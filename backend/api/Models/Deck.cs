@@ -1,4 +1,7 @@
-﻿namespace api.Models;
+﻿using api.DTO;
+using System.Text.Json.Serialization;
+
+namespace api.Models;
 
 public class Deck
 {
@@ -6,5 +9,14 @@ public class Deck
     public string Name { get; set; }
     public ICollection<Card> Cards { get; set; } = new List<Card>();
     public int UserId { get; set; }
+    [JsonIgnore]
     public User User { get; set; }
+
+    public Deck() {}
+
+    public Deck(DeckCreateRequest request)
+    {
+        Name = request.Name;
+        UserId = UserId;
+    }
 }

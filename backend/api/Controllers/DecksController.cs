@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
+using api.DTO;
 
 namespace api.Controllers;
 
-[Route("api/decks")]
+[Route("api/[controller]")]
 [ApiController]
 public class DecksController : ControllerBase
 {
@@ -40,42 +41,38 @@ public class DecksController : ControllerBase
         return deck;
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutDeck(int id, Deck deck)
-    {
-        if (id != deck.Id)
-        {
-            return BadRequest();
-        }
-
-        _context.Entry(deck).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!DeckExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return NoContent();
-    }
-
     [HttpPost]
-    public async Task<ActionResult<Deck>> PostDeck(Deck deck)
+    public async Task<ActionResult<Deck>> PostDeck(DeckCreateRequest request)
     {
+        Deck deck = new Deck(request);
+        User? user = await _context.Users.FindAsync(request.UserId);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        deck.User = user;
+
         _context.Decks.Add(deck);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetDeck", new { id = deck.Id }, deck);
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateDeck(int id, DeckUpdateRequest request)
+    {
+        Deck? deck = await _context.Decks.FindAsync(id);
+
+        if (deck == null) return NotFound();
+
+        deck.Name = request.Name;
+
+        _context.Decks.Update(deck);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
@@ -91,10 +88,5 @@ public class DecksController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private bool DeckExists(int id)
-    {
-        return _context.Decks.Any(e => e.Id == id);
     }
 }

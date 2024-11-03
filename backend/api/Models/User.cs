@@ -1,4 +1,6 @@
-﻿namespace api.Models;
+﻿using api.DTO;
+
+namespace api.Models;
 
 public class User
 {
@@ -7,4 +9,13 @@ public class User
     public string Email { get; set; }
     public string Password { get; set; }
     public ICollection<Deck> Decks { get; set; } = new List<Deck>();
+
+    public User() {}
+
+    public User(UserCreateRequest request)
+    {
+        Username = request.Username;
+        Email = request.Email;
+        Password = request.Password;
+    }
 }

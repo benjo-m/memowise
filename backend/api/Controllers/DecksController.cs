@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
 using api.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace api.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class DecksController : ControllerBase
 {
@@ -22,14 +24,8 @@ public class DecksController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Deck>>> GetDeck()
-    {
-        return await _context.Decks.ToListAsync();
-    }
-
     [HttpGet("{id}")]
-    public async Task<ActionResult<Deck>> GetDeck(int id)
+    public async Task<ActionResult<Deck>> GetDeckById(int id)
     {
         var deck = await _context.Decks.FindAsync(id);
 
@@ -65,7 +61,10 @@ public class DecksController : ControllerBase
     {
         Deck? deck = await _context.Decks.FindAsync(id);
 
-        if (deck == null) return NotFound();
+        if (deck == null)
+        {
+            return NotFound();
+        }
 
         deck.Name = request.Name;
 
@@ -78,7 +77,8 @@ public class DecksController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDeck(int id)
     {
-        var deck = await _context.Decks.FindAsync(id);
+        Deck? deck = await _context.Decks.FindAsync(id);
+
         if (deck == null)
         {
             return NotFound();
@@ -89,4 +89,26 @@ public class DecksController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<List<Deck>>> GetDecksByUserId(int userId)
+    {
+        var decks = await _context.Decks
+            .Where(x => x.UserId == userId)
+            .ToListAsync();
+
+        return decks;
+    }
+    
+    [HttpGet("{deckId}/cards")]
+    public async Task<ActionResult<List<Card>>> GetCardsByDeckId(int deckId)
+    {
+        var cards = await _context.Decks
+            .Where(x => x.Id == deckId)
+            .SelectMany(x => x.Cards)
+            .ToListAsync();
+
+        return Ok(cards);
+    }
+
 }

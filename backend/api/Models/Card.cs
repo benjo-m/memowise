@@ -1,4 +1,6 @@
-﻿namespace api.Models;
+﻿using api.DTO;
+
+namespace api.Models;
 
 public class Card
 {
@@ -7,4 +9,12 @@ public class Card
     public string Answer { get; set; }
     public int DeckId { get; set; }
     public Deck Deck { get; set; }
+
+    public Card() {}
+    
+    public Card(CardCreateRequest cardCreateRequest)
+    {
+        Question = cardCreateRequest.Question;
+        Answer = cardCreateRequest.Answer;
+    }
 }

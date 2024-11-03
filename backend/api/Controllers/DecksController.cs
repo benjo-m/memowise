@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
 using api.DTO;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace api.Controllers;
 
@@ -38,10 +31,10 @@ public class DecksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Deck>> PostDeck(DeckCreateRequest request)
+    public async Task<ActionResult<Deck>> PostDeck(DeckCreateRequest deckCreateRequest)
     {
-        Deck deck = new Deck(request);
-        User? user = await _context.Users.FindAsync(request.UserId);
+        Deck deck = new Deck(deckCreateRequest);
+        User? user = await _context.Users.FindAsync(deckCreateRequest.UserId);
 
         if (user == null)
         {
@@ -57,7 +50,7 @@ public class DecksController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateDeck(int id, DeckUpdateRequest request)
+    public async Task<IActionResult> UpdateDeck(int id, DeckUpdateRequest deckUpdateRequest)
     {
         Deck? deck = await _context.Decks.FindAsync(id);
 
@@ -66,7 +59,7 @@ public class DecksController : ControllerBase
             return NotFound();
         }
 
-        deck.Name = request.Name;
+        deck.Name = deckUpdateRequest.Name;
 
         _context.Decks.Update(deck);
         await _context.SaveChangesAsync();
@@ -111,4 +104,15 @@ public class DecksController : ControllerBase
         return Ok(cards);
     }
 
+    [HttpPost("{deckId}/cards")]
+    public async Task<IActionResult> AddCard(int deckId, CardCreateRequest cardCreateRequest) 
+    {
+        Card card = new Card(cardCreateRequest);
+        card.Deck = await _context.Decks.FirstAsync(x => x.Id == deckId);
+
+        _context.Add(card);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }

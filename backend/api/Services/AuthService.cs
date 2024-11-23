@@ -28,7 +28,6 @@ public class AuthService
         var userDto = new UserDto();
         userDto.Username = user.Username;
         userDto.Email = user.Email;
-        userDto.Password = user.Password;
 
         return userDto;
     }

@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:mobile/views/decks_view.dart';
+import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/login_view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -11,22 +13,30 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register"),
+        title: const Center(child: Text("Register")),
       ),
       body: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(50.0),
+            padding: const EdgeInsets.all(40.0),
             child: Column(
               children: [
                 TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Username is required";
+                      return "Email is required";
                     }
                     return null;
                   },
@@ -35,6 +45,11 @@ class _RegisterViewState extends State<RegisterView> {
                   height: 20,
                 ),
                 TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                  ),
+                  obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Password is required";
@@ -46,14 +61,22 @@ class _RegisterViewState extends State<RegisterView> {
                   height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const DecksView()),
-                        (route) => false, // Remove all previous routes
-                      );
+                      try {
+                        await FirebaseAuthProvider().register(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
+                      } catch (e) {
+                        log(e.toString());
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text("Error"),
+                                  content: Text(e.toString()),
+                                ));
+                      }
                     }
                   },
                   child: const Text("Register"),
@@ -67,7 +90,8 @@ class _RegisterViewState extends State<RegisterView> {
                         (route) => false, // Remove all previous routes
                       );
                     },
-                    child: const Text("Already have an account? Log in."))
+                    child:
+                        const Text("Already have an account? Log in instead."))
               ],
             ),
           )),

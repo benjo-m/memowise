@@ -1,16 +1,16 @@
-class User {
+class AppUser {
   String username;
   String email;
 
-  User({required this.username, required this.email});
+  AppUser({required this.username, required this.email});
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory AppUser.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
         'username': String username,
         'email': String email,
       } =>
-        User(
+        AppUser(
           username: username,
           email: email,
         ),

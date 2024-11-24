@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Models;
 using api.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers;
 
@@ -17,7 +18,9 @@ public class DecksController : ControllerBase
         _context = context;
     }
 
+    
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<Deck>> GetDeckById(int id)
     {
         var deck = await _context.Decks.FindAsync(id);

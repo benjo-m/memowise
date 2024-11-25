@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/login_view.dart';
 
@@ -15,6 +16,8 @@ class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String _emailValidationText = "";
+  String _passwordValidationText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,8 @@ class _RegisterViewState extends State<RegisterView> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Email is required";
+                    } else if (_emailValidationText != "") {
+                      return _emailValidationText;
                     }
                     return null;
                   },
@@ -53,6 +58,8 @@ class _RegisterViewState extends State<RegisterView> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Password is required";
+                    } else if (_passwordValidationText != "") {
+                      return _passwordValidationText;
                     }
                     return null;
                   },
@@ -62,20 +69,33 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                    setState(() {
+                      _emailValidationText = "";
+                      _passwordValidationText = "";
+                    });
                     if (_formKey.currentState!.validate()) {
                       try {
                         await FirebaseAuthProvider().register(
                           email: _emailController.text,
                           password: _passwordController.text,
                         );
+                      } on EmailAlreadyInUseAuthException {
+                        setState(() {
+                          _emailValidationText = "Email already in use";
+                        });
+                        _formKey.currentState!.validate();
+                      } on InvalidEmailAuthException {
+                        setState(() {
+                          _emailValidationText = "Invalid email";
+                        });
+                        _formKey.currentState!.validate();
+                      } on WeakPasswordAuthException {
+                        setState(() {
+                          _passwordValidationText = "Weak password";
+                        });
+                        _formKey.currentState!.validate();
                       } catch (e) {
                         log(e.toString());
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: const Text("Error"),
-                                  content: Text(e.toString()),
-                                ));
                       }
                     }
                   },
@@ -87,7 +107,7 @@ class _RegisterViewState extends State<RegisterView> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const LoginView()),
-                        (route) => false, // Remove all previous routes
+                        (route) => false,
                       );
                     },
                     child:

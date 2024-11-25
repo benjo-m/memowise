@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/register_view.dart';
@@ -13,7 +11,6 @@ class LoginView extends StatefulWidget {
 
 class _LoginFormState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  Future? _loginFuture;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -70,7 +67,32 @@ class _LoginFormState extends State<LoginView> {
                           password: _passwordController.text,
                         );
                       } catch (e) {
-                        log(e.toString());
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text("Wrong credentials"),
+                                  content: const Text(
+                                      "Try again with different credentials or create an account if you don't have one."),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return const RegisterView();
+                                            }),
+                                            (route) => false,
+                                          );
+                                        },
+                                        child: const Text("Register")),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Close"))
+                                  ],
+                                ));
                       }
                     }
                   },
@@ -90,21 +112,6 @@ class _LoginFormState extends State<LoginView> {
               ],
             ),
           )),
-    );
-  }
-
-  FutureBuilder buildFutureBuilder() {
-    return FutureBuilder(
-      future: _loginFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data!);
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-
-        return const CircularProgressIndicator();
-      },
     );
   }
 }

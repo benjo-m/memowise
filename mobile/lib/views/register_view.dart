@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/login_view.dart';
+import 'package:mobile/views/verify_email_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -16,6 +17,8 @@ class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
   String _emailValidationText = "";
   String _passwordValidationText = "";
 
@@ -67,6 +70,22 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(
                   height: 20,
                 ),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm password',
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value != _passwordController.text) {
+                      return "Passwords don't match";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     setState(() {
@@ -79,6 +98,17 @@ class _RegisterViewState extends State<RegisterView> {
                           email: _emailController.text,
                           password: _passwordController.text,
                         );
+
+                        await FirebaseAuthProvider().sendEmailVerification();
+
+                        if (context.mounted) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  VerifyEmailView(email: _emailController.text),
+                            ),
+                          );
+                        }
                       } on EmailAlreadyInUseAuthException {
                         setState(() {
                           _emailValidationText = "Email already in use";
@@ -111,7 +141,7 @@ class _RegisterViewState extends State<RegisterView> {
                       );
                     },
                     child:
-                        const Text("Already have an account? Log in instead."))
+                        const Text("Already have an account? Log in instead.")),
               ],
             ),
           )),

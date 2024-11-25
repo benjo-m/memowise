@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/register_view.dart';
+import 'package:mobile/views/verify_email_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -60,41 +64,7 @@ class _LoginFormState extends State<LoginView> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        await FirebaseAuthProvider().logIn(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        );
-                      } catch (e) {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: const Text("Wrong credentials"),
-                                  content: const Text(
-                                      "Try again with different credentials or create an account if you don't have one."),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                              return const RegisterView();
-                                            }),
-                                            (route) => false,
-                                          );
-                                        },
-                                        child: const Text("Register")),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("Close"))
-                                  ],
-                                ));
-                      }
-                    }
+                    await logIn(context);
                   },
                   child: const Text("Log in"),
                 ),
@@ -104,14 +74,76 @@ class _LoginFormState extends State<LoginView> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const RegisterView()),
-                      (route) => false, // Remove all previous routes
+                      (route) => false,
                     );
                   },
                   child: const Text("Don't have an account? Register here."),
-                )
+                ),
               ],
             ),
           )),
     );
+  }
+
+  Future<void> logIn(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await FirebaseAuthProvider().logIn(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+        var currentUser = FirebaseAuthProvider().currentUser;
+
+        if (currentUser != null && context.mounted) {
+          if (currentUser.emailVerified) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const MainView()),
+              (route) => false,
+            );
+          } else {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => VerifyEmailView(
+                        email: _emailController.text,
+                      )),
+            );
+            await FirebaseAuthProvider().sendEmailVerification();
+          }
+        }
+      } catch (e) {
+        log(e.toString());
+        if (context.mounted) {
+          showWrongCredentialsDialog(context);
+        }
+      }
+    }
+  }
+
+  Future<dynamic> showWrongCredentialsDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Wrong credentials"),
+              content: const Text(
+                  "Try again with different credentials or create a new account."),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) {
+                          return const RegisterView();
+                        }),
+                        (route) => false,
+                      );
+                    },
+                    child: const Text("Register")),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Close"))
+              ],
+            ));
   }
 }

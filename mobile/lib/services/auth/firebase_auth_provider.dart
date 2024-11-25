@@ -96,4 +96,8 @@ class FirebaseAuthProvider {
       throw UserNotLoggedInAuthException();
     }
   }
+
+  Future<void> reloadUser() async {
+    return FirebaseAuth.instance.currentUser?.reload();
+  }
 }

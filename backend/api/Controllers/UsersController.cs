@@ -2,6 +2,7 @@ using api.DTO;
 using api.Models;
 using api.Services;
 using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;

@@ -11,7 +11,7 @@ import 'package:mobile/services/auth/auth_exceptions.dart';
 
 Future<http.Response> saveUser(User user) {
   return http.post(
-    Uri.parse('https://localhost:7251/auth/register'),
+    Uri.parse('https://localhost:7251/users/save'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

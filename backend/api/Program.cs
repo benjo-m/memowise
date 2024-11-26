@@ -1,16 +1,14 @@
 using api.Data;
 using api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication("Bearer").AddJwtBearer(); 
-
-builder.Services.AddAuthorization(options =>
+FirebaseApp.Create(new AppOptions()
 {
-    options.AddPolicy("IsAdmin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
+    Credential = GoogleCredential.GetApplicationDefault(),
 });
 
 builder.Services.AddControllers();
@@ -18,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MemoWiseDb")));
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

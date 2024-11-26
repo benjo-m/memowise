@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/login_view.dart';
@@ -35,6 +36,13 @@ class _SettingsViewState extends State<SettingsView> {
                 );
               },
               child: const Text("Log out")),
+          ElevatedButton(
+              onPressed: () async {
+                var token =
+                    await FirebaseAuth.instance.currentUser!.getIdToken();
+                log(token!);
+              },
+              child: const Text("Get token")),
         ],
       )),
     );

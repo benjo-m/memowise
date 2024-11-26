@@ -1,9 +1,23 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException, User;
+import 'package:http/http.dart' as http;
+import 'package:mobile/dtos/user_save_request.dart';
 import 'package:mobile/firebase_options.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
+
+Future<http.Response> saveUser(User user) {
+  return http.post(
+    Uri.parse('https://localhost:7251/auth/register'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(UserSaveRequest.fromFirebaseUser(user)),
+  );
+}
 
 class FirebaseAuthProvider {
   Future<void> initialize() async {
@@ -23,6 +37,7 @@ class FirebaseAuthProvider {
       );
       final user = currentUser;
       if (user != null) {
+        await saveUser(user);
         return user;
       } else {
         throw UserNotLoggedInAuthException();
@@ -86,18 +101,5 @@ class FirebaseAuthProvider {
     } else {
       throw UserNotLoggedInAuthException();
     }
-  }
-
-  Future<void> sendEmailVerification() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await user.sendEmailVerification();
-    } else {
-      throw UserNotLoggedInAuthException();
-    }
-  }
-
-  Future<void> reloadUser() async {
-    return FirebaseAuth.instance.currentUser?.reload();
   }
 }

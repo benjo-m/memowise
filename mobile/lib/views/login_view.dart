@@ -1,10 +1,10 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/register_view.dart';
-import 'package:mobile/views/verify_email_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -79,6 +79,12 @@ class _LoginFormState extends State<LoginView> {
                   },
                   child: const Text("Don't have an account? Register here."),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    log(FirebaseAuth.instance.currentUser.toString());
+                  },
+                  child: const Text("Current user"),
+                ),
               ],
             ),
           )),
@@ -96,20 +102,10 @@ class _LoginFormState extends State<LoginView> {
         var currentUser = FirebaseAuthProvider().currentUser;
 
         if (currentUser != null && context.mounted) {
-          if (currentUser.emailVerified) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const MainView()),
-              (route) => false,
-            );
-          } else {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => VerifyEmailView(
-                        email: _emailController.text,
-                      )),
-            );
-            await FirebaseAuthProvider().sendEmailVerification();
-          }
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const MainView()),
+            (route) => false,
+          );
         }
       } catch (e) {
         log(e.toString());

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/login_view.dart';
-import 'package:mobile/views/verify_email_view.dart';
+import 'package:mobile/views/main_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -99,14 +99,12 @@ class _RegisterViewState extends State<RegisterView> {
                           password: _passwordController.text,
                         );
 
-                        await FirebaseAuthProvider().sendEmailVerification();
-
-                        if (context.mounted) {
-                          Navigator.of(context).push(
+                        if (FirebaseAuthProvider().currentUser != null &&
+                            context.mounted) {
+                          Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  VerifyEmailView(email: _emailController.text),
-                            ),
+                                builder: (context) => const MainView()),
+                            (route) => false,
                           );
                         }
                       } on EmailAlreadyInUseAuthException {

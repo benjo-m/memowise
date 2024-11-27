@@ -22,8 +22,8 @@ public class DecksController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
     [Authorize]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Deck>> GetDeckById(int id)
     {
         var deck = await _dbContext.Decks.FindAsync(id);
@@ -33,14 +33,11 @@ public class DecksController : ControllerBase
         return deck;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Deck>> CreateDeck(DeckCreateRequest deckCreateRequest)
     {
-        string token = Request.Headers.Authorization
-            .ToString()
-            .Substring("Bearer ".Length);
-
-        User? user = await _userService.GetCurrentUser(token);
+        User? user = await _userService.GetCurrentUser(Request.Headers.Authorization);
 
         if (user == null) return NotFound();
 
@@ -68,15 +65,16 @@ public class DecksController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDeck(int id)
+    [Authorize]
+    [HttpDelete("{deckId}")]
+    public async Task<IActionResult> DeleteDeck(int deckId)
     {
-        Deck? deck = await _dbContext.Decks.FindAsync(id);
+        Deck? deck = await _dbContext.Decks.FindAsync(deckId);
+        User? user = await _userService.GetCurrentUser(Request.Headers.Authorization);
 
-        if (deck == null)
-        {
-            return NotFound();
-        }
+        if (deck == null) return NotFound();
+
+        if (user == null || user.Id != deck.UserId) return Forbid();
 
         _dbContext.Decks.Remove(deck);
         await _dbContext.SaveChangesAsync();
@@ -86,14 +84,16 @@ public class DecksController : ControllerBase
 
     [Authorize]
     [HttpGet("user/{firebaseUid}")]
-    public async Task<ActionResult<List<Deck>>> GetDecksByUser(string firebaseUid)
+    public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
     {
         var decks = await _dbContext.Decks
             .Where(x => x.User.FirebaseUid == firebaseUid)
             .Include(x => x.Cards)
             .ToListAsync();
 
-        return decks;
+        var deckSummaries = decks.Select(deck => new DeckSummary(deck)).ToList();
+
+        return deckSummaries;
     }
     
     [HttpGet("{deckId}/cards")]

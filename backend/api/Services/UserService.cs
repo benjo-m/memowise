@@ -23,8 +23,14 @@ public class UserService
         return user;
     }
 
-    public async Task<User?> GetCurrentUser(string? token)
+    public async Task<User?> GetCurrentUser(string? authorizationHeader)
     {
+        if (authorizationHeader == null) return null;
+
+        string token = authorizationHeader
+            .ToString()
+            .Substring("Bearer ".Length);
+
         FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance
             .VerifyIdTokenAsync(token);
 

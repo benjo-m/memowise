@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/models/card.dart';
 import 'package:mobile/services/deck_service.dart';
 
@@ -14,7 +15,7 @@ class DecksView extends StatefulWidget {
 }
 
 class _DecksViewState extends State<DecksView> {
-  late Future<List<Deck>> futureDecks;
+  late Future<List<DeckSummary>> futureDecks;
 
   @override
   void initState() {
@@ -38,6 +39,10 @@ class _DecksViewState extends State<DecksView> {
                     await DeckService().createDeck("Jos noviji deck"),
                 child: const Text("Create new deck"),
               ),
+              ElevatedButton(
+                onPressed: () async => await DeckService().deleteDeck(22),
+                child: const Text("Delete deck"),
+              ),
               FutureBuilder(
                 future: futureDecks,
                 builder: (context, snapshot) {
@@ -46,20 +51,14 @@ class _DecksViewState extends State<DecksView> {
                         children: snapshot.data!
                             .map((deck) => Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
-                                child: DeckListItem(
-                                  name: deck.name,
-                                  newCards: deck.cards
-                                      .where((card) =>
-                                          card.status == CardStatus.New)
-                                      .length,
-                                  learningCards: deck.cards
-                                      .where((card) =>
-                                          card.status == CardStatus.Learning)
-                                      .length,
-                                  learnedCards: deck.cards
-                                      .where((card) =>
-                                          card.status == CardStatus.Learned)
-                                      .length,
+                                child: GestureDetector(
+                                  onTap: () => log("Tapped deck ${deck.id}"),
+                                  child: DeckListItem(
+                                    name: deck.name,
+                                    newCards: deck.newCards,
+                                    learningCards: deck.learningCards,
+                                    learnedCards: deck.learnedCards,
+                                  ),
                                 )))
                             .toList());
                   }

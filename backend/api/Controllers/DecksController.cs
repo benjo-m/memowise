@@ -4,6 +4,7 @@ using api.Data;
 using api.Models;
 using api.DTO;
 using Microsoft.AspNetCore.Authorization;
+using api.Services;
 
 namespace api.Controllers;
 
@@ -11,61 +12,58 @@ namespace api.Controllers;
 [ApiController]
 public class DecksController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _dbContext;
+    private readonly UserService _userService;
 
-    public DecksController(ApplicationDbContext context)
+    public DecksController(ApplicationDbContext dbContext, UserService userService)
     {
-        _context = context;
+        _dbContext = dbContext;
+        _userService = userService;
     }
 
-    
+
     [HttpGet("{id}")]
     [Authorize]
     public async Task<ActionResult<Deck>> GetDeckById(int id)
     {
-        var deck = await _context.Decks.FindAsync(id);
+        var deck = await _dbContext.Decks.FindAsync(id);
 
-        if (deck == null)
-        {
-            return NotFound();
-        }
+        if (deck == null) return NotFound();
 
         return deck;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Deck>> PostDeck(DeckCreateRequest deckCreateRequest)
+    public async Task<ActionResult<Deck>> CreateDeck(DeckCreateRequest deckCreateRequest)
     {
+        string token = Request.Headers.Authorization
+            .ToString()
+            .Substring("Bearer ".Length);
+
+        User? user = await _userService.GetCurrentUser(token);
+
+        if (user == null) return NotFound();
+
         Deck deck = new Deck(deckCreateRequest);
-        User? user = await _context.Users.FindAsync(deckCreateRequest.UserId);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
         deck.User = user;
 
-        _context.Decks.Add(deck);
-        await _context.SaveChangesAsync();
+        _dbContext.Decks.Add(deck);
+        await _dbContext.SaveChangesAsync();
 
-        return CreatedAtAction("GetDeck", new { id = deck.Id }, deck);
+        return Created();
     }
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateDeck(int id, DeckUpdateRequest deckUpdateRequest)
     {
-        Deck? deck = await _context.Decks.FindAsync(id);
+        Deck? deck = await _dbContext.Decks.FindAsync(id);
 
-        if (deck == null)
-        {
-            return NotFound();
-        }
+        if (deck == null) return NotFound();
 
         deck.Name = deckUpdateRequest.Name;
 
-        _context.Decks.Update(deck);
-        await _context.SaveChangesAsync();
+        _dbContext.Decks.Update(deck);
+        await _dbContext.SaveChangesAsync();
 
         return NoContent();
     }
@@ -73,33 +71,35 @@ public class DecksController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDeck(int id)
     {
-        Deck? deck = await _context.Decks.FindAsync(id);
+        Deck? deck = await _dbContext.Decks.FindAsync(id);
 
         if (deck == null)
         {
             return NotFound();
         }
 
-        _context.Decks.Remove(deck);
-        await _context.SaveChangesAsync();
+        _dbContext.Decks.Remove(deck);
+        await _dbContext.SaveChangesAsync();
 
         return NoContent();
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<ActionResult<List<Deck>>> GetDecksByUserId(int userId)
+    [Authorize]
+    [HttpGet("user/{firebaseUid}")]
+    public async Task<ActionResult<List<Deck>>> GetDecksByUser(string firebaseUid)
     {
-        var decks = await _context.Decks
-            .Where(x => x.UserId == userId)
+        var decks = await _dbContext.Decks
+            .Where(x => x.User.FirebaseUid == firebaseUid)
+            .Include(x => x.Cards)
             .ToListAsync();
 
         return decks;
     }
     
     [HttpGet("{deckId}/cards")]
-    public async Task<ActionResult<List<Card>>> GetCardsByDeckId(int deckId)
+    public async Task<ActionResult<List<Card>>> GetCardsByDeck(int deckId)
     {
-        var cards = await _context.Decks
+        var cards = await _dbContext.Decks
             .Where(x => x.Id == deckId)
             .SelectMany(x => x.Cards)
             .ToListAsync();
@@ -111,10 +111,10 @@ public class DecksController : ControllerBase
     public async Task<IActionResult> AddCard(int deckId, CardCreateRequest cardCreateRequest) 
     {
         Card card = new Card(cardCreateRequest);
-        card.Deck = await _context.Decks.FirstAsync(x => x.Id == deckId);
+        card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
 
-        _context.Add(card);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(card);
+        await _dbContext.SaveChangesAsync();
 
         return Ok();
     }

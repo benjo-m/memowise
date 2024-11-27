@@ -1,6 +1,8 @@
 ﻿using api.Data;
 using api.DTO;
 using api.Models;
+using FirebaseAdmin.Auth;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
@@ -19,5 +21,15 @@ public class UserService
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
         return user;
+    }
+
+    public async Task<User?> GetCurrentUser(string? token)
+    {
+        FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance
+            .VerifyIdTokenAsync(token);
+
+        string uid = decodedToken.Uid;
+
+        return await _dbContext.Users.FirstOrDefaultAsync(x => x.FirebaseUid == uid);
     }
 }

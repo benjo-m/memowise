@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
-import 'package:mobile/views/login_view.dart';
+import 'package:mobile/views/main_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
-      home: const LoginView(),
+      home: const MainView(),
     );
   }
 }

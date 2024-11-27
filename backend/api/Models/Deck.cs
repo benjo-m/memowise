@@ -14,9 +14,8 @@ public class Deck
 
     public Deck() {}
 
-    public Deck(DeckCreateRequest request)
+    public Deck(DeckCreateRequest deckCreateRequest)
     {
-        Name = request.Name;
-        UserId = UserId;
+        Name = deckCreateRequest.Name;
     }
 }

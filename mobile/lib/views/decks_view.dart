@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/models/card.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/views/deck_details_view.dart';
 
 import '../models/deck.dart';
 
@@ -31,40 +34,65 @@ class _DecksViewState extends State<DecksView> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(35.0),
           child: ListView(
             children: [
-              ElevatedButton(
-                onPressed: () async =>
-                    await DeckService().createDeck("Jos noviji deck"),
-                child: const Text("Create new deck"),
+              const SearchBar(
+                leading: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.search),
+                ),
+                hintText: "Search decks",
               ),
-              ElevatedButton(
-                onPressed: () async => await DeckService().deleteDeck(22),
-                child: const Text("Delete deck"),
+              const SizedBox(
+                height: 40,
               ),
               FutureBuilder(
                 future: futureDecks,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    final decks = snapshot.data!;
+
                     return Column(
-                        children: snapshot.data!
-                            .map((deck) => Padding(
-                                padding: const EdgeInsets.only(bottom: 15.0),
-                                child: GestureDetector(
-                                  onTap: () => log("Tapped deck ${deck.id}"),
-                                  child: DeckListItem(
-                                    name: deck.name,
-                                    newCards: deck.newCards,
-                                    learningCards: deck.learningCards,
-                                    learnedCards: deck.learnedCards,
-                                  ),
-                                )))
-                            .toList());
+                      children: [
+                        CarouselSlider(
+                            items: decks
+                                .map((deck) => DeckListItem(
+                                    deckSummary: deck,
+                                    onDelete: () => {
+                                          setState(() {
+                                            futureDecks =
+                                                DeckService().getDecks();
+                                          })
+                                        }))
+                                .toList(),
+                            options: CarouselOptions(
+                              enableInfiniteScroll: true,
+                              enlargeCenterPage: true,
+                              height: 350,
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Text("${decks.length} decks"),
+                        ),
+                      ],
+                    );
                   }
                   return const Center(child: CircularProgressIndicator());
                 },
-              )
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await DeckService().createDeck("Jos noviji deck");
+                  setState(() {
+                    futureDecks = DeckService().getDecks();
+                  });
+                },
+                child: const Text("Create new deck"),
+              ),
             ],
           ),
         ));
@@ -74,47 +102,62 @@ class _DecksViewState extends State<DecksView> {
 class DeckListItem extends StatelessWidget {
   const DeckListItem({
     super.key,
-    required this.name,
-    required this.newCards,
-    required this.learningCards,
-    required this.learnedCards,
+    required this.deckSummary,
+    required this.onDelete,
   });
 
-  final String name;
-  final int newCards;
-  final int learningCards;
-  final int learnedCards;
+  final DeckSummary deckSummary;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 370,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 160, 190, 243),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: const TextStyle(fontSize: 24),
-            ),
-            Text(
-              "New: $newCards",
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(
-              "Learning: $learningCards",
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(
-              "Learned: $learnedCards",
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
+    return SizedBox(
+      child: Container(
+        width: 270,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 160, 190, 243),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  deckSummary.name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Text(
+                    "New: ${deckSummary.newCards}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    "Learning: ${deckSummary.learningCards}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    "Learned: ${deckSummary.learnedCards}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await DeckService().deleteDeck(deckSummary.id);
+                  onDelete();
+                },
+                child: const Text("Delete deck"),
+              ),
+            ],
+          ),
         ),
       ),
     );

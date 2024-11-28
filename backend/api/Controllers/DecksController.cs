@@ -26,7 +26,9 @@ public class DecksController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Deck>> GetDeckById(int id)
     {
-        var deck = await _dbContext.Decks.FindAsync(id);
+        var deck = await _dbContext.Decks
+            .Include(d => d.Cards)
+            .FirstOrDefaultAsync(d => d.Id == id);
 
         if (deck == null) return NotFound();
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -6,8 +7,10 @@ import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 
+import '../models/deck.dart';
+
 class DeckService {
-  final String baseUrl = 'https://localhost:7251/decks';
+  final String baseUrl = 'http://10.0.2.2:5151/decks';
 
   Future<List<DeckSummary>> getDecks() async {
     String? uid = FirebaseAuthProvider().currentUser?.uid;
@@ -46,5 +49,21 @@ class DeckService {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
+  }
+
+  Future<Deck> getDeckById(int deckId) async {
+    String? uid = FirebaseAuthProvider().currentUser?.uid;
+    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/$deckId'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+
+    Deck deck = Deck.fromJson(jsonDecode(response.body));
+
+    return deck;
   }
 }

@@ -17,5 +17,8 @@ public class Deck
     public Deck(DeckCreateRequest deckCreateRequest)
     {
         Name = deckCreateRequest.Name;
+        Cards = deckCreateRequest.Cards
+            .Select(card => new Card(card))
+            .ToList();
     }
 }

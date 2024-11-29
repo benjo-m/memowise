@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/views/achievements_view.dart';
-import 'package:mobile/views/decks_view.dart';
-import 'package:mobile/views/settings_view.dart';
-import 'package:mobile/views/stats_view.dart';
+import 'package:mobile/views/achievements_page/achievements_view.dart';
+import 'package:mobile/views/decks_page/decks_view.dart';
+import 'package:mobile/views/settings_page/settings_view.dart';
+import 'package:mobile/views/stats_page/stats_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});

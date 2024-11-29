@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -11,6 +10,7 @@ import '../models/deck.dart';
 
 class DeckService {
   final String baseUrl = 'http://10.0.2.2:5151/decks';
+  // final String baseUrl = 'http://localhost:5151/decks';
 
   Future<List<DeckSummary>> getDecks() async {
     String? uid = FirebaseAuthProvider().currentUser?.uid;
@@ -28,7 +28,7 @@ class DeckService {
     return jsonList.map((json) => DeckSummary.fromJson(json)).toList();
   }
 
-  Future<void> createDeck(String name) async {
+  Future<void> createDeck(DeckCreateRequest deckCreateRequest) async {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     await http.post(Uri.parse(baseUrl),
@@ -36,7 +36,7 @@ class DeckService {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         },
-        body: jsonEncode(DeckCreateRequest(name: name)));
+        body: jsonEncode(deckCreateRequest));
   }
 
   Future<void> deleteDeck(int deckId) async {
@@ -52,7 +52,6 @@ class DeckService {
   }
 
   Future<Deck> getDeckById(int deckId) async {
-    String? uid = FirebaseAuthProvider().currentUser?.uid;
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     final response = await http.get(

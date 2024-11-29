@@ -26,5 +26,6 @@ public class Card
     {
         Question = cardCreateRequest.Question;
         Answer = cardCreateRequest.Answer;
+        Status = CardStatus.New;
     }
 }

@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/deck_service.dart';
 
@@ -54,7 +53,15 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                         .map((card) => Text(
                             "question: ${card.question} answer: ${card.answer}"))
                         .toList(),
-                  )
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await DeckService().deleteDeck(deck.id);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text("Delete Deck"))
                 ],
               );
             }

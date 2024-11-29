@@ -21,7 +21,6 @@ public class DecksController : ControllerBase
         _userService = userService;
     }
 
-
     [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<Deck>> GetDeckById(int id)

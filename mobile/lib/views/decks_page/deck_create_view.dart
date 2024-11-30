@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/widgets/add_card_dialog.dart';
@@ -14,7 +15,7 @@ class DeckCreateView extends StatefulWidget {
 
 class _DeckCreateViewState extends State<DeckCreateView> {
   final _deckNameController = TextEditingController();
-  final List<CardCreateRequest> _cards = [];
+  final List<CardDto> _cards = [];
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +87,8 @@ class _DeckCreateViewState extends State<DeckCreateView> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AddCardDialog(
-              onAdd: (CardCreateRequest cardCreateRequest) {
-                setState(() => _cards.add(cardCreateRequest));
+              onAdd: (CardDto cardDto) {
+                setState(() => _cards.add(cardDto));
                 Navigator.pop(context);
               },
               onCancel: () => Navigator.pop(context),
@@ -99,11 +100,11 @@ class _DeckCreateViewState extends State<DeckCreateView> {
         barrierDismissible: false,
         context: context,
         builder: (context) => EditCardDialog(
-            cardCreateRequest: _cards[cardIndex],
+            cardDto: _cards[cardIndex],
             onCancel: () => Navigator.pop(context),
-            onEdit: (CardCreateRequest cardCreateRequest) {
+            onEdit: (CardDto cardDto) {
               setState(() {
-                _cards[cardIndex] = cardCreateRequest;
+                _cards[cardIndex] = cardDto;
                 Navigator.pop(context);
               });
             }));

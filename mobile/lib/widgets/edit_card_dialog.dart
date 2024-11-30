@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/dtos/deck_create_request.dart';
+import 'package:mobile/dtos/card_dto.dart';
 
 class EditCardDialog extends StatefulWidget {
   const EditCardDialog({
     super.key,
     required this.onCancel,
     required this.onEdit,
-    required this.cardCreateRequest,
+    required this.cardDto,
   });
 
   final VoidCallback onCancel;
-  final Function(CardCreateRequest) onEdit;
-  final CardCreateRequest cardCreateRequest;
+  final Function(CardDto) onEdit;
+  final CardDto cardDto;
 
   @override
   State<EditCardDialog> createState() => _EditCardDialogState();
@@ -25,8 +25,8 @@ class _EditCardDialogState extends State<EditCardDialog> {
   @override
   void initState() {
     super.initState();
-    _questionController.text = widget.cardCreateRequest.question;
-    _answerController.text = widget.cardCreateRequest.answer;
+    _questionController.text = widget.cardDto.question;
+    _answerController.text = widget.cardDto.answer;
   }
 
   @override
@@ -112,11 +112,11 @@ class _EditCardDialogState extends State<EditCardDialog> {
                         child: const Text("Cancel")),
                     ElevatedButton(
                       onPressed: () {
-                        var cardCreateRequest = CardCreateRequest(
+                        var cardDto = CardDto(
                           question: _questionController.text,
                           answer: _answerController.text,
                         );
-                        widget.onEdit(cardCreateRequest);
+                        widget.onEdit(cardDto);
                       },
                       child: const Text("Edit"),
                     ),

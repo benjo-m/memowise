@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/card_dto.dart';
+import 'package:mobile/dtos/deck_create_request.dart';
 
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/widgets/card_list_item.dart';
+import 'package:mobile/widgets/edit_card_dialog.dart';
 
 class DeckDetailsView extends StatefulWidget {
   const DeckDetailsView({
@@ -28,15 +34,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: FutureBuilder(
-          future: futureDeck,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text(snapshot.data!.name);
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
+        title: const Text("Deck Details"),
         centerTitle: true,
       ),
       body: FutureBuilder(
@@ -44,14 +42,37 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Deck deck = snapshot.data!;
-
               return Column(
                 children: [
                   Text(deck.name),
                   Column(
                     children: deck.cards
-                        .map((card) => Text(
-                            "question: ${card.question} answer: ${card.answer}"))
+                        .map((card) => CardListItem(
+                              question: card.question,
+                              onEdit: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => EditCardDialog(
+                                          cardDto: CardDto(
+                                              question: card.question,
+                                              answer: card.answer),
+                                          onEdit: (CardDto cardDto) async {
+                                            await DeckService().editCard(
+                                                deck.id, card.id, cardDto);
+                                            setState(() {
+                                              futureDeck = DeckService()
+                                                  .getDeckById(deck.id);
+                                            });
+                                            if (context.mounted) {
+                                              Navigator.pop(context);
+                                            }
+                                          },
+                                          onCancel: () =>
+                                              Navigator.pop(context),
+                                        ));
+                              },
+                              onDelete: () => log("Delete"),
+                            ))
                         .toList(),
                   ),
                   ElevatedButton(

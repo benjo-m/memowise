@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
@@ -64,5 +65,18 @@ class DeckService {
     Deck deck = Deck.fromJson(jsonDecode(response.body));
 
     return deck;
+  }
+
+  Future<void> editCard(int deckId, int cardId, CardDto cardDto) async {
+    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+
+    http.patch(
+      Uri.parse("$baseUrl/$deckId/cards/$cardId"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+      body: jsonEncode(cardDto),
+    );
   }
 }

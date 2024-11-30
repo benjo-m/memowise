@@ -29,7 +29,10 @@ public class DecksController : ControllerBase
             .Include(d => d.Cards)
             .FirstOrDefaultAsync(d => d.Id == id);
 
-        if (deck == null) return NotFound();
+        if (deck == null)
+        {
+            return NotFound();
+        }
 
         return deck;
     }
@@ -39,7 +42,10 @@ public class DecksController : ControllerBase
     {
         User? user = await _userService.GetCurrentUser(Request.Headers.Authorization);
 
-        if (user == null) return NotFound();
+        if (user == null)
+        {
+            return NotFound();
+        }
 
         Deck deck = new Deck(deckCreateRequest);
         deck.User = user;
@@ -55,7 +61,10 @@ public class DecksController : ControllerBase
     {
         Deck? deck = await _dbContext.Decks.FindAsync(id);
 
-        if (deck == null) return NotFound();
+        if (deck == null)
+        {
+            return NotFound();
+        }
 
         deck.Name = deckUpdateRequest.Name;
 
@@ -71,9 +80,14 @@ public class DecksController : ControllerBase
         Deck? deck = await _dbContext.Decks.FindAsync(deckId);
         User? user = await _userService.GetCurrentUser(Request.Headers.Authorization);
 
-        if (deck == null) return NotFound();
-
-        if (user == null || user.Id != deck.UserId) return Forbid();
+        if (deck == null)
+        {
+            return NotFound();
+        }
+        else if (user == null || user.Id != deck.UserId)
+        {
+            return Forbid();
+        }
 
         _dbContext.Decks.Remove(deck);
         await _dbContext.SaveChangesAsync();
@@ -124,7 +138,10 @@ public class DecksController : ControllerBase
             .Where(c => c.DeckId == deckId && c.Id == cardId)
             .FirstOrDefaultAsync();
 
-        if (card == null) return NotFound();
+        if (card == null)
+        {
+            return NotFound();
+        }
 
         card.Question = cardUpdateRequest.Question;
         card.Answer = cardUpdateRequest.Answer;

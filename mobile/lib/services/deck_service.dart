@@ -9,8 +9,8 @@ import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import '../models/deck.dart';
 
 class DeckService {
-  final String baseUrl = 'http://10.0.2.2:5151/decks';
-  // final String baseUrl = 'http://localhost:5151/decks';
+  // final String baseUrl = 'http://10.0.2.2:5151/decks';
+  final String baseUrl = 'http://localhost:5151/decks';
 
   Future<List<DeckSummary>> getDecks() async {
     String? uid = FirebaseAuthProvider().currentUser?.uid;

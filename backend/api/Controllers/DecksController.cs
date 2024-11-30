@@ -8,6 +8,7 @@ using api.Services;
 
 namespace api.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class DecksController : ControllerBase
@@ -21,7 +22,6 @@ public class DecksController : ControllerBase
         _userService = userService;
     }
 
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<Deck>> GetDeckById(int id)
     {
@@ -34,7 +34,6 @@ public class DecksController : ControllerBase
         return deck;
     }
 
-    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Deck>> CreateDeck(DeckCreateRequest deckCreateRequest)
     {
@@ -66,7 +65,6 @@ public class DecksController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
     [HttpDelete("{deckId}")]
     public async Task<IActionResult> DeleteDeck(int deckId)
     {
@@ -83,7 +81,6 @@ public class DecksController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
     [HttpGet("user/{firebaseUid}")]
     public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
     {
@@ -96,7 +93,7 @@ public class DecksController : ControllerBase
 
         return deckSummaries;
     }
-    
+
     [HttpGet("{deckId}/cards")]
     public async Task<ActionResult<List<Card>>> GetCardsByDeck(int deckId)
     {
@@ -115,6 +112,24 @@ public class DecksController : ControllerBase
         card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
 
         _dbContext.Add(card);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpPatch("{deckId}/cards/{cardId}")]
+    public async Task<IActionResult> EditCard(int deckId, int cardId, CardUpdateRequest cardUpdateRequest)
+    {
+        Card? card = await _dbContext.Cards
+            .Where(c => c.DeckId == deckId && c.Id == cardId)
+            .FirstOrDefaultAsync();
+
+        if (card == null) return NotFound();
+
+        card.Question = cardUpdateRequest.Question;
+        card.Answer = cardUpdateRequest.Answer;
+
+        _dbContext.Update(card);
         await _dbContext.SaveChangesAsync();
 
         return Ok();

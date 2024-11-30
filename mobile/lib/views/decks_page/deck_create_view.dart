@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/widgets/add_card_dialog.dart';
+import 'package:mobile/widgets/card_list_item.dart';
+import 'package:mobile/widgets/edit_card_dialog.dart';
 
 class DeckCreateView extends StatefulWidget {
   const DeckCreateView({super.key});
@@ -10,10 +13,7 @@ class DeckCreateView extends StatefulWidget {
 }
 
 class _DeckCreateViewState extends State<DeckCreateView> {
-  final _cardFormKey = GlobalKey<FormState>();
   final _deckNameController = TextEditingController();
-  final _questionController = TextEditingController();
-  final _answerController = TextEditingController();
   final List<CardCreateRequest> _cards = [];
 
   @override
@@ -40,7 +40,7 @@ class _DeckCreateViewState extends State<DeckCreateView> {
                   height: 40,
                 ),
                 Column(
-                  children: generateCardListItems(),
+                  children: cardListItems(),
                 ),
                 const SizedBox(
                   height: 40,
@@ -67,44 +67,14 @@ class _DeckCreateViewState extends State<DeckCreateView> {
     );
   }
 
-  List<Widget> generateCardListItems() {
+  List<Widget> cardListItems() {
     List<Widget> cards = [];
 
     for (var i = 0; i < _cards.length; i++) {
-      cards.add(Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 160, 190, 243),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: GestureDetector(
-          onTap: () {
-            showEditCardDialog(context, i);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Text(
-                    _cards[i].question,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _cards.removeAt(i);
-                    });
-                  },
-                  child: const Icon(Icons.delete)),
-            ],
-          ),
-        ),
+      cards.add(CardListItem(
+        question: _cards[i].question,
+        onEdit: () => showEditCardDialog(context, i),
+        onDelete: () => setState(() => _cards.removeAt(i)),
       ));
     }
 
@@ -112,233 +82,30 @@ class _DeckCreateViewState extends State<DeckCreateView> {
   }
 
   void showAddCardDialog(BuildContext context) {
-    setState(() {
-      _questionController.text = "";
-      _answerController.text = "";
-    });
-
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => SimpleDialog(
-              insetPadding: EdgeInsets.all(10),
-              title: const Center(child: Text("Add Card")),
-              children: [
-                Form(
-                  key: _cardFormKey,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 20, right: 20),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _questionController,
-                          minLines: 3,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            label: Text(
-                              "Question",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                          ),
-                          keyboardType: TextInputType.multiline,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          controller: _answerController,
-                          minLines: 3,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            label: Text(
-                              "Answer",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  _cardFormKey.currentState!.reset();
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Cancel")),
-                            ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _cards.add(
-                                      CardCreateRequest(
-                                          question: _questionController.text,
-                                          answer: _answerController.text),
-                                    );
-                                  });
-
-                                  _cardFormKey.currentState!.reset();
-
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Add")),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+        builder: (context) => AddCardDialog(
+              onAdd: (CardCreateRequest cardCreateRequest) {
+                setState(() => _cards.add(cardCreateRequest));
+                Navigator.pop(context);
+              },
+              onCancel: () => Navigator.pop(context),
             ));
   }
 
   void showEditCardDialog(BuildContext context, int cardIndex) {
-    setState(() {
-      _questionController.text = _cards[cardIndex].question;
-      _answerController.text = _cards[cardIndex].answer;
-    });
     showDialog(
-        context: context,
         barrierDismissible: false,
-        builder: (context) => SimpleDialog(
-              insetPadding: EdgeInsets.all(10),
-              title: const Center(child: Text("Edit Card")),
-              children: [
-                Form(
-                  key: _cardFormKey,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 20, right: 20),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _questionController,
-                          minLines: 3,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            label: Text(
-                              "Question",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                          ),
-                          keyboardType: TextInputType.multiline,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          controller: _answerController,
-                          minLines: 3,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            label: Text(
-                              "Answer",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                )),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  _cardFormKey.currentState!.reset();
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Cancel")),
-                            ElevatedButton(
-                                onPressed: () {
-                                  setState(() {});
-                                  _cards[cardIndex].question =
-                                      _questionController.text;
-                                  _cards[cardIndex].answer =
-                                      _answerController.text;
-
-                                  _cardFormKey.currentState!.reset();
-
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Edit")),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ));
+        context: context,
+        builder: (context) => EditCardDialog(
+            cardCreateRequest: _cards[cardIndex],
+            onCancel: () => Navigator.pop(context),
+            onEdit: (CardCreateRequest cardCreateRequest) {
+              setState(() {
+                _cards[cardIndex] = cardCreateRequest;
+                Navigator.pop(context);
+              });
+            }));
   }
 }

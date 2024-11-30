@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
@@ -96,7 +95,7 @@ class _DecksViewState extends State<DecksView> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DeckCreateView())).then(
+                          builder: (context) => const DeckCreateView())).then(
                     (value) => setState(() {
                       futureDecks = DeckService().getDecks();
                     }),

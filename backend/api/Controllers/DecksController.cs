@@ -120,7 +120,7 @@ public class DecksController : ControllerBase
     }
 
     [HttpPost("{deckId}/cards")]
-    public async Task<IActionResult> AddCard(int deckId, CardCreateRequest cardCreateRequest) 
+    public async Task<ActionResult<Card>> AddCard(int deckId, CardCreateRequest cardCreateRequest) 
     {
         Card card = new Card(cardCreateRequest);
         card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
@@ -128,7 +128,7 @@ public class DecksController : ControllerBase
         _dbContext.Add(card);
         await _dbContext.SaveChangesAsync();
 
-        return Ok();
+        return Ok(card);
     }
 
     [HttpPatch("{deckId}/cards/{cardId}")]
@@ -150,5 +150,23 @@ public class DecksController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpDelete("{deckId}/cards/{cardId}")]
+    public async Task<ActionResult<Card>> DeleteCard(int deckId, int cardId)
+    {
+        Card? card = await _dbContext.Cards
+            .Where(c => c.DeckId == deckId && c.Id == cardId)
+            .FirstOrDefaultAsync();
+
+        if (card == null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.Cards.Remove(card);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok(card);
     }
 }

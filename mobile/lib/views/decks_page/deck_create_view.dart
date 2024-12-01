@@ -100,7 +100,8 @@ class _DeckCreateViewState extends State<DeckCreateView> {
         barrierDismissible: false,
         context: context,
         builder: (context) => EditCardDialog(
-            cardDto: _cards[cardIndex],
+            question: _cards[cardIndex].question,
+            answer: _cards[cardIndex].answer,
             onCancel: () => Navigator.pop(context),
             onEdit: (CardDto cardDto) {
               setState(() {

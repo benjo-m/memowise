@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
+import 'package:mobile/models/card.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 
 import '../models/deck.dart';
@@ -78,5 +79,38 @@ class DeckService {
       },
       body: jsonEncode(cardDto),
     );
+  }
+
+  Future<Card> deleteCard(int deckId, int cardId) async {
+    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+
+    final response = await http.delete(
+      Uri.parse("$baseUrl/$deckId/cards/$cardId"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+
+    Card card = Card.fromJson(jsonDecode(response.body));
+
+    return card;
+  }
+
+  Future<Card> createCard(int deckId, CardDto cardDto) async {
+    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+
+    final response = await http.post(
+      Uri.parse("$baseUrl/$deckId/cards"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+      body: jsonEncode(cardDto),
+    );
+
+    Card card = Card.fromJson(jsonDecode(response.body));
+
+    return card;
   }
 }

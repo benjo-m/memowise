@@ -6,12 +6,14 @@ class EditCardDialog extends StatefulWidget {
     super.key,
     required this.onCancel,
     required this.onEdit,
-    required this.cardDto,
+    required this.question,
+    required this.answer,
   });
 
   final VoidCallback onCancel;
   final Function(CardDto) onEdit;
-  final CardDto cardDto;
+  final String question;
+  final String answer;
 
   @override
   State<EditCardDialog> createState() => _EditCardDialogState();
@@ -25,8 +27,8 @@ class _EditCardDialogState extends State<EditCardDialog> {
   @override
   void initState() {
     super.initState();
-    _questionController.text = widget.cardDto.question;
-    _answerController.text = widget.cardDto.answer;
+    _questionController.text = widget.question;
+    _answerController.text = widget.answer;
   }
 
   @override

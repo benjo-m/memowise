@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException, User;
+
 import 'package:http/http.dart' as http;
 import 'package:mobile/dtos/user_save_request.dart';
 import 'package:mobile/firebase_options.dart';
@@ -101,5 +101,9 @@ class FirebaseAuthProvider {
     } else {
       throw UserNotLoggedInAuthException();
     }
+  }
+
+  Stream<User?> authStateChanges() {
+    return FirebaseAuth.instance.authStateChanges();
   }
 }

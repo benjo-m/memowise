@@ -18,6 +18,7 @@ class DecksView extends StatefulWidget {
 
 class _DecksViewState extends State<DecksView> {
   late Future<List<DeckSummary>> _decksFuture;
+  final _searchBarController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +31,18 @@ class _DecksViewState extends State<DecksView> {
           padding: const EdgeInsets.all(35.0),
           child: ListView(
             children: [
-              const SearchBar(
-                leading: Padding(
+              SearchBar(
+                controller: _searchBarController,
+                leading: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Icon(Icons.search),
                 ),
                 hintText: "Search decks",
+                onChanged: (value) {
+                  setState(() {
+                    _decksFuture = DeckService().getDecks();
+                  });
+                },
               ),
               const SizedBox(
                 height: 40,
@@ -49,36 +56,12 @@ class _DecksViewState extends State<DecksView> {
                       future: _decksFuture,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          final decks = snapshot.data!;
+                          final decks = snapshot.data!.where((d) => d.name
+                              .toLowerCase()
+                              .startsWith(_searchBarController.text));
                           return Column(
                             children: [
-                              CarouselSlider(
-                                  items: decks
-                                      .map((deck) => GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          DeckDetailsView(
-                                                              deckId: deck
-                                                                  .id))).then(
-                                                (value) => setState(() {
-                                                  _decksFuture =
-                                                      DeckService().getDecks();
-                                                }),
-                                              );
-                                            },
-                                            child: DeckListItem(
-                                              deckSummary: deck,
-                                            ),
-                                          ))
-                                      .toList(),
-                                  options: CarouselOptions(
-                                    enableInfiniteScroll: true,
-                                    enlargeCenterPage: true,
-                                    height: 350,
-                                  )),
+                              showCarousel(decks, context),
                               Padding(
                                 padding: const EdgeInsets.only(top: 20.0),
                                 child: Text("${decks.length} decks"),
@@ -111,6 +94,35 @@ class _DecksViewState extends State<DecksView> {
               ),
             ],
           ),
+        ));
+  }
+
+  CarouselSlider showCarousel(
+      Iterable<DeckSummary> decks, BuildContext context) {
+    return CarouselSlider(
+        items: decks
+            .map((deck) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DeckDetailsView(deckId: deck.id))).then(
+                      (value) => setState(() {
+                        _decksFuture = DeckService().getDecks();
+                      }),
+                    );
+                  },
+                  child: DeckListItem(
+                    deckSummary: deck,
+                  ),
+                ))
+            .toList(),
+        options: CarouselOptions(
+          enableInfiniteScroll: false,
+          enlargeCenterPage: true,
+          height: 350,
+          padEnds: true,
         ));
   }
 }

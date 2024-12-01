@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_dto.dart';
-import 'package:mobile/dtos/deck_create_request.dart';
 
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/deck_service.dart';

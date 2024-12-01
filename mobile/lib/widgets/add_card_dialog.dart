@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_dto.dart';
-import 'package:mobile/dtos/deck_create_request.dart';
 
 class AddCardDialog extends StatefulWidget {
   const AddCardDialog({super.key, required this.onCancel, required this.onAdd});

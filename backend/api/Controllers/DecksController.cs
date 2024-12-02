@@ -5,6 +5,9 @@ using api.Models;
 using api.DTO;
 using Microsoft.AspNetCore.Authorization;
 using api.Services;
+using System.Text.Json.Nodes;
+using api.Groq;
+using Newtonsoft.Json;
 
 namespace api.Controllers;
 
@@ -15,11 +18,13 @@ public class DecksController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly UserService _userService;
+    private readonly IConfiguration _configuration;
 
-    public DecksController(ApplicationDbContext dbContext, UserService userService)
+    public DecksController(ApplicationDbContext dbContext, UserService userService, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _userService = userService;
+        _configuration = configuration;
     }
 
     [HttpGet("{id}")]
@@ -168,5 +173,30 @@ public class DecksController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return Ok(card);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("generate")]
+    public async Task<GenerateDeckResponse?> GenerateDeck(GenerateDeckRequest generateDeckRequest)
+    {
+        var groqApi = new GroqApiClient(_configuration["Groq:ApiKey"]!);
+
+        var request = new JsonObject
+        {
+            ["model"] = _configuration["Groq:Model"],
+            ["messages"] = new JsonArray
+            {
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] = string.Format(_configuration["Groq:Prompt"]!, generateDeckRequest.Topic, generateDeckRequest.CardCount)
+                }
+            }
+        };
+
+        var result = await groqApi.CreateChatCompletionAsync(request);
+        var response = result?["choices"]?[0]?["message"]?["content"]?.ToString();
+
+        return JsonConvert.DeserializeObject<GenerateDeckResponse>(response!);
     }
 }

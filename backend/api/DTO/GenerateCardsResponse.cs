@@ -1,7 +1,7 @@
 ﻿namespace api.DTO;
 
-public class DeckCreateRequest
+public class GenerateCardsResponse
 {
-    public string Name { get; set; }
     public List<CardDto> Cards { get; set; }
 }
+

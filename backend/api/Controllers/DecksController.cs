@@ -125,9 +125,9 @@ public class DecksController : ControllerBase
     }
 
     [HttpPost("{deckId}/cards")]
-    public async Task<ActionResult<Card>> AddCard(int deckId, CardCreateRequest cardCreateRequest) 
+    public async Task<ActionResult<Card>> AddCard(int deckId, CardDto cardDto) 
     {
-        Card card = new Card(cardCreateRequest);
+        Card card = new Card(cardDto);
         card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
 
         _dbContext.Add(card);
@@ -137,7 +137,7 @@ public class DecksController : ControllerBase
     }
 
     [HttpPatch("{deckId}/cards/{cardId}")]
-    public async Task<IActionResult> EditCard(int deckId, int cardId, CardUpdateRequest cardUpdateRequest)
+    public async Task<IActionResult> EditCard(int deckId, int cardId, CardDto cardDto)
     {
         Card? card = await _dbContext.Cards
             .Where(c => c.DeckId == deckId && c.Id == cardId)
@@ -148,8 +148,8 @@ public class DecksController : ControllerBase
             return NotFound();
         }
 
-        card.Question = cardUpdateRequest.Question;
-        card.Answer = cardUpdateRequest.Answer;
+        card.Question = cardDto.Question;
+        card.Answer = cardDto.Answer;
 
         _dbContext.Update(card);
         await _dbContext.SaveChangesAsync();
@@ -177,7 +177,7 @@ public class DecksController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("generate")]
-    public async Task<GenerateDeckResponse?> GenerateDeck(GenerateDeckRequest generateDeckRequest)
+    public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
         var groqApi = new GroqApiClient(_configuration["Groq:ApiKey"]!);
 
@@ -189,14 +189,15 @@ public class DecksController : ControllerBase
                 new JsonObject
                 {
                     ["role"] = "user",
-                    ["content"] = string.Format(_configuration["Groq:Prompt"]!, generateDeckRequest.Topic, generateDeckRequest.CardCount)
+                    ["content"] = string.Format(_configuration["Groq:Prompt"]!, generateCardsRequest.CardCount, generateCardsRequest.Topic)
                 }
             }
         };
 
         var result = await groqApi.CreateChatCompletionAsync(request);
         var response = result?["choices"]?[0]?["message"]?["content"]?.ToString();
+        var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
 
-        return JsonConvert.DeserializeObject<GenerateDeckResponse>(response!);
+        return generatedCards;
     }
 }

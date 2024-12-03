@@ -22,10 +22,10 @@ public class Card
 
     public Card() {}
     
-    public Card(CardCreateRequest cardCreateRequest)
+    public Card(CardDto cardDto)
     {
-        Question = cardCreateRequest.Question;
-        Answer = cardCreateRequest.Answer;
+        Question = cardDto.Question;
+        Answer = cardDto.Answer;
         Status = CardStatus.New;
     }
 }

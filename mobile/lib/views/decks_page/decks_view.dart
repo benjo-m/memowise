@@ -8,6 +8,7 @@ import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks_page/deck_create_view.dart';
 import 'package:mobile/views/decks_page/deck_details_view.dart';
+import 'package:mobile/views/decks_page/generate_deck_view.dart';
 
 class DecksView extends StatefulWidget {
   const DecksView({super.key});
@@ -84,13 +85,13 @@ class _DecksViewState extends State<DecksView> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DeckCreateView())).then(
+                          builder: (context) => const GenerateDeckView())).then(
                     (value) => setState(() {
                       _decksFuture = DeckService().getDecks();
                     }),
                   );
                 },
-                child: const Text("Create Deck"),
+                child: const Text("New Deck"),
               ),
             ],
           ),

@@ -58,7 +58,7 @@ public class DecksController : ControllerBase
         _dbContext.Decks.Add(deck);
         await _dbContext.SaveChangesAsync();
 
-        return Created();
+        return deck;
     }
 
     [HttpPatch("{id}")]

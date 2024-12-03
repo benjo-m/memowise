@@ -32,15 +32,19 @@ class DeckService {
     return jsonList.map((json) => DeckSummary.fromJson(json)).toList();
   }
 
-  Future<void> createDeck(DeckCreateRequest deckCreateRequest) async {
+  Future<Deck> createDeck(DeckCreateRequest deckCreateRequest) async {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
-    await http.post(Uri.parse(baseUrl),
+    final response = await http.post(Uri.parse(baseUrl),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         },
         body: jsonEncode(deckCreateRequest));
+
+    Deck deck = Deck.fromJson(jsonDecode(response.body));
+
+    return deck;
   }
 
   Future<void> deleteDeck(int deckId) async {

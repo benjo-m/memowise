@@ -9,6 +9,7 @@ import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks_page/deck_create_view.dart';
 import 'package:mobile/views/decks_page/deck_details_view.dart';
 import 'package:mobile/views/decks_page/generate_deck_view.dart';
+import 'package:mobile/widgets/deck_list_item.dart';
 
 class DecksView extends StatefulWidget {
   const DecksView({super.key});
@@ -82,20 +83,57 @@ class _DecksViewState extends State<DecksView> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GenerateDeckView())).then(
-                    (value) => setState(() {
-                      _decksFuture = DeckService().getDecks();
-                    }),
-                  );
+                  showNewDeckDialog(context);
                 },
                 child: const Text("New Deck"),
               ),
             ],
           ),
         ));
+  }
+
+  Future<dynamic> showNewDeckDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              title: const Center(child: Text("New Deck")),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DeckCreateView())).then(
+                              (value) => setState(() {
+                                _decksFuture = DeckService().getDecks();
+                              }),
+                            );
+                          },
+                          child: const Text("Create deck")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const GenerateDeckView())).then(
+                              (value) => setState(() {
+                                _decksFuture = DeckService().getDecks();
+                              }),
+                            );
+                          },
+                          child: const Text("Generate deck")),
+                    ],
+                  ),
+                )
+              ],
+            ));
   }
 
   CarouselSlider showCarousel(
@@ -125,72 +163,5 @@ class _DecksViewState extends State<DecksView> {
           height: 350,
           padEnds: true,
         ));
-  }
-}
-
-class DeckListItem extends StatelessWidget {
-  const DeckListItem({
-    super.key,
-    required this.deckSummary,
-  });
-
-  final DeckSummary deckSummary;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: Container(
-        width: 270,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 160, 190, 243),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  deckSummary.name,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "New: ${deckSummary.newCards}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "Learning: ${deckSummary.learningCards}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "Learned: ${deckSummary.learnedCards}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    log("Start study session for deck ${deckSummary.name}");
-                  },
-                  child: const Text("Study Deck"),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

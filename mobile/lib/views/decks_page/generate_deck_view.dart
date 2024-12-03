@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/views/decks_page/deck_details_view.dart';
 
 class GenerateDeckView extends StatefulWidget {
   const GenerateDeckView({super.key});
@@ -71,8 +73,16 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                       cardCount: int.parse(_cardCountController.text)),
                 );
 
-                for (var card in response.cards) {
-                  log("${card.question} - ${card.answer}\n");
+                final createDeckResponse = await DeckService().createDeck(
+                    DeckCreateRequest(
+                        name: _deckNameController.text, cards: response.cards));
+
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DeckDetailsView(deckId: createDeckResponse.id)));
                 }
               },
               child: const Text("Generate Deck"),

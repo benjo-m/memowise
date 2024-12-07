@@ -175,7 +175,6 @@ public class DecksController : ControllerBase
         return Ok(card);
     }
 
-    [AllowAnonymous]
     [HttpPost("generate")]
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {

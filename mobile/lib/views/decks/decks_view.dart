@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/services/deck_service.dart';
-import 'package:mobile/views/decks_page/deck_create_view.dart';
-import 'package:mobile/views/decks_page/deck_details_view.dart';
-import 'package:mobile/views/decks_page/generate_deck_view.dart';
+import 'package:mobile/views/decks/deck_create_view.dart';
+import 'package:mobile/views/decks/deck_details_view.dart';
+import 'package:mobile/views/decks/generate_deck_view.dart';
 import 'package:mobile/widgets/deck_list_item.dart';
 
 class DecksView extends StatefulWidget {

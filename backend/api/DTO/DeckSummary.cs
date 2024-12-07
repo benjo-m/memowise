@@ -8,6 +8,8 @@ public class DeckSummary
     public string Name { get; set; }
     public int NewCards { get; set; }
     public int LearningCards { get; set; }
+    public int ReviewingCards { get; set; }
+
     public int LearnedCards { get; set; }
 
     public DeckSummary() { }
@@ -21,6 +23,9 @@ public class DeckSummary
             .Count();
         LearningCards = deck.Cards
             .Where(c => c.Status == CardStatus.Learning)
+            .Count();
+        LearningCards = deck.Cards
+            .Where(c => c.Status == CardStatus.Rewieving)
             .Count();
         LearnedCards = deck.Cards
             .Where(c => c.Status == CardStatus.Learned)

@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
+import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/views/study_session/study_session_view.dart';
 
 class DeckListItem extends StatelessWidget {
   const DeckListItem({
@@ -47,6 +49,10 @@ class DeckListItem extends StatelessWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     Text(
+                      "Reviewing: ${deckSummary.learnedCards}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    Text(
                       "Learned: ${deckSummary.learnedCards}",
                       style: const TextStyle(fontSize: 16),
                     ),
@@ -55,8 +61,16 @@ class DeckListItem extends StatelessWidget {
               ),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    log("Start study session for deck ${deckSummary.name}");
+                  onPressed: () async {
+                    final deck =
+                        await DeckService().getDeckById(deckSummary.id);
+                    if (context.mounted) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  StudySessionView(deck: deck)));
+                    }
                   },
                   child: const Text("Study Deck"),
                 ),

@@ -7,6 +7,7 @@ public enum CardStatus
 {
     New,
     Learning,
+    Rewieving,
     Learned
 }
 
@@ -15,7 +16,11 @@ public class Card
     public int Id { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
-    public CardStatus Status { get; set; }
+    public CardStatus Status { get; set; } = CardStatus.New;
+    public int Repetitions { get; set; } = 0;
+    public int Interval { get; set; } = 0;
+    public float EaseFactor { get; set; } = 2.5f;
+    public DateTime DueDate { get; set; } = DateTime.Now;
     public int DeckId { get; set; }
     [JsonIgnore]
     public Deck Deck { get; set; }

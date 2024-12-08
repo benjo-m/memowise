@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_dto.dart';
 
 import 'package:mobile/models/deck.dart';
+import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/widgets/add_card_dialog.dart';
 import 'package:mobile/widgets/card_list_item.dart';
@@ -53,7 +54,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                       builder: (context) => AddCardDialog(
                         onAdd: (CardDto cardDto) async {
                           final createdCard =
-                              await DeckService().createCard(deck.id, cardDto);
+                              await CardService().createCard(deck.id, cardDto);
                           setState(() => deck.cards.add(createdCard));
                           if (context.mounted) {
                             Navigator.pop(context);
@@ -98,7 +99,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                 question: card.question,
                 answer: card.answer,
                 onEdit: (CardDto cardDto) async {
-                  await DeckService().editCard(deck.id, card.id, cardDto);
+                  await CardService().editCard(deck.id, card.id, cardDto);
                   final cardToEdit = deck.cards[i];
                   cardToEdit.question = cardDto.question;
                   cardToEdit.answer = cardDto.answer;
@@ -114,8 +115,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             );
           },
           onDelete: () async {
-            final deletedCard =
-                await DeckService().deleteCard(deck.id, card.id);
+            final deletedCard = await CardService().deleteCard(card.id);
             setState(
                 () => deck.cards.removeWhere((c) => c.id == deletedCard.id));
           },

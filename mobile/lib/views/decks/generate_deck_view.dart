@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
+import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/deck_details_view.dart';
 
@@ -67,7 +66,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final response = await DeckService().generateCards(
+                final response = await CardService().generateCards(
                   GenerateCardsRequest(
                       topic: _topicController.text,
                       cardCount: int.parse(_cardCountController.text)),

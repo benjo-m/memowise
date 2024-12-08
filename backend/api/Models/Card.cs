@@ -23,4 +23,11 @@ public class Card
         Question = cardDto.Question;
         Answer = cardDto.Answer;
     }
+
+    public void UpdateLearningStats(CardLearningStatsUpdateRequest request)
+    {
+        Repetitions = request.Repetitions;
+        Interval = request.Interval;
+        EaseFactor = request.EaseFactor;
+    }
 }

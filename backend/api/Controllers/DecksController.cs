@@ -12,27 +12,25 @@ using Newtonsoft.Json;
 namespace api.Controllers;
 
 [Authorize]
-[Route("[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class DecksController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly UserService _userService;
-    private readonly IConfiguration _configuration;
 
-    public DecksController(ApplicationDbContext dbContext, UserService userService, IConfiguration configuration)
+    public DecksController(ApplicationDbContext dbContext, UserService userService)
     {
         _dbContext = dbContext;
         _userService = userService;
-        _configuration = configuration;
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Deck>> GetDeckById(int id)
+    [HttpGet("{deckId}")]
+    public async Task<ActionResult<Deck>> GetDeckById(int deckId)
     {
         var deck = await _dbContext.Decks
             .Include(d => d.Cards)
-            .FirstOrDefaultAsync(d => d.Id == id);
+            .FirstOrDefaultAsync(d => d.Id == deckId);
 
         if (deck == null)
         {
@@ -61,10 +59,10 @@ public class DecksController : ControllerBase
         return deck;
     }
 
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateDeck(int id, DeckUpdateRequest deckUpdateRequest)
+    [HttpPatch("{deckId}")]
+    public async Task<IActionResult> UpdateDeck(int deckId, DeckUpdateRequest deckUpdateRequest)
     {
-        Deck? deck = await _dbContext.Decks.FindAsync(id);
+        Deck? deck = await _dbContext.Decks.FindAsync(deckId);
 
         if (deck == null)
         {
@@ -108,92 +106,5 @@ public class DecksController : ControllerBase
             .Include(x => x.Cards)
             .Select(deck => new DeckSummary(deck))
             .ToListAsync();
-    }
-
-    [HttpGet("{deckId}/cards")]
-    public async Task<ActionResult<List<Card>>> GetCardsByDeck(int deckId)
-    {
-        var cards = await _dbContext.Decks
-            .Where(x => x.Id == deckId)
-            .SelectMany(x => x.Cards)
-            .ToListAsync();
-
-        return Ok(cards);
-    }
-
-    [HttpPost("{deckId}/cards")]
-    public async Task<ActionResult<Card>> AddCard(int deckId, CardDto cardDto) 
-    {
-        Card card = new Card(cardDto);
-        card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
-
-        _dbContext.Add(card);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok(card);
-    }
-
-    [HttpPatch("{deckId}/cards/{cardId}")]
-    public async Task<IActionResult> EditCard(int deckId, int cardId, CardDto cardDto)
-    {
-        Card? card = await _dbContext.Cards
-            .Where(c => c.DeckId == deckId && c.Id == cardId)
-            .FirstOrDefaultAsync();
-
-        if (card == null)
-        {
-            return NotFound();
-        }
-
-        card.Question = cardDto.Question;
-        card.Answer = cardDto.Answer;
-
-        _dbContext.Update(card);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok();
-    }
-
-    [HttpDelete("{deckId}/cards/{cardId}")]
-    public async Task<ActionResult<Card>> DeleteCard(int deckId, int cardId)
-    {
-        Card? card = await _dbContext.Cards
-            .Where(c => c.DeckId == deckId && c.Id == cardId)
-            .FirstOrDefaultAsync();
-
-        if (card == null)
-        {
-            return NotFound();
-        }
-
-        _dbContext.Cards.Remove(card);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok(card);
-    }
-
-    [HttpPost("generate")]
-    public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
-    {
-        var groqApi = new GroqApiClient(_configuration["Groq:ApiKey"]!);
-
-        var request = new JsonObject
-        {
-            ["model"] = _configuration["Groq:Model"],
-            ["messages"] = new JsonArray
-            {
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] = string.Format(_configuration["Groq:Prompt"]!, generateCardsRequest.CardCount, generateCardsRequest.Topic)
-                }
-            }
-        };
-
-        var result = await groqApi.CreateChatCompletionAsync(request);
-        var response = result?["choices"]?[0]?["message"]?["content"]?.ToString();
-        var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
-
-        return generatedCards;
     }
 }

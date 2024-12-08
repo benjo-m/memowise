@@ -8,8 +8,6 @@ public class DeckSummary
     public string Name { get; set; }
     public int NewCards { get; set; }
     public int LearningCards { get; set; }
-    public int ReviewingCards { get; set; }
-
     public int LearnedCards { get; set; }
 
     public DeckSummary() { }
@@ -19,16 +17,15 @@ public class DeckSummary
         Id = deck.Id;
         Name = deck.Name;
         NewCards = deck.Cards
-            .Where(c => c.Status == CardStatus.New)
+            .Where(card => card.Interval == 0)
             .Count();
         LearningCards = deck.Cards
-            .Where(c => c.Status == CardStatus.Learning)
-            .Count();
-        LearningCards = deck.Cards
-            .Where(c => c.Status == CardStatus.Rewieving)
+            .Where(card => card.Interval > 0 
+                && DateTime.Compare(card.DueDate, DateTime.Now) < 0)
             .Count();
         LearnedCards = deck.Cards
-            .Where(c => c.Status == CardStatus.Learned)
+            .Where(card => card.Interval > 0
+                && DateTime.Compare(card.DueDate, DateTime.Now) > 0)
             .Count();
     }
 }

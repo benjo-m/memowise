@@ -103,14 +103,11 @@ public class DecksController : ControllerBase
     [HttpGet("user/{firebaseUid}")]
     public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
     {
-        var decks = await _dbContext.Decks
+        return await _dbContext.Decks
             .Where(x => x.User.FirebaseUid == firebaseUid)
             .Include(x => x.Cards)
+            .Select(deck => new DeckSummary(deck))
             .ToListAsync();
-
-        var deckSummaries = decks.Select(deck => new DeckSummary(deck)).ToList();
-
-        return deckSummaries;
     }
 
     [HttpGet("{deckId}/cards")]

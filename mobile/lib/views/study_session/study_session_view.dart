@@ -49,25 +49,37 @@ class _StudySessionViewState extends State<StudySessionView> {
                     onPressed: () {
                       selectAnswer(0);
                     },
-                    child: const Text("Don't know"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      selectAnswer(0);
-                    },
-                    child: const Text("Hard"),
+                    child: const Text("0"),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       selectAnswer(1);
                     },
-                    child: const Text("Medium"),
+                    child: const Text("1"),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       selectAnswer(2);
                     },
-                    child: const Text("Easy"),
+                    child: const Text("2"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      selectAnswer(3);
+                    },
+                    child: const Text("3"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      selectAnswer(4);
+                    },
+                    child: const Text("4"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      selectAnswer(5);
+                    },
+                    child: const Text("5"),
                   ),
                 ],
               ),
@@ -75,18 +87,36 @@ class _StudySessionViewState extends State<StudySessionView> {
     );
   }
 
-  void selectAnswer(int days) {
+  void selectAnswer(int q) {
+    var card = cards[currentCard];
+
+    // correct answer
+    if (q >= 3) {
+      if (card.repetitions == 0) {
+        card.interval = 1;
+      } else if (card.repetitions == 1) {
+        card.interval = 6;
+      } else {
+        card.interval = (card.interval * card.easeFactor).round();
+      }
+      // incorrect answer
+    } else {
+      card.repetitions = 0;
+      card.interval = 1;
+    }
+
+    var newEf = card.easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+    card.easeFactor = double.parse(newEf.toStringAsFixed(2));
+
     if (currentCard == cards.length - 1) {
-      setState(() {
-        currentCard = 0;
-        showAnswer = false;
-      });
-      // Navigator.pushReplacement(context,
-      //     MaterialPageRoute(builder: (context) => StudySessionResultsView()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => StudySessionResultsView(
+                    cards: cards,
+                  )));
     } else {
       setState(() {
-        cards[currentCard].dueDate =
-            cards[currentCard].dueDate.add(Duration(days: days));
         currentCard++;
         showAnswer = false;
       });

@@ -49,10 +49,6 @@ class DeckListItem extends StatelessWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     Text(
-                      "Reviewing: ${deckSummary.learnedCards}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Text(
                       "Learned: ${deckSummary.learnedCards}",
                       style: const TextStyle(fontSize: 16),
                     ),

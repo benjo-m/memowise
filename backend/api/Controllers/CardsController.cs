@@ -110,24 +110,27 @@ public class CardsController : ControllerBase
         return generatedCards;
     }
 
-    [HttpPatch("{deckId}/cards-learning-stats/{cardId}")]
-    public async Task<IActionResult> UpdateCardLearningStats(CardLearningStatsUpdateRequest cardLearningStatsUpdateRequest)
+    [HttpPatch]
+    public async Task<IActionResult> UpdateCardLearningStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
     {
-        Card? card = await _dbContext.Cards
-            .Where(c => c.Id == cardLearningStatsUpdateRequest.Id)
-            .FirstOrDefaultAsync();
-
-        if (card == null)
+        foreach (var cardStats in cardStatsUpdateRequests)
         {
-            return NotFound();
+            Card? card = await _dbContext.Cards
+                .Where(c => c.Id == cardStats.CardId)
+                .FirstOrDefaultAsync();
+
+            if (card == null)
+            {
+                return NotFound();
+            }
+
+            card.UpdateLearningStats(cardStats);
+
+            _dbContext.Update(card);
+        await _dbContext.SaveChangesAsync();
         }
 
-        card.UpdateLearningStats(cardLearningStatsUpdateRequest);
-
-        _dbContext.Update(card);
-        await _dbContext.SaveChangesAsync();
 
         return Ok();
     }
-
 }

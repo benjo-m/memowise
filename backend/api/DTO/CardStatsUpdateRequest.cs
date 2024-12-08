@@ -2,17 +2,18 @@
 
 namespace api.DTO;
 
-public class CardLearningStatsUpdateRequest
+public class CardStatsUpdateRequest
 {
-    public int Id { get; set; }
-
+    public int CardId { get; set; }
     public float EaseFactor { get; set; } 
     public int Interval { get; set; }
     public int Repetitions { get; set; }
 
-    public CardLearningStatsUpdateRequest(int id, float easeFactor, int interval, int repetitions)
+    public CardStatsUpdateRequest() {}
+
+    public CardStatsUpdateRequest(int id, float easeFactor, int interval, int repetitions)
     {
-        Id = id;
+        CardId = id;
         EaseFactor = easeFactor;
         Interval = interval;
         Repetitions = repetitions;

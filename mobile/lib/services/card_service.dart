@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:mobile/dtos/card_dto.dart';
+import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
 import 'package:mobile/dtos/generate_cards_response.dart';
 import 'package:mobile/models/card.dart';
@@ -75,5 +76,19 @@ class CardService {
         GenerateCardsResponse.fromJson(jsonDecode(response.body));
 
     return generatedCards;
+  }
+
+  Future<void> updateCardStats(
+      List<CardStatsUpdateRequest> cardStatsUpdateRequest) async {
+    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+
+    http.patch(
+      Uri.parse(baseUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+      body: jsonEncode(cardStatsUpdateRequest),
+    );
   }
 }

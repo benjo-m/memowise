@@ -24,10 +24,11 @@ public class Card
         Answer = cardDto.Answer;
     }
 
-    public void UpdateLearningStats(CardLearningStatsUpdateRequest request)
+    public void UpdateLearningStats(CardStatsUpdateRequest request)
     {
         Repetitions = request.Repetitions;
         Interval = request.Interval;
         EaseFactor = request.EaseFactor;
+        DueDate = DueDate.AddDays(request.Interval);
     }
 }

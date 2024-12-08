@@ -25,6 +25,16 @@ public class DecksController : ControllerBase
         _userService = userService;
     }
 
+    [HttpGet("user/{firebaseUid}")]
+    public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
+    {
+        return await _dbContext.Decks
+            .Where(x => x.User.FirebaseUid == firebaseUid)
+            .Include(x => x.Cards)
+            .Select(deck => new DeckSummary(deck))
+            .ToListAsync();
+    }
+
     [HttpGet("{deckId}")]
     public async Task<ActionResult<Deck>> GetDeckById(int deckId)
     {
@@ -96,15 +106,5 @@ public class DecksController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    [HttpGet("user/{firebaseUid}")]
-    public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
-    {
-        return await _dbContext.Decks
-            .Where(x => x.User.FirebaseUid == firebaseUid)
-            .Include(x => x.Cards)
-            .Select(deck => new DeckSummary(deck))
-            .ToListAsync();
     }
 }

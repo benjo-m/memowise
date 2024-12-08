@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/services/sm2.dart';
 import 'package:mobile/views/study_session/study_session_results_view.dart';
 
 class StudySessionView extends StatefulWidget {
@@ -18,7 +20,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   late List<models.Card> cards = widget.deck.cards
       .where((card) => card.dueDate.isBefore(DateTime.now()))
       .toList();
-
+  List<CardStatsUpdateRequest> cardStatsList = List.empty(growable: true);
   int currentCard = 0;
   bool showAnswer = false;
 
@@ -88,33 +90,17 @@ class _StudySessionViewState extends State<StudySessionView> {
   }
 
   void selectAnswer(int q) {
-    var card = cards[currentCard];
-
-    // correct answer
-    if (q >= 3) {
-      if (card.repetitions == 0) {
-        card.interval = 1;
-      } else if (card.repetitions == 1) {
-        card.interval = 6;
-      } else {
-        card.interval = (card.interval * card.easeFactor).round();
-      }
-      // incorrect answer
-    } else {
-      card.repetitions = 0;
-      card.interval = 1;
-    }
-
-    var newEf = card.easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
-    card.easeFactor = double.parse(newEf.toStringAsFixed(2));
+    var cardStatsUpdateRequest = SM2().sm2(q, cards[currentCard]);
+    cardStatsList.add(cardStatsUpdateRequest);
 
     if (currentCard == cards.length - 1) {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => StudySessionResultsView(
-                    cards: cards,
-                  )));
+            builder: (context) => StudySessionResultsView(
+              cards: cardStatsList,
+            ),
+          ));
     } else {
       setState(() {
         currentCard++;

@@ -18,7 +18,7 @@ class _StudySessionViewState extends State<StudySessionView> {
       .where((card) => card.dueDate.isBefore(DateTime.now()))
       .toList();
   List<CardStatsUpdateRequest> cardStatsList = List.empty(growable: true);
-  int currentCard = 0;
+  int currentCardIndex = 0;
   bool showAnswer = false;
 
   @override
@@ -33,9 +33,9 @@ class _StudySessionViewState extends State<StudySessionView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                    Text(cards[currentCard].question),
+                    Text(cards[currentCardIndex].question),
                     showAnswer
-                        ? Text(cards[currentCard].answer)
+                        ? Text(cards[currentCardIndex].answer)
                         : ElevatedButton(
                             onPressed: () {
                               setState(() => showAnswer = true);
@@ -93,20 +93,37 @@ class _StudySessionViewState extends State<StudySessionView> {
   }
 
   void selectAnswer(int q) {
-    var cardStatsUpdateRequest = SM2().sm2(q, cards[currentCard]);
-    cardStatsList.add(cardStatsUpdateRequest);
+    var card = cards[currentCardIndex];
+    var cardStatsUpdateRequest = SM2().sm2(q, card);
+    card.easeFactor = cardStatsUpdateRequest.easeFactor;
 
-    if (currentCard == cards.length - 1) {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StudySessionResultsView(
-              cards: cardStatsList,
-            ),
-          ));
+    if (q >= 4) {
+      setState(() {
+        cardStatsList.add(cardStatsUpdateRequest);
+        cards.remove(card);
+        showAnswer = false;
+        if (cards.isEmpty) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StudySessionResultsView(
+                  cards: cardStatsList,
+                ),
+              ));
+        } else if (currentCardIndex > cards.length - 1) {
+          setState(() {
+            currentCardIndex = 0;
+            showAnswer = false;
+          });
+        }
+      });
     } else {
       setState(() {
-        currentCard++;
+        if (currentCardIndex == cards.length - 1) {
+          currentCardIndex = 0;
+        } else {
+          currentCardIndex++;
+        }
         showAnswer = false;
       });
     }

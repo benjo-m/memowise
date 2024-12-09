@@ -23,7 +23,13 @@ class SM2 {
     }
 
     var newEf = card.easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
-    cardStatsUpdateRequest.easeFactor = double.parse(newEf.toStringAsFixed(2));
+
+    if (newEf < 1.3) {
+      cardStatsUpdateRequest.easeFactor = 1.3;
+    } else {
+      cardStatsUpdateRequest.easeFactor =
+          double.parse(newEf.toStringAsFixed(2));
+    }
 
     return cardStatsUpdateRequest;
   }

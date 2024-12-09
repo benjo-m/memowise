@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace api.DTO;
+﻿namespace api.DTO;
 
 public class CardStatsUpdateRequest
 {

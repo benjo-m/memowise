@@ -27,14 +27,17 @@ class SM2 {
 
     if (easeFactor < 1.3) {
       easeFactor = 1.3;
+    } else if (easeFactor > 2.7) {
+      easeFactor = 2.7;
     } else {
       easeFactor = double.parse(easeFactor.toStringAsFixed(2));
     }
 
     return CardStatsUpdateRequest(
-        cardId: card.id,
-        easeFactor: easeFactor,
-        interval: interval,
-        repetitions: repetitions);
+      cardId: card.id,
+      easeFactor: easeFactor,
+      interval: interval,
+      repetitions: repetitions,
+    );
   }
 }

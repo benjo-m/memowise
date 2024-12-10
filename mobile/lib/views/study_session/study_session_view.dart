@@ -95,7 +95,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   void selectAnswer(int q) {
     var card = cards[currentCardIndex];
     var cardStatsUpdateRequest = SM2().sm2(q, card);
-    card.cardStats.easeFactor = cardStatsUpdateRequest.easeFactor;
+    card.updateCardStats(cardStatsUpdateRequest);
 
     if (q >= 4) {
       setState(() {

@@ -1,3 +1,4 @@
+import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/card_stats.dart';
 
 class Card {
@@ -27,4 +28,10 @@ class Card {
         "answer": answer,
         "cardStats": cardStats,
       };
+
+  void updateCardStats(CardStatsUpdateRequest cardStatsUpdateRequest) {
+    cardStats.easeFactor = cardStatsUpdateRequest.easeFactor;
+    cardStats.repetitions = cardStatsUpdateRequest.repetitions;
+    cardStats.interval = cardStatsUpdateRequest.interval;
+  }
 }

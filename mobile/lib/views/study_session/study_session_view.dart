@@ -15,7 +15,7 @@ class StudySessionView extends StatefulWidget {
 
 class _StudySessionViewState extends State<StudySessionView> {
   late List<models.Card> cards = widget.deck.cards
-      .where((card) => card.dueDate.isBefore(DateTime.now()))
+      .where((card) => card.cardStats.dueDate.isBefore(DateTime.now()))
       .toList();
   List<CardStatsUpdateRequest> cardStatsList = List.empty(growable: true);
   int currentCardIndex = 0;
@@ -95,7 +95,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   void selectAnswer(int q) {
     var card = cards[currentCardIndex];
     var cardStatsUpdateRequest = SM2().sm2(q, card);
-    card.easeFactor = cardStatsUpdateRequest.easeFactor;
+    card.cardStats.easeFactor = cardStatsUpdateRequest.easeFactor;
 
     if (q >= 4) {
       setState(() {

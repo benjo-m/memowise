@@ -81,7 +81,7 @@ namespace api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Card");
+                name: "CardDto");
 
             migrationBuilder.DropTable(
                 name: "Decks");

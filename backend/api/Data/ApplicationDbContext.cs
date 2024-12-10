@@ -13,4 +13,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Deck> Decks { get; set; }
     public DbSet<Card> Cards { get; set; }
+    public DbSet<CardStats> CardStats { get; set; }
+
 }

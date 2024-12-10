@@ -25,7 +25,7 @@ namespace api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("api.Models.Card", b =>
+            modelBuilder.Entity("api.Models.CardDto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +106,7 @@ namespace api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("api.Models.Card", b =>
+            modelBuilder.Entity("api.Models.CardDto", b =>
                 {
                     b.HasOne("api.Models.Deck", "Deck")
                         .WithMany("Cards")

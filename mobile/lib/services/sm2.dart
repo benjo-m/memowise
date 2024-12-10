@@ -3,34 +3,38 @@ import 'package:mobile/models/card.dart';
 
 class SM2 {
   CardStatsUpdateRequest sm2(int q, Card card) {
-    var cardStatsUpdateRequest = CardStatsUpdateRequest.fromCard(card);
+    num easeFactor = card.cardStats.easeFactor;
+    int interval = card.cardStats.interval;
+    int repetitions = card.cardStats.repetitions;
 
     // correct answer
     if (q >= 3) {
-      if (card.repetitions == 0) {
-        cardStatsUpdateRequest.interval = 1;
-      } else if (card.repetitions == 1) {
-        cardStatsUpdateRequest.interval = 6;
+      if (repetitions == 0) {
+        interval = 1;
+      } else if (repetitions == 1) {
+        interval = 6;
       } else {
-        cardStatsUpdateRequest.interval =
-            (card.interval * card.easeFactor).round();
+        interval = (interval * easeFactor).round();
       }
-      cardStatsUpdateRequest.repetitions++;
+      repetitions++;
       // incorrect answer
     } else {
-      cardStatsUpdateRequest.repetitions = 0;
-      cardStatsUpdateRequest.interval = 1;
+      repetitions = 0;
+      interval = 1;
     }
 
-    var newEf = card.easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+    easeFactor = easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
 
-    if (newEf < 1.3) {
-      cardStatsUpdateRequest.easeFactor = 1.3;
+    if (easeFactor < 1.3) {
+      easeFactor = 1.3;
     } else {
-      cardStatsUpdateRequest.easeFactor =
-          double.parse(newEf.toStringAsFixed(2));
+      easeFactor = double.parse(easeFactor.toStringAsFixed(2));
     }
 
-    return cardStatsUpdateRequest;
+    return CardStatsUpdateRequest(
+        cardId: card.id,
+        easeFactor: easeFactor,
+        interval: interval,
+        repetitions: repetitions);
   }
 }

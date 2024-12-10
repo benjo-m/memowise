@@ -5,9 +5,6 @@ using api.Models;
 using api.DTO;
 using Microsoft.AspNetCore.Authorization;
 using api.Services;
-using System.Text.Json.Nodes;
-using api.Groq;
-using Newtonsoft.Json;
 
 namespace api.Controllers;
 
@@ -31,6 +28,7 @@ public class DecksController : ControllerBase
         return await _dbContext.Decks
             .Where(x => x.User.FirebaseUid == firebaseUid)
             .Include(x => x.Cards)
+            .ThenInclude(c => c.CardStats)
             .Select(deck => new DeckSummary(deck))
             .ToListAsync();
     }
@@ -40,6 +38,7 @@ public class DecksController : ControllerBase
     {
         var deck = await _dbContext.Decks
             .Include(d => d.Cards)
+            .ThenInclude(c => c.CardStats)
             .FirstOrDefaultAsync(d => d.Id == deckId);
 
         if (deck == null)

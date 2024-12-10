@@ -3,5 +3,5 @@
 public class DeckCreateRequest
 {
     public string Name { get; set; }
-    public List<CardDto> Cards { get; set; }
+    public List<CardCreateRequest> Cards { get; set; }
 }

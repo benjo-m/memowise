@@ -8,27 +8,24 @@ public class Card
     public int Id { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
-    public int Repetitions { get; set; } = 0;
-    public int Interval { get; set; } = 0;
-    public float EaseFactor { get; set; } = 2.5f;
-    public DateTime DueDate { get; set; } = DateTime.Now;
+    public CardStats CardStats { get; set; } = new CardStats();
     public int DeckId { get; set; }
     [JsonIgnore]
     public Deck Deck { get; set; }
 
     public Card() {}
     
-    public Card(CardDto cardDto)
+    public Card(CardCreateRequest cardCreateRequest)
     {
-        Question = cardDto.Question;
-        Answer = cardDto.Answer;
+        Question = cardCreateRequest.Question;
+        Answer = cardCreateRequest.Answer;
     }
 
     public void UpdateLearningStats(CardStatsUpdateRequest request)
     {
-        Repetitions = request.Repetitions;
-        Interval = request.Interval;
-        EaseFactor = request.EaseFactor;
-        DueDate = DueDate.AddDays(request.Interval);
+        CardStats.Repetitions = request.Repetitions;
+        CardStats.Interval = request.Interval;
+        CardStats.EaseFactor = request.EaseFactor;
+        CardStats.DueDate = CardStats.DueDate.AddDays(request.Interval);
     }
 }

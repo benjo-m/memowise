@@ -66,7 +66,6 @@ class DeckService {
     );
 
     Deck deck = Deck.fromJson(jsonDecode(response.body));
-
     return deck;
   }
 }

@@ -1,5 +1,3 @@
-import 'package:mobile/models/card.dart';
-
 class CardStatsUpdateRequest {
   int cardId;
   num easeFactor;
@@ -12,12 +10,6 @@ class CardStatsUpdateRequest {
     required this.interval,
     required this.repetitions,
   });
-
-  CardStatsUpdateRequest.fromCard(Card card)
-      : cardId = card.id,
-        easeFactor = card.easeFactor,
-        interval = card.interval,
-        repetitions = card.repetitions;
 
   Map<String, dynamic> toJson() {
     return {

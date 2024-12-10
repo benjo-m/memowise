@@ -34,10 +34,10 @@ public class CardsController : ControllerBase
         return Ok(cards);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Card>> AddCard(int deckId, CardDto cardDto)
+    [HttpPost("{deckId}")]
+    public async Task<ActionResult<Card>> AddCard(int deckId, CardCreateRequest cardCreateRequest)
     {
-        Card card = new Card(cardDto);
+        Card card = new Card(cardCreateRequest);
         card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
 
         _dbContext.Add(card);
@@ -47,7 +47,7 @@ public class CardsController : ControllerBase
     }
 
     [HttpPatch("{cardId}")]
-    public async Task<IActionResult> EditCard(int cardId, CardDto cardDto)
+    public async Task<IActionResult> EditCard(int cardId, CardEditRequest cardEditRequest)
     {
         Card? card = await _dbContext.Cards
             .Where(c => c.Id == cardId)
@@ -58,8 +58,8 @@ public class CardsController : ControllerBase
             return NotFound();
         }
 
-        card.Question = cardDto.Question;
-        card.Answer = cardDto.Answer;
+        card.Question = cardEditRequest.Question;
+        card.Answer = cardEditRequest.Answer;
 
         _dbContext.Update(card);
         await _dbContext.SaveChangesAsync();
@@ -111,12 +111,13 @@ public class CardsController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<IActionResult> UpdateCardLearningStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
+    public async Task<IActionResult> UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
     {
         foreach (var cardStats in cardStatsUpdateRequests)
         {
             Card? card = await _dbContext.Cards
                 .Where(c => c.Id == cardStats.CardId)
+                .Include(c => c.CardStats)
                 .FirstOrDefaultAsync();
 
             if (card == null)
@@ -127,7 +128,7 @@ public class CardsController : ControllerBase
             card.UpdateLearningStats(cardStats);
 
             _dbContext.Update(card);
-        await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
 

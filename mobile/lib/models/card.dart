@@ -1,38 +1,30 @@
+import 'package:mobile/models/card_stats.dart';
+
 class Card {
   int id;
   String question;
   String answer;
-  int repetitions;
-  int interval;
-  num easeFactor;
-  DateTime dueDate;
+  CardStats cardStats;
 
   Card({
     required this.id,
     required this.question,
     required this.answer,
-    required this.repetitions,
-    required this.interval,
-    required this.easeFactor,
-    required this.dueDate,
+    required this.cardStats,
   });
 
   factory Card.fromJson(Map<String, dynamic> json) => Card(
-      id: json["id"],
-      question: json["question"],
-      answer: json["answer"],
-      repetitions: json['repetitions'],
-      interval: json['interval'],
-      easeFactor: json['easeFactor'],
-      dueDate: DateTime.parse(json['dueDate']));
+        id: json["id"],
+        question: json["question"],
+        answer: json["answer"],
+        cardStats:
+            CardStats.fromJson(json["cardStats"]), // Correctly parse cardStats
+      );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "question": question,
         "answer": answer,
-        "repetitions": repetitions,
-        "interval": interval,
-        "easeFactor": easeFactor,
-        "dueDate": dueDate
+        "cardStats": cardStats,
       };
 }

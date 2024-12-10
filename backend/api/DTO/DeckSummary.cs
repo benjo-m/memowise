@@ -17,15 +17,15 @@ public class DeckSummary
         Id = deck.Id;
         Name = deck.Name;
         NewCards = deck.Cards
-            .Where(card => card.Interval == 0)
+            .Where(card => card.CardStats.Interval == 0)
             .Count();
         LearningCards = deck.Cards
-            .Where(card => card.Interval > 0 
-                && DateTime.Compare(card.DueDate, DateTime.Now) < 0)
+            .Where(card => card.CardStats.Interval > 0 
+                && DateTime.Compare(card.CardStats.DueDate, DateTime.Now) < 0)
             .Count();
         LearnedCards = deck.Cards
-            .Where(card => card.Interval > 0
-                && DateTime.Compare(card.DueDate, DateTime.Now) > 0)
+            .Where(card => card.CardStats.Interval > 0
+                && DateTime.Compare(card.CardStats.DueDate, DateTime.Now) > 0)
             .Count();
     }
 }

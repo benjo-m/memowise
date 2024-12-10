@@ -1,6 +1,6 @@
 ﻿namespace api.DTO;
 
-public class CardDto
+public class CardCreateRequest
 {
     public string Question { get; set; }
     public string Answer { get; set; }

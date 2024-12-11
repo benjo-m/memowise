@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/dtos/card_stats_update_request.dart';
-import 'package:mobile/models/card.dart' as models;
-import 'package:mobile/services/card_service.dart';
+import 'package:mobile/models/study_session.dart';
 
 class StudySessionResultsView extends StatefulWidget {
   const StudySessionResultsView({
     super.key,
-    required this.cards,
+    required this.studySession,
   });
 
-  final List<CardStatsUpdateRequest> cards;
+  final StudySession studySession;
 
   @override
   State<StudySessionResultsView> createState() =>
@@ -18,12 +16,6 @@ class StudySessionResultsView extends StatefulWidget {
 
 class _StudySessionResultsViewState extends State<StudySessionResultsView> {
   @override
-  void initState() {
-    super.initState();
-    CardService().updateCardStats(widget.cards);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -31,9 +23,10 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
         centerTitle: true,
       ),
       body: Column(
-        children: widget.cards
-            .map((card) => Text("${card.easeFactor} | ${card.interval}"))
-            .toList(),
+        children: [
+          Text(
+              "Study session duration: ${widget.studySession.duration.toString()} seconds"),
+        ],
       ),
     );
   }

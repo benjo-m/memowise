@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
+import 'package:mobile/models/study_session.dart';
+import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/sm2.dart';
+import 'package:mobile/services/study_session_service.dart';
 import 'package:mobile/views/study_session/study_session_results_view.dart';
 
 class StudySessionView extends StatefulWidget {
@@ -20,6 +24,13 @@ class _StudySessionViewState extends State<StudySessionView> {
   List<CardStatsUpdateRequest> cardStatsList = List.empty(growable: true);
   int currentCardIndex = 0;
   bool showAnswer = false;
+  final stopwatch = Stopwatch();
+
+  @override
+  void initState() {
+    super.initState();
+    stopwatch.start();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,13 +114,7 @@ class _StudySessionViewState extends State<StudySessionView> {
         cards.remove(card);
         showAnswer = false;
         if (cards.isEmpty) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StudySessionResultsView(
-                  cards: cardStatsList,
-                ),
-              ));
+          finishStudySession();
         } else if (currentCardIndex > cards.length - 1) {
           setState(() {
             currentCardIndex = 0;
@@ -127,5 +132,34 @@ class _StudySessionViewState extends State<StudySessionView> {
         showAnswer = false;
       });
     }
+  }
+
+  void finishStudySession() async {
+    stopwatch.stop();
+    final studySession = StudySession(
+      firebaseUserUid: FirebaseAuthProvider().currentUser!.uid,
+      duration: stopwatch.elapsed.inSeconds,
+      cardCount: cardStatsList.length,
+      averageEaseFactor: double.parse((cardStatsList.fold(
+                  0.0, (sum, cardStats) => sum + cardStats.easeFactor) /
+              cardStatsList.length)
+          .toStringAsFixed(2)),
+      averageRepetitions: double.parse((cardStatsList.fold(
+                  0.0, (sum, cardStats) => sum + cardStats.repetitions) /
+              cardStatsList.length)
+          .toStringAsFixed(2)),
+      studiedAt: DateTime.now(),
+    );
+
+    await StudySessionService().saveSession(studySession);
+    await CardService().updateCardStats(cardStatsList);
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StudySessionResultsView(
+            studySession: studySession,
+          ),
+        ));
   }
 }

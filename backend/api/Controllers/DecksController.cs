@@ -15,22 +15,35 @@ public class DecksController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly UserService _userService;
+    private readonly StudySessionService _studySessionService;
 
-    public DecksController(ApplicationDbContext dbContext, UserService userService)
+    public DecksController(ApplicationDbContext dbContext, UserService userService, StudySessionService studySessionService)
     {
         _dbContext = dbContext;
         _userService = userService;
+        _studySessionService = studySessionService;
     }
 
     [HttpGet("user/{firebaseUid}")]
     public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
     {
-        return await _dbContext.Decks
+        var decks = await _dbContext.Decks
             .Where(x => x.User.FirebaseUid == firebaseUid)
             .Include(x => x.Cards)
             .ThenInclude(c => c.CardStats)
-            .Select(deck => new DeckSummary(deck))
             .ToListAsync();
+
+        var deckSummaries = new List<DeckSummary>();
+
+        foreach (var deck in decks)
+        {
+            var deckSummary = new DeckSummary(deck);
+            var duration = await _studySessionService.PredictStudySessionDuration(deck);
+            deckSummary.TimeToComplete = (int)duration.Duration;
+            deckSummaries.Add(deckSummary); 
+        }
+
+        return deckSummaries;
     }
 
     [HttpGet("{deckId}")]
@@ -52,7 +65,7 @@ public class DecksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Deck>> CreateDeck(DeckCreateRequest deckCreateRequest)
     {
-        User? user = await _userService.GetCurrentUser(Request.Headers.Authorization);
+        User? user = await _userService.GetCurrentUser();
 
         if (user == null)
         {
@@ -90,15 +103,10 @@ public class DecksController : ControllerBase
     public async Task<IActionResult> DeleteDeck(int deckId)
     {
         Deck? deck = await _dbContext.Decks.FindAsync(deckId);
-        User? user = await _userService.GetCurrentUser(Request.Headers.Authorization);
 
         if (deck == null)
         {
             return NotFound();
-        }
-        else if (user == null || user.Id != deck.UserId)
-        {
-            return Forbid();
         }
 
         _dbContext.Decks.Remove(deck);

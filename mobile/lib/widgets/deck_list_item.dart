@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/deck_service.dart';
@@ -52,6 +51,19 @@ class DeckListItem extends StatelessWidget {
                       "Learned: ${deckSummary.learnedCards}",
                       style: const TextStyle(fontSize: 16),
                     ),
+                    if (deckSummary.newCards == 0 &&
+                        deckSummary.learningCards == 0)
+                      const Text(
+                        "No cards to study right now",
+                      )
+                    else if (deckSummary.timeToComplete < 60)
+                      const Text(
+                        "Time to complete: < 1 minute",
+                      )
+                    else
+                      Text(
+                        "Time to complete: ${(deckSummary.timeToComplete / 60).ceil()} minutes",
+                      ),
                   ],
                 ),
               ),

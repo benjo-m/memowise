@@ -9,6 +9,7 @@ public class DeckSummary
     public int NewCards { get; set; }
     public int LearningCards { get; set; }
     public int LearnedCards { get; set; }
+    public int TimeToComplete { get; set; }
 
     public DeckSummary() { }
 

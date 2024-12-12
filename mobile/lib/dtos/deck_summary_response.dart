@@ -4,6 +4,7 @@ class DeckSummary {
   int newCards;
   int learningCards;
   int learnedCards;
+  int timeToComplete;
 
   DeckSummary({
     required this.id,
@@ -11,6 +12,7 @@ class DeckSummary {
     required this.newCards,
     required this.learningCards,
     required this.learnedCards,
+    required this.timeToComplete,
   });
 
   factory DeckSummary.fromJson(Map<String, dynamic> json) => DeckSummary(
@@ -19,6 +21,7 @@ class DeckSummary {
         newCards: json["newCards"],
         learningCards: json["learningCards"],
         learnedCards: json["learnedCards"],
+        timeToComplete: json["timeToComplete"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -27,5 +30,6 @@ class DeckSummary {
         "newCards": newCards,
         "learningCards": learningCards,
         "learnedCards": learnedCards,
+        "timeToComplete": timeToComplete,
       };
 }

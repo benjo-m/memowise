@@ -1,8 +1,6 @@
 using api.DTO;
 using api.Models;
 using api.Services;
-using FirebaseAdmin.Auth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -11,16 +9,16 @@ namespace api.Controllers;
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly UserService _firebaseService;
+    private readonly UserService _userService;
 
-    public UsersController(UserService firebaseService)
+    public UsersController(UserService userService)
     {
-        _firebaseService = firebaseService;
+        _userService = userService;
     }
 
     [HttpPost("save")]
     public async Task<User> SaveUser(UserSaveRequest userRegisterRequest)
     {
-        return await _firebaseService.SaveUser(userRegisterRequest);
+        return await _userService.SaveUser(userRegisterRequest);
     }
 }

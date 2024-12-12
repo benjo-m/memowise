@@ -9,10 +9,12 @@ namespace api.Services;
 public class UserService
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(ApplicationDbContext dbContext)
+    public UserService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<User> SaveUser(UserSaveRequest userRegisterRequest)
@@ -23,11 +25,9 @@ public class UserService
         return user;
     }
 
-    public async Task<User?> GetCurrentUser(string? authorizationHeader)
+    public async Task<User?> GetCurrentUser()
     {
-        if (authorizationHeader == null) return null;
-
-        string token = authorizationHeader
+        string token = _httpContextAccessor.HttpContext!.Request.Headers.Authorization
             .ToString()
             .Substring("Bearer ".Length);
 
@@ -36,6 +36,9 @@ public class UserService
 
         string uid = decodedToken.Uid;
 
-        return await _dbContext.Users.FirstOrDefaultAsync(x => x.FirebaseUid == uid);
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(x => x.FirebaseUid == uid);
+
+        return user;
     }
 }

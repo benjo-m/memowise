@@ -23,10 +23,4 @@ public class StudySessionsController : ControllerBase
     {
         await _studySessionService.SaveSession(studySessionCreateRequest);
     }
-
-    [HttpPost("predict")]
-    public StudySessionDurationPrediction PredictStudySessionDuration(StudySessionDurationInput studySessionDurationInput)
-    {
-        return _studySessionService.PredictStudySessionDuration(studySessionDurationInput);
-    }
 }

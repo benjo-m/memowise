@@ -2,7 +2,7 @@
 
 namespace api.ML;
 
-public class StudySessionDurationService
+public class RegressionModel
 {
     public ITransformer Train()
     {
@@ -11,7 +11,7 @@ public class StudySessionDurationService
 
         MLContext mlContext = new MLContext();
 
-        IDataView dataView = mlContext.Data.LoadFromTextFile<StudySessionDataView>(dataPath, hasHeader: true, separatorChar: ',');
+        IDataView dataView = mlContext.Data.LoadFromTextFile<StudySessionData>(dataPath, hasHeader: true, separatorChar: ',');
 
         var pipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: "Duration")
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "FirebaseUserUidEncoded", inputColumnName: "FirebaseUserUid"))
@@ -27,10 +27,9 @@ public class StudySessionDurationService
         return model;
     }
 
-    public StudySessionDurationPrediction TestSinglePrediction(MLContext mlContext, ITransformer model, StudySessionDurationInput studySession)
+    public StudySessionDurationPrediction Predict(MLContext mlContext, ITransformer model, StudySessionData studySession)
     {
-        var predictionFunction = mlContext.Model.CreatePredictionEngine<StudySessionDurationInput, StudySessionDurationPrediction>(model);
-
+        var predictionFunction = mlContext.Model.CreatePredictionEngine<StudySessionData, StudySessionDurationPrediction>(model);
         return predictionFunction.Predict(studySession);
     }
 }

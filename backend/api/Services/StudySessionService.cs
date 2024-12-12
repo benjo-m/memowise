@@ -9,13 +9,13 @@ namespace api.Services;
 public class StudySessionService
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly StudySessionDurationService _studySessionDurationService;
+    private readonly RegressionModel _regressionModel;
     private readonly UserService _userService;
 
-    public StudySessionService(ApplicationDbContext dbContext, StudySessionDurationService studySessionDurationService, UserService userService)
+    public StudySessionService(ApplicationDbContext dbContext, RegressionModel regressionModel, UserService userService)
     {
         _dbContext = dbContext;
-        _studySessionDurationService = studySessionDurationService;
+        _regressionModel = regressionModel;
         _userService = userService;
     }
 
@@ -33,7 +33,7 @@ public class StudySessionService
         DataViewSchema modelSchema;
         ITransformer model;
         string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ML", "model.zip");
-        StudySessionDurationInput studySessionDurationInput = await StudySessionDurationInputFromDeck(deck);
+        StudySessionData studySessionData = await StudySessionDataFromDeck(deck);
 
         if (File.Exists(modelPath))
         {
@@ -41,13 +41,13 @@ public class StudySessionService
         }
         else
         {
-            model = _studySessionDurationService.Train();
+            model = _regressionModel.Train();
         }
 
-        return _studySessionDurationService.TestSinglePrediction(mlContext, model, studySessionDurationInput);
+        return _regressionModel.Predict(mlContext, model, studySessionData);
     }
 
-    private async Task<StudySessionDurationInput> StudySessionDurationInputFromDeck(Deck deck)
+    private async Task<StudySessionData> StudySessionDataFromDeck(Deck deck)
     {
         User? user = await _userService.GetCurrentUser();
 
@@ -66,7 +66,7 @@ public class StudySessionService
             }
         }
 
-        var studySessionDurationInput = new StudySessionDurationInput()
+        var studySessionData = new StudySessionData()
         {
             FirebaseUserUid = user!.FirebaseUid,
             CardCount = cardCount,
@@ -75,6 +75,6 @@ public class StudySessionService
             AverageRepetitions = sumReps / cardCount,
             StudiedAt = DateTime.Now,
         };
-        return studySessionDurationInput;
+        return studySessionData;
     }
 }

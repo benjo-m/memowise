@@ -40,7 +40,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<StudySessionDurationService>();
+builder.Services.AddScoped<RegressionModel>();
 builder.Services.AddScoped<StudySessionService>();
 
 var app = builder.Build();

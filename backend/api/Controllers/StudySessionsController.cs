@@ -1,7 +1,8 @@
 ﻿using api.Data;
 using api.DTO;
+using api.ML;
 using api.Models;
-using Microsoft.AspNetCore.Http;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -10,19 +11,22 @@ namespace api.Controllers;
 [ApiController]
 public class StudySessionsController : ControllerBase
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly StudySessionService _studySessionService;
 
-    public StudySessionsController(ApplicationDbContext dbContext)
+    public StudySessionsController(StudySessionService studySessionService)
     {
-        _dbContext = dbContext;
+        _studySessionService = studySessionService;
     }
 
     [HttpPost]
     public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
     {
-        var studySession = new StudySession(studySessionCreateRequest);
+        await _studySessionService.SaveSession(studySessionCreateRequest);
+    }
 
-        _dbContext.StudySessions.Add(studySession);
-        await _dbContext.SaveChangesAsync();    
+    [HttpPost("predict")]
+    public StudySessionDurationPrediction PredictStudySessionDuration(StudySessionDurationInput studySessionDurationInput)
+    {
+        return _studySessionService.PredictStudySessionDuration(studySessionDurationInput);
     }
 }

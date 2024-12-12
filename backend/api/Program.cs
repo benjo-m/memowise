@@ -1,4 +1,5 @@
 using api.Data;
+using api.ML;
 using api.Services;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -38,6 +39,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MemoWiseDb")));
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<StudySessionDurationService>();
+builder.Services.AddScoped<StudySessionService>();
 
 var app = builder.Build();
 

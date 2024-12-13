@@ -2,9 +2,11 @@
 using api.DTO;
 using api.Groq;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Text.Json.Nodes;
 
@@ -98,16 +100,25 @@ public class CardsController : ControllerBase
                 new JsonObject
                 {
                     ["role"] = "user",
-                    ["content"] = string.Format(_configuration["Groq:Prompt"]!, generateCardsRequest.CardCount, generateCardsRequest.Topic)
+                    ["content"] = _configuration["Groq:Prompt"]!
+                        .Replace("{input_phrase}", generateCardsRequest.Topic)
+                        .Replace("{num_cards}", generateCardsRequest.CardCount.ToString())
                 }
             }
         };
 
         var result = await groqApi.CreateChatCompletionAsync(request);
         var response = result?["choices"]?[0]?["message"]?["content"]?.ToString();
-        var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
 
-        return generatedCards;
+        try
+        {
+            var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
+            return generatedCards;
+        }
+        catch (Exception e)
+        {
+            return new GenerateCardsResponse { Cards = new List<CardCreateRequest>() };
+        }
     }
 
     [HttpPatch]

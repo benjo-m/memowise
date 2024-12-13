@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:mobile/models/study_session.dart';
@@ -13,17 +12,13 @@ class StudySessionService {
   Future<void> saveSession(StudySession studySession) async {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
-    var b = jsonEncode(studySession);
-
     await http.post(
       Uri.parse(baseUrl),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
-      body: b,
+      body: jsonEncode(studySession),
     );
-
-    log(b);
   }
 }

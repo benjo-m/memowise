@@ -23,4 +23,10 @@ public class StudySessionsController : ControllerBase
     {
         await _studySessionService.SaveSession(studySessionCreateRequest);
     }
+
+    [HttpGet("generate-500")]
+    public void GenerarateStudySessions()
+    {
+        _studySessionService.GenerateMockStudySessions();
+    }
 }

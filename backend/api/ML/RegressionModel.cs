@@ -1,9 +1,18 @@
-﻿using Microsoft.ML;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.ML;
+using Microsoft.ML.Data;
 
 namespace api.ML;
 
 public class RegressionModel
 {
+    private readonly IConfiguration _configuration;
+
+    public RegressionModel(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public ITransformer Train()
     {
         string dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ML", "training-data.csv");
@@ -11,19 +20,27 @@ public class RegressionModel
 
         MLContext mlContext = new MLContext();
 
-        IDataView dataView = mlContext.Data.LoadFromTextFile<StudySessionData>(dataPath, hasHeader: true, separatorChar: ',');
+        string sqlCommand = @"
+            SELECT
+                FirebaseUserUid, 
+                CAST(CardCount AS REAL) AS CardCount,
+                CAST(Duration AS REAL) AS Duration,
+                AverageEaseFactor, 
+                AverageRepetitions
+            FROM StudySessions";
+
+        DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<StudySessionData>();
+        DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, _configuration.GetConnectionString("MemoWiseDb") , sqlCommand);
+        IDataView data = loader.Load(dbSource);
 
         var pipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: "Duration")
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "FirebaseUserUidEncoded", inputColumnName: "FirebaseUserUid"))
-            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "StudiedAtEncoded", inputColumnName: "StudiedAt"))
-            .Append(mlContext.Transforms.Concatenate("Features", "FirebaseUserUidEncoded", "CardCount", "AverageEaseFactor", "AverageRepetitions", "StudiedAtEncoded"))
+            .Append(mlContext.Transforms.Concatenate("Features", "FirebaseUserUidEncoded", "CardCount", "AverageEaseFactor", "AverageRepetitions"))
             .Append(mlContext.Transforms.NormalizeMinMax("Features"))
             .Append(mlContext.Regression.Trainers.FastTree());
 
-        var model = pipeline.Fit(dataView);
-
-        mlContext.Model.Save(model, dataView.Schema, modelPath);
-
+        var model = pipeline.Fit(data);
+        mlContext.Model.Save(model, data.Schema, modelPath);
         return model;
     }
 

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_dto.dart';
 
 class AddCardDialog extends StatefulWidget {
-  const AddCardDialog({super.key, required this.onCancel, required this.onAdd});
+  const AddCardDialog({
+    super.key,
+    required this.onCancel,
+    required this.onAdd,
+  });
 
   final VoidCallback onCancel;
   final Function(CardDto) onAdd;
@@ -30,8 +34,8 @@ class _AddCardDialogState extends State<AddCardDialog> {
               children: [
                 TextFormField(
                   controller: _questionController,
-                  minLines: 3,
-                  maxLines: 3,
+                  minLines: 5,
+                  maxLines: 5,
                   decoration: const InputDecoration(
                     label: Text(
                       "Question",
@@ -62,8 +66,8 @@ class _AddCardDialogState extends State<AddCardDialog> {
                 ),
                 TextFormField(
                   controller: _answerController,
-                  minLines: 3,
-                  maxLines: 3,
+                  minLines: 5,
+                  maxLines: 5,
                   decoration: const InputDecoration(
                     label: Text(
                       "Answer",

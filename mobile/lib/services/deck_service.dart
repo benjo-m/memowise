@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
@@ -9,15 +10,12 @@ import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import '../models/deck.dart';
 
 class DeckService {
-  // final String baseUrl = 'http://10.0.2.2:5151/api/decks';
-  final String baseUrl = 'http://localhost:5151/api/decks';
-
   Future<List<DeckSummary>> getDecks() async {
     String? uid = FirebaseAuthProvider().currentUser?.uid;
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/user/$uid'),
+      Uri.parse('$baseUrl/decks/user/$uid'),
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
@@ -31,7 +29,7 @@ class DeckService {
   Future<Deck> createDeck(DeckCreateRequest deckCreateRequest) async {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
-    final response = await http.post(Uri.parse(baseUrl),
+    final response = await http.post(Uri.parse("$baseUrl/decks"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -47,7 +45,7 @@ class DeckService {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     await http.delete(
-      Uri.parse('$baseUrl/$deckId'),
+      Uri.parse('$baseUrl/decks/$deckId'),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -59,7 +57,7 @@ class DeckService {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/$deckId'),
+      Uri.parse('$baseUrl/decks/$deckId'),
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },

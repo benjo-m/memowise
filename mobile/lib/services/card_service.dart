@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
@@ -10,14 +11,11 @@ import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:http/http.dart' as http;
 
 class CardService {
-  // final String baseUrl = 'http://10.0.2.2:5151/api/cards';
-  final String baseUrl = 'http://localhost:5151/api/cards';
-
   Future<void> editCard(int deckId, int cardId, CardDto cardDto) async {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     http.patch(
-      Uri.parse("$baseUrl/$cardId"),
+      Uri.parse("$baseUrl/cards/$cardId"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -30,7 +28,7 @@ class CardService {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     final response = await http.delete(
-      Uri.parse("$baseUrl/$cardId"),
+      Uri.parse("$baseUrl/cards/$cardId"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -46,7 +44,7 @@ class CardService {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     final response = await http.post(
-      Uri.parse("$baseUrl/$deckId"),
+      Uri.parse("$baseUrl/cards/$deckId"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -64,7 +62,7 @@ class CardService {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     final response = await http.post(
-      Uri.parse("$baseUrl/generate"),
+      Uri.parse("$baseUrl/cards/generate"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -83,7 +81,7 @@ class CardService {
     String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
 
     http.patch(
-      Uri.parse(baseUrl),
+      Uri.parse("$baseUrl/cards"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token',

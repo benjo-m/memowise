@@ -39,6 +39,7 @@ class _DecksViewState extends State<DecksView> {
                   child: Icon(Icons.search),
                 ),
                 hintText: "Search decks",
+                elevation: WidgetStateProperty.all(0),
                 onChanged: (value) {
                   setState(() {
                     _decksFuture = DeckService().getDecks();
@@ -157,10 +158,10 @@ class _DecksViewState extends State<DecksView> {
                 ))
             .toList(),
         options: CarouselOptions(
-          enableInfiniteScroll: false,
           enlargeCenterPage: true,
           height: 350,
           padEnds: true,
+          viewportFraction: 0.7,
         ));
   }
 }

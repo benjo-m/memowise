@@ -74,6 +74,7 @@ class _DeckCreateViewState extends State<DeckCreateView> {
     for (var i = 0; i < _cards.length; i++) {
       cards.add(CardListItem(
         question: _cards[i].question,
+        answer: _cards[i].answer,
         onEdit: () => showEditCardDialog(context, i),
         onDelete: () => setState(() => _cards.removeAt(i)),
       ));

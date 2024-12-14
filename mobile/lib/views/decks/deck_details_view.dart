@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_update_request.dart';
 
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/views/decks/decks_view.dart';
 import 'package:mobile/widgets/add_card_dialog.dart';
 import 'package:mobile/widgets/card_list_item.dart';
 import 'package:mobile/widgets/edit_card_dialog.dart';
@@ -86,84 +88,182 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 24,
+                              fontSize: 18,
                             ),
                             controller: _deckNameController,
+                            onEditingComplete: () => editDeckName(deck),
                             enabled: _editingDeckName,
                           ),
                         ),
                         const SizedBox(
                           width: 20,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _editingDeckName
-                              ? GestureDetector(
-                                  onTap: () async {
-                                    deck.name = _deckNameController.text;
-                                    await DeckService().updateDeck(
-                                        deck.id,
-                                        DeckUpdateRequest(
-                                            name: _deckNameController.text));
-                                    setState(() {
-                                      _editingDeckName = false;
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.done,
+                        !_editingDeckName
+                            ? TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _editingDeckName = true;
+                                  });
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    deckNameFocusNode.requestFocus();
+                                  });
+                                },
+                                style: const ButtonStyle(
+                                  fixedSize: WidgetStatePropertyAll(
+                                    Size(85, 45),
                                   ),
-                                )
-                              : GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _editingDeckName = true;
-                                    });
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      deckNameFocusNode.requestFocus();
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.edit,
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color(blue),
+                                  ),
+                                  foregroundColor:
+                                      WidgetStatePropertyAll(Colors.white),
+                                  side: WidgetStatePropertyAll(
+                                    BorderSide(
+                                      width: 2,
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                 ),
-                        ),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.edit,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Edit",
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : TextButton(
+                                onPressed: () async => await editDeckName(deck),
+                                style: const ButtonStyle(
+                                  fixedSize: WidgetStatePropertyAll(
+                                    Size(85, 45),
+                                  ),
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color.fromARGB(255, 95, 197, 98),
+                                  ),
+                                  foregroundColor:
+                                      WidgetStatePropertyAll(Colors.white),
+                                  side: WidgetStatePropertyAll(
+                                    BorderSide(
+                                      width: 2,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.done,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Done",
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ),
                       ],
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 30,
                     ),
                     Expanded(
                       child: ListView(
                         children: cardListItems(deck, context),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () => showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => AddCardDialog(
-                          onAdd: (CardDto cardDto) async {
-                            final createdCard = await CardService()
-                                .createCard(deck.id, cardDto);
-                            setState(() => deck.cards.add(createdCard));
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                          },
-                          onCancel: () => Navigator.pop(context),
-                        ),
-                      ),
-                      child: const Text("New Card"),
+                    const SizedBox(
+                      height: 30,
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await DeckService().deleteDeck(deck.id);
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: const Text("Delete Deck"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            await showDeletionConfirmationDialog(deck, context);
+                          },
+                          style: const ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                                Color.fromARGB(255, 243, 83, 71)),
+                            foregroundColor:
+                                WidgetStatePropertyAll(Colors.white),
+                            fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                            elevation: WidgetStatePropertyAll(0),
+                            side: WidgetStatePropertyAll(
+                              BorderSide(
+                                width: 2,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.delete),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text("Delete Deck"),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) => AddCardDialog(
+                              onAdd: (CardDto cardDto) async {
+                                final createdCard = await CardService()
+                                    .createCard(deck.id, cardDto);
+                                setState(() => deck.cards.add(createdCard));
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              onCancel: () => Navigator.pop(context),
+                            ),
+                          ),
+                          style: const ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(Color(blue)),
+                            foregroundColor:
+                                WidgetStatePropertyAll(Colors.white),
+                            fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                            elevation: WidgetStatePropertyAll(0),
+                            side: WidgetStatePropertyAll(
+                              BorderSide(
+                                width: 2,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_circle),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text("New Card"),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -175,21 +275,91 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     );
   }
 
+  Future<void> showDeletionConfirmationDialog(
+      Deck deck, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Are you sure you want to delete\n${deck.name}?",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: const Text("No"),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await DeckService().deleteDeck(deck.id);
+                              if (context.mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DecksView()),
+                                    (route) => false);
+                              }
+                            },
+                            child: const Text("Yes"),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ));
+  }
+
+  Future<void> editDeckName(Deck deck) async {
+    deck.name = _deckNameController.text;
+    await DeckService()
+        .updateDeck(deck.id, DeckUpdateRequest(name: _deckNameController.text));
+    setState(() {
+      _editingDeckName = false;
+    });
+  }
+
   List<CardListItem> cardListItems(Deck deck, BuildContext context) {
     List<CardListItem> cardListItems = [];
-
     for (int i = 0; i < deck.cards.length; i++) {
       var card = deck.cards[i];
       cardListItems.add(
         CardListItem(
           question: card.question,
+          answer: card.answer,
           onEdit: () {
             showDialog(
               barrierDismissible: false,
               context: context,
               builder: (context) => EditCardDialog(
-                question: card.question,
                 answer: card.answer,
+                question: card.question,
                 onEdit: (CardDto cardDto) async {
                   await CardService().editCard(deck.id, card.id, cardDto);
                   final cardToEdit = deck.cards[i];

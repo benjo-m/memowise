@@ -75,6 +75,7 @@ class _DecksViewState extends State<DecksView> {
                                   "${decks.length} decks",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                     color: Color.fromARGB(255, 36, 36, 36),
                                   ),
                                 ),
@@ -90,7 +91,7 @@ class _DecksViewState extends State<DecksView> {
                 },
               ),
               const SizedBox(
-                height: 40,
+                height: 80,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -117,7 +118,7 @@ class _DecksViewState extends State<DecksView> {
                           side: WidgetStatePropertyAll(
                             BorderSide(
                               width: 2,
-                              color: Color.fromARGB(253, 2, 141, 168),
+                              color: Colors.blue,
                             ),
                           ),
                         ),
@@ -202,9 +203,9 @@ class _DecksViewState extends State<DecksView> {
             .toList(),
         options: CarouselOptions(
           enlargeCenterPage: true,
-          height: 350,
+          height: 370,
           padEnds: true,
-          viewportFraction: 0.7,
+          viewportFraction: 0.75,
         ));
   }
 }

@@ -6,39 +6,62 @@ class CardListItem extends StatelessWidget {
     required this.question,
     required this.onEdit,
     required this.onDelete,
+    required this.answer,
   });
 
   final String question;
+  final String answer;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 160, 190, 243),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: GestureDetector(
-        onTap: () => onEdit(),
+    return GestureDetector(
+      onTap: () => onEdit(),
+      child: Container(
+        height: 80,
+        margin: const EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: const Color(0xffFEEFAD),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            width: 2.0,
+            color: const Color.fromARGB(255, 252, 221, 84),
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(right: 20.0),
-                child: Text(
-                  question,
-                  maxLines: 1,
+                child: RichText(
                   overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: "$question\n",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: answer),
+                    ],
+                  ),
                 ),
               ),
             ),
             GestureDetector(
               onTap: () => onDelete(),
-              child: const Icon(Icons.delete),
+              child: const Icon(
+                Icons.remove_circle,
+                color: Colors.red,
+                size: 28,
+              ),
             ),
           ],
         ),

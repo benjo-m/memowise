@@ -16,7 +16,6 @@ class DeckListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Container(
-        width: 250,
         decoration: BoxDecoration(
           color: const Color(0xffFEEFAD),
           borderRadius: BorderRadius.circular(10),

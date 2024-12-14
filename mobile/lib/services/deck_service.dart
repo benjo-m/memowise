@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
+import 'package:mobile/dtos/deck_update_request.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 
 import '../models/deck.dart';
@@ -51,6 +52,18 @@ class DeckService {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
+  }
+
+  Future<void> updateDeck(
+      int deckId, DeckUpdateRequest deckUpdateRequest) async {
+    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+
+    await http.patch(Uri.parse("$baseUrl/decks/$deckId"),
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
+        body: jsonEncode(deckUpdateRequest));
   }
 
   Future<Deck> getDeckById(int deckId) async {

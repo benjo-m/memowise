@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_dto.dart';
+import 'package:mobile/dtos/deck_update_request.dart';
 
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/card_service.dart';
@@ -22,11 +25,15 @@ class DeckDetailsView extends StatefulWidget {
 
 class _DeckDetailsViewState extends State<DeckDetailsView> {
   late Future<Deck> _deckFuture;
+  final _deckNameController = TextEditingController();
+  bool _editingDeckName = false;
+  late FocusNode deckNameFocusNode;
 
   @override
   void initState() {
     super.initState();
     _deckFuture = DeckService().getDeckById(widget.deckId);
+    deckNameFocusNode = FocusNode();
   }
 
   @override
@@ -41,40 +48,125 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Deck deck = snapshot.data!;
-              return Column(
-                children: [
-                  Text(deck.name),
-                  Column(
-                    children: cardListItems(deck, context),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context) => AddCardDialog(
-                        onAdd: (CardDto cardDto) async {
-                          final createdCard =
-                              await CardService().createCard(deck.id, cardDto);
-                          setState(() => deck.cards.add(createdCard));
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        onCancel: () => Navigator.pop(context),
+              _deckNameController.text = deck.name;
+              return Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            focusNode: deckNameFocusNode,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              border: InputBorder.none,
+                              fillColor:
+                                  const Color.fromARGB(255, 233, 233, 233),
+                              disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                            ),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                            controller: _deckNameController,
+                            enabled: _editingDeckName,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: _editingDeckName
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    deck.name = _deckNameController.text;
+                                    await DeckService().updateDeck(
+                                        deck.id,
+                                        DeckUpdateRequest(
+                                            name: _deckNameController.text));
+                                    setState(() {
+                                      _editingDeckName = false;
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.done,
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _editingDeckName = true;
+                                    });
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      deckNameFocusNode.requestFocus();
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.edit,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Expanded(
+                      child: ListView(
+                        children: cardListItems(deck, context),
                       ),
                     ),
-                    child: const Text("New Card"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await DeckService().deleteDeck(deck.id);
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: const Text("Delete Deck"),
-                  ),
-                ],
+                    ElevatedButton(
+                      onPressed: () => showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) => AddCardDialog(
+                          onAdd: (CardDto cardDto) async {
+                            final createdCard = await CardService()
+                                .createCard(deck.id, cardDto);
+                            setState(() => deck.cards.add(createdCard));
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
+                          onCancel: () => Navigator.pop(context),
+                        ),
+                      ),
+                      child: const Text("New Card"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await DeckService().deleteDeck(deck.id);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text("Delete Deck"),
+                    ),
+                  ],
+                ),
               );
             }
 

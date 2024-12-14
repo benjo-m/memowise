@@ -24,13 +24,14 @@ class _DecksViewState extends State<DecksView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Decks"),
-          centerTitle: true,
-        ),
-        body: Padding(
+      appBar: AppBar(
+        title: const Text("Decks"),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(35.0),
-          child: ListView(
+          child: Column(
             children: [
               SearchBar(
                 controller: _searchBarController,
@@ -40,6 +41,10 @@ class _DecksViewState extends State<DecksView> {
                 ),
                 hintText: "Search decks",
                 elevation: WidgetStateProperty.all(0),
+                constraints: const BoxConstraints(
+                  maxHeight: 50,
+                  minHeight: 50,
+                ),
                 onChanged: (value) {
                   setState(() {
                     _decksFuture = DeckService().getDecks();
@@ -169,7 +174,9 @@ class _DecksViewState extends State<DecksView> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   CarouselSlider showCarousel(

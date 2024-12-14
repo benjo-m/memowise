@@ -65,8 +65,14 @@ class _DecksViewState extends State<DecksView> {
                             children: [
                               showCarousel(decks, context),
                               Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
-                                child: Text("${decks.length} decks"),
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  "${decks.length} decks",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 36, 36, 36),
+                                  ),
+                                ),
                               ),
                             ],
                           );
@@ -81,59 +87,89 @@ class _DecksViewState extends State<DecksView> {
               const SizedBox(
                 height: 40,
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  showNewDeckDialog(context);
-                },
-                child: const Text("New Deck"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const DeckCreateView())).then(
+                            (value) => setState(() {
+                              _decksFuture = DeckService().getDecks();
+                            }),
+                          );
+                        },
+                        style: const ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(Color(0xff03AED2)),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                          side: WidgetStatePropertyAll(
+                            BorderSide(
+                              width: 2,
+                              color: Color.fromARGB(253, 2, 141, 168),
+                            ),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.style_rounded),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text("Create deck"),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const GenerateDeckView())).then(
+                        (value) => setState(() {
+                          _decksFuture = DeckService().getDecks();
+                        }),
+                      );
+                    },
+                    style: const ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(Color(0xff03AED2)),
+                      foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                      elevation: WidgetStatePropertyAll(0),
+                      side: WidgetStatePropertyAll(
+                        BorderSide(
+                          width: 2,
+                          color: Color.fromARGB(253, 2, 141, 168),
+                        ),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.auto_awesome_rounded),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text("Generate deck"),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ));
-  }
-
-  Future<dynamic> showNewDeckDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-              title: const Center(child: Text("New Deck")),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () async {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DeckCreateView())).then(
-                              (value) => setState(() {
-                                _decksFuture = DeckService().getDecks();
-                              }),
-                            );
-                          },
-                          child: const Text("Create deck")),
-                      ElevatedButton(
-                          onPressed: () async {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const GenerateDeckView())).then(
-                              (value) => setState(() {
-                                _decksFuture = DeckService().getDecks();
-                              }),
-                            );
-                          },
-                          child: const Text("Generate deck")),
-                    ],
-                  ),
-                )
-              ],
-            ));
   }
 
   CarouselSlider showCarousel(

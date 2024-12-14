@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/study_session/study_session_view.dart';
@@ -17,11 +18,13 @@ class DeckListItem extends StatelessWidget {
       child: Container(
         width: 250,
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 211, 211, 211),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 3.0,
-            )),
+          color: const Color(0xffFEEFAD),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            width: 2.0,
+            color: const Color.fromARGB(255, 252, 221, 84),
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
@@ -46,14 +49,16 @@ class DeckListItem extends StatelessWidget {
                       children: [
                         const Icon(
                           Icons.star_rounded,
-                          color: Colors.yellow,
+                          color: Colors.amber,
                         ),
                         const SizedBox(
                           width: 8,
                         ),
                         Text(
                           "New: ${deckSummary.newCards}",
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                     ),
@@ -156,9 +161,16 @@ class DeckListItem extends StatelessWidget {
                     child: TextButton(
                       style: const ButtonStyle(
                         foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        backgroundColor: WidgetStatePropertyAll(Colors.green),
+                        backgroundColor: WidgetStatePropertyAll(
+                            Color.fromARGB(255, 95, 197, 98)),
                         side: WidgetStatePropertyAll(
-                          BorderSide(width: 2),
+                          BorderSide(
+                            width: 2,
+                            color: Colors.green,
+                          ),
+                        ),
+                        fixedSize: WidgetStatePropertyAll(
+                          Size(120, 4),
                         ),
                       ),
                       onPressed: () async {
@@ -172,7 +184,12 @@ class DeckListItem extends StatelessWidget {
                                       StudySessionView(deck: deck)));
                         }
                       },
-                      child: const Text("Study Deck"),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.play_arrow_rounded),
+                          Text("Study Deck"),
+                        ],
+                      ),
                     ),
                   ),
                 ],

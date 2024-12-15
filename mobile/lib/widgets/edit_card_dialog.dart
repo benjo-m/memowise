@@ -115,8 +115,8 @@ class _EditCardDialogState extends State<EditCardDialog> {
                     ElevatedButton(
                       onPressed: () {
                         var cardDto = CardDto(
-                          question: _questionController.text,
-                          answer: _answerController.text,
+                          question: _questionController.text.trim(),
+                          answer: _answerController.text.trim(),
                         );
                         widget.onEdit(cardDto);
                       },

@@ -104,8 +104,8 @@ class _AddCardDialogState extends State<AddCardDialog> {
                     ElevatedButton(
                       onPressed: () {
                         var cardCreateRequest = CardDto(
-                            question: _questionController.text,
-                            answer: _answerController.text);
+                            question: _questionController.text.trim(),
+                            answer: _answerController.text.trim());
                         widget.onAdd(cardCreateRequest);
                       },
                       child: const Text("Add"),

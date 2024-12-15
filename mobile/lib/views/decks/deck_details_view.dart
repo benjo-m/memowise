@@ -87,7 +87,8 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                               fontSize: 18,
                             ),
                             controller: _deckNameController,
-                            onEditingComplete: () => editDeckName(deck),
+                            onEditingComplete: () async =>
+                                await editDeckName(deck),
                             enabled: _editingDeckName,
                           ),
                         ),
@@ -237,9 +238,12 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                             context: context,
                             builder: (context) => AddCardDialog(
                               onAdd: (CardDto cardDto) async {
-                                final createdCard = await CardService()
-                                    .createCard(deck.id, cardDto);
-                                setState(() => deck.cards.add(createdCard));
+                                if (cardDto.question.isNotEmpty ||
+                                    cardDto.answer.isNotEmpty) {
+                                  final createdCard = await CardService()
+                                      .createCard(deck.id, cardDto);
+                                  setState(() => deck.cards.add(createdCard));
+                                }
                                 if (context.mounted) {
                                   Navigator.pop(context);
                                 }
@@ -342,9 +346,14 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
   }
 
   Future<void> editDeckName(Deck deck) async {
-    deck.name = _deckNameController.text;
-    await DeckService()
-        .updateDeck(deck.id, DeckUpdateRequest(name: _deckNameController.text));
+    String deckName = _deckNameController.text.trim();
+    if (deckName.isEmpty || deckName.length > 100) {
+      _deckNameController.text = deck.name;
+    } else {
+      deck.name = _deckNameController.text;
+      await DeckService().updateDeck(
+          deck.id, DeckUpdateRequest(name: _deckNameController.text));
+    }
     setState(() {
       _editingDeckName = false;
     });
@@ -366,13 +375,16 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                 answer: card.answer,
                 question: card.question,
                 onEdit: (CardDto cardDto) async {
-                  await CardService().editCard(deck.id, card.id, cardDto);
-                  final cardToEdit = deck.cards[i];
-                  cardToEdit.question = cardDto.question;
-                  cardToEdit.answer = cardDto.answer;
-                  setState(() {
-                    deck.cards[i] = cardToEdit;
-                  });
+                  if (cardDto.question.isNotEmpty ||
+                      cardDto.answer.isNotEmpty) {
+                    await CardService().editCard(deck.id, card.id, cardDto);
+                    final cardToEdit = deck.cards[i];
+                    cardToEdit.question = cardDto.question;
+                    cardToEdit.answer = cardDto.answer;
+                    setState(() {
+                      deck.cards[i] = cardToEdit;
+                    });
+                  }
                   if (context.mounted) {
                     Navigator.pop(context);
                   }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
@@ -39,6 +37,8 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "Deck name is required";
+                  } else if (value.trim().length > 100) {
+                    return "Deck name must be 100 characters or fewer";
                   }
                   return null;
                 },
@@ -141,8 +141,8 @@ class _CreateDeckViewState extends State<CreateDeckView> {
 
   Future<void> createDeck(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await DeckService().createDeck(
-          DeckCreateRequest(name: _deckNameController.text, cards: _cards));
+      await DeckService().createDeck(DeckCreateRequest(
+          name: _deckNameController.text.trim(), cards: _cards));
       if (context.mounted) {
         Navigator.pop(context);
       }
@@ -170,7 +170,9 @@ class _CreateDeckViewState extends State<CreateDeckView> {
         barrierDismissible: false,
         builder: (context) => AddCardDialog(
               onAdd: (CardDto cardDto) {
-                setState(() => _cards.add(cardDto));
+                if (cardDto.question.isNotEmpty || cardDto.answer.isNotEmpty) {
+                  setState(() => _cards.add(cardDto));
+                }
                 Navigator.pop(context);
               },
               onCancel: () => Navigator.pop(context),

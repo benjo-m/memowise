@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/study_session/study_session_view.dart';
@@ -37,7 +36,7 @@ class DeckListItem extends StatelessWidget {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

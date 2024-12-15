@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
@@ -47,6 +45,8 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Deck name is required";
+                      } else if (value.trim().length > 100) {
+                        return "Deck name must be 100 characters or fewer";
                       }
                       return null;
                     },
@@ -73,6 +73,8 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Topic is required";
+                      } else if (value.trim().length > 100) {
+                        return "Topic must be 100 characters of fewer";
                       }
                       return null;
                     },
@@ -143,7 +145,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
       try {
         final response = await CardService().generateCards(
           GenerateCardsRequest(
-              topic: _topicController.text,
+              topic: _topicController.text.trim(),
               cardCount: int.parse(_cardCountController.text)),
         );
 
@@ -152,7 +154,8 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
         } else {
           final createDeckResponse = await DeckService().createDeck(
               DeckCreateRequest(
-                  name: _deckNameController.text, cards: response.cards));
+                  name: _deckNameController.text.trim(),
+                  cards: response.cards));
 
           if (context.mounted) {
             Navigator.pushReplacement(

@@ -43,7 +43,6 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Deck Details"),
-        centerTitle: true,
       ),
       body: FutureBuilder(
           future: _deckFuture,
@@ -121,7 +120,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                                   side: WidgetStatePropertyAll(
                                     BorderSide(
                                       width: 2,
-                                      color: Colors.blue,
+                                      color: Colors.lightBlue,
                                     ),
                                   ),
                                 ),
@@ -183,9 +182,23 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                       height: 30,
                     ),
                     Expanded(
-                      child: ListView(
-                        children: cardListItems(deck, context),
-                      ),
+                      child: deck.cards.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    " Number of cards: ${deck.cards.length.toString()}"),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Expanded(
+                                  child: ListView(
+                                    children: cardListItems(deck, context),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const Center(child: Text("Deck empty")),
                     ),
                     const SizedBox(
                       height: 30,
@@ -248,7 +261,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                             side: WidgetStatePropertyAll(
                               BorderSide(
                                 width: 2,
-                                color: Colors.blue,
+                                color: Colors.lightBlue,
                               ),
                             ),
                           ),

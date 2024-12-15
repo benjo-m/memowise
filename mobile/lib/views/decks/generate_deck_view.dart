@@ -30,7 +30,6 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Generate Deck"),
-        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

@@ -37,7 +37,6 @@ class _StudySessionViewState extends State<StudySessionView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Study"),
-          centerTitle: true,
         ),
         body: cards.isNotEmpty
             ? Column(

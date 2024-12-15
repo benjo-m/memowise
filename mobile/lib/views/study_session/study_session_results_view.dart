@@ -20,7 +20,6 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Session results"),
-        centerTitle: true,
       ),
       body: Column(
         children: [

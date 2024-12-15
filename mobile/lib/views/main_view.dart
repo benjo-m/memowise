@@ -32,7 +32,7 @@ class _MainViewState extends State<MainView> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            icon: Icon(Icons.view_agenda),
+            icon: Icon(Icons.view_carousel_rounded),
             label: 'Decks',
           ),
           NavigationDestination(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/services/deck_service.dart';
-import 'package:mobile/views/decks/deck_create_view.dart';
+import 'package:mobile/views/decks/create_deck_view.dart';
 import 'package:mobile/views/decks/deck_details_view.dart';
 import 'package:mobile/views/decks/generate_deck_view.dart';
 import 'package:mobile/widgets/deck_list_item.dart';
@@ -26,18 +26,27 @@ class _DecksViewState extends State<DecksView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Decks"),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(35.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(
             children: [
               SearchBar(
+                backgroundColor: const WidgetStatePropertyAll(
+                  Color.fromARGB(255, 240, 240, 240),
+                ),
+                side: const WidgetStatePropertyAll(BorderSide(
+                  width: 2,
+                  color: Color.fromARGB(255, 197, 197, 197),
+                )),
                 controller: _searchBarController,
                 leading: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.search),
+                  child: Icon(
+                    Icons.search,
+                    color: Color.fromARGB(255, 116, 116, 116),
+                  ),
                 ),
                 hintText: "Search decks",
                 elevation: WidgetStateProperty.all(0),
@@ -104,7 +113,7 @@ class _DecksViewState extends State<DecksView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const DeckCreateView())).then(
+                                      const CreateDeckView())).then(
                             (value) => setState(() {
                               _decksFuture = DeckService().getDecks();
                             }),
@@ -118,7 +127,7 @@ class _DecksViewState extends State<DecksView> {
                           side: WidgetStatePropertyAll(
                             BorderSide(
                               width: 2,
-                              color: Colors.blue,
+                              color: Colors.lightBlue,
                             ),
                           ),
                         ),
@@ -156,7 +165,7 @@ class _DecksViewState extends State<DecksView> {
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
-                          color: Color.fromARGB(253, 2, 141, 168),
+                          color: Colors.lightBlue,
                         ),
                       ),
                     ),

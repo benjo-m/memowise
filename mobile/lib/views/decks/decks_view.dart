@@ -37,7 +37,7 @@ class _DecksViewState extends State<DecksView> {
                   Color.fromARGB(255, 240, 240, 240),
                 ),
                 side: const WidgetStatePropertyAll(BorderSide(
-                  width: 2,
+                  width: 3,
                   color: Color.fromARGB(255, 197, 197, 197),
                 )),
                 controller: _searchBarController,
@@ -161,7 +161,6 @@ class _DecksViewState extends State<DecksView> {
                           WidgetStatePropertyAll(Color(0xff03AED2)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
                       fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                      elevation: WidgetStatePropertyAll(0),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,

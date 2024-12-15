@@ -42,40 +42,10 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 197, 197, 197),
-                      width: 3,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 197, 197, 197),
-                      width: 3,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                      width: 3,
-                    ),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                      width: 3,
-                    ),
-                  ),
-                  label: const Text("Deck Name"),
-                  border: InputBorder.none,
+                decoration: const InputDecoration(
+                  label: Text("Deck Name"),
                 ),
                 style: const TextStyle(
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -111,14 +81,13 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                    onPressed: () async => createDeck(context),
+                    onPressed: () async => await createDeck(context),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
                         Color.fromARGB(255, 95, 197, 98),
                       ),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
                       fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                      elevation: WidgetStatePropertyAll(0),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
@@ -143,7 +112,6 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                       backgroundColor: WidgetStatePropertyAll(Color(blue)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
                       fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                      elevation: WidgetStatePropertyAll(0),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,

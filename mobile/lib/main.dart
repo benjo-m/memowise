@@ -29,6 +29,39 @@ class MyApp extends StatelessWidget {
           ),
           centerTitle: true,
         ),
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 197, 197, 197),
+              width: 3,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 197, 197, 197),
+              width: 3,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 3,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 3,
+            ),
+          ),
+          floatingLabelStyle: const TextStyle(
+            fontSize: 20,
+          ),
+        ),
       ),
       home: const MainView(),
     );

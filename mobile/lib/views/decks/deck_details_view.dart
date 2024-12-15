@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
@@ -8,7 +6,6 @@ import 'package:mobile/dtos/deck_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
-import 'package:mobile/views/decks/decks_view.dart';
 import 'package:mobile/widgets/add_card_dialog.dart';
 import 'package:mobile/widgets/card_list_item.dart';
 import 'package:mobile/widgets/edit_card_dialog.dart';
@@ -216,7 +213,6 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                             foregroundColor:
                                 WidgetStatePropertyAll(Colors.white),
                             fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                            elevation: WidgetStatePropertyAll(0),
                             side: WidgetStatePropertyAll(
                               BorderSide(
                                 width: 2,
@@ -257,7 +253,6 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                             foregroundColor:
                                 WidgetStatePropertyAll(Colors.white),
                             fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                            elevation: WidgetStatePropertyAll(0),
                             side: WidgetStatePropertyAll(
                               BorderSide(
                                 width: 2,
@@ -293,6 +288,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     showDialog(
         context: context,
         builder: (context) => SimpleDialog(
+              title: const Center(child: Text("Delete deck?")),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -316,6 +312,19 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
+                            onPressed: () async {
+                              await DeckService().deleteDeck(deck.id);
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: const Text("Yes"),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          ElevatedButton(
                             onPressed: () {
                               if (context.mounted) {
                                 Navigator.pop(context);
@@ -323,23 +332,6 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                             },
                             child: const Text("No"),
                           ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await DeckService().deleteDeck(deck.id);
-                              if (context.mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const DecksView()),
-                                    (route) => false);
-                              }
-                            },
-                            child: const Text("Yes"),
-                          )
                         ],
                       )
                     ],

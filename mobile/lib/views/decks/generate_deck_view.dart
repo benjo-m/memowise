@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
@@ -32,9 +34,9 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
         title: const Text("Generate Deck"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(25.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Form(
               key: _formKey,
@@ -42,15 +44,19 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                 children: [
                   TextFormField(
                     controller: _deckNameController,
-                    decoration: const InputDecoration(
-                      label: Text("Deck name"),
-                    ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Deck name is required";
                       }
                       return null;
                     },
+                    decoration: const InputDecoration(
+                      label: Text("Deck Name"),
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
@@ -59,6 +65,10 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                     controller: _topicController,
                     decoration: const InputDecoration(
                       label: Text("Topic"),
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -74,6 +84,10 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                     controller: _cardCountController,
                     decoration: const InputDecoration(
                       label: Text("Number of cards"),
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -92,11 +106,31 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await generateDeck(context);
-              },
-              child: const Text("Generate Deck"),
+            TextButton(
+              onPressed: () async => await generateDeck(context),
+              style: const ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  Color.fromARGB(255, 95, 197, 98),
+                ),
+                foregroundColor: WidgetStatePropertyAll(Colors.white),
+                fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                side: WidgetStatePropertyAll(
+                  BorderSide(
+                    width: 2,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.done),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text("Generate Deck"),
+                ],
+              ),
             ),
           ],
         ),
@@ -106,41 +140,62 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
 
   Future<void> generateDeck(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      final response = await CardService().generateCards(
-        GenerateCardsRequest(
-            topic: _topicController.text,
-            cardCount: int.parse(_cardCountController.text)),
-      );
+      try {
+        final response = await CardService().generateCards(
+          GenerateCardsRequest(
+              topic: _topicController.text,
+              cardCount: int.parse(_cardCountController.text)),
+        );
 
-      if (response.cards.isEmpty && context.mounted) {
-        showDialog(
-            context: context,
-            builder: (context) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SimpleDialog(
-                    title: const Text("Deck generation failed"),
-                    children: [
-                      const Text(
-                          "Could not generate deck for the provided topic. Please enter a different topic and try again."),
-                      ElevatedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Ok"))
-                    ],
-                  ),
-                ));
-      } else {
-        final createDeckResponse = await DeckService().createDeck(
-            DeckCreateRequest(
-                name: _deckNameController.text, cards: response.cards));
+        if (response.cards.isEmpty && context.mounted) {
+          showGenerationFailedDialog(context);
+        } else {
+          final createDeckResponse = await DeckService().createDeck(
+              DeckCreateRequest(
+                  name: _deckNameController.text, cards: response.cards));
 
+          if (context.mounted) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        DeckDetailsView(deckId: createDeckResponse.id)));
+          }
+        }
+      } catch (e) {
         if (context.mounted) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      DeckDetailsView(deckId: createDeckResponse.id)));
+          showGenerationFailedDialog(context);
         }
       }
     }
+  }
+
+  void showGenerationFailedDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              title: const Center(child: Text("Could not generate deck")),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child:
+                        Text("Please enter a different topic and try again."),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Ok"),
+                    ),
+                  ],
+                )
+              ],
+            ));
   }
 }

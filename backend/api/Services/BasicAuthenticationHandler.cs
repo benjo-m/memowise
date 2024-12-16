@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using api.DTO;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -31,7 +32,11 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var username = credentials[0];
         var password = credentials[1];
 
-        var user = await _userService.Login(username, password);
+        var user = await _userService.Login(new LoginRequest()
+        {
+            Username = username,
+            Password = password
+        });
 
         if (user == null)
         {

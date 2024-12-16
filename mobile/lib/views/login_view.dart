@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/dtos/login_request.dart';
+import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/register_view.dart';
 
@@ -15,7 +16,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginFormState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -31,14 +32,13 @@ class _LoginFormState extends State<LoginView> {
             child: Column(
               children: [
                 TextFormField(
-                  controller: _emailController,
+                  controller: _usernameController,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Username',
                   ),
-                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Email is required";
+                      return "Username is required";
                     }
                     return null;
                   },
@@ -64,7 +64,7 @@ class _LoginFormState extends State<LoginView> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await logIn(context);
+                    await login(context);
                   },
                   child: const Text("Log in"),
                 ),
@@ -91,26 +91,24 @@ class _LoginFormState extends State<LoginView> {
     );
   }
 
-  Future<void> logIn(BuildContext context) async {
+  Future<void> login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      try {
-        await FirebaseAuthProvider().logIn(
-          email: _emailController.text,
+      var user = await AuthService().login(
+        LoginRequest(
+          username: _usernameController.text,
           password: _passwordController.text,
-        );
+        ),
+      );
 
-        var currentUser = FirebaseAuthProvider().currentUser;
-
-        if (currentUser != null && context.mounted) {
+      // TODO: Store inside secureStorage
+      if (user == null && context.mounted) {
+        showWrongCredentialsDialog(context);
+      } else {
+        if (context.mounted) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const MainView()),
             (route) => false,
           );
-        }
-      } catch (e) {
-        log(e.toString());
-        if (context.mounted) {
-          showWrongCredentialsDialog(context);
         }
       }
     }

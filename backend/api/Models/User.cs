@@ -12,10 +12,10 @@ public class User
 
     public User() {}
 
-    public User(UserSaveRequest userSaveRequest)
+    public User(RegisterRequest registerRequest)
     {
-        Username = userSaveRequest.Password;
-        Email = userSaveRequest.Email;
-        Password = userSaveRequest.Password;
+        Username = registerRequest.Username;
+        Email = registerRequest.Email;
+        Password = registerRequest.Password;
     }
 }

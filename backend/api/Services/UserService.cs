@@ -1,8 +1,10 @@
 ﻿using api.Data;
 using api.DTO;
+using api.Exceptions;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using RegisterRequest = api.DTO.RegisterRequest;
 
 namespace api.Services;
 
@@ -15,14 +17,6 @@ public class UserService
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
-    }
-
-    public async Task<User> SaveUser(UserSaveRequest userRegisterRequest)
-    {
-        var user = new User(userRegisterRequest);
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
-        return user;
     }
 
     public async Task<User?> GetCurrentUser()
@@ -41,12 +35,44 @@ public class UserService
         return user;
     }
 
-    public async Task<User?> Login(string username, string password)
+    public async Task<UserDto?> Login(LoginRequest loginRequest)
     {
         var user = await _dbContext.Users
-            .Where(u => u.Username == username && u.Password == password)
+            .Where(u => u.Username == loginRequest.Username && u.Password == loginRequest.Password)
             .FirstOrDefaultAsync();
 
-        return user;
+        if (user == null) 
+        {
+            return null;
+        }
+
+        var userDto = new UserDto(user);
+
+        return userDto;
+    }
+    
+    public async Task<UserDto?> Register(RegisterRequest registerRequest)
+    {
+        if (registerRequest.Password != registerRequest.PasswordConfirmation)
+        {
+            throw new PasswordsNotMatching("Passwords do not match");
+        }
+
+        if (await _dbContext.Users.AnyAsync(u => u.Username == registerRequest.Username))
+        {
+            throw new UsernameTakenException("Username taken");
+        }
+
+        if (await _dbContext.Users.AnyAsync(u => u.Email == registerRequest.Email))
+        {
+            throw new EmailAlreadyInUseException("Email already in use");
+        }
+
+        var user = new User(registerRequest);
+
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+
+        return new UserDto(user);
     }
 }

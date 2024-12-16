@@ -2,7 +2,7 @@
 
 public class StudySessionCreateRequest
 {
-    public string FirebaseUserUid { get; set; }
+    public int UserId { get; set; }
     public int Duration { get; set; }
     public int CardCount { get; set; }
     public float AverageEaseFactor { get; set; }

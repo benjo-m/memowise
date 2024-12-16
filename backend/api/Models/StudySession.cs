@@ -5,7 +5,7 @@ namespace api.Models;
 public class StudySession
 {
     public int Id { get; set; }
-    public string FirebaseUserUid { get; set; }
+    public int UserId { get; set; }
     public int Duration { get; set; }
     public int CardCount { get; set; }
     public float AverageEaseFactor { get; set; }
@@ -16,7 +16,7 @@ public class StudySession
 
     public StudySession(StudySessionCreateRequest studySessionCreateRequest)
     {
-        FirebaseUserUid = studySessionCreateRequest.FirebaseUserUid;
+        UserId = studySessionCreateRequest.UserId;
         Duration = studySessionCreateRequest.Duration;
         CardCount = studySessionCreateRequest.CardCount;
         AverageEaseFactor = studySessionCreateRequest.AverageEaseFactor;

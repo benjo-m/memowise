@@ -3,10 +3,8 @@ using api.DTO;
 using api.Groq;
 using api.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Text.Json.Nodes;
 
@@ -14,6 +12,7 @@ namespace api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CardsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;

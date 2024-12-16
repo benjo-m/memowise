@@ -5,6 +5,7 @@ using api.Models;
 using api.DTO;
 using Microsoft.AspNetCore.Authorization;
 using api.Services;
+using System.Security.Claims;
 
 namespace api.Controllers;
 
@@ -24,11 +25,18 @@ public class DecksController : ControllerBase
         _studySessionService = studySessionService;
     }
 
-    [HttpGet("user/{firebaseUid}")]
-    public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(string firebaseUid)
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(int userId)
     {
+        var authenticatedUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (int.Parse(authenticatedUserId!) != userId)
+        {
+            return Forbid();
+        }
+
         var decks = await _dbContext.Decks
-            .Where(x => x.User.FirebaseUid == firebaseUid)
+            .Where(x => x.User.Id == userId)
             .Include(x => x.Cards)
             .ThenInclude(c => c.CardStats)
             .ToListAsync();
@@ -38,7 +46,7 @@ public class DecksController : ControllerBase
         foreach (var deck in decks)
         {
             var deckSummary = new DeckSummary(deck);
-            var duration = await _studySessionService.PredictStudySessionDuration(deck);
+            var duration = _studySessionService.PredictStudySessionDuration(deck, userId);
             deckSummary.TimeToComplete = (int)duration.Duration;
             deckSummaries.Add(deckSummary); 
         }

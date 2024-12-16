@@ -1,8 +1,8 @@
 ﻿using api.Data;
 using api.DTO;
 using api.Models;
-using FirebaseAdmin.Auth;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace api.Services;
 
@@ -27,17 +27,25 @@ public class UserService
 
     public async Task<User?> GetCurrentUser()
     {
-        string token = _httpContextAccessor.HttpContext!.Request.Headers.Authorization
-            .ToString()
-            .Substring("Bearer ".Length);
+        var userId = _httpContextAccessor.HttpContext!.User
+            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance
-            .VerifyIdTokenAsync(token);
-
-        string uid = decodedToken.Uid;
+        if (userId == null)
+        {
+            return null;
+        }
 
         var user = await _dbContext.Users
-            .FirstOrDefaultAsync(x => x.FirebaseUid == uid);
+            .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+
+        return user;
+    }
+
+    public async Task<User?> Login(string username, string password)
+    {
+        var user = await _dbContext.Users
+            .Where(u => u.Username == username && u.Password == password)
+            .FirstOrDefaultAsync();
 
         return user;
     }

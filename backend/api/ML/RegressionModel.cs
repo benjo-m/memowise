@@ -15,18 +15,17 @@ public class RegressionModel
 
     public ITransformer Train()
     {
-        string dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ML", "training-data.csv");
-        string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ML", "model.zip");
+        string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.zip");
 
         MLContext mlContext = new MLContext();
 
         string sqlCommand = @"
             SELECT
-                FirebaseUserUid, 
                 CAST(CardCount AS REAL) AS CardCount,
                 CAST(Duration AS REAL) AS Duration,
                 AverageEaseFactor, 
-                AverageRepetitions
+                AverageRepetitions,
+                CAST(UserId AS REAL) AS UserId
             FROM StudySessions";
 
         DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<StudySessionData>();
@@ -34,8 +33,7 @@ public class RegressionModel
         IDataView data = loader.Load(dbSource);
 
         var pipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: "Duration")
-            .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "FirebaseUserUidEncoded", inputColumnName: "FirebaseUserUid"))
-            .Append(mlContext.Transforms.Concatenate("Features", "FirebaseUserUidEncoded", "CardCount", "AverageEaseFactor", "AverageRepetitions"))
+            .Append(mlContext.Transforms.Concatenate("Features", "UserId", "CardCount", "AverageEaseFactor", "AverageRepetitions"))
             .Append(mlContext.Transforms.NormalizeMinMax("Features"))
             .Append(mlContext.Regression.Trainers.FastTree());
 

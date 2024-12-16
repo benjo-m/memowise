@@ -27,13 +27,13 @@ public class StudySessionService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<StudySessionDurationPrediction> PredictStudySessionDuration(Deck deck)
+    public StudySessionDurationPrediction PredictStudySessionDuration(Deck deck, int userId)
     {
         var mlContext = new MLContext();
         DataViewSchema modelSchema;
         ITransformer model;
-        string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ML", "model.zip");
-        StudySessionData studySessionData = await StudySessionDataFromDeck(deck);
+        string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.zip");
+        StudySessionData studySessionData = StudySessionDataFromDeck(deck, userId);
 
         if (File.Exists(modelPath))
         {
@@ -47,10 +47,8 @@ public class StudySessionService
         return _regressionModel.Predict(mlContext, model, studySessionData);
     }
 
-    private async Task<StudySessionData> StudySessionDataFromDeck(Deck deck)
+    private StudySessionData StudySessionDataFromDeck(Deck deck, int userId)
     {
-        User? user = await _userService.GetCurrentUser();
-
         float sumEf = 0f;
         float sumReps = 0f;
         int cardCount = 0;
@@ -68,7 +66,7 @@ public class StudySessionService
 
         var studySessionData = new StudySessionData()
         {
-            FirebaseUserUid = user!.FirebaseUid,
+            UserId = userId,
             CardCount = cardCount,
             Duration = 0,
             AverageEaseFactor = sumEf / cardCount,
@@ -79,21 +77,6 @@ public class StudySessionService
 
     public void GenerateMockStudySessions()
     {
-
-        var userIds = new List<string>()
-        {
-            "WkmN9t0rnNPqjoy0ZwPlvrO8TAF3",
-            "2mtrAfkE6OhWm5ZxNN53vvdcFuB3",
-            "oYsdGWC18NT9OnJJcnIfct63wEz1",
-            "t5j7pKciWueXhIFctDKKWikt8dB3",
-            "tq4oAbtsNzgkg0h3F1U2NLnlqVA3",
-            "GaEKRP68uxfYzAgtiCkRsqXY9g22",
-            "JEQnUMsoZTXKkYxv4x4MRx7aaj03",
-            "Bjk4lSJc0be7dPWSLVwRrmiNiU93",
-            "JgxLYJjCGec8B4lIAYQvhrTQsAL2",
-            "R7skfIHBOyYOE32ioVreIP9nQLG2"
-        };
-
         var random = new Random();
         var mockData = new List<StudySession>();
 
@@ -112,7 +95,7 @@ public class StudySessionService
 
             var studySession = new StudySession
             {
-                FirebaseUserUid = userIds[random.Next(0, userIds.Count)], // Random user ID between 1 and 10
+                UserId = random.Next(10, 20), // Random user ID between 1 and 10
                 CardCount = cardCount,
                 Duration = duration,
                 AverageEaseFactor = easeFactor,

@@ -26,6 +26,6 @@ public class Card
         CardStats.Repetitions = request.Repetitions;
         CardStats.Interval = request.Interval;
         CardStats.EaseFactor = request.EaseFactor;
-        CardStats.DueDate = CardStats.DueDate.AddDays(request.Interval);
+        CardStats.DueDate = DateTime.Now.AddDays(request.Interval);
     }
 }

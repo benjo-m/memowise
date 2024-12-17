@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/login_request.dart';
 import 'package:mobile/services/auth/auth_service.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/register_view.dart';
 
@@ -63,9 +64,7 @@ class _LoginFormState extends State<LoginView> {
                   height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    await login(context);
-                  },
+                  onPressed: () async => await login(context),
                   child: const Text("Log in"),
                 ),
                 TextButton(
@@ -80,9 +79,8 @@ class _LoginFormState extends State<LoginView> {
                   child: const Text("Don't have an account? Register here."),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    log(FirebaseAuth.instance.currentUser.toString());
-                  },
+                  onPressed: () => log(
+                      "id: ${CurrentUser.userId} username: ${CurrentUser.username}"),
                   child: const Text("Current user"),
                 ),
               ],
@@ -100,11 +98,15 @@ class _LoginFormState extends State<LoginView> {
         ),
       );
 
-      // TODO: Store inside secureStorage
       if (user == null && context.mounted) {
         showWrongCredentialsDialog(context);
       } else {
         if (context.mounted) {
+          CurrentUser.userId = user!.id;
+          CurrentUser.username = user.username;
+          CurrentUser.password = _passwordController.text;
+          CurrentUser.authHeader =
+              "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const MainView()),
             (route) => false,

@@ -1,15 +1,11 @@
-﻿using api.Data;
-using api.DTO;
-using api.ML;
-using api.Models;
+﻿using api.DTO;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class StudySessionsController : ControllerBase
+public class StudySessionsController : BaseController
 {
     private readonly StudySessionService _studySessionService;
 

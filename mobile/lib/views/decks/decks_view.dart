@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/create_deck_view.dart';
 import 'package:mobile/views/decks/deck_details_view.dart';
@@ -20,6 +19,12 @@ class DecksView extends StatefulWidget {
 class _DecksViewState extends State<DecksView> {
   late Future<List<DeckSummary>> _decksFuture;
   final _searchBarController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _decksFuture = DeckService().getDecks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,37 +68,28 @@ class _DecksViewState extends State<DecksView> {
               const SizedBox(
                 height: 40,
               ),
-              StreamBuilder(
-                stream: FirebaseAuthProvider().authStateChanges(),
+              FutureBuilder(
+                future: _decksFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    _decksFuture = DeckService().getDecks();
-                    return FutureBuilder(
-                      future: _decksFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final decks = snapshot.data!.where((d) => d.name
-                              .toLowerCase()
-                              .startsWith(_searchBarController.text));
-                          return Column(
-                            children: [
-                              showCarousel(decks, context),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15.0),
-                                child: Text(
-                                  "${decks.length} decks",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Color.fromARGB(255, 36, 36, 36),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const Center(child: CircularProgressIndicator());
-                      },
+                    final decks = snapshot.data!.where((d) => d.name
+                        .toLowerCase()
+                        .startsWith(_searchBarController.text));
+                    return Column(
+                      children: [
+                        showCarousel(decks, context),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Text(
+                            "${decks.length} decks",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 36, 36, 36),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   }
                   return const CircularProgressIndicator();

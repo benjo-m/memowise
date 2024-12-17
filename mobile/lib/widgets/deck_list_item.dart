@@ -170,7 +170,7 @@ class DeckListItem extends StatelessWidget {
                           ),
                         ),
                         fixedSize: WidgetStatePropertyAll(
-                          Size(120, 4),
+                          Size(121, 4),
                         ),
                       ),
                       onPressed: () async {

@@ -115,7 +115,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                   Color.fromARGB(255, 95, 197, 98),
                 ),
                 foregroundColor: WidgetStatePropertyAll(Colors.white),
-                fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                fixedSize: WidgetStatePropertyAll(Size(151, 45)),
                 side: WidgetStatePropertyAll(
                   BorderSide(
                     width: 2,

@@ -9,10 +9,7 @@ using System.Security.Claims;
 
 namespace api.Controllers;
 
-[Authorize]
-[Route("api/[controller]")]
-[ApiController]
-public class DecksController : ControllerBase
+public class DecksController : BaseController
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly UserService _userService;
@@ -89,7 +86,7 @@ public class DecksController : ControllerBase
         return deck;
     }
 
-    [HttpPatch("{deckId}")]
+    [HttpPut("{deckId}")]
     public async Task<IActionResult> UpdateDeck(int deckId, DeckUpdateRequest deckUpdateRequest)
     {
         Deck? deck = await _dbContext.Decks.FindAsync(deckId);

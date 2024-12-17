@@ -10,10 +10,7 @@ using System.Text.Json.Nodes;
 
 namespace api.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-[Authorize]
-public class CardsController : ControllerBase
+public class CardsController : BaseController
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IConfiguration _configuration;
@@ -47,7 +44,7 @@ public class CardsController : ControllerBase
         return Ok(card);
     }
 
-    [HttpPatch("{cardId}")]
+    [HttpPut("{cardId}")]
     public async Task<IActionResult> EditCard(int cardId, CardEditRequest cardEditRequest)
     {
         Card? card = await _dbContext.Cards
@@ -120,7 +117,7 @@ public class CardsController : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPut]
     public async Task<IActionResult> UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
     {
         foreach (var cardStats in cardStatsUpdateRequests)

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/services/auth/auth_service.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/views/login_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -24,25 +24,18 @@ class _SettingsViewState extends State<SettingsView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-              onPressed: () =>
-                  log(FirebaseAuthProvider().currentUser.toString()),
+              onPressed: () => log(
+                  "id: ${CurrentUser.userId} username: ${CurrentUser.username}"),
               child: const Text("Get current user")),
           ElevatedButton(
               onPressed: () {
-                FirebaseAuthProvider().logOut();
+                AuthService().logout();
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const LoginView()),
                   (route) => false,
                 );
               },
               child: const Text("Log out")),
-          ElevatedButton(
-              onPressed: () async {
-                var token =
-                    await FirebaseAuth.instance.currentUser!.getIdToken();
-                log(token!);
-              },
-              child: const Text("Get token")),
         ],
       )),
     );

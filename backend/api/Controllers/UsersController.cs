@@ -2,13 +2,12 @@ using api.DTO;
 using api.Exceptions;
 using api.Models;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class UsersController : BaseController
 {
     private readonly UserService _userService;
 
@@ -17,6 +16,7 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<UserDto?>> Login(LoginRequest loginRequest)
     {
@@ -30,6 +30,7 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult<UserDto?>> Register(RegisterRequest registerRequest)
     {

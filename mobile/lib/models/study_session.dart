@@ -1,5 +1,5 @@
 class StudySession {
-  String firebaseUserUid;
+  int userId;
   int duration;
   int cardCount;
   num averageEaseFactor;
@@ -7,7 +7,7 @@ class StudySession {
   DateTime studiedAt;
 
   StudySession({
-    required this.firebaseUserUid,
+    required this.userId,
     required this.duration,
     required this.cardCount,
     required this.averageEaseFactor,
@@ -16,7 +16,7 @@ class StudySession {
   });
 
   factory StudySession.fromJson(Map<String, dynamic> json) => StudySession(
-        firebaseUserUid: json["firebaseUserUid"],
+        userId: json["userId"],
         duration: json["duration"],
         cardCount: json["cardCount"],
         averageEaseFactor: json["averageEaseFactor"]?.toDouble(),
@@ -25,7 +25,7 @@ class StudySession {
       );
 
   Map<String, dynamic> toJson() => {
-        "firebaseUserUid": firebaseUserUid,
+        "userId": userId,
         "duration": duration,
         "cardCount": cardCount,
         "averageEaseFactor": averageEaseFactor,

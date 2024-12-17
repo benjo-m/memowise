@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
 import 'package:mobile/views/login_view.dart';
-import 'package:mobile/views/main_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FirebaseAuthProvider().initialize();
   runApp(const MyApp());
 }
 
@@ -64,8 +61,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      // TODO: Check if user is logged in
-      home: 1 == 1 ? const MainView() : const LoginView(),
+      home: const LoginView(),
     );
   }
 }

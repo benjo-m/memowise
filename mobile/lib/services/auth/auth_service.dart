@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/login_request.dart';
@@ -8,17 +7,14 @@ import 'package:mobile/dtos/login_response.dart';
 import 'package:mobile/dtos/register_request.dart';
 import 'package:mobile/dtos/register_response.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
+import 'package:mobile/services/auth/current_user.dart';
 
 class AuthService {
   Future<LoginResponse?> login(LoginRequest loginRequest) async {
-    String authHeader =
-        "Basic ${base64Encode(utf8.encode('${loginRequest.username}:${loginRequest.password}'))}";
-
     final response = await http.post(
       Uri.parse("$baseUrl/users/login"),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: authHeader,
       },
       body: jsonEncode(loginRequest),
     );
@@ -55,5 +51,11 @@ class AuthService {
     } else {
       throw Exception("Server error");
     }
+  }
+
+  void logout() {
+    CurrentUser.userId = null;
+    CurrentUser.username = null;
+    CurrentUser.password = null;
   }
 }

@@ -6,19 +6,16 @@ import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/dtos/deck_update_request.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/services/auth/current_user.dart';
 
 import '../models/deck.dart';
 
 class DeckService {
   Future<List<DeckSummary>> getDecks() async {
-    String? uid = FirebaseAuthProvider().currentUser?.uid;
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
     final response = await http.get(
-      Uri.parse('$baseUrl/decks/user/$uid'),
+      Uri.parse('$baseUrl/decks/user/${CurrentUser.userId}'),
       headers: {
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
     );
 
@@ -27,13 +24,23 @@ class DeckService {
     return jsonList.map((json) => DeckSummary.fromJson(json)).toList();
   }
 
-  Future<Deck> createDeck(DeckCreateRequest deckCreateRequest) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
+  Future<Deck> getDeckById(int deckId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/decks/$deckId'),
+      headers: {
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+    );
 
+    Deck deck = Deck.fromJson(jsonDecode(response.body));
+    return deck;
+  }
+
+  Future<Deck> createDeck(DeckCreateRequest deckCreateRequest) async {
     final response = await http.post(Uri.parse("$baseUrl/decks"),
         headers: {
           'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
         },
         body: jsonEncode(deckCreateRequest));
 
@@ -43,40 +50,22 @@ class DeckService {
   }
 
   Future<void> deleteDeck(int deckId) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
     await http.delete(
       Uri.parse('$baseUrl/decks/$deckId'),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
     );
   }
 
   Future<void> updateDeck(
       int deckId, DeckUpdateRequest deckUpdateRequest) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
-    await http.patch(Uri.parse("$baseUrl/decks/$deckId"),
+    await http.put(Uri.parse("$baseUrl/decks/$deckId"),
         headers: {
           'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
         },
         body: jsonEncode(deckUpdateRequest));
-  }
-
-  Future<Deck> getDeckById(int deckId) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/decks/$deckId'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-    );
-
-    Deck deck = Deck.fromJson(jsonDecode(response.body));
-    return deck;
   }
 }

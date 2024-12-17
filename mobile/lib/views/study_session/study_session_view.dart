@@ -3,7 +3,7 @@ import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
 import 'package:mobile/models/study_session.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/sm2.dart';
 import 'package:mobile/services/study_session_service.dart';
@@ -136,7 +136,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   void finishStudySession() async {
     stopwatch.stop();
     final studySession = StudySession(
-      firebaseUserUid: FirebaseAuthProvider().currentUser!.uid,
+      userId: CurrentUser.userId!,
       duration: stopwatch.elapsed.inSeconds,
       cardCount: cardStatsList.length,
       averageEaseFactor: double.parse((cardStatsList.fold(

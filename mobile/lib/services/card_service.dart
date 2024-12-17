@@ -7,31 +7,27 @@ import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
 import 'package:mobile/dtos/generate_cards_response.dart';
 import 'package:mobile/models/card.dart';
-import 'package:mobile/services/auth/firebase_auth_provider.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:http/http.dart' as http;
 
 class CardService {
   Future<void> editCard(int deckId, int cardId, CardDto cardDto) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
-    http.patch(
+    http.put(
       Uri.parse("$baseUrl/cards/$cardId"),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
       body: jsonEncode(cardDto),
     );
   }
 
   Future<Card> deleteCard(int cardId) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
     final response = await http.delete(
       Uri.parse("$baseUrl/cards/$cardId"),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
     );
 
@@ -41,13 +37,11 @@ class CardService {
   }
 
   Future<Card> createCard(int deckId, CardDto cardDto) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
     final response = await http.post(
       Uri.parse("$baseUrl/cards/$deckId"),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
       body: jsonEncode(cardDto),
     );
@@ -59,13 +53,11 @@ class CardService {
 
   Future<GenerateCardsResponse> generateCards(
       GenerateCardsRequest generateCardsRequest) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
     final response = await http.post(
       Uri.parse("$baseUrl/cards/generate"),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
       body: jsonEncode(generateCardsRequest),
     );
@@ -78,13 +70,11 @@ class CardService {
 
   Future<void> updateCardStats(
       List<CardStatsUpdateRequest> cardStatsUpdateRequest) async {
-    String? token = await FirebaseAuthProvider().currentUser?.getIdToken();
-
-    http.patch(
+    http.put(
       Uri.parse("$baseUrl/cards"),
       headers: {
         'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
       body: jsonEncode(cardStatsUpdateRequest),
     );

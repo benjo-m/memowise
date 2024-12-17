@@ -2,6 +2,7 @@
 using api.DTO;
 using api.Groq;
 using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,133 +13,53 @@ namespace api.Controllers;
 
 public class CardsController : BaseController
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IConfiguration _configuration;
+    private readonly CardService _cardService;
 
-    public CardsController(ApplicationDbContext dbContext, IConfiguration configuration)
+    public CardsController(CardService cardService)
     {
-        _dbContext = dbContext;
-        _configuration = configuration;
+        _cardService = cardService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Card>>> GetCardsByDeck(int deckId)
     {
-        var cards = await _dbContext.Decks
-            .Where(x => x.Id == deckId)
-            .SelectMany(x => x.Cards)
-            .ToListAsync();
-
-        return Ok(cards);
+        return await _cardService.GetCardsByDeck(deckId);
     }
 
     [HttpPost("{deckId}")]
     public async Task<ActionResult<Card>> AddCard(int deckId, CardCreateRequest cardCreateRequest)
     {
-        Card card = new Card(cardCreateRequest);
-        card.Deck = await _dbContext.Decks.FirstAsync(x => x.Id == deckId);
+        var card = await _cardService.AddCard(deckId, cardCreateRequest);
 
-        _dbContext.Add(card);
-        await _dbContext.SaveChangesAsync();
+        if (card == null)
+        {
+            return BadRequest();
+        }
 
         return Ok(card);
     }
 
     [HttpPut("{cardId}")]
-    public async Task<IActionResult> EditCard(int cardId, CardEditRequest cardEditRequest)
+    public async Task EditCard(int cardId, CardEditRequest cardEditRequest)
     {
-        Card? card = await _dbContext.Cards
-            .Where(c => c.Id == cardId)
-            .FirstOrDefaultAsync();
-
-        if (card == null)
-        {
-            return NotFound();
-        }
-
-        card.Question = cardEditRequest.Question;
-        card.Answer = cardEditRequest.Answer;
-
-        _dbContext.Update(card);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok();
+        await _cardService.EditCard(cardId, cardEditRequest);
     }
 
     [HttpDelete("{cardId}")]
     public async Task<ActionResult<Card>> DeleteCard(int cardId)
     {
-        Card? card = await _dbContext.Cards
-            .Where(c => c.Id == cardId)
-            .FirstOrDefaultAsync();
-
-        if (card == null)
-        {
-            return NotFound();
-        }
-
-        _dbContext.Cards.Remove(card);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok(card);
+        return await _cardService.DeleteCard(cardId);
     }
 
     [HttpPost("generate")]
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
-        var groqApi = new GroqApiClient(_configuration["Groq:ApiKey"]!);
-
-        var request = new JsonObject
-        {
-            ["model"] = _configuration["Groq:Model"],
-            ["messages"] = new JsonArray
-            {
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] = _configuration["Groq:Prompt"]!
-                        .Replace("{input_phrase}", generateCardsRequest.Topic)
-                        .Replace("{num_cards}", generateCardsRequest.CardCount.ToString())
-                }
-            }
-        };
-
-        var result = await groqApi.CreateChatCompletionAsync(request);
-        var response = result?["choices"]?[0]?["message"]?["content"]?.ToString();
-
-        try
-        {
-            var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
-            return generatedCards;
-        }
-        catch (Exception e)
-        {
-            return new GenerateCardsResponse { Cards = new List<CardCreateRequest>() };
-        }
+        return await _cardService.GenerateCards(generateCardsRequest);
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
+    public async Task UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
     {
-        foreach (var cardStats in cardStatsUpdateRequests)
-        {
-            Card? card = await _dbContext.Cards
-                .Where(c => c.Id == cardStats.CardId)
-                .Include(c => c.CardStats)
-                .FirstOrDefaultAsync();
-
-            if (card == null)
-            {
-                return NotFound();
-            }
-
-            card.UpdateLearningStats(cardStats);
-
-            _dbContext.Update(card);
-            await _dbContext.SaveChangesAsync();
-        }
-
-
-        return Ok();
+        await _cardService.UpdateCardStats(cardStatsUpdateRequests);
     }
 }

@@ -55,7 +55,7 @@ public class UserService
     {
         if (registerRequest.Password != registerRequest.PasswordConfirmation)
         {
-            throw new PasswordsNotMatching("Passwords do not match");
+            throw new PasswordsNotMatchingException("Passwords do not match");
         }
 
         if (await _dbContext.Users.AnyAsync(u => u.Username == registerRequest.Username))

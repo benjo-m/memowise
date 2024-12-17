@@ -37,6 +37,8 @@ builder.Services.AddAuthentication("BasicAuthentication")
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MemoWiseDb")));
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<DeckService>();
+builder.Services.AddScoped<CardService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RegressionModel>();
 builder.Services.AddScoped<StudySessionService>();

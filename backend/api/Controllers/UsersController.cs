@@ -48,7 +48,7 @@ public class UsersController : BaseController
         {
             return Conflict(new { errorCode = "EMAIL_TAKEN", message = ex.Message });
         }
-        catch (PasswordsNotMatching ex)
+        catch (PasswordsNotMatchingException ex)
         {
             return BadRequest(new { message = ex.Message });
         }

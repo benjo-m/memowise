@@ -10,13 +10,19 @@ public class StudySessionService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly RegressionModel _regressionModel;
-    private readonly UserService _userService;
+
+    private static readonly MLContext _mlContext = new MLContext();
+    private static ITransformer _model;
+    private static readonly object _modelLock = new object();
+    private readonly string _modelPath;
+
 
     public StudySessionService(ApplicationDbContext dbContext, RegressionModel regressionModel, UserService userService)
     {
         _dbContext = dbContext;
         _regressionModel = regressionModel;
-        _userService = userService;
+        _modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.zip");
+        LoadModel();
     }
 
     public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
@@ -27,24 +33,32 @@ public class StudySessionService
         await _dbContext.SaveChangesAsync();
     }
 
+    private void LoadModel()
+    {
+        if (_model != null)
+            return;
+
+        lock (_modelLock)
+        {
+            if (_model == null)
+            {
+                if (File.Exists(_modelPath))
+                {
+                    _model = _mlContext.Model.Load(_modelPath, out _);
+                }
+                else
+                {
+                    _model = _regressionModel.Train();
+                }
+            }
+        }
+    }
+
     public StudySessionDurationPrediction PredictStudySessionDuration(Deck deck, int userId)
     {
-        var mlContext = new MLContext();
-        DataViewSchema modelSchema;
-        ITransformer model;
-        string modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.zip");
         StudySessionData studySessionData = StudySessionDataFromDeck(deck, userId);
 
-        if (File.Exists(modelPath))
-        {
-            model = mlContext.Model.Load(modelPath, out modelSchema);
-        }
-        else
-        {
-            model = _regressionModel.Train();
-        }
-
-        return _regressionModel.Predict(mlContext, model, studySessionData);
+        return _regressionModel.Predict(_mlContext, _model, studySessionData);
     }
 
     private StudySessionData StudySessionDataFromDeck(Deck deck, int userId)
@@ -73,40 +87,5 @@ public class StudySessionService
             AverageRepetitions = sumReps / cardCount,
         };
         return studySessionData;
-    }
-
-    public void GenerateMockStudySessions()
-    {
-        var random = new Random();
-        var mockData = new List<StudySession>();
-
-        // Generate 100 realistic study sessions
-        for (int i = 0; i < 500; i++)
-        {
-            var cardCount = random.Next(10, 51); // 10 to 50 cards per session
-            var easeFactor = (float)Math.Round((random.NextDouble() * 1.4 + 1.3), 2); // Ease factor between 1.3 and 2.7
-
-            // Duration correlates with card count and ease factor
-            var duration = (int)((cardCount * 3) * (2.7 - easeFactor) * random.Next(15, 30)); // Adjusting range and scaling
-
-
-            // Repetitions will be somewhat correlated with ease factor (higher ease factor = fewer repetitions)
-            float repetitions = (float)Math.Round(random.NextDouble() * 2.7 + 1.3, 2); // Between 1 and 5
-
-            var studySession = new StudySession
-            {
-                UserId = random.Next(10, 20), // Random user ID between 1 and 10
-                CardCount = cardCount,
-                Duration = duration,
-                AverageEaseFactor = easeFactor,
-                AverageRepetitions = repetitions,
-                StudiedAt = DateTime.Now.AddDays(-random.Next(1, 30)).AddHours(-random.Next(1, 24)) // Random date within the last 30 days
-            };
-
-            mockData.Add(studySession);
-        }
-
-        _dbContext.StudySessions.AddRange(mockData);
-        _dbContext.SaveChanges();
     }
 }

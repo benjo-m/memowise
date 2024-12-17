@@ -40,8 +40,16 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RegressionModel>();
 builder.Services.AddScoped<StudySessionService>();
+builder.Services.AddScoped<SeedDataService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var seedDataService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
+    seedDataService.GenerateMockStudySessions();
+}
+
 
 if (app.Environment.IsDevelopment())
 {

@@ -75,22 +75,62 @@ class _DecksViewState extends State<DecksView> {
                     final decks = snapshot.data!.where((d) => d.name
                         .toLowerCase()
                         .startsWith(_searchBarController.text));
-                    return Column(
-                      children: [
-                        showCarousel(decks, context),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Text(
-                            "${decks.length} decks",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 36, 36, 36),
+                    return decks.isNotEmpty
+                        ? Column(
+                            children: [
+                              showCarousel(decks, context),
+                              decks.length > 1
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Text(
+                                        "${decks.length} decks",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color:
+                                              Color.fromARGB(255, 36, 36, 36),
+                                        ),
+                                      ),
+                                    )
+                                  : const Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Text(
+                                        "1 deck",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color:
+                                              Color.fromARGB(255, 36, 36, 36),
+                                        ),
+                                      ),
+                                    ),
+                            ],
+                          )
+                        : const SizedBox(
+                            height: 423,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "No decks found!",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color.fromARGB(255, 78, 78, 78),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    );
+                          );
                   }
                   return const CircularProgressIndicator();
                 },

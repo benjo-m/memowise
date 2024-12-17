@@ -19,29 +19,13 @@ public class UserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<User?> GetCurrentUser()
-    {
-        var userId = _httpContextAccessor.HttpContext!.User
-            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (userId == null)
-        {
-            return null;
-        }
-
-        var user = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
-
-        return user;
-    }
-
     public async Task<UserDto?> Login(LoginRequest loginRequest)
     {
         var user = await _dbContext.Users
-            .Where(u => u.Username == loginRequest.Username && u.Password == loginRequest.Password)
+            .Where(u => u.Username == loginRequest.Username)
             .FirstOrDefaultAsync();
 
-        if (user == null) 
+        if (user == null || !BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHashed)) 
         {
             return null;
         }
@@ -74,5 +58,21 @@ public class UserService
         await _dbContext.SaveChangesAsync();
 
         return new UserDto(user);
+    }
+
+    public async Task<User?> GetCurrentUser()
+    {
+        var userId = _httpContextAccessor.HttpContext!.User
+            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userId == null)
+        {
+            return null;
+        }
+
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+
+        return user;
     }
 }

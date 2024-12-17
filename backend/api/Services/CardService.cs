@@ -101,7 +101,7 @@ public class CardService
             var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
             return generatedCards;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return new GenerateCardsResponse { Cards = new List<CardCreateRequest>() };
         }

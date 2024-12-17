@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/register_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/auth_service.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:mobile/views/main_view.dart';
 
@@ -134,7 +136,7 @@ class _RegisterViewState extends State<RegisterView> {
 
     if (_formKey.currentState!.validate()) {
       try {
-        await AuthService().register(
+        var user = await AuthService().register(
           RegisterRequest(
             username: _usernameController.text,
             email: _emailController.text,
@@ -144,6 +146,11 @@ class _RegisterViewState extends State<RegisterView> {
         );
 
         if (context.mounted) {
+          CurrentUser.userId = user.id;
+          CurrentUser.username = user.username;
+          CurrentUser.password = _passwordController.text;
+          CurrentUser.authHeader =
+              "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const MainView()),
             (route) => false,

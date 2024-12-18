@@ -1,6 +1,5 @@
 using api.DTO;
 using api.Exceptions;
-using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +13,6 @@ public class UsersController : BaseController
     public UsersController(UserService userService)
     {
         _userService = userService;
-    }
-
-    [AllowAnonymous]
-    [HttpGet("{userId}")]
-    public async Task<User?> GetAchievementsByUser(int userId)
-    {
-        return await _userService.GetAchievementsByUser(userId);
     }
 
     [AllowAnonymous]

@@ -74,7 +74,7 @@ public class SeedDataService
             new Achievement
             {
                 Name = "First Steps",
-                Description = "Finish your first review session.",
+                Description = "Finish your first study session.",
                 Icon = "first_steps.png"
             },
             new Achievement
@@ -94,12 +94,6 @@ public class SeedDataService
                 Name = "Daily Devotion",
                 Description = "Study for 1 hour in one day.",
                 Icon = "daily_devotion.png"
-            },
-            new Achievement
-            {
-                Name = "Flawless Victory",
-                Description = "Review all cards with a 5 rating in one session.",
-                Icon = "flawless_victory.png"
             },
             new Achievement
             {

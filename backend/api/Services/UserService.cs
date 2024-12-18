@@ -19,13 +19,6 @@ public class UserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<User?> GetAchievementsByUser(int userId)
-    {
-        return await _dbContext.Users
-            .Include(u => u.Achievements)
-            .SingleOrDefaultAsync(u => u.Id == userId);
-    }
-
     public async Task<UserDto?> Login(LoginRequest loginRequest)
     {
         var user = await _dbContext.Users
@@ -62,6 +55,14 @@ public class UserService
         var user = new User(registerRequest);
 
         _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+
+        var userStats = new UserStats()
+        {
+            UserId = user.Id,
+        };
+
+        _dbContext.UserStats.Add(userStats);
         await _dbContext.SaveChangesAsync();
 
         return new UserDto(user);

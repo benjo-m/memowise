@@ -35,16 +35,9 @@ public class AchievementsController : BaseController
         return Ok(achievements);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Achievement>> UnlockAchievement(AddAchievementRequest addAchievementRequest)
+    [HttpGet("check/user/{userId}")]
+    public async Task CheckAchievements(int userId)
     {
-        var achievement = await _achievementsService.UnlockAchievement(addAchievementRequest);
-
-        if (achievement == null)
-        {
-            return BadRequest();
-        }
-
-        return Ok(achievement);
+        await _achievementsService.CheckAchievements(userId);
     }
 }

@@ -19,6 +19,13 @@ public class UserService
         _httpContextAccessor = httpContextAccessor;
     }
 
+    public async Task<User?> GetAchievementsByUser(int userId)
+    {
+        return await _dbContext.Users
+            .Include(u => u.Achievements)
+            .SingleOrDefaultAsync(u => u.Id == userId);
+    }
+
     public async Task<UserDto?> Login(LoginRequest loginRequest)
     {
         var user = await _dbContext.Users

@@ -106,33 +106,12 @@ class _DecksViewState extends State<DecksView> {
                                     ),
                             ],
                           )
-                        : const SizedBox(
-                            height: 423,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "No decks found!",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Color.fromARGB(255, 78, 78, 78),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          );
+                        : noDecksMessage();
                   }
-                  return const CircularProgressIndicator();
+                  return const SizedBox(
+                    height: 423,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 },
               ),
               const SizedBox(
@@ -251,5 +230,33 @@ class _DecksViewState extends State<DecksView> {
           padEnds: true,
           viewportFraction: 0.75,
         ));
+  }
+
+  SizedBox noDecksMessage() {
+    return const SizedBox(
+      height: 423,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "No decks found!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Color.fromARGB(255, 78, 78, 78),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }

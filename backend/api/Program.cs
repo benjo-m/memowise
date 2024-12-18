@@ -42,6 +42,7 @@ builder.Services.AddScoped<CardService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RegressionModel>();
 builder.Services.AddScoped<StudySessionService>();
+builder.Services.AddScoped<AchievementsService>();
 builder.Services.AddScoped<SeedDataService>();
 
 var app = builder.Build();
@@ -49,7 +50,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var seedDataService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
-    seedDataService.GenerateMockStudySessions();
+    seedDataService.PopulateDatabase();
 }
 
 

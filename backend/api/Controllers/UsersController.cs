@@ -17,6 +17,13 @@ public class UsersController : BaseController
     }
 
     [AllowAnonymous]
+    [HttpGet("{userId}")]
+    public async Task<User?> GetAchievementsByUser(int userId)
+    {
+        return await _userService.GetAchievementsByUser(userId);
+    }
+
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<UserDto?>> Login(LoginRequest loginRequest)
     {

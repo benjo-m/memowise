@@ -15,6 +15,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<Card> Cards { get; set; }
     public DbSet<CardStats> CardStats { get; set; }
     public DbSet<StudySession> StudySessions { get; set; }
-
-
+    public DbSet<Achievement> Achievements { get; set; }
 }

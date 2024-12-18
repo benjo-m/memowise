@@ -13,6 +13,12 @@ public class SeedDataService
         _dbContext = dbContext;
     }
 
+    public void PopulateDatabase()
+    {
+        GenerateMockStudySessions();
+        PopulateAchievementsTable();
+    }
+
     public void GenerateMockStudySessions()
     {
         if (_dbContext.StudySessions.Any())
@@ -47,6 +53,99 @@ public class SeedDataService
         }
 
         _dbContext.StudySessions.AddRange(mockData);
+        _dbContext.SaveChanges();
+    }
+
+    public void PopulateAchievementsTable()
+    {
+        if (_dbContext.Achievements.Any())
+        {
+            return;
+        }
+
+        var achievements = new List<Achievement>
+        {
+            new Achievement
+            {
+                Name = "Consistent Learner",
+                Description = "Study every day for 30 consecutive days.",
+                Icon = "consistent_learner.png"
+            },
+            new Achievement
+            {
+                Name = "First Steps",
+                Description = "Finish your first review session.",
+                Icon = "first_steps.png"
+            },
+            new Achievement
+            {
+                Name = "Committed Student",
+                Description = "Finish 10 study sessions.",
+                Icon = "commited_student.png"
+            },
+            new Achievement
+            {
+                Name = "Perfect Recall",
+                Description = "Review all cards in a session without any mistakes.",
+                Icon = "perfect_recall.png"
+            },
+            new Achievement
+            {
+                Name = "Daily Devotion",
+                Description = "Study for 1 hour in one day.",
+                Icon = "daily_devotion.png"
+            },
+            new Achievement
+            {
+                Name = "Flawless Victory",
+                Description = "Review all cards with a 5 rating in one session.",
+                Icon = "flawless_victory.png"
+            },
+            new Achievement
+            {
+                Name = "Comeback King",
+                Description = "Resume studying after a 7-day or longer break.",
+                Icon = "comeback_king.png"
+            },
+            new Achievement
+            {
+                Name = "Early Bird",
+                Description = "Complete a session between 4 AM and 7 AM.",
+                Icon = "early_bird.png"
+            },
+            new Achievement
+            {
+                Name = "Night Owl",
+                Description = "Complete a session between 10 AM and 3 AM.",
+                Icon = "night_owl.png"
+            },
+            new Achievement
+            {
+                Name = "Speed Demon",
+                Description = "Review 50 cards in less than 5 minutes.",
+                Icon = "speed_demon.png"
+            },
+            new Achievement
+            {
+                Name = "Weekend Warrior",
+                Description = "Study on consecutive Saturday and Sunday.",
+                Icon = "weekend_warrior.png"
+            },
+            new Achievement
+            {
+                Name = "Flashcard Pro",
+                Description = "Review 100 cards in total.",
+                Icon = "flashcard_pro.png"
+            },
+            new Achievement
+            {
+                Name = "Deck designer",
+                Description = "Manually add 100 cards to your decks.",
+                Icon = "deck_designer.png"
+            },
+        };
+
+        _dbContext.Achievements.AddRange(achievements);
         _dbContext.SaveChanges();
     }
 }

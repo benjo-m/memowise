@@ -31,100 +31,139 @@ class _RegisterViewState extends State<RegisterView> {
       appBar: AppBar(
         title: const Center(child: Text("Register")),
       ),
-      body: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    errorText: _usernameError,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Username is required";
-                    } else if (value.length > 50) {
-                      return "Username must be 50 characters of fewer";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    errorText: _emailError,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Email is required";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Password is required";
-                    }
-                    if (value != _confirmPasswordController.text) {
-                      return "Passwords do not match";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm password',
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value != _passwordController.text) {
-                      return "Passwords do not match";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: () async => await register(context),
-                  child: const Text("Register"),
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginView()),
-                        (route) => false,
-                      );
+      body: SingleChildScrollView(
+        child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      errorText: _usernameError,
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Username is required";
+                      } else if (value.length > 50) {
+                        return "Username must be 50 characters of fewer";
+                      }
+                      return null;
                     },
-                    child:
-                        const Text("Already have an account? Log in instead.")),
-              ],
-            ),
-          )),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      errorText: _emailError,
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Email is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Password is required";
+                      }
+                      if (value != _confirmPasswordController.text) {
+                        return "Passwords do not match";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirm password',
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != _passwordController.text) {
+                        return "Passwords do not match";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    onPressed: () async => await register(context),
+                    style: const ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(Color(0xff03AED2)),
+                      foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                      side: WidgetStatePropertyAll(
+                        BorderSide(
+                          width: 2,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.login_rounded),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text("Register"),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginView()),
+                          (route) => false,
+                        );
+                      },
+                      child: const Text(
+                          "Already have an account? Log in instead.")),
+                ],
+              ),
+            )),
+      ),
     );
   }
 

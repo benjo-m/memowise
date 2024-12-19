@@ -58,6 +58,8 @@ class DeckListItem extends StatelessWidget {
                           "New: ${deckSummary.newCards}",
                           style: const TextStyle(
                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 82, 82, 82),
                           ),
                         ),
                       ],
@@ -77,7 +79,11 @@ class DeckListItem extends StatelessWidget {
                         ),
                         Text(
                           "Learning: ${deckSummary.learningCards}",
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 82, 82, 82),
+                          ),
                         ),
                       ],
                     ),
@@ -96,7 +102,11 @@ class DeckListItem extends StatelessWidget {
                         ),
                         Text(
                           "Learned: ${deckSummary.learnedCards}",
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 82, 82, 82),
+                          ),
                         ),
                       ],
                     ),

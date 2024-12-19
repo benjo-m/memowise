@@ -26,66 +26,92 @@ class _LoginFormState extends State<LoginView> {
       appBar: AppBar(
         title: const Center(child: Text("Login")),
       ),
-      body: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
+      body: SingleChildScrollView(
+        child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Username is required";
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Username is required";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
+                  const SizedBox(
+                    height: 20,
                   ),
-                  obscureText: true,
-                  controller: _passwordController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Password is required";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: () async => await login(context),
-                  child: const Text("Log in"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RegisterView()),
-                      (route) => false,
-                    );
-                  },
-                  child: const Text("Don't have an account? Register here."),
-                ),
-                ElevatedButton(
-                  onPressed: () => log(
-                      "id: ${CurrentUser.userId} username: ${CurrentUser.username}"),
-                  child: const Text("Current user"),
-                ),
-              ],
-            ),
-          )),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    obscureText: true,
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Password is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    onPressed: () async => await login(context),
+                    style: const ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(Color(0xff03AED2)),
+                      foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                      side: WidgetStatePropertyAll(
+                        BorderSide(
+                          width: 2,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.login_rounded),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text("Log in"),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterView()),
+                        (route) => false,
+                      );
+                    },
+                    child: const Text("Don't have an account? Register here."),
+                  ),
+                ],
+              ),
+            )),
+      ),
     );
   }
 
@@ -119,27 +145,43 @@ class _LoginFormState extends State<LoginView> {
   Future<dynamic> showWrongCredentialsDialog(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: const Text("Wrong credentials"),
-              content: const Text(
-                  "Try again with different credentials or create a new account."),
-              actions: [
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) {
-                          return const RegisterView();
-                        }),
-                        (route) => false,
-                      );
-                    },
-                    child: const Text("Register")),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Close"))
-              ],
-            ));
+        builder: (context) => SimpleDialog(
+                title: const Text(
+                  "Invalid credentials",
+                  textAlign: TextAlign.center,
+                ),
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "Try again with different credentials or create a new account.",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) {
+                              return const RegisterView();
+                            }),
+                            (route) => false,
+                          );
+                        },
+                        child: const Text("Register"),
+                      ),
+                      const SizedBox(width: 30),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Close"),
+                      ),
+                    ],
+                  )
+                ]));
   }
 }

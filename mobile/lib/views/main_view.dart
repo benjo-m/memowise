@@ -44,7 +44,7 @@ class _MainViewState extends State<MainView> {
             label: 'Achievements',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_rounded),
             label: 'Settings',
           ),
         ],

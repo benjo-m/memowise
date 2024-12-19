@@ -4,7 +4,6 @@ using api.Exceptions;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using RegisterRequest = api.DTO.RegisterRequest;
 
 namespace api.Services;
 
@@ -94,5 +93,35 @@ public class UserService
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task UpdateUser(UpdateUserRequest updateUserRequest)
+    {
+        var user = await GetCurrentUser();
+
+        if (user == null)
+        {
+            return;
+        }
+
+        bool isUsernameTaken = await _dbContext.Users.AnyAsync(u => u.Username == updateUserRequest.Username);
+        bool isEmailTaken = await _dbContext.Users.AnyAsync(u => u.Email == updateUserRequest.Email);
+
+        if (isUsernameTaken && user.Username != updateUserRequest.Username)
+        {
+            throw new UsernameTakenException("Username taken");
+        }
+
+        if (isEmailTaken && user.Email != updateUserRequest.Email)
+        {
+            throw new EmailAlreadyInUseException("Email already in use");
+        }
+        
+        user.Username = updateUserRequest.Username;
+        user.Email = updateUserRequest.Email;
+        user.PasswordHashed = BCrypt.Net.BCrypt.HashPassword(updateUserRequest.Password);
+        
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
     }
 }

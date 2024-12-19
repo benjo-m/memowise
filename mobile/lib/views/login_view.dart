@@ -130,6 +130,7 @@ class _LoginFormState extends State<LoginView> {
         if (context.mounted) {
           CurrentUser.userId = user!.id;
           CurrentUser.username = user.username;
+          CurrentUser.email = user.email;
           CurrentUser.password = _passwordController.text;
           CurrentUser.authHeader =
               "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";

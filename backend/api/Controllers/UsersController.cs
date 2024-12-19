@@ -41,7 +41,6 @@ public class UsersController : BaseController
         catch (UsernameTakenException ex)
         {
             return Conflict(new { errorCode = "USERNAME_TAKEN", message = ex.Message });
-
         }
         catch (EmailAlreadyInUseException ex)
         {
@@ -56,4 +55,27 @@ public class UsersController : BaseController
             return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message }); 
         }
     }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateUser(UpdateUserRequest updateUserRequest)
+    {
+        try
+        {
+            await _userService.UpdateUser(updateUserRequest);
+            return Ok();
+        }
+        catch (UsernameTakenException ex)
+        {
+            return Conflict(new { errorCode = "USERNAME_TAKEN", message = ex.Message });
+        }
+        catch (EmailAlreadyInUseException ex)
+        {
+            return Conflict(new { errorCode = "EMAIL_TAKEN", message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+        }
+    }
+
 }

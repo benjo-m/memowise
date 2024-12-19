@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/login_request.dart';
@@ -6,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/dtos/login_response.dart';
 import 'package:mobile/dtos/register_request.dart';
 import 'package:mobile/dtos/register_response.dart';
+import 'package:mobile/dtos/update_user_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/current_user.dart';
 
@@ -42,10 +45,9 @@ class AuthService {
       return registerReponse;
     } else if (response.statusCode == 409) {
       final responseBody = jsonDecode(response.body);
-      if (responseBody['errorCode'] == "USERNAME_TAKEN") {
-        throw UsernameTakenException();
-      }
-      throw EmailAlreadyInUseException();
+      responseBody['errorCode'] == "USERNAME_TAKEN"
+          ? throw UsernameTakenException()
+          : throw EmailAlreadyInUseException();
     } else if (response.statusCode == 400) {
       throw PasswordsNotMatching();
     } else {
@@ -57,5 +59,23 @@ class AuthService {
     CurrentUser.userId = null;
     CurrentUser.username = null;
     CurrentUser.password = null;
+  }
+
+  Future<void> updateUser(UpdateUserRequest updateUserRequest) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/users"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+      body: jsonEncode(updateUserRequest),
+    );
+
+    if (response.statusCode == 409) {
+      final responseBody = jsonDecode(response.body);
+      responseBody['errorCode'] == "USERNAME_TAKEN"
+          ? throw UsernameTakenException()
+          : throw EmailAlreadyInUseException();
+    }
   }
 }

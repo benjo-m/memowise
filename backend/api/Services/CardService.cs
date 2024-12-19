@@ -2,7 +2,6 @@
 using api.DTO;
 using api.Groq;
 using api.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text.Json.Nodes;
@@ -13,11 +12,15 @@ public class CardService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IConfiguration _configuration;
+    private readonly UserService _userService;
+    private readonly AchievementsService _achievementService;
 
-    public CardService(ApplicationDbContext dbContext, IConfiguration configuration)
+    public CardService(ApplicationDbContext dbContext, IConfiguration configuration, UserService userService, AchievementsService achievementService)
     {
         _dbContext = dbContext;
         _configuration = configuration;
+        _userService = userService;
+        _achievementService = achievementService;
     }
 
     public async Task<List<Card>> GetCardsByDeck(int deckId)
@@ -40,8 +43,20 @@ public class CardService
             return null;
         }
 
-        _dbContext.Add(card);
+        deck.Cards.Add(card);
+
+        _dbContext.Decks.Update(deck);
         await _dbContext.SaveChangesAsync();
+
+        var user = await _userService.GetCurrentUser();
+
+        if (user != null)
+        {
+            user.UserStats.TotalCardsCreated++;
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+            await _achievementService.CheckAchievements(user.Id);
+        }
 
         return card;
     }

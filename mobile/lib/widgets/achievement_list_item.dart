@@ -63,8 +63,23 @@ class AchievementListItem extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.emoji_events,
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 239, 239),
+                    border: Border.all(
+                      width: 1.5,
+                      color: const Color.fromARGB(255, 78, 78, 78),
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Image(
+                    image: AssetImage(
+                        'lib/assets/achievements/${achievement.icon}'),
+                    filterQuality: FilterQuality.high,
+                    // width: 50,
+                    // height: 50,
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Text(

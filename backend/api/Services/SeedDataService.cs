@@ -97,12 +97,6 @@ public class SeedDataService
             },
             new Achievement
             {
-                Name = "Comeback King",
-                Description = "Resume studying after a 7-day or longer break.",
-                Icon = "comeback_king.png"
-            },
-            new Achievement
-            {
                 Name = "Early Bird",
                 Description = "Complete a session between 4 AM and 7 AM.",
                 Icon = "early_bird.png"
@@ -110,7 +104,7 @@ public class SeedDataService
             new Achievement
             {
                 Name = "Night Owl",
-                Description = "Complete a session between 10 AM and 3 AM.",
+                Description = "Complete a session between 10 PM and 3 AM.",
                 Icon = "night_owl.png"
             },
             new Achievement
@@ -128,7 +122,7 @@ public class SeedDataService
             new Achievement
             {
                 Name = "Flashcard Pro",
-                Description = "Review 100 cards in total.",
+                Description = "Review 1000 cards in total.",
                 Icon = "flashcard_pro.png"
             },
             new Achievement

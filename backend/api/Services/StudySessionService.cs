@@ -2,6 +2,7 @@
 using api.DTO;
 using api.ML;
 using api.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.ML;
 
 namespace api.Services;
@@ -10,6 +11,7 @@ public class StudySessionService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly RegressionModel _regressionModel;
+    private readonly AchievementsService _achievementService;
 
     private static readonly MLContext _mlContext = new MLContext();
     private static ITransformer _model;
@@ -17,19 +19,48 @@ public class StudySessionService
     private readonly string _modelPath;
 
 
-    public StudySessionService(ApplicationDbContext dbContext, RegressionModel regressionModel, UserService userService)
+    public StudySessionService(ApplicationDbContext dbContext, RegressionModel regressionModel, UserService userService, AchievementsService achievementService)
     {
         _dbContext = dbContext;
         _regressionModel = regressionModel;
         _modelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.zip");
         LoadModel();
+        _achievementService = achievementService;
     }
 
     public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
     {
         var studySession = new StudySession(studySessionCreateRequest);
 
+        await UpdateUserStats(studySession);
+
         _dbContext.StudySessions.Add(studySession);
+        await _dbContext.SaveChangesAsync();
+
+        await _achievementService.CheckAchievements(studySession.UserId);
+    }
+
+    private async Task UpdateUserStats(StudySession studySession)
+    {
+        var user = await _dbContext.Users
+            .Include(u => u.UserStats)
+            .SingleAsync(u => u.Id == studySession.UserId);
+
+        var lastStudySession = await _dbContext.StudySessions
+            .Where(ss => ss.UserId == user!.Id)
+            .OrderByDescending(ss => ss.StudiedAt)
+            .FirstOrDefaultAsync();
+
+        if (lastStudySession == null || lastStudySession.StudiedAt.Date != DateTime.Today)
+        {
+            user.UserStats.StudyStreak++;
+        }
+
+        user.UserStats.TotalSessionsCompleted++;
+        user.UserStats.TotalCardsLearned += studySession.CardCount;
+        user.UserStats.TotalCorrectAnswers += studySession.CardCount;
+
+        _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
     }
 

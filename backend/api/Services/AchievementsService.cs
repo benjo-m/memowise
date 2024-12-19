@@ -113,7 +113,7 @@ public class AchievementsService
             {
                 await UnlockAchievement(achievement.Id, userId);
             }
-            else if (achievement.Name == "Deck designer" && userStats.TotalCardsCreated >= 100)
+            else if (achievement.Name == "Deck designer" && userStats.TotalCardsCreated >= 20)
             {
                 await UnlockAchievement(achievement.Id, userId);
             }

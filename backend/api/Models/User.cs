@@ -10,6 +10,7 @@ public class User
     public string PasswordHashed { get; set; }
     public ICollection<Deck> Decks { get; set; } = new List<Deck>();
     public List<Achievement> Achievements { get; set; } = [];
+    public UserStats UserStats { get; set; } = new UserStats();
 
     public User() {}
 

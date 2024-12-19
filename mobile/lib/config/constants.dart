@@ -1,5 +1,5 @@
-// const String baseUrl = 'http://10.0.2.2:5151';
-const String baseUrl = 'http://localhost:5151';
+const String baseUrl = 'http://10.0.2.2:5151';
+// const String baseUrl = 'http://localhost:5151';
 
 const int blue = 0xff03AED2;
 const green = "255, 95, 197, 98";

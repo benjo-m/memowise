@@ -22,6 +22,7 @@ public class UserService
     public async Task<UserDto?> Login(LoginRequest loginRequest)
     {
         var user = await _dbContext.Users
+            .Include(u => u.UserStats)
             .Where(u => u.Username == loginRequest.Username)
             .FirstOrDefaultAsync();
 
@@ -29,6 +30,8 @@ public class UserService
         {
             return null;
         }
+
+        await CheckStudyStreak(user);
 
         var userDto = new UserDto(user);
 
@@ -57,14 +60,6 @@ public class UserService
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
 
-        var userStats = new UserStats()
-        {
-            UserId = user.Id,
-        };
-
-        _dbContext.UserStats.Add(userStats);
-        await _dbContext.SaveChangesAsync();
-
         return new UserDto(user);
     }
 
@@ -79,8 +74,25 @@ public class UserService
         }
 
         var user = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            .Include(u => u.UserStats)
+            .SingleOrDefaultAsync(u => u.Id == int.Parse(userId));
 
         return user;
+    }
+
+    private async Task CheckStudyStreak(User user)
+    {
+        var lastStudySession = await _dbContext.StudySessions
+            .Where(ss => ss.UserId == user.Id)
+            .OrderByDescending(ss => ss.StudiedAt)
+            .FirstOrDefaultAsync();
+
+        if (lastStudySession != null && lastStudySession.StudiedAt.Date < DateTime.Now.Date.AddDays(-1))
+        {
+            user.UserStats.StudyStreak = 0;
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

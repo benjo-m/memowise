@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/change_password_request.dart';
+import 'package:mobile/dtos/delete_user_request.dart';
 import 'package:mobile/dtos/login_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/dtos/login_response.dart';
@@ -58,7 +59,9 @@ class AuthService {
   void logout() {
     CurrentUser.userId = null;
     CurrentUser.username = null;
+    CurrentUser.email = null;
     CurrentUser.password = null;
+    CurrentUser.authHeader = null;
   }
 
   Future<void> updateUser(UpdateUserRequest updateUserRequest) async {
@@ -88,6 +91,21 @@ class AuthService {
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
       body: jsonEncode(changePasswordRequest),
+    );
+
+    if (response.statusCode == 401) {
+      throw WrongPasswordException();
+    }
+  }
+
+  Future<void> deleteUser(DeleteUserRequest deleteUserRequest) async {
+    final response = await http.delete(
+      Uri.parse("$baseUrl/users"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+      body: jsonEncode(deleteUserRequest),
     );
 
     if (response.statusCode == 401) {

@@ -146,4 +146,17 @@ public class UserService
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task DeleteUser(DeleteUserRequest deleteUserRequest)
+    {
+        var user = await GetCurrentUser();
+
+        if (user == null || !BCrypt.Net.BCrypt.Verify(deleteUserRequest.Password, user.PasswordHashed))
+        {
+            throw new WrongPasswordException("Wrong Password");
+        }
+
+        _dbContext.Users.Remove(user);
+        await _dbContext.SaveChangesAsync();
+    }
 }

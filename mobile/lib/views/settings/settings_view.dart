@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/delete_user_request.dart';
 import 'package:mobile/dtos/update_user_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/auth_service.dart';
@@ -113,7 +114,7 @@ class _SettingsViewState extends State<SettingsView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () async => curr(),
+                    onPressed: () => showDeleteAccountDialog(),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
                           Color.fromARGB(255, 243, 83, 71)),
@@ -287,13 +288,6 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
-  void curr() {
-    log(CurrentUser.username!);
-    log(CurrentUser.email!);
-    log(CurrentUser.password!);
-    log(CurrentUser.authHeader!);
-  }
-
   void updateUser() async {
     if (_formKey.currentState!.validate()) {
       final updateUserRequest = UpdateUserRequest(
@@ -324,6 +318,82 @@ class _SettingsViewState extends State<SettingsView> {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginView()),
       (route) => false,
+    );
+  }
+
+  showDeleteAccountDialog() {
+    String? _passwordError = null;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        final _passwordController = TextEditingController();
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return SimpleDialog(
+              title: const Center(child: Text("Delete Account")),
+              children: [
+                const Center(
+                    child:
+                        Text("Are you sure you want to delete your account?")),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      errorText: _passwordError,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("Cancel"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_passwordController.text.trim().isEmpty) {
+                          setState(() {
+                            _passwordError =
+                                "You must enter your password to proceed";
+                          });
+                          return;
+                        } else if (_passwordController.text.trim() !=
+                            CurrentUser.password) {
+                          setState(() {
+                            _passwordError = "Wrong password";
+                          });
+                          return;
+                        }
+
+                        await AuthService().deleteUser(DeleteUserRequest(
+                            password: _passwordController.text));
+
+                        AuthService().logout();
+
+                        if (context.mounted) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const LoginView()),
+                            (route) => false,
+                          );
+                        }
+                      },
+                      child: const Text("Delete"),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

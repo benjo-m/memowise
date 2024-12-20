@@ -91,4 +91,18 @@ public class UsersController : BaseController
             return Unauthorized();
         }
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser(DeleteUserRequest deleteUserRequest)
+    {
+        try
+        {
+            await _userService.DeleteUser(deleteUserRequest);
+            return Ok();
+        }
+        catch (WrongPasswordException)
+        {
+            return Unauthorized();
+        }
+    }
 }

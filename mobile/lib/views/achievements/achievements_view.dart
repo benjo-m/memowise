@@ -26,9 +26,12 @@ class _AchievementsViewState extends State<AchievementsView> {
   Future _getUnlockedAchievements() async {
     final achievements = await AchievementsService()
         .getUnlockedAchievements(CurrentUser.userId!);
-    setState(() {
-      _unlockedAchievements = achievements;
-    });
+
+    if (mounted) {
+      setState(() {
+        _unlockedAchievements = achievements;
+      });
+    }
   }
 
   @override

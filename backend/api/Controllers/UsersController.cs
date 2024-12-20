@@ -33,77 +33,29 @@ public class UsersController : BaseController
     [HttpPost("register")]
     public async Task<ActionResult<UserDto?>> Register(RegisterRequest registerRequest)
     {
-        try
-        {
-            var userDto = await _userService.Register(registerRequest);
-            return Ok(userDto);
-        }
-        catch (UsernameTakenException ex)
-        {
-            return Conflict(new { errorCode = "USERNAME_TAKEN", message = ex.Message });
-        }
-        catch (EmailAlreadyInUseException ex)
-        {
-            return Conflict(new { errorCode = "EMAIL_TAKEN", message = ex.Message });
-        }
-        catch (PasswordsNotMatchingException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message }); 
-        }
+        var userDto = await _userService.Register(registerRequest);
+        return Ok(userDto);
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest updateUserRequest)
     {
-        try
-        {
-            await _userService.UpdateUser(updateUserRequest);
-            return Ok();
-        }
-        catch (UsernameTakenException ex)
-        {
-            return Conflict(new { errorCode = "USERNAME_TAKEN", message = ex.Message });
-        }
-        catch (EmailAlreadyInUseException ex)
-        {
-            return Conflict(new { errorCode = "EMAIL_TAKEN", message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
-        }
+        await _userService.UpdateUser(updateUserRequest);
+        return Ok();
     }
 
     [HttpPut("password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest changePasswordRequest)
     {
-        try
-        {
-            await _userService.ChangePassword(changePasswordRequest);
-            return Ok();
-        }
-        catch (WrongPasswordException)
-        {
-            return Unauthorized();
-        }
+        await _userService.ChangePassword(changePasswordRequest);
+        return Ok();
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeleteUser(DeleteUserRequest deleteUserRequest)
     {
-        try
-        {
-            await _userService.DeleteUser(deleteUserRequest);
-            return Ok();
-        }
-        catch (WrongPasswordException)
-        {
-            return Unauthorized();
-        }
+        await _userService.DeleteUser(deleteUserRequest);
+        return Ok();
     }
 
     [HttpPut("delete-data")]

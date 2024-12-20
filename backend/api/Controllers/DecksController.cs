@@ -22,15 +22,8 @@ public class DecksController : BaseController
     [HttpGet("user/{userId}")]
     public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(int userId)
     {
-        try
-        {
-            var decks = await _deckService.GetDecksByUser(userId);
-            return Ok(decks);
-        }
-        catch (ResourceForbiddenException)
-        {
-            return Forbid();
-        }
+        var decks = await _deckService.GetDecksByUser(userId);
+        return Ok(decks);
     }
 
     [HttpGet("{deckId}")]

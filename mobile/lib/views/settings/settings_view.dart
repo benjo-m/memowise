@@ -289,6 +289,11 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   void updateUser() async {
+    setState(() {
+      _usernameError = null;
+      _emailError = null;
+    });
+
     if (_formKey.currentState!.validate()) {
       final updateUserRequest = UpdateUserRequest(
         username: _usernameController.text.trim(),
@@ -322,12 +327,12 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   showDeleteAccountDialog() {
-    String? _passwordError = null;
+    String? passwordError;
 
     showDialog(
       context: context,
       builder: (context) {
-        final _passwordController = TextEditingController();
+        final passwordController = TextEditingController();
         return StatefulBuilder(
           builder: (context, setState) {
             return SimpleDialog(
@@ -340,11 +345,11 @@ class _SettingsViewState extends State<SettingsView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextFormField(
-                    controller: _passwordController,
+                    controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      errorText: _passwordError,
+                      errorText: passwordError,
                     ),
                   ),
                 ),
@@ -358,22 +363,22 @@ class _SettingsViewState extends State<SettingsView> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        if (_passwordController.text.trim().isEmpty) {
+                        if (passwordController.text.trim().isEmpty) {
                           setState(() {
-                            _passwordError =
+                            passwordError =
                                 "You must enter your password to proceed";
                           });
                           return;
-                        } else if (_passwordController.text.trim() !=
+                        } else if (passwordController.text.trim() !=
                             CurrentUser.password) {
                           setState(() {
-                            _passwordError = "Wrong password";
+                            passwordError = "Wrong password";
                           });
                           return;
                         }
 
                         await AuthService().deleteUser(DeleteUserRequest(
-                            password: _passwordController.text));
+                            password: passwordController.text));
 
                         AuthService().logout();
 

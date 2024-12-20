@@ -68,7 +68,10 @@ public class DeckService
         Deck deck = new Deck(deckCreateRequest);
         deck.User = user;
 
+        user.UserStats.TotalDecksCreated++;
+
         _dbContext.Decks.Add(deck);
+        _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
         return deck;

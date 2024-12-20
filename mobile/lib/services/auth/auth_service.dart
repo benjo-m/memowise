@@ -112,4 +112,14 @@ class AuthService {
       throw WrongPasswordException();
     }
   }
+
+  Future<void> deleteAllData() async {
+    await http.put(
+      Uri.parse("$baseUrl/users/delete-data"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+    );
+  }
 }

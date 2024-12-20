@@ -105,4 +105,11 @@ public class UsersController : BaseController
             return Unauthorized();
         }
     }
+
+    [HttpPut("delete-data")]
+    public async Task<IActionResult> DeleteAllData()
+    {
+        await _userService.DeleteAllData();
+        return Ok();
+    }
 }

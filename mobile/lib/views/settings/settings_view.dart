@@ -202,7 +202,7 @@ class _SettingsViewState extends State<SettingsView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () async => log("delete acc"),
+                    onPressed: () async => deleteData(),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
                           Color.fromARGB(255, 243, 83, 71)),
@@ -392,6 +392,44 @@ class _SettingsViewState extends State<SettingsView> {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  deleteData() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: const Center(child: Text("Delete Data")),
+          children: [
+            const Center(
+              child: Text(
+                "This action will delete all your decks, cards, and achievements.\nAre you sure you want to proceed?",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await AuthService().deleteAllData();
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text("Delete"),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );

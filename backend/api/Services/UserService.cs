@@ -2,7 +2,6 @@
 using api.DTO;
 using api.Exceptions;
 using api.Models;
-using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using LoginRequest = api.DTO.LoginRequest;
@@ -13,6 +12,7 @@ namespace api.Services;
 public class UserService
 {
     private readonly ApplicationDbContext _dbContext;
+
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public UserService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
@@ -77,6 +77,7 @@ public class UserService
 
         var user = await _dbContext.Users
             .Include(u => u.UserStats)
+            .Include(u => u.Achievements)
             .SingleOrDefaultAsync(u => u.Id == int.Parse(userId));
 
         return user;
@@ -158,5 +159,37 @@ public class UserService
 
         _dbContext.Users.Remove(user);
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteAllData()
+    {
+        var user = await GetCurrentUser();
+
+        if (user == null)
+        {
+            return;
+        }
+
+        ResetUserStats(user);
+
+        var decks = await _dbContext.Decks
+            .Where(d => d.UserId == user.Id)
+            .ToListAsync();
+
+        await _dbContext.Database.ExecuteSqlRawAsync("DELETE FROM AchievementUser WHERE UsersId = {0}", user.Id);
+
+        _dbContext.Decks.RemoveRange(decks);
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    private void ResetUserStats(User user)
+    {
+        user.UserStats.TotalDecksCreated = 0;
+        user.UserStats.TotalCardsCreated = 0;
+        user.UserStats.TotalCardsLearned = 0;
+        user.UserStats.StudyStreak = 0;
+        user.UserStats.TotalSessionsCompleted = 0;
+        user.UserStats.TotalCorrectAnswers = 0;
     }
 }

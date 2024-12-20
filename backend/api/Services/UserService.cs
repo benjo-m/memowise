@@ -2,8 +2,11 @@
 using api.DTO;
 using api.Exceptions;
 using api.Models;
+using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using LoginRequest = api.DTO.LoginRequest;
+using RegisterRequest = api.DTO.RegisterRequest;
 
 namespace api.Services;
 
@@ -119,8 +122,27 @@ public class UserService
         
         user.Username = updateUserRequest.Username;
         user.Email = updateUserRequest.Email;
-        user.PasswordHashed = BCrypt.Net.BCrypt.HashPassword(updateUserRequest.Password);
         
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task ChangePassword(ChangePasswordRequest changePasswordRequest)
+    {
+        var user = await GetCurrentUser();
+
+        if (user == null || !BCrypt.Net.BCrypt.Verify(changePasswordRequest.CurrentPassword, user.PasswordHashed))
+        {
+            throw new WrongPasswordException("Wrong Password");
+        }
+
+        if (changePasswordRequest.CurrentPassword == changePasswordRequest.NewPassword)
+        {
+            return;
+        }
+
+        user.PasswordHashed = BCrypt.Net.BCrypt.HashPassword(changePasswordRequest.NewPassword);
+
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
     }

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:mobile/config/constants.dart';
+import 'package:mobile/dtos/change_password_request.dart';
 import 'package:mobile/dtos/login_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/dtos/login_response.dart';
@@ -76,6 +76,22 @@ class AuthService {
       responseBody['errorCode'] == "USERNAME_TAKEN"
           ? throw UsernameTakenException()
           : throw EmailAlreadyInUseException();
+    }
+  }
+
+  Future<void> changePassword(
+      ChangePasswordRequest changePasswordRequest) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/users/password"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+      body: jsonEncode(changePasswordRequest),
+    );
+
+    if (response.statusCode == 401) {
+      throw WrongPasswordException();
     }
   }
 }

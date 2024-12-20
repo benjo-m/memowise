@@ -78,4 +78,17 @@ public class UsersController : BaseController
         }
     }
 
+    [HttpPut("password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest changePasswordRequest)
+    {
+        try
+        {
+            await _userService.ChangePassword(changePasswordRequest);
+            return Ok();
+        }
+        catch (WrongPasswordException)
+        {
+            return Unauthorized();
+        }
+    }
 }

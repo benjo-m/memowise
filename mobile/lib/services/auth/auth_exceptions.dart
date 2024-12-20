@@ -10,6 +10,8 @@ class InvalidEmailException implements Exception {}
 
 class PasswordsNotMatching implements Exception {}
 
+class WrongPasswordException implements Exception {}
+
 // generic exceptions
 class GenericAuthException implements Exception {}
 

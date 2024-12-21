@@ -37,6 +37,7 @@ public class UsersController : BaseController
         return Ok(userDto);
     }
 
+
     [HttpPut]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest updateUserRequest)
     {

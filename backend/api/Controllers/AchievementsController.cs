@@ -1,12 +1,9 @@
-﻿using api.DTO;
-using api.Models;
-using api.Services;
+﻿using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[AllowAnonymous]
 public class AchievementsController : BaseController
 {
     private readonly AchievementsService _achievementsService;
@@ -33,11 +30,5 @@ public class AchievementsController : BaseController
         }
 
         return Ok(achievements);
-    }
-
-    [HttpGet("check/user/{userId}")]
-    public async Task CheckAchievements(int userId)
-    {
-        await _achievementsService.CheckAchievements(userId);
     }
 }

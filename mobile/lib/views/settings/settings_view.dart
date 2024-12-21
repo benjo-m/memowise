@@ -9,6 +9,7 @@ import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:mobile/views/settings/change_password_view.dart';
+import 'package:mobile/views/settings/premium_upgrade_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -163,7 +164,7 @@ class _SettingsViewState extends State<SettingsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Account type: Free",
+                    "Unlock the full experience with \nthe Premium upgrade",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -171,7 +172,13 @@ class _SettingsViewState extends State<SettingsView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () async => log("delete acc"),
+                    onPressed: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PremiumUpgradeView()),
+                      );
+                    },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
                         Color.fromARGB(255, 241, 183, 7),
@@ -194,7 +201,7 @@ class _SettingsViewState extends State<SettingsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Want to start fresh?",
+                    "Delete all data and start fresh,\nyour account remains intact!",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

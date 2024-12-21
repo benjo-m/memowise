@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mobile/views/login_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey =
+      const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
   runApp(const MyApp());
 }
 

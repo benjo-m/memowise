@@ -43,6 +43,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RegressionModel>();
 builder.Services.AddScoped<StudySessionService>();
 builder.Services.AddScoped<AchievementsService>();
+builder.Services.AddScoped<StripeService>();
 builder.Services.AddScoped<SeedDataService>();
 
 var app = builder.Build();

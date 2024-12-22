@@ -3,6 +3,8 @@ import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/views/decks/add_card_view.dart';
+import 'package:mobile/views/decks/add_card_view2.dart';
 import 'package:mobile/widgets/add_card_dialog.dart';
 import 'package:mobile/widgets/card_list_item.dart';
 import 'package:mobile/widgets/edit_card_dialog.dart';
@@ -107,7 +109,12 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => showAddCardDialog(context),
+                    // onPressed: () => showAddCardDialog(context),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddCardView2()),
+                    ),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Color(blue)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),

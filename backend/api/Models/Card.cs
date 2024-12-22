@@ -8,6 +8,7 @@ public class Card
     public int Id { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
+    public byte[]? Image { get; set; }
     public CardStats CardStats { get; set; } = new CardStats();
     public int DeckId { get; set; }
     [JsonIgnore]

@@ -81,9 +81,6 @@ class _SettingsViewState extends State<SettingsView> {
                       },
                       onEditingComplete: () async => updateUser(),
                     ),
-                    const SizedBox(
-                      width: 20,
-                    ),
                     const SizedBox(height: 20),
                     TextFormField(
                       focusNode: _emailFocusNode,
@@ -118,9 +115,6 @@ class _SettingsViewState extends State<SettingsView> {
                         return null;
                       },
                       onEditingComplete: () async => updateUser(),
-                    ),
-                    const SizedBox(
-                      width: 20,
                     ),
                   ],
                 ),

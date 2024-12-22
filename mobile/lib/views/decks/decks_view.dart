@@ -58,6 +58,8 @@ class _DecksViewState extends State<DecksView> {
                 constraints: const BoxConstraints(
                   maxHeight: 50,
                   minHeight: 50,
+                  maxWidth: 340,
+                  minWidth: 340,
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -66,7 +68,7 @@ class _DecksViewState extends State<DecksView> {
                 },
               ),
               const SizedBox(
-                height: 40,
+                height: 70,
               ),
               FutureBuilder(
                 future: _decksFuture,
@@ -109,13 +111,13 @@ class _DecksViewState extends State<DecksView> {
                         : noDecksMessage();
                   }
                   return const SizedBox(
-                    height: 423,
+                    height: 383,
                     child: Center(child: CircularProgressIndicator()),
                   );
                 },
               ),
               const SizedBox(
-                height: 80,
+                height: 70,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -206,30 +208,31 @@ class _DecksViewState extends State<DecksView> {
   CarouselSlider showCarousel(
       Iterable<DeckSummary> decks, BuildContext context) {
     return CarouselSlider(
-        items: decks
-            .map((deck) => GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                DeckDetailsView(deckId: deck.id))).then(
-                      (value) => setState(() {
-                        _decksFuture = DeckService().getDecks();
-                      }),
-                    );
-                  },
-                  child: DeckListItem(
-                    deckSummary: deck,
-                  ),
-                ))
-            .toList(),
-        options: CarouselOptions(
-          enlargeCenterPage: true,
-          height: 370,
-          padEnds: true,
-          viewportFraction: 0.75,
-        ));
+      items: decks
+          .map((deck) => GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DeckDetailsView(deckId: deck.id))).then(
+                    (value) => setState(() {
+                      _decksFuture = DeckService().getDecks();
+                    }),
+                  );
+                },
+                child: DeckListItem(
+                  deckSummary: deck,
+                ),
+              ))
+          .toList(),
+      options: CarouselOptions(
+        enlargeCenterPage: true,
+        height: 330,
+        padEnds: true,
+        viewportFraction: 0.7,
+      ),
+    );
   }
 
   SizedBox noDecksMessage() {

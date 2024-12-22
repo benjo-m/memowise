@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
@@ -39,20 +40,101 @@ class _StudySessionViewState extends State<StudySessionView> {
           title: const Text("Study"),
         ),
         body: cards.isNotEmpty
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                    Text(cards[currentCardIndex].question),
-                    showAnswer
-                        ? Text(cards[currentCardIndex].answer)
-                        : ElevatedButton(
-                            onPressed: () {
-                              setState(() => showAnswer = true);
-                            },
-                            child: const Text("Show answer")),
-                    if (showAnswer) showRatingButtons(),
-                  ])
+            ? Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "Question",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffFEEFAD),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    width: 2.0,
+                                    color:
+                                        const Color.fromARGB(255, 252, 221, 84),
+                                  ),
+                                ),
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  cards[currentCardIndex].question,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          showAnswer
+                              ? Column(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 8.0),
+                                      child: Text(
+                                        "Answer",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xffFEEFAD),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          width: 2.0,
+                                          color: const Color.fromARGB(
+                                              255, 252, 221, 84),
+                                        ),
+                                      ),
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        cards[currentCardIndex].answer,
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                        ],
+                      ),
+                      showAnswer
+                          ? const SizedBox()
+                          : TextButton(
+                              onPressed: () {
+                                setState(() => showAnswer = true);
+                              },
+                              style: const ButtonStyle(
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Color(0xff03AED2)),
+                                foregroundColor:
+                                    WidgetStatePropertyAll(Colors.white),
+                                fixedSize:
+                                    WidgetStatePropertyAll(Size(150, 45)),
+                                side: WidgetStatePropertyAll(
+                                  BorderSide(
+                                    width: 2,
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                              ),
+                              child: const Text("Show Answer"),
+                            ),
+                      if (showAnswer) showRatingButtons(),
+                    ]),
+              )
             : const Center(
                 child: Text("No learning cards at the moment"),
               ));
@@ -64,39 +146,83 @@ class _StudySessionViewState extends State<StudySessionView> {
       children: [
         ElevatedButton(
           onPressed: () {
-            selectAnswer(0);
-          },
-          child: const Text("0"),
-        ),
-        ElevatedButton(
-          onPressed: () {
             selectAnswer(1);
           },
-          child: const Text("1"),
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.red[500]),
+          ),
+          child: const Text(
+            "1",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
             selectAnswer(2);
           },
-          child: const Text("2"),
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.orange[500]),
+          ),
+          child: const Text(
+            "2",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
             selectAnswer(3);
           },
-          child: const Text("3"),
+          style: const ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.amberAccent),
+          ),
+          child: const Text(
+            "3",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
             selectAnswer(4);
           },
-          child: const Text("4"),
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.lightGreen[500]),
+          ),
+          child: const Text(
+            "4",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
             selectAnswer(5);
           },
-          child: const Text("5"),
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.green[500]),
+          ),
+          child: const Text(
+            "5",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
       ],
     );

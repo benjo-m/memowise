@@ -25,9 +25,14 @@ class _SettingsViewState extends State<SettingsView> {
   String? _usernameError;
   String? _emailError;
 
+  late FocusNode _usernameFocusNode;
+  late FocusNode _emailFocusNode;
+
   @override
   void initState() {
     super.initState();
+    _usernameFocusNode = FocusNode();
+    _emailFocusNode = FocusNode();
     _usernameController.text = CurrentUser.username ?? "";
     _emailController.text = CurrentUser.email ?? "";
   }
@@ -57,6 +62,7 @@ class _SettingsViewState extends State<SettingsView> {
                 child: Column(
                   children: [
                     TextFormField(
+                      focusNode: _usernameFocusNode,
                       controller: _usernameController,
                       decoration: InputDecoration(
                         labelText: 'Username',
@@ -65,6 +71,7 @@ class _SettingsViewState extends State<SettingsView> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        color: Colors.black,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -74,8 +81,12 @@ class _SettingsViewState extends State<SettingsView> {
                       },
                       onEditingComplete: () async => updateUser(),
                     ),
+                    const SizedBox(
+                      width: 20,
+                    ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      focusNode: _emailFocusNode,
                       controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
@@ -84,6 +95,7 @@ class _SettingsViewState extends State<SettingsView> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        color: Colors.black,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -106,6 +118,9 @@ class _SettingsViewState extends State<SettingsView> {
                         return null;
                       },
                       onEditingComplete: () async => updateUser(),
+                    ),
+                    const SizedBox(
+                      width: 20,
                     ),
                   ],
                 ),
@@ -163,13 +178,18 @@ class _SettingsViewState extends State<SettingsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Unlock the full experience with \nthe Premium upgrade",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 85, 85, 85),
+                  const Flexible(
+                    child: Text(
+                      "Unlock the full experience with the Premium upgrade",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 85, 85, 85),
+                      ),
                     ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   TextButton(
                     onPressed: () async {
@@ -200,13 +220,18 @@ class _SettingsViewState extends State<SettingsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Delete all data and start fresh,\nyour account remains intact!",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 85, 85, 85),
+                  const Flexible(
+                    child: Text(
+                      "Delete all data and start fresh, your account remains intact!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 85, 85, 85),
+                      ),
                     ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   TextButton(
                     onPressed: () async => deleteData(),
@@ -230,13 +255,18 @@ class _SettingsViewState extends State<SettingsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Encountered a bug or have a \nsuggestion to improve the app?",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 85, 85, 85),
+                  const Flexible(
+                    child: Text(
+                      "Encountered a bug or have a suggestion to improve the app?",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 85, 85, 85),
+                      ),
                     ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   TextButton(
                     onPressed: () async => log("delete acc"),
@@ -296,10 +326,24 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   void updateUser() async {
+    _usernameFocusNode.unfocus();
+    _emailFocusNode.unfocus();
+
     setState(() {
       _usernameError = null;
       _emailError = null;
     });
+
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+
+    if (username.isEmpty) {
+      _usernameController.text = CurrentUser.username ?? "";
+    }
+
+    if (email.isEmpty) {
+      _emailController.text = CurrentUser.email ?? "";
+    }
 
     if (_formKey.currentState!.validate()) {
       final updateUserRequest = UpdateUserRequest(

@@ -25,14 +25,19 @@ class DeckDetailsView extends StatefulWidget {
 class _DeckDetailsViewState extends State<DeckDetailsView> {
   late Future<Deck> _deckFuture;
   final _deckNameController = TextEditingController();
-  bool _editingDeckName = false;
-  late FocusNode deckNameFocusNode;
+  late FocusNode _deckNameFocusNode;
+  String? _deckNameError;
 
   @override
   void initState() {
     super.initState();
     _deckFuture = DeckService().getDeckById(widget.deckId);
-    deckNameFocusNode = FocusNode();
+    _deckNameFocusNode = FocusNode();
+    DeckService().getDeckById(widget.deckId).then((deck) {
+      setState(() {
+        _deckNameController.text = deck.name;
+      });
+    });
   }
 
   @override
@@ -46,135 +51,27 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Deck deck = snapshot.data!;
-              _deckNameController.text = deck.name;
               return Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            focusNode: deckNameFocusNode,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              border: InputBorder.none,
-                              fillColor:
-                                  const Color.fromARGB(255, 233, 233, 233),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                            controller: _deckNameController,
-                            onEditingComplete: () async =>
-                                await editDeckName(deck),
-                            enabled: _editingDeckName,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        !_editingDeckName
-                            ? TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _editingDeckName = true;
-                                  });
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    deckNameFocusNode.requestFocus();
-                                  });
-                                },
-                                style: const ButtonStyle(
-                                  fixedSize: WidgetStatePropertyAll(
-                                    Size(85, 45),
-                                  ),
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Color(blue),
-                                  ),
-                                  foregroundColor:
-                                      WidgetStatePropertyAll(Colors.white),
-                                  side: WidgetStatePropertyAll(
-                                    BorderSide(
-                                      width: 2,
-                                      color: Colors.lightBlue,
-                                    ),
-                                  ),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.edit,
-                                      size: 20,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "Edit",
-                                      style: TextStyle(fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : TextButton(
-                                onPressed: () async => await editDeckName(deck),
-                                style: const ButtonStyle(
-                                  fixedSize: WidgetStatePropertyAll(
-                                    Size(85, 45),
-                                  ),
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Color.fromARGB(255, 95, 197, 98),
-                                  ),
-                                  foregroundColor:
-                                      WidgetStatePropertyAll(Colors.white),
-                                  side: WidgetStatePropertyAll(
-                                    BorderSide(
-                                      width: 2,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.done,
-                                      size: 20,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "Done",
-                                      style: TextStyle(fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                      ],
+                    TextFormField(
+                      focusNode: _deckNameFocusNode,
+                      maxLength: 50,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Deck Name',
+                        errorText: _deckNameError,
+                      ),
+                      controller: _deckNameController,
+                      onEditingComplete: () async => await editDeckName(deck),
+                    ),
+                    const SizedBox(
+                      width: 20,
                     ),
                     const SizedBox(
                       height: 30,
@@ -346,16 +243,40 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
   }
 
   Future<void> editDeckName(Deck deck) async {
+    _deckNameFocusNode.unfocus();
     String deckName = _deckNameController.text.trim();
-    if (deckName.isEmpty || deckName.length > 100) {
-      _deckNameController.text = deck.name;
-    } else {
-      deck.name = _deckNameController.text;
-      await DeckService().updateDeck(
-          deck.id, DeckUpdateRequest(name: _deckNameController.text));
+
+    final decks = await DeckService().getDecks();
+
+    if (deckName.isEmpty) {
+      setState(() {
+        _deckNameError = null;
+        _deckNameController.text = deck.name;
+      });
+      return;
     }
+
+    if (deckName == deck.name) {
+      setState(() {
+        _deckNameError = null;
+      });
+      return;
+    }
+
+    if (decks.any((existingDeck) =>
+        existingDeck.name == deckName && existingDeck.id != deck.id)) {
+      setState(() {
+        _deckNameError = "A deck with that name already exists";
+      });
+      return;
+    }
+
+    await DeckService().updateDeck(
+      deck.id,
+      DeckUpdateRequest(name: deckName),
+    );
     setState(() {
-      _editingDeckName = false;
+      _deckNameError = null;
     });
   }
 

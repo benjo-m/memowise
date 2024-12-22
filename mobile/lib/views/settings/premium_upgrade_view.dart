@@ -20,25 +20,59 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Upgrade to Premium',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
             const SizedBox(height: 16),
             const Text(
               'With the premium upgrade, you get:',
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8),
-            const Text('Unlimited number of decks'),
-            const Text('Unlimited number of cards per deck'),
-            const Text('AI-generated decks with up to 50 cards instead of 20'),
             const Text(
-                'Premium users\' feedback is displayed before free users\' feedback'),
+              'Unlimited number of decks',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 85, 85, 85),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Unlimited number of cards per deck',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 85, 85, 85),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'AI-generated decks with up to 50 cards instead of 20',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 85, 85, 85),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Premium users\' feedback is displayed before free users\' feedback',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 85, 85, 85),
+              ),
+            ),
             const SizedBox(height: 16),
-            const Text(
-              'Price: \$4.99',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Price: \$4.99',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const Spacer(),
             Center(

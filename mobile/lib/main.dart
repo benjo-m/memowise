@@ -31,6 +31,13 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
         ),
         inputDecorationTheme: InputDecorationTheme(
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 197, 197, 197),
+              width: 3,
+            ),
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
@@ -61,6 +68,7 @@ class MyApp extends StatelessWidget {
           ),
           floatingLabelStyle: const TextStyle(
             fontSize: 20,
+            color: Colors.black,
           ),
         ),
       ),

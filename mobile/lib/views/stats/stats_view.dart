@@ -30,20 +30,8 @@ class _StatsViewState extends State<StatsView> {
         title: const Text("Stats"),
       ),
       body: Center(
-          child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () async =>
-                await ImageUploadService().pickAndUploadImage(),
-            child: const Text("Upload Image"),
-          ),
-          Image.memory(
-            slika ?? Uint8List(0),
-            width: 300,
-            height: 200,
-          )
-        ],
-      )),
+        child: Text("stats"),
+      ),
     );
   }
 }

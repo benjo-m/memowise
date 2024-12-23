@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
@@ -6,9 +8,9 @@ import 'package:mobile/dtos/deck_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
-import 'package:mobile/widgets/add_card_dialog.dart';
+import 'package:mobile/views/decks/add_card_view.dart';
+import 'package:mobile/views/decks/edit_card_view.dart';
 import 'package:mobile/widgets/card_list_item.dart';
-import 'package:mobile/widgets/edit_card_dialog.dart';
 
 class DeckDetailsView extends StatefulWidget {
   const DeckDetailsView({
@@ -130,22 +132,18 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) => AddCardDialog(
-                              onAdd: (CardDto cardDto) async {
-                                if (cardDto.question.isNotEmpty ||
-                                    cardDto.answer.isNotEmpty) {
-                                  final createdCard = await CardService()
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddCardView(
+                                onAdd: (CardDto cardDto) async {
+                                  final newCard = await CardService()
                                       .createCard(deck.id, cardDto);
-                                  setState(() => deck.cards.add(createdCard));
-                                }
-                                if (context.mounted) {
-                                  Navigator.pop(context);
-                                }
-                              },
-                              onCancel: () => Navigator.pop(context),
+                                  setState(() {
+                                    deck.cards.add(newCard);
+                                  });
+                                },
+                              ),
                             ),
                           ),
                           style: const ButtonStyle(
@@ -288,32 +286,22 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
         CardListItem(
           question: card.question,
           answer: card.answer,
-          onEdit: () {
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => EditCardDialog(
-                answer: card.answer,
-                question: card.question,
+          onEdit: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditCardView(
+                cardDto: CardDto.fromCard(card),
                 onEdit: (CardDto cardDto) async {
-                  if (cardDto.question.isNotEmpty ||
-                      cardDto.answer.isNotEmpty) {
-                    await CardService().editCard(deck.id, card.id, cardDto);
-                    final cardToEdit = deck.cards[i];
-                    cardToEdit.question = cardDto.question;
-                    cardToEdit.answer = cardDto.answer;
-                    setState(() {
-                      deck.cards[i] = cardToEdit;
-                    });
-                  }
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
+                  await CardService().editCard(deck.id, card.id, cardDto);
+                  final cardToEdit = deck.cards[i];
+                  cardToEdit.editCard(cardDto);
+                  setState(() {
+                    deck.cards[i] = cardToEdit;
+                  });
                 },
-                onCancel: () => Navigator.pop(context),
               ),
-            );
-          },
+            ),
+          ),
           onDelete: () async {
             final deletedCard = await CardService().deleteCard(card.id);
             setState(

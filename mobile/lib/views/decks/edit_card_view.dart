@@ -6,16 +6,21 @@ import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/services/image_upload_service.dart';
 
-class AddCardView extends StatefulWidget {
-  const AddCardView({super.key, required this.onAdd});
+class EditCardView extends StatefulWidget {
+  const EditCardView({
+    super.key,
+    required this.onEdit,
+    required this.cardDto,
+  });
 
-  final Function(CardDto) onAdd;
+  final Function(CardDto) onEdit;
+  final CardDto cardDto;
 
   @override
-  State<AddCardView> createState() => _AddCardViewState();
+  State<EditCardView> createState() => _EditCardViewState();
 }
 
-class _AddCardViewState extends State<AddCardView> {
+class _EditCardViewState extends State<EditCardView> {
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
   Uint8List? _questionImage;
@@ -27,6 +32,16 @@ class _AddCardViewState extends State<AddCardView> {
   @override
   void initState() {
     super.initState();
+    _questionController.text = widget.cardDto.question;
+    _answerController.text = widget.cardDto.answer;
+    if (widget.cardDto.questionImage != null &&
+        widget.cardDto.questionImage != '') {
+      _questionImage = base64Decode(widget.cardDto.questionImage ?? '');
+    }
+    if (widget.cardDto.answerImage != null &&
+        widget.cardDto.answerImage != '') {
+      _answerImage = base64Decode(widget.cardDto.answerImage ?? '');
+    }
   }
 
   @override
@@ -57,7 +72,7 @@ class _AddCardViewState extends State<AddCardView> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Add Cards'),
+        title: const Text('Edit Card'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -267,45 +282,38 @@ class _AddCardViewState extends State<AddCardView> {
                     onPressed: () => Navigator.pop(context),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 95, 197, 98),
-                      ),
+                          Color.fromARGB(255, 243, 83, 71)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
                       fixedSize: WidgetStatePropertyAll(Size(150, 45)),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
-                          color: Colors.green,
+                          color: Colors.red,
                         ),
                       ),
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.done),
+                        Icon(Icons.close),
                         SizedBox(
                           width: 8,
                         ),
-                        Text("Complete"),
+                        Text("Cancel"),
                       ],
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      var cardCreateRequest = CardDto(
-                        question: _questionController.text.trim(),
-                        answer: _answerController.text.trim(),
+                      final cardDto = CardDto(
+                        question: _questionController.text,
+                        answer: _answerController.text,
                         questionImage:
                             base64Encode(_questionImage ?? Uint8List(0)),
                         answerImage: base64Encode(_answerImage ?? Uint8List(0)),
                       );
-                      widget.onAdd(cardCreateRequest);
-                      _questionController.clear();
-                      _answerController.clear();
-                      setState(() {
-                        _questionImage = null;
-                        _answerImage = null;
-                      });
-                      _questionFocusNode.requestFocus();
+                      widget.onEdit(cardDto);
+                      Navigator.pop(context);
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Color(blue)),
@@ -321,11 +329,11 @@ class _AddCardViewState extends State<AddCardView> {
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add_circle),
+                        Icon(Icons.edit),
                         SizedBox(
                           width: 8,
                         ),
-                        Text("Add Card"),
+                        Text("Edit Card"),
                       ],
                     ),
                   ),

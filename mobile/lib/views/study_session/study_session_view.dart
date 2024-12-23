@@ -1,5 +1,7 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
@@ -26,11 +28,34 @@ class _StudySessionViewState extends State<StudySessionView> {
   int currentCardIndex = 0;
   bool showAnswer = false;
   final stopwatch = Stopwatch();
+  Uint8List? cachedQuestionImageBytes;
+  Uint8List? cachedAnswerImageBytes;
 
   @override
   void initState() {
     super.initState();
     stopwatch.start();
+    if (cards.isNotEmpty) {
+      _cacheImages();
+    }
+  }
+
+  void _cacheImages() {
+    if (cards[currentCardIndex].questionImage == null ||
+        cards[currentCardIndex].questionImage!.isEmpty) {
+      cachedQuestionImageBytes = null;
+    }
+
+    if (cards[currentCardIndex].answerImage == null ||
+        cards[currentCardIndex].answerImage!.isEmpty) {
+      cachedAnswerImageBytes = null;
+    }
+
+    cachedQuestionImageBytes =
+        base64Decode(cards[currentCardIndex].questionImage ?? "");
+
+    cachedAnswerImageBytes =
+        base64Decode(cards[currentCardIndex].answerImage ?? "");
   }
 
   @override
@@ -57,6 +82,7 @@ class _StudySessionViewState extends State<StudySessionView> {
                                 ),
                               ),
                               Container(
+                                height: 220,
                                 decoration: BoxDecoration(
                                   color: const Color(0xffFEEFAD),
                                   borderRadius: BorderRadius.circular(10),
@@ -68,9 +94,28 @@ class _StudySessionViewState extends State<StudySessionView> {
                                 ),
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  cards[currentCardIndex].question,
-                                  style: const TextStyle(fontSize: 16),
+                                child: Scrollbar(
+                                  thumbVisibility: true,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          cards[currentCardIndex].question,
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        cachedQuestionImageBytes != null &&
+                                                cachedQuestionImageBytes!
+                                                    .isNotEmpty
+                                            ? Image.memory(
+                                                cachedQuestionImageBytes!,
+                                                height: 200,
+                                              )
+                                            : const SizedBox(),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -89,6 +134,7 @@ class _StudySessionViewState extends State<StudySessionView> {
                                       ),
                                     ),
                                     Container(
+                                      height: 200,
                                       decoration: BoxDecoration(
                                         color: const Color(0xffFEEFAD),
                                         borderRadius: BorderRadius.circular(10),
@@ -100,9 +146,26 @@ class _StudySessionViewState extends State<StudySessionView> {
                                       ),
                                       width: double.infinity,
                                       padding: const EdgeInsets.all(10),
-                                      child: Text(
-                                        cards[currentCardIndex].answer,
-                                        style: const TextStyle(fontSize: 16),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              cards[currentCardIndex].answer,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                            cachedAnswerImageBytes != null &&
+                                                    cachedAnswerImageBytes!
+                                                        .isNotEmpty
+                                                ? Image.memory(
+                                                    cachedAnswerImageBytes!,
+                                                    height: 200,
+                                                  )
+                                                : const SizedBox(),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -237,6 +300,7 @@ class _StudySessionViewState extends State<StudySessionView> {
       setState(() {
         cardStatsList.add(cardStatsUpdateRequest);
         cards.remove(card);
+
         showAnswer = false;
         if (cards.isEmpty) {
           finishStudySession();
@@ -244,6 +308,12 @@ class _StudySessionViewState extends State<StudySessionView> {
           setState(() {
             currentCardIndex = 0;
             showAnswer = false;
+            _cacheImages();
+          });
+        } else {
+          setState(() {
+            showAnswer = false;
+            _cacheImages();
           });
         }
       });
@@ -251,8 +321,10 @@ class _StudySessionViewState extends State<StudySessionView> {
       setState(() {
         if (currentCardIndex == cards.length - 1) {
           currentCardIndex = 0;
+          _cacheImages();
         } else {
           currentCardIndex++;
+          _cacheImages();
         }
         showAnswer = false;
       });

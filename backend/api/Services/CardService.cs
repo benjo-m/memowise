@@ -71,6 +71,8 @@ public class CardService
         {
             card.Question = cardEditRequest.Question;
             card.Answer = cardEditRequest.Answer;
+            card.QuestionImage = Convert.FromBase64String(cardEditRequest.QuestionImage ?? "");
+            card.AnswerImage = Convert.FromBase64String(cardEditRequest.AnswerImage ?? "");
 
             _dbContext.Update(card);
             await _dbContext.SaveChangesAsync();

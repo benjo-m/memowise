@@ -71,10 +71,8 @@ class _AchievementsViewState extends State<AchievementsView> {
                   );
                 }
 
-                return const SizedBox(
-                  height: 500,
-                  child: Center(child: CircularProgressIndicator()),
-                );
+                return Expanded(
+                    child: Center(child: CircularProgressIndicator()));
               },
             )
           ],

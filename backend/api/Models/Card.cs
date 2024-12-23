@@ -8,7 +8,8 @@ public class Card
     public int Id { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
-    public byte[]? Image { get; set; }
+    public byte[]? QuestionImage { get; set; }
+    public byte[]? AnswerImage { get; set; }
     public CardStats CardStats { get; set; } = new CardStats();
     public int DeckId { get; set; }
     [JsonIgnore]
@@ -20,6 +21,8 @@ public class Card
     {
         Question = cardCreateRequest.Question;
         Answer = cardCreateRequest.Answer;
+        QuestionImage = Convert.FromBase64String(cardCreateRequest.QuestionImage ?? "");
+        AnswerImage = Convert.FromBase64String(cardCreateRequest.AnswerImage ?? "");
     }
 
     public void UpdateLearningStats(CardStatsUpdateRequest request)

@@ -65,7 +65,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
               ),
             ),
             const SizedBox(height: 16),
-            Center(
+            const Center(
               child: Text(
                 'Price: \$4.99',
                 style: TextStyle(

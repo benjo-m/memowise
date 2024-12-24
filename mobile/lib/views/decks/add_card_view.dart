@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
-import 'package:mobile/services/image_upload_service.dart';
+import 'package:mobile/services/image_picker_service.dart';
 
 class AddCardView extends StatefulWidget {
   const AddCardView({super.key, required this.onAdd});
@@ -21,8 +21,8 @@ class _AddCardViewState extends State<AddCardView> {
   Uint8List? _questionImage;
   Uint8List? _answerImage;
 
-  FocusNode _questionFocusNode = FocusNode();
-  FocusNode _answerFocusNode = FocusNode();
+  final FocusNode _questionFocusNode = FocusNode();
+  final FocusNode _answerFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -38,15 +38,14 @@ class _AddCardViewState extends State<AddCardView> {
 
   void _uploadQuestionImage() async {
     final questionImage =
-        await ImageUploadService().pickAndUploadImage() ?? Uint8List(0);
+        await ImagePickerService().pickImage() ?? Uint8List(0);
     setState(() {
       _questionImage = questionImage;
     });
   }
 
   void _uploadAnswerImage() async {
-    final answerImage =
-        await ImageUploadService().pickAndUploadImage() ?? Uint8List(0);
+    final answerImage = await ImagePickerService().pickImage() ?? Uint8List(0);
     setState(() {
       _answerImage = answerImage;
     });

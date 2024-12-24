@@ -4,4 +4,6 @@ class CurrentUser {
   static String? password;
   static String? email;
   static String? authHeader;
+  static bool? isPremium;
+  static bool? isAdmin;
 }

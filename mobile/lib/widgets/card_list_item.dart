@@ -23,11 +23,9 @@ class CardListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color(0xffFEEFAD),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            width: 2.0,
-            color: const Color.fromARGB(255, 252, 221, 84),
+            width: 3.0,
           ),
         ),
         child: Row(

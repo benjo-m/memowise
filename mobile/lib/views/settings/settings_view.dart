@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/delete_user_request.dart';
@@ -263,7 +262,9 @@ class _SettingsViewState extends State<SettingsView> {
                     width: 10,
                   ),
                   TextButton(
-                    onPressed: () async => log("delete acc"),
+                    onPressed: () {
+                      CurrentUser.isPremium = !CurrentUser.isPremium!;
+                    },
                     style: const ButtonStyle(
                       backgroundColor:
                           WidgetStatePropertyAll(Color(0xff03AED2)),

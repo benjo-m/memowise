@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/register_request.dart';
+import 'package:mobile/dtos/register_response.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
@@ -196,13 +197,9 @@ class _RegisterViewState extends State<RegisterView> {
           ),
         );
 
+        setCurrentUser(user);
+
         if (context.mounted) {
-          CurrentUser.userId = user.id;
-          CurrentUser.username = user.username;
-          CurrentUser.email = user.email;
-          CurrentUser.password = _passwordController.text;
-          CurrentUser.authHeader =
-              "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const MainView()),
             (route) => false,
@@ -224,5 +221,16 @@ class _RegisterViewState extends State<RegisterView> {
         log(e.toString());
       }
     }
+  }
+
+  setCurrentUser(RegisterResponse user) {
+    CurrentUser.userId = user.id;
+    CurrentUser.username = user.username;
+    CurrentUser.email = user.email;
+    CurrentUser.password = _passwordController.text;
+    CurrentUser.authHeader =
+        "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
+    CurrentUser.isPremium = user.isPremium;
+    CurrentUser.isAdmin = user.isAdmin;
   }
 }

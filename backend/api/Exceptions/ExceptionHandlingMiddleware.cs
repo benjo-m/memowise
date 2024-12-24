@@ -29,13 +29,19 @@ public class ExceptionHandlingMiddleware
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         }
-        catch (ResourceForbiddenException)
+        catch (ResourceForbiddenException ex)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsJsonAsync(new { errorCode = "RESOURCE_FORBBIDEN", message = ex.Message });
         }
         catch (PasswordsNotMatchingException)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        }
+        catch (DeckLimitException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsJsonAsync(new { errorCode = "DECK_LIMIT_EXCEEDED", message = ex.Message });
         }
         catch (Exception ex)
         {

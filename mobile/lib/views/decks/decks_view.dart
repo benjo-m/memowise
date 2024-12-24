@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/create_deck_view.dart';
 import 'package:mobile/views/decks/deck_details_view.dart';
 import 'package:mobile/views/decks/generate_deck_view.dart';
+import 'package:mobile/views/settings/premium_upgrade_view.dart';
 import 'package:mobile/widgets/deck_list_item.dart';
 
 class DecksView extends StatefulWidget {
@@ -19,8 +21,6 @@ class DecksView extends StatefulWidget {
 class _DecksViewState extends State<DecksView> {
   late Future<List<DeckSummary>> _decksFuture;
   final _searchBarController = TextEditingController();
-  bool _isSearching = false;
-  FocusNode _searchFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -37,181 +37,266 @@ class _DecksViewState extends State<DecksView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
-        child: CustomScrollView(slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SearchBar(
-                  onTap: () {
-                    setState(() {
-                      _isSearching = true;
-                    });
-                  },
-                  onSubmitted: (value) => setState(() {
-                    _isSearching = false;
-                  }),
-                  backgroundColor: const WidgetStatePropertyAll(
-                    Color.fromARGB(255, 240, 240, 240),
-                  ),
-                  side: const WidgetStatePropertyAll(BorderSide(
-                    width: 3,
-                    color: Color.fromARGB(255, 197, 197, 197),
-                  )),
-                  controller: _searchBarController,
-                  leading: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.search,
-                      color: Color.fromARGB(255, 116, 116, 116),
-                    ),
-                  ),
-                  hintText: "Search decks",
-                  elevation: WidgetStateProperty.all(0),
-                  constraints: const BoxConstraints(
-                    maxHeight: 50,
-                    minHeight: 50,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _decksFuture = DeckService().getDecks();
-                    });
-                  },
-                ),
-                if (_isSearching)
-                  SizedBox(
-                    height: 40,
-                  ),
-                FutureBuilder(
-                  future: _decksFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final decks = snapshot.data!.where((d) => d.name
-                          .toLowerCase()
-                          .startsWith(_searchBarController.text));
-                      return decks.isNotEmpty
-                          ? Column(
-                              children: [
-                                showCarousel(decks, context),
-                                decks.length > 1
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          "${decks.length} decks",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color:
-                                                Color.fromARGB(255, 36, 36, 36),
-                                          ),
-                                        ),
-                                      )
-                                    : const Padding(
-                                        padding: EdgeInsets.only(top: 10.0),
-                                        child: Text(
-                                          "1 deck",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color:
-                                                Color.fromARGB(255, 36, 36, 36),
-                                          ),
-                                        ),
-                                      ),
-                              ],
-                            )
-                          : noDecksMessage();
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateDeckView())).then(
-                              (value) => setState(() {
-                                _decksFuture = DeckService().getDecks();
-                              }),
-                            );
-                          },
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Color(0xff03AED2)),
-                            foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
-                            fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                            side: WidgetStatePropertyAll(
-                              BorderSide(
-                                width: 2,
-                                color: Colors.lightBlue,
-                              ),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.style_rounded),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text("Create deck"),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const GenerateDeckView())).then(
-                          (value) => setState(() {
-                            _decksFuture = DeckService().getDecks();
-                          }),
-                        );
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(Color(0xff03AED2)),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                        side: WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.lightBlue,
-                          ),
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.auto_awesome_rounded),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Generate deck"),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ]),
+        child: FutureBuilder(
+          future: _decksFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final decks = snapshot.data!;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  statsRow(decks),
+                  decks.isNotEmpty
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            showCarousel(decks, context),
+                          ],
+                        )
+                      : noDecksMessage(),
+                  buttonsRow(decks),
+                ],
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  Row statsRow(List<DeckSummary> decks) {
+    final cardToLearn = decks.fold(0, (total, deck) {
+      return total + deck.learnedCards + deck.newCards;
+    });
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 3.0,
+            ),
+          ),
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text(
+                "Total Decks",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 59, 59, 59),
+                ),
+              ),
+              Text(
+                "${decks.length}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                  color: decks.length == 10 && !CurrentUser.isPremium!
+                      ? Colors.red
+                      : Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 3.0,
+            ),
+          ),
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text(
+                "Total Cards",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 59, 59, 59),
+                ),
+              ),
+              Text(
+                "${totalCards(decks)}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 3.0,
+            ),
+          ),
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text(
+                "  To Learn  ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 59, 59, 59),
+                ),
+              ),
+              Text(
+                "$cardToLearn",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  int totalCards(List<DeckSummary> decks) {
+    return decks.fold(0, (total, deck) {
+      return total + deck.newCards + deck.learnedCards + deck.learnedCards;
+    });
+  }
+
+  Row buttonsRow(List<DeckSummary> decks) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TextButton(
+          onPressed: () => deckLimitExceeded(decks)
+              ? deckLimitExceededDialog()
+              : createDeck(),
+          style: ButtonStyle(
+            backgroundColor: deckLimitExceeded(decks)
+                ? const WidgetStatePropertyAll(
+                    Color.fromARGB(255, 192, 192, 192))
+                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.045),
+            ),
+            side: WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: deckLimitExceeded(decks)
+                    ? const Color.fromARGB(255, 179, 179, 179)
+                    : Colors.lightBlue,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.style_rounded),
+              SizedBox(
+                width: 5,
+              ),
+              Text("Create Deck  "),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () => deckLimitExceeded(decks)
+              ? deckLimitExceededDialog()
+              : createDeck(),
+          style: ButtonStyle(
+            backgroundColor: deckLimitExceeded(decks)
+                ? const WidgetStatePropertyAll(
+                    Color.fromARGB(255, 192, 192, 192))
+                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.045),
+            ),
+            side: WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: deckLimitExceeded(decks)
+                    ? const Color.fromARGB(255, 179, 179, 179)
+                    : Colors.lightBlue,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.auto_awesome_rounded),
+              SizedBox(
+                width: 5,
+              ),
+              Text("Generate Deck"),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void createDeck() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const CreateDeckView())).then(
+      (value) => setState(() {
+        _decksFuture = DeckService().getDecks();
+      }),
+    );
+  }
+
+  void generateDeck() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const GenerateDeckView())).then(
+      (value) => setState(() {
+        _decksFuture = DeckService().getDecks();
+      }),
+    );
+  }
+
+  void deckLimitExceededDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              title: const Text(
+                "Deck Limit Exceeded",
+                textAlign: TextAlign.center,
+              ),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text(
+                    "You have exceeded the limit of 10 decks.\nUpgrade to premium version to create more decks",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Close"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PremiumUpgradeView()),
+                      ),
+                      child: const Text("Upgrade"),
+                    ),
+                  ],
+                )
+              ],
+            ));
   }
 
   CarouselSlider showCarousel(
@@ -239,19 +324,19 @@ class _DecksViewState extends State<DecksView> {
         enlargeCenterPage: true,
         height: MediaQuery.sizeOf(context).height * 0.4,
         padEnds: true,
-        viewportFraction: 0.7,
+        viewportFraction: 0.65,
       ),
     );
   }
 
   SizedBox noDecksMessage() {
-    return const SizedBox(
-      height: 423,
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).height * 0.5,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             "No decks found!",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -260,15 +345,24 @@ class _DecksViewState extends State<DecksView> {
               color: Color.fromARGB(255, 78, 78, 78),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text(
-            "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
-            textAlign: TextAlign.center,
-          ),
+          _searchBarController.text.isEmpty
+              ? const Text(
+                  "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
+                  textAlign: TextAlign.center,
+                )
+              : const Text(
+                  "You don't have any decks that match your\nsearch criteria",
+                  textAlign: TextAlign.center,
+                )
         ],
       ),
     );
+  }
+
+  bool deckLimitExceeded(List<DeckSummary> decks) {
+    return decks.length == 10 && !CurrentUser.isPremium!;
   }
 }

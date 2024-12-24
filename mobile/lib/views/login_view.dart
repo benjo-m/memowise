@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/login_request.dart';
+import 'package:mobile/dtos/login_response.dart';
 import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/views/main_view.dart';
@@ -127,12 +128,7 @@ class _LoginFormState extends State<LoginView> {
         showWrongCredentialsDialog(context);
       } else {
         if (context.mounted) {
-          CurrentUser.userId = user!.id;
-          CurrentUser.username = user.username;
-          CurrentUser.email = user.email;
-          CurrentUser.password = _passwordController.text;
-          CurrentUser.authHeader =
-              "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
+          setCurrentUser(user);
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const MainView()),
             (route) => false,
@@ -140,6 +136,17 @@ class _LoginFormState extends State<LoginView> {
         }
       }
     }
+  }
+
+  void setCurrentUser(LoginResponse? user) {
+    CurrentUser.userId = user!.id;
+    CurrentUser.username = user.username;
+    CurrentUser.email = user.email;
+    CurrentUser.password = _passwordController.text;
+    CurrentUser.authHeader =
+        "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
+    CurrentUser.isPremium = user.isPremium;
+    CurrentUser.isAdmin = user.isAdmin;
   }
 
   Future<dynamic> showWrongCredentialsDialog(BuildContext context) {

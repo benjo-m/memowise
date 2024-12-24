@@ -71,7 +71,7 @@ class _AchievementsViewState extends State<AchievementsView> {
                   );
                 }
 
-                return Expanded(
+                return const Expanded(
                     child: Center(child: CircularProgressIndicator()));
               },
             )

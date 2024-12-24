@@ -28,6 +28,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   int currentCardIndex = 0;
   bool showAnswer = false;
   final stopwatch = Stopwatch();
+
   Uint8List? cachedQuestionImageBytes;
   Uint8List? cachedAnswerImageBytes;
 
@@ -82,39 +83,36 @@ class _StudySessionViewState extends State<StudySessionView> {
                                 ),
                               ),
                               Container(
-                                height: 220,
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height * 0.25,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xffFEEFAD),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    width: 2.0,
-                                    color:
-                                        const Color.fromARGB(255, 252, 221, 84),
+                                    width: 3.0,
                                   ),
                                 ),
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(10),
-                                child: Scrollbar(
-                                  thumbVisibility: true,
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          cards[currentCardIndex].question,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                        cachedQuestionImageBytes != null &&
-                                                cachedQuestionImageBytes!
-                                                    .isNotEmpty
-                                            ? Image.memory(
-                                                cachedQuestionImageBytes!,
-                                                height: 200,
-                                              )
-                                            : const SizedBox(),
-                                      ],
-                                    ),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cards[currentCardIndex].question,
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      cachedQuestionImageBytes != null &&
+                                              cachedQuestionImageBytes!
+                                                  .isNotEmpty
+                                          ? Image.memory(
+                                              cachedQuestionImageBytes!,
+                                              height: 200,
+                                            )
+                                          : const SizedBox(),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -134,14 +132,15 @@ class _StudySessionViewState extends State<StudySessionView> {
                                       ),
                                     ),
                                     Container(
-                                      height: 200,
+                                      constraints: BoxConstraints(
+                                        maxHeight:
+                                            MediaQuery.of(context).size.height *
+                                                0.25,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xffFEEFAD),
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                          width: 2.0,
-                                          color: const Color.fromARGB(
-                                              255, 252, 221, 84),
+                                          width: 3.0,
                                         ),
                                       ),
                                       width: double.infinity,

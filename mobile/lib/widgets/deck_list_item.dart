@@ -16,11 +16,9 @@ class DeckListItem extends StatelessWidget {
     return SizedBox(
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xffFEEFAD),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            width: 2.0,
-            color: const Color.fromARGB(255, 252, 221, 84),
+            width: 3.0,
           ),
         ),
         child: Padding(
@@ -169,19 +167,20 @@ class DeckListItem extends StatelessWidget {
                   ),
                   Center(
                     child: TextButton(
-                      style: const ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        backgroundColor: WidgetStatePropertyAll(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        backgroundColor: const WidgetStatePropertyAll(
                             Color.fromARGB(255, 95, 197, 98)),
-                        side: WidgetStatePropertyAll(
+                        side: const WidgetStatePropertyAll(
                           BorderSide(
                             width: 2,
                             color: Colors.green,
                           ),
                         ),
-                        fixedSize: WidgetStatePropertyAll(
-                          Size(121, 4),
-                        ),
+                        fixedSize: WidgetStatePropertyAll(Size(
+                            MediaQuery.sizeOf(context).width * 0.3,
+                            MediaQuery.sizeOf(context).height * 0.05)),
                       ),
                       onPressed: () async {
                         final deck =

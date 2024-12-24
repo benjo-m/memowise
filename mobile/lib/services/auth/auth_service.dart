@@ -62,6 +62,8 @@ class AuthService {
     CurrentUser.email = null;
     CurrentUser.password = null;
     CurrentUser.authHeader = null;
+    CurrentUser.isPremium = null;
+    CurrentUser.isAdmin = null;
   }
 
   Future<void> updateUser(UpdateUserRequest updateUserRequest) async {

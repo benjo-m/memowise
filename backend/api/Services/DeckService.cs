@@ -65,6 +65,15 @@ public class DeckService
             return null;
         }
 
+        var currentDeckCount = _dbContext.Decks
+            .Where(d => d.UserId ==  user.Id)
+            .Count();
+
+        if (!user.IsPremium && currentDeckCount == 10)
+        {
+            throw new DeckLimitException("Deck limit exceeded");
+        }
+
         Deck deck = new Deck(deckCreateRequest);
         deck.User = user;
 

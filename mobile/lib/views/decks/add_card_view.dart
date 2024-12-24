@@ -4,12 +4,18 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/image_picker_service.dart';
 
 class AddCardView extends StatefulWidget {
-  const AddCardView({super.key, required this.onAdd});
+  const AddCardView({
+    super.key,
+    required this.onAdd,
+    required this.currentCardCount,
+  });
 
   final Function(CardDto) onAdd;
+  final int currentCardCount;
 
   @override
   State<AddCardView> createState() => _AddCardViewState();
@@ -22,10 +28,12 @@ class _AddCardViewState extends State<AddCardView> {
   Uint8List? _answerImage;
   final FocusNode _questionFocusNode = FocusNode();
   final FocusNode _answerFocusNode = FocusNode();
+  late int currentCardCount;
 
   @override
   void initState() {
     super.initState();
+    currentCardCount = widget.currentCardCount;
   }
 
   @override
@@ -268,7 +276,9 @@ class _AddCardViewState extends State<AddCardView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => addCard(),
+                    onPressed: () => cardLimitExceeded()
+                        ? Navigator.pop(context)
+                        : addCard(),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Color(blue)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
@@ -314,9 +324,15 @@ class _AddCardViewState extends State<AddCardView> {
     widget.onAdd(cardCreateRequest);
     _questionController.clear();
     _answerController.clear();
+
+    if (currentCardCount == 19) {
+      Navigator.pop(context);
+    }
+
     setState(() {
       _questionImage = null;
       _answerImage = null;
+      currentCardCount++;
     });
     _questionFocusNode.requestFocus();
   }
@@ -341,5 +357,9 @@ class _AddCardViewState extends State<AddCardView> {
     setState(() {
       _answerImage = answerImage;
     });
+  }
+
+  bool cardLimitExceeded() {
+    return currentCardCount == 20 && !CurrentUser.isPremium!;
   }
 }

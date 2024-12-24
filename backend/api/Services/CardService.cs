@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.DTO;
+using api.Exceptions;
 using api.Groq;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -36,11 +37,19 @@ public class CardService
     public async Task<Card?> AddCard(int deckId, CardCreateRequest cardCreateRequest)
     {
         Card card = new Card(cardCreateRequest);
-        var deck = await _dbContext.Decks.FirstOrDefaultAsync(x => x.Id == deckId);
+        var deck = await _dbContext.Decks
+            .Include(d => d.Cards)
+            .FirstOrDefaultAsync(x => x.Id == deckId);
+        var user = await _userService.GetCurrentUser();
 
-        if (deck == null)
+        if (deck == null || user == null)
         {
             return null;
+        }
+
+        if (!user.IsPremium && deck.Cards.Count == 20)
+        {
+            throw new NonPremiumLimitException("Card count per deck limit exceeded");
         }
 
         deck.Cards.Add(card);
@@ -48,16 +57,11 @@ public class CardService
         _dbContext.Decks.Update(deck);
         await _dbContext.SaveChangesAsync();
 
-        var user = await _userService.GetCurrentUser();
-
-        if (user != null)
-        {
-            user.UserStats.TotalCardsCreated++;
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
-            await _achievementService.CheckAchievements(user.Id);
-        }
-
+        user.UserStats.TotalCardsCreated++;
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+        await _achievementService.CheckAchievements(user.Id);
+        
         return card;
     }
 

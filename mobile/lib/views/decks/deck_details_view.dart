@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_update_request.dart';
 
 import 'package:mobile/models/deck.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/add_card_view.dart';
 import 'package:mobile/views/decks/edit_card_view.dart';
+import 'package:mobile/views/settings/premium_upgrade_view.dart';
 import 'package:mobile/widgets/card_list_item.dart';
 
 class DeckDetailsView extends StatefulWidget {
@@ -105,13 +106,16 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                           onPressed: () async {
                             await showDeletionConfirmationDialog(deck, context);
                           },
-                          style: const ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
+                          style: ButtonStyle(
+                            backgroundColor: const WidgetStatePropertyAll(
                                 Color.fromARGB(255, 243, 83, 71)),
                             foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
-                            fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                            side: WidgetStatePropertyAll(
+                                const WidgetStatePropertyAll(Colors.white),
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.all(
+                                  MediaQuery.sizeOf(context).height * 0.015),
+                            ),
+                            side: const WidgetStatePropertyAll(
                               BorderSide(
                                 width: 2,
                                 color: Colors.red,
@@ -130,30 +134,42 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddCardView(
-                                onAdd: (CardDto cardDto) async {
-                                  final newCard = await CardService()
-                                      .createCard(deck.id, cardDto);
-                                  setState(() {
-                                    deck.cards.add(newCard);
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                          style: const ButtonStyle(
+                          onPressed: () => cardLimitExceeded(deck.cards.length)
+                              ? cardLimitExceededDialog()
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddCardView(
+                                      currentCardCount: deck.cards.length,
+                                      onAdd: (CardDto cardDto) async {
+                                        final newCard = await CardService()
+                                            .createCard(deck.id, cardDto);
+                                        setState(() {
+                                          deck.cards.add(newCard);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                          style: ButtonStyle(
                             backgroundColor:
-                                WidgetStatePropertyAll(Color(blue)),
+                                cardLimitExceeded(deck.cards.length)
+                                    ? const WidgetStatePropertyAll(
+                                        Color.fromARGB(255, 192, 192, 192))
+                                    : const WidgetStatePropertyAll(
+                                        Color(0xff03AED2)),
                             foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
-                            fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                                const WidgetStatePropertyAll(Colors.white),
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.all(
+                                  MediaQuery.sizeOf(context).height * 0.015),
+                            ),
                             side: WidgetStatePropertyAll(
                               BorderSide(
                                 width: 2,
-                                color: Colors.lightBlue,
+                                color: cardLimitExceeded(deck.cards.length)
+                                    ? const Color.fromARGB(255, 179, 179, 179)
+                                    : Colors.lightBlue,
                               ),
                             ),
                           ),
@@ -310,5 +326,49 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     }
 
     return cardListItems;
+  }
+
+  bool cardLimitExceeded(int cardCount) {
+    return cardCount == 20 && !CurrentUser.isPremium!;
+  }
+
+  void cardLimitExceededDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              title: const Text(
+                "Card Limit Exceeded",
+                textAlign: TextAlign.center,
+              ),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text(
+                    "You have exceeded the limit of 20 cards per deck.\nUpgrade to premium version to create more decks",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Close"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PremiumUpgradeView()));
+                      },
+                      child: const Text("Upgrade"),
+                    ),
+                  ],
+                )
+              ],
+            ));
   }
 }

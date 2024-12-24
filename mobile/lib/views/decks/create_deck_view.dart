@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/add_card_view.dart';
 import 'package:mobile/views/decks/edit_card_view.dart';
+import 'package:mobile/views/settings/premium_upgrade_view.dart';
 import 'package:mobile/widgets/card_list_item.dart';
 
 class CreateDeckView extends StatefulWidget {
@@ -82,13 +83,17 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                 children: [
                   TextButton(
                     onPressed: () async => await createDeck(context),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
+                    style: ButtonStyle(
+                      backgroundColor: const WidgetStatePropertyAll(
                         Color.fromARGB(255, 95, 197, 98),
                       ),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                      side: WidgetStatePropertyAll(
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.all(
+                            MediaQuery.sizeOf(context).height * 0.015),
+                      ),
+                      side: const WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
                           color: Colors.green,
@@ -107,23 +112,35 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AddCardView(onAdd: (CardDto cardDto) {
-                          setState(() => _cards.add(cardDto));
-                        }),
+                    onPressed: () => cardLimitExceeded()
+                        ? cardLimitExceededDialog()
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddCardView(
+                                  currentCardCount: _cards.length,
+                                  onAdd: (CardDto cardDto) {
+                                    setState(() => _cards.add(cardDto));
+                                  }),
+                            ),
+                          ),
+                    style: ButtonStyle(
+                      backgroundColor: cardLimitExceeded()
+                          ? const WidgetStatePropertyAll(
+                              Color.fromARGB(255, 192, 192, 192))
+                          : const WidgetStatePropertyAll(Color(0xff03AED2)),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.all(
+                            MediaQuery.sizeOf(context).height * 0.015),
                       ),
-                    ),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Color(blue)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
-                          color: Colors.lightBlue,
+                          color: cardLimitExceeded()
+                              ? const Color.fromARGB(255, 179, 179, 179)
+                              : Colors.lightBlue,
                         ),
                       ),
                     ),
@@ -182,5 +199,49 @@ class _CreateDeckViewState extends State<CreateDeckView> {
     }
 
     return cards;
+  }
+
+  bool cardLimitExceeded() {
+    return _cards.length == 20 && !CurrentUser.isPremium!;
+  }
+
+  void cardLimitExceededDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              title: const Text(
+                "Card Limit Exceeded",
+                textAlign: TextAlign.center,
+              ),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text(
+                    "You have exceeded the limit of 20 cards per deck.\nUpgrade to premium version to create more decks",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Close"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PremiumUpgradeView()));
+                      },
+                      child: const Text("Upgrade"),
+                    ),
+                  ],
+                )
+              ],
+            ));
   }
 }

@@ -209,7 +209,7 @@ class _DecksViewState extends State<DecksView> {
         TextButton(
           onPressed: () => deckLimitExceeded(decks)
               ? deckLimitExceededDialog()
-              : createDeck(),
+              : generateDeck(),
           style: ButtonStyle(
             backgroundColor: deckLimitExceeded(decks)
                 ? const WidgetStatePropertyAll(

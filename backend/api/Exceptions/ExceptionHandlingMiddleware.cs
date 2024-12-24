@@ -38,10 +38,10 @@ public class ExceptionHandlingMiddleware
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         }
-        catch (DeckLimitException ex)
+        catch (NonPremiumLimitException ex)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            await context.Response.WriteAsJsonAsync(new { errorCode = "DECK_LIMIT_EXCEEDED", message = ex.Message });
+            await context.Response.WriteAsJsonAsync(new { errorCode = "NON_PREMIUM_LIMIT_EXCEEDED", message = ex.Message });
         }
         catch (AlreadyPremiumException ex)
         {

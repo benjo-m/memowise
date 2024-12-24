@@ -71,7 +71,7 @@ public class DeckService
 
         if (!user.IsPremium && currentDeckCount == 10)
         {
-            throw new DeckLimitException("Deck limit exceeded");
+            throw new NonPremiumLimitException("Deck limit exceeded");
         }
 
         Deck deck = new Deck(deckCreateRequest);

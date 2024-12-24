@@ -1,13 +1,7 @@
-﻿using api.Data;
-using api.DTO;
-using api.Groq;
+﻿using api.DTO;
 using api.Models;
 using api.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System.Text.Json.Nodes;
 
 namespace api.Controllers;
 
@@ -29,6 +23,7 @@ public class CardsController : BaseController
     [HttpPost("{deckId}")]
     public async Task<ActionResult<Card>> AddCard(int deckId, CardCreateRequest cardCreateRequest)
     {
+
         var card = await _cardService.AddCard(deckId, cardCreateRequest);
 
         if (card == null)

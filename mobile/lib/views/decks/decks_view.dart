@@ -321,15 +321,16 @@ class _DecksViewState extends State<DecksView> {
                     }),
                   );
                 },
-                child: DeckListItem(
-                  deckSummary: deck,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DeckListItem(
+                    deckSummary: deck,
+                  ),
                 ),
               ))
           .toList(),
       options: CarouselOptions(
-        enlargeCenterPage: true,
         height: MediaQuery.sizeOf(context).height * 0.4,
-        padEnds: true,
         viewportFraction: 0.65,
       ),
     );

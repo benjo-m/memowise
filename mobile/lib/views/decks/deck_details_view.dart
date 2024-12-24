@@ -164,7 +164,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                               SizedBox(
                                 width: 8,
                               ),
-                              Text("New Card"),
+                              Text("Add Cards"),
                             ],
                           ),
                         ),

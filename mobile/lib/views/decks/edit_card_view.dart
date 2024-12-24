@@ -304,15 +304,7 @@ class _EditCardViewState extends State<EditCardView> {
                   ),
                   TextButton(
                     onPressed: () {
-                      final cardDto = CardDto(
-                        question: _questionController.text,
-                        answer: _answerController.text,
-                        questionImage:
-                            base64Encode(_questionImage ?? Uint8List(0)),
-                        answerImage: base64Encode(_answerImage ?? Uint8List(0)),
-                      );
-                      widget.onEdit(cardDto);
-                      Navigator.pop(context);
+                      finishEdit(context);
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Color(blue)),
@@ -343,5 +335,28 @@ class _EditCardViewState extends State<EditCardView> {
         ),
       ),
     );
+  }
+
+  void finishEdit(BuildContext context) {
+    if (isCardEmpty()) {
+      Navigator.pop(context);
+      return;
+    }
+
+    final cardDto = CardDto(
+      question: _questionController.text,
+      answer: _answerController.text,
+      questionImage: base64Encode(_questionImage ?? Uint8List(0)),
+      answerImage: base64Encode(_answerImage ?? Uint8List(0)),
+    );
+    widget.onEdit(cardDto);
+    Navigator.pop(context);
+  }
+
+  bool isCardEmpty() {
+    return _questionController.text.trim().isEmpty &&
+        _answerController.text.trim().isEmpty &&
+        _questionImage == null &&
+        _answerImage == null;
   }
 }

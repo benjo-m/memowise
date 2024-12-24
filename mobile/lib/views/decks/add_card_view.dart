@@ -20,7 +20,6 @@ class _AddCardViewState extends State<AddCardView> {
   final _answerController = TextEditingController();
   Uint8List? _questionImage;
   Uint8List? _answerImage;
-
   final FocusNode _questionFocusNode = FocusNode();
   final FocusNode _answerFocusNode = FocusNode();
 
@@ -30,31 +29,8 @@ class _AddCardViewState extends State<AddCardView> {
   }
 
   @override
-  void dispose() {
-    _questionController.dispose();
-    _answerController.dispose();
-    super.dispose();
-  }
-
-  void _uploadQuestionImage() async {
-    final questionImage =
-        await ImagePickerService().pickImage() ?? Uint8List(0);
-    setState(() {
-      _questionImage = questionImage;
-    });
-  }
-
-  void _uploadAnswerImage() async {
-    final answerImage = await ImagePickerService().pickImage() ?? Uint8List(0);
-    setState(() {
-      _answerImage = answerImage;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Add Cards'),
       ),
@@ -263,7 +239,10 @@ class _AddCardViewState extends State<AddCardView> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      addCard();
+                      Navigator.pop(context);
+                    },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
                         Color.fromARGB(255, 95, 197, 98),
@@ -289,23 +268,7 @@ class _AddCardViewState extends State<AddCardView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      var cardCreateRequest = CardDto(
-                        question: _questionController.text.trim(),
-                        answer: _answerController.text.trim(),
-                        questionImage:
-                            base64Encode(_questionImage ?? Uint8List(0)),
-                        answerImage: base64Encode(_answerImage ?? Uint8List(0)),
-                      );
-                      widget.onAdd(cardCreateRequest);
-                      _questionController.clear();
-                      _answerController.clear();
-                      setState(() {
-                        _questionImage = null;
-                        _answerImage = null;
-                      });
-                      _questionFocusNode.requestFocus();
-                    },
+                    onPressed: () => addCard(),
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Color(blue)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
@@ -335,5 +298,48 @@ class _AddCardViewState extends State<AddCardView> {
         ),
       ),
     );
+  }
+
+  void addCard() {
+    if (isCardEmpty()) {
+      return;
+    }
+
+    var cardCreateRequest = CardDto(
+      question: _questionController.text.trim(),
+      answer: _answerController.text.trim(),
+      questionImage: base64Encode(_questionImage ?? Uint8List(0)),
+      answerImage: base64Encode(_answerImage ?? Uint8List(0)),
+    );
+    widget.onAdd(cardCreateRequest);
+    _questionController.clear();
+    _answerController.clear();
+    setState(() {
+      _questionImage = null;
+      _answerImage = null;
+    });
+    _questionFocusNode.requestFocus();
+  }
+
+  bool isCardEmpty() {
+    return _questionController.text.trim().isEmpty &&
+        _answerController.text.trim().isEmpty &&
+        _questionImage == null &&
+        _answerImage == null;
+  }
+
+  void _uploadQuestionImage() async {
+    final questionImage =
+        await ImagePickerService().pickImage() ?? Uint8List(0);
+    setState(() {
+      _questionImage = questionImage;
+    });
+  }
+
+  void _uploadAnswerImage() async {
+    final answerImage = await ImagePickerService().pickImage() ?? Uint8List(0);
+    setState(() {
+      _answerImage = answerImage;
+    });
   }
 }

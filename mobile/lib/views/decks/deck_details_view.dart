@@ -72,10 +72,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                       onEditingComplete: () async => await editDeckName(deck),
                     ),
                     const SizedBox(
-                      width: 20,
-                    ),
-                    const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
                     Expanded(
                       child: deck.cards.isNotEmpty
@@ -83,7 +80,8 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    " Number of cards: ${deck.cards.length.toString()}"),
+                                  " Number of cards: ${deck.cards.length.toString()}",
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -97,95 +95,9 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                           : const Center(child: Text("Deck empty")),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            await showDeletionConfirmationDialog(deck, context);
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: const WidgetStatePropertyAll(
-                                Color.fromARGB(255, 243, 83, 71)),
-                            foregroundColor:
-                                const WidgetStatePropertyAll(Colors.white),
-                            padding: WidgetStatePropertyAll(
-                              EdgeInsets.all(
-                                  MediaQuery.sizeOf(context).height * 0.015),
-                            ),
-                            side: const WidgetStatePropertyAll(
-                              BorderSide(
-                                width: 2,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.delete),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text("Delete Deck"),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => cardLimitExceeded(deck.cards.length)
-                              ? cardLimitExceededDialog()
-                              : Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddCardView(
-                                      currentCardCount: deck.cards.length,
-                                      onAdd: (CardDto cardDto) async {
-                                        final newCard = await CardService()
-                                            .createCard(deck.id, cardDto);
-                                        setState(() {
-                                          deck.cards.add(newCard);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                          style: ButtonStyle(
-                            backgroundColor:
-                                cardLimitExceeded(deck.cards.length)
-                                    ? const WidgetStatePropertyAll(
-                                        Color.fromARGB(255, 192, 192, 192))
-                                    : const WidgetStatePropertyAll(
-                                        Color(0xff03AED2)),
-                            foregroundColor:
-                                const WidgetStatePropertyAll(Colors.white),
-                            padding: WidgetStatePropertyAll(
-                              EdgeInsets.all(
-                                  MediaQuery.sizeOf(context).height * 0.015),
-                            ),
-                            side: WidgetStatePropertyAll(
-                              BorderSide(
-                                width: 2,
-                                color: cardLimitExceeded(deck.cards.length)
-                                    ? const Color.fromARGB(255, 179, 179, 179)
-                                    : Colors.lightBlue,
-                              ),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add_circle),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text("Add Cards"),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    buttonsRow(deck, context),
                   ],
                 ),
               );
@@ -193,6 +105,90 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
 
             return const Center(child: CircularProgressIndicator());
           }),
+    );
+  }
+
+  Row buttonsRow(Deck deck, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TextButton(
+          onPressed: () async {
+            await showDeletionConfirmationDialog(deck, context);
+          },
+          style: ButtonStyle(
+            backgroundColor:
+                const WidgetStatePropertyAll(Color.fromARGB(255, 243, 83, 71)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+            ),
+            side: const WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: Colors.red,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.delete),
+              SizedBox(
+                width: 8,
+              ),
+              Text("Delete Deck"),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () => cardLimitExceeded(deck.cards.length)
+              ? cardLimitExceededDialog()
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddCardView(
+                      currentCardCount: deck.cards.length,
+                      onAdd: (CardDto cardDto) async {
+                        final newCard =
+                            await CardService().createCard(deck.id, cardDto);
+                        setState(() {
+                          deck.cards.add(newCard);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+          style: ButtonStyle(
+            backgroundColor: cardLimitExceeded(deck.cards.length)
+                ? const WidgetStatePropertyAll(
+                    Color.fromARGB(255, 192, 192, 192))
+                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+            ),
+            side: WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: cardLimitExceeded(deck.cards.length)
+                    ? const Color.fromARGB(255, 179, 179, 179)
+                    : Colors.lightBlue,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle),
+              SizedBox(
+                width: 8,
+              ),
+              Text(" Add Cards "),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

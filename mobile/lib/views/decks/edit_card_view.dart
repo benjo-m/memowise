@@ -73,267 +73,277 @@ class _EditCardViewState extends State<EditCardView> {
       appBar: AppBar(
         title: const Text('Edit Card'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      " Question",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () => _questionFocusNode.requestFocus(),
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.2,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                width: 3.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    focusNode: _questionFocusNode,
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your question here',
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                          width: 3,
+                                        ),
+                                      ),
+                                    ),
+                                    controller: _questionController,
+                                    maxLines: null,
+                                  ),
+                                  _questionImage != null
+                                      ? Stack(children: [
+                                          Image.memory(
+                                            _questionImage!,
+                                            height: 200,
+                                            width: double.infinity,
+                                          ),
+                                          Positioned(
+                                            bottom: 10,
+                                            right: 10,
+                                            child: ElevatedButton(
+                                              style: const ButtonStyle(
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        Colors.red),
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _questionImage = null;
+                                                });
+                                              },
+                                              child: const Icon(Icons.delete,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ])
+                                      : const SizedBox(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        _questionImage == null
+                            ? Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: IconButton(
+                                  onPressed: () => _uploadQuestionImage(),
+                                  icon: const Icon(
+                                      Icons.add_photo_alternate_rounded),
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      " Answer",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () => _answerFocusNode.requestFocus(),
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.2,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                width: 3.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    focusNode: _answerFocusNode,
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your answer here',
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                          width: 3,
+                                        ),
+                                      ),
+                                    ),
+                                    controller: _answerController,
+                                    maxLines: null,
+                                  ),
+                                  _answerImage != null
+                                      ? Stack(children: [
+                                          Image.memory(
+                                            _answerImage!,
+                                            height: 200,
+                                            width: double.infinity,
+                                          ),
+                                          Positioned(
+                                            bottom: 10,
+                                            right: 10,
+                                            child: ElevatedButton(
+                                              style: const ButtonStyle(
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        Colors.red),
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _answerImage = null;
+                                                });
+                                              },
+                                              child: const Icon(Icons.delete,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ])
+                                      : const SizedBox(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        _answerImage == null
+                            ? Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: IconButton(
+                                  onPressed: () => _uploadAnswerImage(),
+                                  icon: const Icon(
+                                      Icons.add_photo_alternate_rounded),
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            buttonsRow(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row buttonsRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          style: ButtonStyle(
+            backgroundColor:
+                const WidgetStatePropertyAll(Color.fromARGB(255, 243, 83, 71)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+            ),
+            side: const WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: Colors.red,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    " Question",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () => _questionFocusNode.requestFocus(),
-                        child: Container(
-                          height: 200,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              width: 3.0,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                TextField(
-                                  focusNode: _questionFocusNode,
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter your question here',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                  controller: _questionController,
-                                  maxLines: null,
-                                ),
-                                _questionImage != null
-                                    ? Stack(children: [
-                                        Image.memory(
-                                          _questionImage!,
-                                          height: 200,
-                                          width: double.infinity,
-                                        ),
-                                        Positioned(
-                                          bottom: 10,
-                                          right: 10,
-                                          child: ElevatedButton(
-                                            style: const ButtonStyle(
-                                              backgroundColor:
-                                                  WidgetStatePropertyAll(
-                                                      Colors.red),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                _questionImage = null;
-                                              });
-                                            },
-                                            child: const Icon(Icons.delete,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ])
-                                    : const SizedBox(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      _questionImage == null
-                          ? Positioned(
-                              bottom: 10,
-                              right: 10,
-                              child: ElevatedButton.icon(
-                                onPressed: () => _uploadQuestionImage(),
-                                icon: const Icon(Icons.upload_rounded),
-                                label: const Text(
-                                  'Image',
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const Text(
-                    " Answer",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () => _answerFocusNode.requestFocus(),
-                        child: Container(
-                          height: 200,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              width: 3.0,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                TextField(
-                                  focusNode: _answerFocusNode,
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter your answer here',
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                  controller: _answerController,
-                                  maxLines: null,
-                                ),
-                                _answerImage != null
-                                    ? Stack(children: [
-                                        Image.memory(
-                                          _answerImage!,
-                                          height: 200,
-                                          width: double.infinity,
-                                        ),
-                                        Positioned(
-                                          bottom: 10,
-                                          right: 10,
-                                          child: ElevatedButton(
-                                            style: const ButtonStyle(
-                                              backgroundColor:
-                                                  WidgetStatePropertyAll(
-                                                      Colors.red),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                _answerImage = null;
-                                              });
-                                            },
-                                            child: const Icon(Icons.delete,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ])
-                                    : const SizedBox(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      _answerImage == null
-                          ? Positioned(
-                              bottom: 10,
-                              right: 10,
-                              child: ElevatedButton.icon(
-                                onPressed: () => _uploadAnswerImage(),
-                                icon: const Icon(Icons.upload_rounded),
-                                label: const Text(
-                                  'Image',
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
-                    ],
-                  ),
-                ],
+              Icon(Icons.close),
+              SizedBox(
+                width: 5,
               ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                          Color.fromARGB(255, 243, 83, 71)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.close),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("Cancel"),
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      finishEdit(context);
-                    },
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Color(blue)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.edit),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("Edit Card"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              Text(" Cancel   "),
             ],
           ),
         ),
-      ),
+        TextButton(
+          onPressed: () {
+            finishEdit(context);
+          },
+          style: ButtonStyle(
+            backgroundColor: const WidgetStatePropertyAll(Color(blue)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+            ),
+            side: const WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: Colors.lightBlue,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.edit),
+              SizedBox(
+                width: 5,
+              ),
+              Text("Edit Card "),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

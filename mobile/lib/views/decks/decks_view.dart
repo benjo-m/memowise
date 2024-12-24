@@ -184,7 +184,7 @@ class _DecksViewState extends State<DecksView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.015),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -217,7 +217,7 @@ class _DecksViewState extends State<DecksView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.015),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(

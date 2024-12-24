@@ -52,7 +52,7 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               Expanded(
                 child: _cards.isNotEmpty
@@ -76,91 +76,91 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                       ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () async => await createDeck(context),
-                    style: ButtonStyle(
-                      backgroundColor: const WidgetStatePropertyAll(
-                        Color.fromARGB(255, 95, 197, 98),
-                      ),
-                      foregroundColor:
-                          const WidgetStatePropertyAll(Colors.white),
-                      padding: WidgetStatePropertyAll(
-                        EdgeInsets.all(
-                            MediaQuery.sizeOf(context).height * 0.015),
-                      ),
-                      side: const WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.done),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("Create Deck"),
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => cardLimitExceeded()
-                        ? cardLimitExceededDialog()
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddCardView(
-                                  currentCardCount: _cards.length,
-                                  onAdd: (CardDto cardDto) {
-                                    setState(() => _cards.add(cardDto));
-                                  }),
-                            ),
-                          ),
-                    style: ButtonStyle(
-                      backgroundColor: cardLimitExceeded()
-                          ? const WidgetStatePropertyAll(
-                              Color.fromARGB(255, 192, 192, 192))
-                          : const WidgetStatePropertyAll(Color(0xff03AED2)),
-                      foregroundColor:
-                          const WidgetStatePropertyAll(Colors.white),
-                      padding: WidgetStatePropertyAll(
-                        EdgeInsets.all(
-                            MediaQuery.sizeOf(context).height * 0.015),
-                      ),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: cardLimitExceeded()
-                              ? const Color.fromARGB(255, 179, 179, 179)
-                              : Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_circle),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("Add Cards"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              buttonsRow(context),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row buttonsRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TextButton(
+          onPressed: () async => await createDeck(context),
+          style: ButtonStyle(
+            backgroundColor: const WidgetStatePropertyAll(
+              Color.fromARGB(255, 95, 197, 98),
+            ),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+            ),
+            side: const WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.done),
+              SizedBox(
+                width: 8,
+              ),
+              Text("Create Deck "),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () => cardLimitExceeded()
+              ? cardLimitExceededDialog()
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddCardView(
+                        currentCardCount: _cards.length,
+                        onAdd: (CardDto cardDto) {
+                          setState(() => _cards.add(cardDto));
+                        }),
+                  ),
+                ),
+          style: ButtonStyle(
+            backgroundColor: cardLimitExceeded()
+                ? const WidgetStatePropertyAll(
+                    Color.fromARGB(255, 192, 192, 192))
+                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+            ),
+            side: WidgetStatePropertyAll(
+              BorderSide(
+                width: 2,
+                color: cardLimitExceeded()
+                    ? const Color.fromARGB(255, 179, 179, 179)
+                    : Colors.lightBlue,
+              ),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle),
+              SizedBox(
+                width: 8,
+              ),
+              Text(" Add Cards  "),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

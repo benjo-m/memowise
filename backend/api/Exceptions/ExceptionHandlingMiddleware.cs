@@ -43,6 +43,11 @@ public class ExceptionHandlingMiddleware
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsJsonAsync(new { errorCode = "DECK_LIMIT_EXCEEDED", message = ex.Message });
         }
+        catch (AlreadyPremiumException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsJsonAsync(new { errorCode = "ALREADY_PREMIUM", message = ex.Message });
+        }
         catch (Exception ex)
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;

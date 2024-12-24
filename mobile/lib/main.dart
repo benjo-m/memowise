@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // Stripe.publishableKey = const String.fromEnvironment('STRIPE_PK');
   Stripe.publishableKey =
-      const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
+      "pk_test_51QYA8lKyxjTB7qLm9wnnZ9r7PGg6WXcd1uzvuQ6y1h3i2FK8HTHlRzvrqqA5S9NFEObdmytmFZRWiHxLyUESY5Sv00uGD5SCvx";
   runApp(const MyApp());
 }
 

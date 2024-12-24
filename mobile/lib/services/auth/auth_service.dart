@@ -124,4 +124,18 @@ class AuthService {
       },
     );
   }
+
+  Future<void> upgradeToPremium() async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/users/premium-upgrade/${CurrentUser.userId}"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      CurrentUser.isPremium = true;
+    }
+  }
 }

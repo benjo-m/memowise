@@ -167,48 +167,49 @@ class _SettingsViewState extends State<SettingsView> {
                 "Application Settings",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Flexible(
-                    child: Text(
-                      "Unlock the full experience with the Premium upgrade",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 85, 85, 85),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PremiumUpgradeView()),
-                      );
-                    },
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 241, 183, 7),
-                      ),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(100, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.amber,
+              if (!CurrentUser.isPremium!) const SizedBox(height: 20),
+              if (!CurrentUser.isPremium!)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Flexible(
+                      child: Text(
+                        "Unlock the full experience with the Premium upgrade",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 85, 85, 85),
                         ),
                       ),
                     ),
-                    child: const Text("Upgrade"),
-                  ),
-                ],
-              ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PremiumUpgradeView()),
+                        );
+                      },
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Color.fromARGB(255, 241, 183, 7),
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        fixedSize: WidgetStatePropertyAll(Size(100, 45)),
+                        side: WidgetStatePropertyAll(
+                          BorderSide(
+                            width: 2,
+                            color: Colors.amber,
+                          ),
+                        ),
+                      ),
+                      child: const Text("Upgrade"),
+                    ),
+                  ],
+                ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,5 +1,4 @@
 using api.DTO;
-using api.Exceptions;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +62,13 @@ public class UsersController : BaseController
     public async Task<IActionResult> DeleteAllData()
     {
         await _userService.DeleteAllData();
+        return Ok();
+    }
+
+    [HttpGet("premium-upgrade/{userId}")]
+    public async Task<IActionResult> UpgradeToPremium(int userId)
+    {
+        await _userService.UpgradeToPremium(userId);
         return Ok();
     }
 }

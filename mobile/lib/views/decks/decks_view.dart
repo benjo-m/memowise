@@ -184,7 +184,7 @@ class _DecksViewState extends State<DecksView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.045),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.015),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -217,7 +217,7 @@ class _DecksViewState extends State<DecksView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.045),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.015),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -286,11 +286,17 @@ class _DecksViewState extends State<DecksView> {
                       child: const Text("Close"),
                     ),
                     ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PremiumUpgradeView()),
-                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PremiumUpgradeView())).then((_) {
+                          setState(() {
+                            _decksFuture = DeckService().getDecks();
+                          });
+                        });
+                      },
                       child: const Text("Upgrade"),
                     ),
                   ],

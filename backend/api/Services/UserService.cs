@@ -192,4 +192,19 @@ public class UserService
         user.UserStats.TotalSessionsCompleted = 0;
         user.UserStats.TotalCorrectAnswers = 0;
     }
+
+    public async Task UpgradeToPremium(int userId)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user.IsPremium)
+        {
+            throw new AlreadyPremiumException("This user has already upgraded to the premium version");
+        }
+
+        user.IsPremium = true;
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+    }
 }

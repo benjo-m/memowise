@@ -284,7 +284,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     if (decks.any((existingDeck) =>
         existingDeck.name == deckName && existingDeck.id != deck.id)) {
       setState(() {
-        _deckNameError = "A deck with that name already exists";
+        _deckNameError = "You already have a deck named $deckName";
       });
       return;
     }

@@ -442,8 +442,10 @@ class _SettingsViewState extends State<SettingsView> {
               title: const Center(child: Text("Delete Account")),
               children: [
                 const Center(
-                    child:
-                        Text("Are you sure you want to delete your account?")),
+                    child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text("Are you sure you want to delete your account?"),
+                )),
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),

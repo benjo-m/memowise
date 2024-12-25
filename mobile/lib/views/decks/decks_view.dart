@@ -176,7 +176,7 @@ class _DecksViewState extends State<DecksView> {
         TextButton(
           onPressed: () => deckLimitExceeded(decks)
               ? deckLimitExceededDialog()
-              : createDeck(),
+              : createDeck(decks),
           style: ButtonStyle(
             backgroundColor: deckLimitExceeded(decks)
                 ? const WidgetStatePropertyAll(
@@ -253,9 +253,11 @@ class _DecksViewState extends State<DecksView> {
     );
   }
 
-  void createDeck() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const CreateDeckView())).then(
+  void createDeck(List<DeckSummary> decks) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CreateDeckView(decks: decks))).then(
       (value) => setState(() {
         _decksFuture = DeckService().getDecks();
       }),

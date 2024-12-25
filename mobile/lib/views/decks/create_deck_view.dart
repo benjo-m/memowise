@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
+import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/add_card_view.dart';
@@ -9,7 +12,12 @@ import 'package:mobile/views/settings/premium_upgrade_view.dart';
 import 'package:mobile/widgets/card_list_item.dart';
 
 class CreateDeckView extends StatefulWidget {
-  const CreateDeckView({super.key});
+  const CreateDeckView({
+    super.key,
+    required this.decks,
+  });
+
+  final List<DeckSummary> decks;
 
   @override
   State<CreateDeckView> createState() => _CreateDeckViewState();
@@ -38,8 +46,8 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "Deck name is required";
-                  } else if (value.trim().length > 50) {
-                    return "Deck name must be 50 characters or fewer";
+                  } else if (widget.decks.any((deck) => deck.name == value)) {
+                    return "You already have a deck named $value";
                   }
                   return null;
                 },
@@ -50,6 +58,7 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
+                maxLength: 50,
               ),
               const SizedBox(
                 height: 20,

@@ -30,7 +30,7 @@ class DeckListItem extends StatelessWidget {
               fontSize: MediaQuery.sizeOf(context).width * 0.05,
               fontWeight: FontWeight.bold,
             ),
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Column(

@@ -78,6 +78,7 @@ public class DeckService
         deck.User = user;
 
         user.UserStats.TotalDecksCreated++;
+        user.UserStats.TotalCardsCreated += deck.Cards.Count();
 
         _dbContext.Decks.Add(deck);
         _dbContext.Users.Update(user);

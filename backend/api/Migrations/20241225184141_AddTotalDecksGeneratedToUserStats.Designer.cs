@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241225184141_AddTotalDecksGeneratedToUserStats")]
+    partial class AddTotalDecksGeneratedToUserStats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,21 +167,6 @@ namespace api.Migrations
                     b.Property<int>("CardCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("CardsRated1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsRated2")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsRated3")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsRated4")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsRated5")
-                        .HasColumnType("int");
-
                     b.Property<int>("DeckId")
                         .HasColumnType("int");
 
@@ -234,9 +222,6 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LongestStudyStreak")
-                        .HasColumnType("int");
 
                     b.Property<int>("StudyStreak")
                         .HasColumnType("int");

@@ -207,4 +207,12 @@ public class UserService
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<UserStats?> GetStats(int userId)
+    {
+        var userStats = await _dbContext.UserStats
+            .FirstOrDefaultAsync(us => us.UserId == userId);
+
+        return userStats;
+    }
 }

@@ -1,4 +1,5 @@
 using api.DTO;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -70,5 +71,12 @@ public class UsersController : BaseController
     {
         await _userService.UpgradeToPremium(userId);
         return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("stats/{userId}")]
+    public async Task<ActionResult<UserStats>> GetStats(int userId)
+    {
+        return await _userService.GetStats(userId);
     }
 }

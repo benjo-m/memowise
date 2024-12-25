@@ -97,6 +97,8 @@ public class CardService
 
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
+        var user = await _userService.GetCurrentUser();
+
         var groqApi = new GroqApiClient(_configuration["Groq:ApiKey"]!);
 
         var request = new JsonObject
@@ -120,6 +122,9 @@ public class CardService
         try
         {
             var generatedCards = JsonConvert.DeserializeObject<GenerateCardsResponse>(response!);
+            user.UserStats.TotalDecksGenerated++;
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
             return generatedCards;
         }
         catch (Exception)

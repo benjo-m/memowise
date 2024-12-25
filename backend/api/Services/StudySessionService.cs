@@ -54,6 +54,10 @@ public class StudySessionService
         if (lastStudySession == null || lastStudySession.StudiedAt.Date != DateTime.Today)
         {
             user.UserStats.StudyStreak++;
+            if (user.UserStats.StudyStreak > user.UserStats.LongestStudyStreak)
+            {
+                user.UserStats.LongestStudyStreak = user.UserStats.StudyStreak;
+            }
         }
 
         user.UserStats.TotalSessionsCompleted++;

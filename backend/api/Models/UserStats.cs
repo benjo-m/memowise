@@ -6,9 +6,11 @@ public class UserStats
     public int UserId { get; set; }
     public User User { get; set; }
     public int TotalDecksCreated { get; set; } = 0;
+    public int TotalDecksGenerated { get; set; } = 0;
     public int TotalCardsCreated { get; set; } = 0;
     public int TotalCardsLearned { get; set; } = 0;
     public int StudyStreak { get; set; } = 0;
+    public int LongestStudyStreak { get; set; } = 0;
     public int TotalSessionsCompleted { get; set; } = 0;
     public int TotalCorrectAnswers { get; set; } = 0;
 }

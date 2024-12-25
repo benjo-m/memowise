@@ -28,7 +28,11 @@ class _StudySessionViewState extends State<StudySessionView> {
   int currentCardIndex = 0;
   bool showAnswer = false;
   final stopwatch = Stopwatch();
-
+  int cardsRated1 = 0;
+  int cardsRated2 = 0;
+  int cardsRated3 = 0;
+  int cardsRated4 = 0;
+  int cardsRated5 = 0;
   Uint8List? cachedQuestionImageBytes;
   Uint8List? cachedAnswerImageBytes;
 
@@ -219,6 +223,9 @@ class _StudySessionViewState extends State<StudySessionView> {
       children: [
         ElevatedButton(
           onPressed: () {
+            setState(() {
+              cardsRated1++;
+            });
             selectAnswer(1);
           },
           style: ButtonStyle(
@@ -235,6 +242,9 @@ class _StudySessionViewState extends State<StudySessionView> {
         ),
         ElevatedButton(
           onPressed: () {
+            setState(() {
+              cardsRated2++;
+            });
             selectAnswer(2);
           },
           style: ButtonStyle(
@@ -251,6 +261,9 @@ class _StudySessionViewState extends State<StudySessionView> {
         ),
         ElevatedButton(
           onPressed: () {
+            setState(() {
+              cardsRated3++;
+            });
             selectAnswer(3);
           },
           style: const ButtonStyle(
@@ -267,6 +280,9 @@ class _StudySessionViewState extends State<StudySessionView> {
         ),
         ElevatedButton(
           onPressed: () {
+            setState(() {
+              cardsRated4++;
+            });
             selectAnswer(4);
           },
           style: ButtonStyle(
@@ -283,6 +299,9 @@ class _StudySessionViewState extends State<StudySessionView> {
         ),
         TextButton(
           onPressed: () {
+            setState(() {
+              cardsRated5++;
+            });
             selectAnswer(5);
           },
           style: ButtonStyle(
@@ -345,6 +364,7 @@ class _StudySessionViewState extends State<StudySessionView> {
     stopwatch.stop();
     final studySession = StudySession(
       userId: CurrentUser.userId!,
+      deckId: widget.deck.id,
       duration: stopwatch.elapsed.inSeconds,
       cardCount: cardStatsList.length,
       averageEaseFactor: double.parse((cardStatsList.fold(
@@ -356,6 +376,11 @@ class _StudySessionViewState extends State<StudySessionView> {
               cardStatsList.length)
           .toStringAsFixed(2)),
       studiedAt: DateTime.now(),
+      cardsRated1: cardsRated1,
+      cardsRated2: cardsRated2,
+      cardsRated3: cardsRated3,
+      cardsRated4: cardsRated4,
+      cardsRated5: cardsRated5,
     );
 
     await StudySessionService().saveSession(studySession);

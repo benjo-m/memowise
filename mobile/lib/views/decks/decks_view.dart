@@ -68,8 +68,12 @@ class _DecksViewState extends State<DecksView> {
   }
 
   Row statsRow(List<DeckSummary> decks) {
+    final totalCards = decks.fold(0, (total, deck) {
+      return total + deck.newCards + deck.learnedCards + deck.learningCards;
+    });
+
     final cardToLearn = decks.fold(0, (total, deck) {
-      return total + deck.learnedCards + deck.newCards;
+      return total + deck.learningCards + deck.newCards;
     });
 
     return Row(
@@ -123,7 +127,7 @@ class _DecksViewState extends State<DecksView> {
                 ),
               ),
               Text(
-                "${totalCards(decks)}",
+                "$totalCards",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: MediaQuery.sizeOf(context).height * 0.025,
@@ -163,11 +167,11 @@ class _DecksViewState extends State<DecksView> {
     );
   }
 
-  int totalCards(List<DeckSummary> decks) {
-    return decks.fold(0, (total, deck) {
-      return total + deck.newCards + deck.learnedCards + deck.learnedCards;
-    });
-  }
+  // int totalCards(List<DeckSummary> decks) {
+  //   return decks.fold(0, (total, deck) {
+  //     return total + deck.newCards + deck.learnedCards + deck.learnedCards;
+  //   });
+  // }
 
   Row buttonsRow(List<DeckSummary> decks) {
     return Row(

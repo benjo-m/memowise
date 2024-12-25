@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/study_session.dart';
+import 'package:mobile/views/main_view.dart';
 
 class StudySessionResultsView extends StatefulWidget {
   const StudySessionResultsView({
@@ -49,7 +50,12 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
                 height: MediaQuery.sizeOf(context).height * 0.03,
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context, true),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MainView()));
+                },
                 style: ButtonStyle(
                   backgroundColor: const WidgetStatePropertyAll(
                     Color.fromARGB(255, 95, 197, 98),

@@ -42,7 +42,7 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
                 height: MediaQuery.sizeOf(context).height * 0.03,
               ),
               Text(
-                "Average response time: ${widget.studySession.duration / widget.studySession.cardCount} seconds",
+                "Average response time: ${(widget.studySession.duration / widget.studySession.cardCount).toStringAsFixed(2)} seconds",
                 style: resultsTextStyle(),
               ),
               SizedBox(
@@ -55,9 +55,14 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
                     Color.fromARGB(255, 95, 197, 98),
                   ),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
-                  fixedSize: WidgetStatePropertyAll(Size(
-                      MediaQuery.sizeOf(context).width * 0.3,
-                      MediaQuery.sizeOf(context).height * 0.05)),
+                  padding: WidgetStatePropertyAll(
+                    EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
+                  ),
+                  fixedSize: WidgetStatePropertyAll(
+                    Size.fromWidth(
+                      MediaQuery.sizeOf(context).width * 0.4,
+                    ),
+                  ),
                   side: const WidgetStatePropertyAll(
                     BorderSide(
                       width: 2,
@@ -70,7 +75,7 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
                   children: [
                     Icon(Icons.done),
                     SizedBox(
-                      width: 8,
+                      width: 5,
                     ),
                     Text("Complete"),
                   ],
@@ -90,10 +95,10 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
   }
 
   TextStyle resultsTextStyle() {
-    return TextStyle(
+    return const TextStyle(
       fontWeight: FontWeight.bold,
-      color: const Color.fromARGB(255, 88, 88, 88),
-      fontSize: MediaQuery.sizeOf(context).height * 0.02,
+      color: Color.fromARGB(255, 88, 88, 88),
+      fontSize: 16,
     );
   }
 }

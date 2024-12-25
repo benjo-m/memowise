@@ -31,112 +31,121 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
       appBar: AppBar(
         title: const Text("Generate Deck"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _deckNameController,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Deck name is required";
-                      } else if (value.trim().length > 100) {
-                        return "Deck name must be 100 characters or fewer";
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      label: Text("Deck Name"),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            children: [
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _deckNameController,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Deck name is required";
+                        } else if (value.trim().length > 100) {
+                          return "Deck name must be 100 characters or fewer";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text("Deck Name"),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: _topicController,
-                    decoration: const InputDecoration(
-                      label: Text("Topic"),
+                    TextFormField(
+                      controller: _topicController,
+                      decoration: const InputDecoration(
+                        label: Text("Topic"),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Topic is required";
+                        } else if (value.trim().length > 100) {
+                          return "Topic must be 100 characters of fewer";
+                        }
+                        return null;
+                      },
                     ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    const SizedBox(
+                      height: 20,
                     ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Topic is required";
-                      } else if (value.trim().length > 100) {
-                        return "Topic must be 100 characters of fewer";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: _cardCountController,
-                    decoration: const InputDecoration(
-                      label: Text("Number of cards"),
+                    TextFormField(
+                      controller: _cardCountController,
+                      decoration: const InputDecoration(
+                        label: Text("Number of cards"),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Number of cards must be specified";
+                        }
+                        if (int.parse(value) < 1 || int.parse(value) > 20) {
+                          return "Number of cards must be a number between 1 and 20";
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Number of cards must be specified";
-                      }
-                      if (int.parse(value) < 1 || int.parse(value) > 20) {
-                        return "Number of cards must be a number between 1 and 20";
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () async => await generateDeck(context),
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(
-                  Color.fromARGB(255, 95, 197, 98),
-                ),
-                foregroundColor: WidgetStatePropertyAll(Colors.white),
-                padding: WidgetStatePropertyAll(
-                  EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
-                ),
-                side: WidgetStatePropertyAll(
-                  BorderSide(
-                    width: 2,
-                    color: Colors.green,
-                  ),
+                  ],
                 ),
               ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.done),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text("Generate Deck"),
-                ],
+              const SizedBox(
+                height: 20,
               ),
-            ),
-          ],
+              TextButton(
+                onPressed: () async => await generateDeck(context),
+                style: ButtonStyle(
+                  backgroundColor: const WidgetStatePropertyAll(
+                    Color.fromARGB(255, 95, 197, 98),
+                  ),
+                  foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                  padding: WidgetStatePropertyAll(
+                    EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+                  ),
+                  fixedSize: WidgetStatePropertyAll(
+                    Size.fromWidth(
+                      MediaQuery.sizeOf(context).width * 0.4,
+                    ),
+                  ),
+                  side: const WidgetStatePropertyAll(
+                    BorderSide(
+                      width: 2,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.done),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Generate Deck"),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -184,7 +184,12 @@ class _DecksViewState extends State<DecksView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -202,7 +207,7 @@ class _DecksViewState extends State<DecksView> {
               SizedBox(
                 width: 5,
               ),
-              Text("Create Deck  "),
+              Text("Create Deck"),
             ],
           ),
         ),
@@ -217,7 +222,12 @@ class _DecksViewState extends State<DecksView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -331,7 +341,7 @@ class _DecksViewState extends State<DecksView> {
           .toList(),
       options: CarouselOptions(
         height: MediaQuery.sizeOf(context).height * 0.4,
-        viewportFraction: 0.65,
+        viewportFraction: 0.7,
       ),
     );
   }

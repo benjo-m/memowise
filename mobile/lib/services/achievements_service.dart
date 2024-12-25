@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:mobile/config/constants.dart';
+import 'package:mobile/dtos/unlocked_achievement_response.dart';
 import 'package:mobile/models/achievement.dart';
 import 'package:mobile/services/auth/current_user.dart';
 
@@ -21,7 +22,8 @@ class AchievementsService {
     return jsonList.map((json) => Achievement.fromJson(json)).toList();
   }
 
-  Future<List<Achievement>> getUnlockedAchievements(int userId) async {
+  Future<UnlockedAchievementsResponse> getUnlockedAchievements(
+      int userId) async {
     final response = await http.get(
       Uri.parse("$baseUrl/achievements/user/$userId"),
       headers: {
@@ -30,8 +32,6 @@ class AchievementsService {
       },
     );
 
-    final List<dynamic> jsonList = jsonDecode(response.body);
-
-    return jsonList.map((json) => Achievement.fromJson(json)).toList();
+    return UnlockedAchievementsResponse.fromJson(jsonDecode(response.body));
   }
 }

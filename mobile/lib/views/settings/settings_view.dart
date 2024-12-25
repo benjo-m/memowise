@@ -42,139 +42,209 @@ class _SettingsViewState extends State<SettingsView> {
       appBar: AppBar(
         title: const Text("Settings"),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Account Settings",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+      body: Scrollbar(
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Account Settings",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
+                const SizedBox(height: 20),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        focusNode: _usernameFocusNode,
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          errorText: _usernameError,
+                        ),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Username is required";
+                          }
+                          return null;
+                        },
+                        onEditingComplete: () async => updateUser(),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        focusNode: _emailFocusNode,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          errorText: _emailError,
+                        ),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Email is required";
+                          }
+                          const pattern =
+                              r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+                              r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+                              r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+                              r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+                              r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+                              r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+                              r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+                          final regex = RegExp(pattern);
+
+                          if (!regex.hasMatch(value)) {
+                            return "Please enter a valid email address";
+                          }
+
+                          return null;
+                        },
+                        onEditingComplete: () async => updateUser(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextFormField(
-                      focusNode: _usernameFocusNode,
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        errorText: _usernameError,
+                    TextButton(
+                      onPressed: () => showDeleteAccountDialog(),
+                      style: ButtonStyle(
+                        backgroundColor: const WidgetStatePropertyAll(
+                            Color.fromARGB(255, 243, 83, 71)),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.all(
+                              MediaQuery.sizeOf(context).height * 0.014),
+                        ),
+                        fixedSize: WidgetStatePropertyAll(
+                          Size.fromWidth(
+                            MediaQuery.sizeOf(context).width * 0.4,
+                          ),
+                        ),
+                        side: const WidgetStatePropertyAll(
+                          BorderSide(
+                            width: 2,
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "Username is required";
-                        }
-                        return null;
-                      },
-                      onEditingComplete: () async => updateUser(),
+                      child: const Text("Delete Account"),
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      focusNode: _emailFocusNode,
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        errorText: _emailError,
+                    TextButton(
+                      onPressed: () async => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ChangePasswordView())),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Color(0xff03AED2)),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.all(
+                              MediaQuery.sizeOf(context).height * 0.014),
+                        ),
+                        fixedSize: WidgetStatePropertyAll(
+                          Size.fromWidth(
+                            MediaQuery.sizeOf(context).width * 0.4,
+                          ),
+                        ),
+                        side: const WidgetStatePropertyAll(
+                          BorderSide(
+                            width: 2,
+                            color: Colors.lightBlue,
+                          ),
+                        ),
                       ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "Email is required";
-                        }
-                        const pattern =
-                            r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
-                            r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
-                            r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
-                            r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
-                            r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
-                            r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
-                            r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
-                        final regex = RegExp(pattern);
-
-                        if (!regex.hasMatch(value)) {
-                          return "Please enter a valid email address";
-                        }
-
-                        return null;
-                      },
-                      onEditingComplete: () async => updateUser(),
+                      child: const Text("Change Password"),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () => showDeleteAccountDialog(),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                          Color.fromARGB(255, 243, 83, 71)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(140, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.red,
+                const SizedBox(height: 40),
+                const Text(
+                  "Application Settings",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                if (!CurrentUser.isPremium!) const SizedBox(height: 20),
+                if (!CurrentUser.isPremium!)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Flexible(
+                        child: Text(
+                          "Unlock the full experience with the Premium upgrade",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 85, 85, 85),
+                          ),
                         ),
                       ),
-                    ),
-                    child: const Text("Delete Account"),
-                  ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  TextButton(
-                    onPressed: () async => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ChangePasswordView())),
-                    style: const ButtonStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(Color(0xff03AED2)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(140, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.lightBlue,
-                        ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                    child: const Text("Change Password"),
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PremiumUpgradeView()),
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: const WidgetStatePropertyAll(
+                            Color.fromARGB(255, 241, 183, 7),
+                          ),
+                          foregroundColor:
+                              const WidgetStatePropertyAll(Colors.white),
+                          padding: WidgetStatePropertyAll(
+                            EdgeInsets.all(
+                                MediaQuery.sizeOf(context).height * 0.014),
+                          ),
+                          fixedSize: WidgetStatePropertyAll(
+                            Size.fromWidth(
+                              MediaQuery.sizeOf(context).width * 0.3,
+                            ),
+                          ),
+                          side: const WidgetStatePropertyAll(
+                            BorderSide(
+                              width: 2,
+                              color: Colors.amber,
+                            ),
+                          ),
+                        ),
+                        child: const Text("Upgrade"),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 40),
-              const Text(
-                "Application Settings",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              if (!CurrentUser.isPremium!) const SizedBox(height: 20),
-              if (!CurrentUser.isPremium!)
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Flexible(
                       child: Text(
-                        "Unlock the full experience with the Premium upgrade",
+                        "Delete all data and start fresh, your account remains intact!",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -186,135 +256,121 @@ class _SettingsViewState extends State<SettingsView> {
                       width: 10,
                     ),
                     TextButton(
-                      onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PremiumUpgradeView()),
-                        );
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Color.fromARGB(255, 241, 183, 7),
+                      onPressed: () async => deleteData(),
+                      style: ButtonStyle(
+                        backgroundColor: const WidgetStatePropertyAll(
+                            Color.fromARGB(255, 243, 83, 71)),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.all(
+                              MediaQuery.sizeOf(context).height * 0.014),
                         ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        fixedSize: WidgetStatePropertyAll(Size(100, 45)),
-                        side: WidgetStatePropertyAll(
+                        fixedSize: WidgetStatePropertyAll(
+                          Size.fromWidth(
+                            MediaQuery.sizeOf(context).width * 0.3,
+                          ),
+                        ),
+                        side: const WidgetStatePropertyAll(
                           BorderSide(
                             width: 2,
-                            color: Colors.amber,
+                            color: Colors.red,
                           ),
                         ),
                       ),
-                      child: const Text("Upgrade"),
+                      child: const Text("Delete Data"),
                     ),
                   ],
                 ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Flexible(
-                    child: Text(
-                      "Delete all data and start fresh, your account remains intact!",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 85, 85, 85),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(
-                    onPressed: () async => deleteData(),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                          Color.fromARGB(255, 243, 83, 71)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(100, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.red,
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Flexible(
+                      child: Text(
+                        "Encountered a bug or have a suggestion to improve the app?",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 85, 85, 85),
                         ),
                       ),
                     ),
-                    child: const Text("Delete Data"),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Flexible(
-                    child: Text(
-                      "Encountered a bug or have a suggestion to improve the app?",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 85, 85, 85),
-                      ),
+                    const SizedBox(
+                      width: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      CurrentUser.isPremium = !CurrentUser.isPremium!;
-                    },
-                    style: const ButtonStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(Color(0xff03AED2)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(100, 45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.lightBlue,
+                    TextButton(
+                      onPressed: () {
+                        CurrentUser.isPremium = !CurrentUser.isPremium!;
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Color(0xff03AED2)),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.all(
+                              MediaQuery.sizeOf(context).height * 0.014),
+                        ),
+                        fixedSize: WidgetStatePropertyAll(
+                          Size.fromWidth(
+                            MediaQuery.sizeOf(context).width * 0.3,
+                          ),
+                        ),
+                        side: const WidgetStatePropertyAll(
+                          BorderSide(
+                            width: 2,
+                            color: Colors.lightBlue,
+                          ),
                         ),
                       ),
+                      child: const Text("Feedback"),
                     ),
-                    child: const Text("Feedback"),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () async => logout(),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 173, 173, 173),
-                      ),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size.fromHeight(45)),
-                      side: WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Color.fromARGB(255, 165, 165, 165),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () async => logout(),
+                      style: ButtonStyle(
+                        backgroundColor: const WidgetStatePropertyAll(
+                          Color.fromARGB(255, 173, 173, 173),
+                        ),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.all(
+                              MediaQuery.sizeOf(context).height * 0.013),
+                        ),
+                        fixedSize: WidgetStatePropertyAll(
+                          Size.fromWidth(
+                            MediaQuery.sizeOf(context).width * 0.4,
+                          ),
+                        ),
+                        side: const WidgetStatePropertyAll(
+                          BorderSide(
+                            width: 2,
+                            color: Color.fromARGB(255, 165, 165, 165),
+                          ),
                         ),
                       ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.logout_rounded),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text("Log Out"),
+                        ],
+                      ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.logout_rounded),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("Log Out"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

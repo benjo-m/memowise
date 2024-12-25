@@ -295,7 +295,12 @@ class _EditCardViewState extends State<EditCardView> {
                 const WidgetStatePropertyAll(Color.fromARGB(255, 243, 83, 71)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: const WidgetStatePropertyAll(
               BorderSide(
@@ -311,7 +316,7 @@ class _EditCardViewState extends State<EditCardView> {
               SizedBox(
                 width: 5,
               ),
-              Text(" Cancel   "),
+              Text("Cancel"),
             ],
           ),
         ),
@@ -323,7 +328,12 @@ class _EditCardViewState extends State<EditCardView> {
             backgroundColor: const WidgetStatePropertyAll(Color(blue)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: const WidgetStatePropertyAll(
               BorderSide(
@@ -339,7 +349,7 @@ class _EditCardViewState extends State<EditCardView> {
               SizedBox(
                 width: 5,
               ),
-              Text("Edit Card "),
+              Text("Edit Card"),
             ],
           ),
         ),

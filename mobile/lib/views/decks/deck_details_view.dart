@@ -121,7 +121,12 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                 const WidgetStatePropertyAll(Color.fromARGB(255, 243, 83, 71)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: const WidgetStatePropertyAll(
               BorderSide(
@@ -135,7 +140,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             children: [
               Icon(Icons.delete),
               SizedBox(
-                width: 8,
+                width: 5,
               ),
               Text("Delete Deck"),
             ],
@@ -166,7 +171,12 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -182,7 +192,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             children: [
               Icon(Icons.add_circle),
               SizedBox(
-                width: 8,
+                width: 5,
               ),
               Text(" Add Cards "),
             ],

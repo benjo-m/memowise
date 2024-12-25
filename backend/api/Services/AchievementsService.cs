@@ -22,12 +22,20 @@ public class AchievementsService
             .ToListAsync();
     }
 
-    public async Task<List<Achievement>?> GetUnlockedAchievements(int userId)
+    public async Task<UnlockedAchievementsResponse> GetUnlockedAchievements(int userId)
     {
-        return await _dbContext.Users
+        var unlockedAchievements = await _dbContext.Users
             .Where(u => u.Id == userId)
             .Select(u => u.Achievements)
-            .FirstOrDefaultAsync();
+            .FirstAsync();
+
+        int totalAchievementCount = await _dbContext.Achievements.CountAsync();
+
+        return new UnlockedAchievementsResponse()
+        {
+            Achievements = unlockedAchievements,
+            Progress = Math.Round(((double)unlockedAchievements.Count / totalAchievementCount) * 100, 1)
+        };
     }
 
     public async Task<Achievement?> UnlockAchievement(int achievementId, int userId)
@@ -54,7 +62,8 @@ public class AchievementsService
 
     public async Task CheckAchievements(int userId)
     {
-        var unlockedAchievements = await GetUnlockedAchievements(userId);
+        var unlockedAchievementsResponse = await GetUnlockedAchievements(userId);
+        var unlockedAchievements = unlockedAchievementsResponse.Achievements;
         var achievements = await GetAllAchievements();
         var userStats = await _dbContext.UserStats
             .SingleAsync(us => us.UserId == userId);

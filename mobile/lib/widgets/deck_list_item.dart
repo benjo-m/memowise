@@ -120,16 +120,16 @@ class DeckListItem extends StatelessWidget {
                     ),
                   ),
                   fixedSize: WidgetStatePropertyAll(
-                    Size(MediaQuery.sizeOf(context).width * 0.333,
-                        MediaQuery.sizeOf(context).height * 0.05),
-                  ),
+                      Size.fromWidth(MediaQuery.sizeOf(context).width * 0.35)),
                 ),
                 onPressed: () async => await startStudySession(context),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.play_arrow_rounded),
-                    Text("Study Deck"),
+                    Text(
+                      "Study Deck",
+                    ),
                   ],
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/dtos/unlocked_achievement_response.dart';
 import 'package:mobile/models/achievement.dart';
 import 'package:mobile/services/achievements_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
@@ -14,7 +15,8 @@ class AchievementsView extends StatefulWidget {
 class _AchievementsViewState extends State<AchievementsView> {
   late Future<List<Achievement>> _achievementsFuture;
   int progress = 0;
-  List<Achievement> _unlockedAchievements = [];
+  UnlockedAchievementsResponse _unlockedAchievements =
+      UnlockedAchievementsResponse(achievements: [], progress: 0);
 
   @override
   void initState() {
@@ -45,28 +47,34 @@ class _AchievementsViewState extends State<AchievementsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Unlocked achievements: ${_unlockedAchievements.length}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 65, 65, 65),
-                  ),
-                ),
-              ],
+            Text(
+              "Unlocked achievements: ${_unlockedAchievements.achievements.length}",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 65, 65, 65),
+              ),
             ),
-            const SizedBox(height: 30),
+            Text(
+              "Progress: ${_unlockedAchievements.progress}%",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 65, 65, 65),
+              ),
+            ),
+            const SizedBox(height: 20),
             FutureBuilder(
               future: _achievementsFuture,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final achievements = snapshot.data!;
                   return Expanded(
-                    child: ListView(
-                      children: achievementsList(achievements),
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: ListView(
+                        children: achievementsList(achievements),
+                      ),
                     ),
                   );
                 }
@@ -85,7 +93,7 @@ class _AchievementsViewState extends State<AchievementsView> {
     List<AchievementListItem> achievementsList = List.empty(growable: true);
 
     for (var achievement in achievements) {
-      bool isLocked = !_unlockedAchievements.any(
+      bool isLocked = !_unlockedAchievements.achievements.any(
           (unlockedAchievement) => unlockedAchievement.id == achievement.id);
       achievementsList.add(AchievementListItem(
         achievement: achievement,

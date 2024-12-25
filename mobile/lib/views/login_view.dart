@@ -27,10 +27,10 @@ class _LoginFormState extends State<LoginView> {
         title: const Center(child: Text("Login")),
       ),
       body: SingleChildScrollView(
-        child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Form(
+              key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -74,11 +74,19 @@ class _LoginFormState extends State<LoginView> {
                   ),
                   TextButton(
                     onPressed: () async => await login(context),
-                    style: const ButtonStyle(
+                    style: ButtonStyle(
                       backgroundColor:
                           WidgetStatePropertyAll(Color(0xff03AED2)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.all(
+                            MediaQuery.sizeOf(context).height * 0.013),
+                      ),
+                      fixedSize: WidgetStatePropertyAll(
+                        Size.fromWidth(
+                          MediaQuery.sizeOf(context).width * 0.4,
+                        ),
+                      ),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
@@ -91,7 +99,7 @@ class _LoginFormState extends State<LoginView> {
                       children: [
                         Icon(Icons.login_rounded),
                         SizedBox(
-                          width: 8,
+                          width: 5,
                         ),
                         Text("Log in"),
                       ],
@@ -109,8 +117,8 @@ class _LoginFormState extends State<LoginView> {
                     child: const Text("Don't have an account? Register here."),
                   ),
                 ],
-              ),
-            )),
+              )),
+        ),
       ),
     );
   }

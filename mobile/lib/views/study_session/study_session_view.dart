@@ -67,7 +67,8 @@ class _StudySessionViewState extends State<StudySessionView> {
         ),
         body: cards.isNotEmpty
             ? Padding(
-                padding: const EdgeInsets.all(25.0),
+                padding: const EdgeInsets.only(
+                    top: 20, right: 20, left: 20, bottom: 10),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -76,7 +77,7 @@ class _StudySessionViewState extends State<StudySessionView> {
                           Column(
                             children: [
                               const Padding(
-                                padding: EdgeInsets.only(bottom: 8.0),
+                                padding: EdgeInsets.only(bottom: 5.0),
                                 child: Text(
                                   "Question",
                                   style: TextStyle(fontSize: 16),
@@ -119,13 +120,13 @@ class _StudySessionViewState extends State<StudySessionView> {
                             ],
                           ),
                           const SizedBox(
-                            height: 30,
+                            height: 20,
                           ),
                           showAnswer
                               ? Column(
                                   children: [
                                     const Padding(
-                                      padding: EdgeInsets.only(bottom: 8.0),
+                                      padding: EdgeInsets.only(bottom: 5.0),
                                       child: Text(
                                         "Answer",
                                         style: TextStyle(fontSize: 16),
@@ -178,14 +179,22 @@ class _StudySessionViewState extends State<StudySessionView> {
                               onPressed: () {
                                 setState(() => showAnswer = true);
                               },
-                              style: const ButtonStyle(
-                                backgroundColor:
-                                    WidgetStatePropertyAll(Color(0xff03AED2)),
+                              style: ButtonStyle(
+                                backgroundColor: const WidgetStatePropertyAll(
+                                    Color(0xff03AED2)),
                                 foregroundColor:
-                                    WidgetStatePropertyAll(Colors.white),
-                                fixedSize:
-                                    WidgetStatePropertyAll(Size(150, 45)),
-                                side: WidgetStatePropertyAll(
+                                    const WidgetStatePropertyAll(Colors.white),
+                                padding: WidgetStatePropertyAll(
+                                  EdgeInsets.all(
+                                      MediaQuery.sizeOf(context).height *
+                                          0.014),
+                                ),
+                                fixedSize: WidgetStatePropertyAll(
+                                  Size.fromWidth(
+                                    MediaQuery.sizeOf(context).width * 0.4,
+                                  ),
+                                ),
+                                side: const WidgetStatePropertyAll(
                                   BorderSide(
                                     width: 2,
                                     color: Colors.lightBlue,
@@ -202,9 +211,11 @@ class _StudySessionViewState extends State<StudySessionView> {
               ));
   }
 
-  Row showRatingButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+  Wrap showRatingButtons() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8.0,
+      runSpacing: 8.0,
       children: [
         ElevatedButton(
           onPressed: () {
@@ -216,7 +227,7 @@ class _StudySessionViewState extends State<StudySessionView> {
           child: const Text(
             "1",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -232,7 +243,7 @@ class _StudySessionViewState extends State<StudySessionView> {
           child: const Text(
             "2",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -248,7 +259,7 @@ class _StudySessionViewState extends State<StudySessionView> {
           child: const Text(
             "3",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -264,13 +275,13 @@ class _StudySessionViewState extends State<StudySessionView> {
           child: const Text(
             "4",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: () {
             selectAnswer(5);
           },
@@ -280,7 +291,7 @@ class _StudySessionViewState extends State<StudySessionView> {
           child: const Text(
             "5",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

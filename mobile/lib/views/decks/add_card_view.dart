@@ -269,7 +269,12 @@ class _AddCardViewState extends State<AddCardView> {
             ),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: const WidgetStatePropertyAll(
               BorderSide(
@@ -296,7 +301,12 @@ class _AddCardViewState extends State<AddCardView> {
             backgroundColor: const WidgetStatePropertyAll(Color(blue)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: const WidgetStatePropertyAll(
               BorderSide(

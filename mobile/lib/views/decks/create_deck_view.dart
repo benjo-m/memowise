@@ -98,7 +98,12 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             ),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: const WidgetStatePropertyAll(
               BorderSide(
@@ -112,9 +117,9 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             children: [
               Icon(Icons.done),
               SizedBox(
-                width: 8,
+                width: 5,
               ),
-              Text("Create Deck "),
+              Text("Create Deck"),
             ],
           ),
         ),
@@ -138,7 +143,12 @@ class _CreateDeckViewState extends State<CreateDeckView> {
                 : const WidgetStatePropertyAll(Color(0xff03AED2)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.012),
+              EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+            ),
+            fixedSize: WidgetStatePropertyAll(
+              Size.fromWidth(
+                MediaQuery.sizeOf(context).width * 0.4,
+              ),
             ),
             side: WidgetStatePropertyAll(
               BorderSide(
@@ -154,9 +164,9 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             children: [
               Icon(Icons.add_circle),
               SizedBox(
-                width: 8,
+                width: 5,
               ),
-              Text(" Add Cards  "),
+              Text("Add Cards"),
             ],
           ),
         ),

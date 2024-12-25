@@ -33,10 +33,10 @@ class _RegisterViewState extends State<RegisterView> {
         title: const Center(child: Text("Register")),
       ),
       body: SingleChildScrollView(
-        child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Form(
+              key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -139,11 +139,19 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   TextButton(
                     onPressed: () async => await register(context),
-                    style: const ButtonStyle(
+                    style: ButtonStyle(
                       backgroundColor:
                           WidgetStatePropertyAll(Color(0xff03AED2)),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      fixedSize: WidgetStatePropertyAll(Size(150, 45)),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.all(
+                            MediaQuery.sizeOf(context).height * 0.013),
+                      ),
+                      fixedSize: WidgetStatePropertyAll(
+                        Size.fromWidth(
+                          MediaQuery.sizeOf(context).width * 0.4,
+                        ),
+                      ),
                       side: WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
@@ -156,7 +164,7 @@ class _RegisterViewState extends State<RegisterView> {
                       children: [
                         Icon(Icons.login_rounded),
                         SizedBox(
-                          width: 8,
+                          width: 5,
                         ),
                         Text("Register"),
                       ],
@@ -174,8 +182,8 @@ class _RegisterViewState extends State<RegisterView> {
                       child: const Text(
                           "Already have an account? Log in instead.")),
                 ],
-              ),
-            )),
+              )),
+        ),
       ),
     );
   }

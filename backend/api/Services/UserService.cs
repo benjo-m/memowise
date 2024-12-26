@@ -95,9 +95,14 @@ public class UserService
             .Where(d => d.UserId == user.Id)
             .ToListAsync();
 
+        var studySessions = await _dbContext.StudySessions
+            .Where(d => d.UserId == user.Id)
+            .ToListAsync();
+
         await _dbContext.Database.ExecuteSqlRawAsync("DELETE FROM AchievementUser WHERE UsersId = {0}", user.Id);
 
         _dbContext.Decks.RemoveRange(decks);
+        _dbContext.StudySessions.RemoveRange(studySessions);
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
     }
@@ -108,6 +113,7 @@ public class UserService
         user.UserStats.TotalCardsCreated = 0;
         user.UserStats.TotalCardsLearned = 0;
         user.UserStats.StudyStreak = 0;
+        user.UserStats.LongestStudyStreak = 0;
         user.UserStats.TotalSessionsCompleted = 0;
         user.UserStats.TotalCorrectAnswers = 0;
     }

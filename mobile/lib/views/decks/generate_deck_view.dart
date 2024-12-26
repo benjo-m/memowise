@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/deck_service.dart';
 import 'package:mobile/views/decks/deck_details_view.dart';
@@ -95,8 +96,12 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                         if (value == null || value.trim().isEmpty) {
                           return "Number of cards must be specified";
                         }
-                        if (int.parse(value) < 1 || int.parse(value) > 20) {
-                          return "Number of cards must be a number between 1 and 20";
+                        if ((int.parse(value) < 1 || int.parse(value) > 10) &&
+                            !CurrentUser.isPremium!) {
+                          return "Number of cards must be between 1 and 10";
+                        }
+                        if ((int.parse(value) < 1 || int.parse(value) > 30)) {
+                          return "Number of cards must be between 1 and 30";
                         }
                         return null;
                       },

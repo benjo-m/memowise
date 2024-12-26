@@ -84,7 +84,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                 ),
                 Flexible(
                   child: Text(
-                    'AI generated decks with up to 50 cards',
+                    'AI generated decks with up to 30 cards',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

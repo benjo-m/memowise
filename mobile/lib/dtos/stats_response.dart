@@ -3,7 +3,7 @@ class StatsResponse {
   int totalDecksCreatedManually;
   int totalDecksGenerated;
   List<MostStudiedDeck> mostStudiedDecks;
-  double averageDeckSize;
+  num averageDeckSize;
   int totalCardsCreated;
   int totalCardsLearned;
   int totalCardsRated1;
@@ -15,7 +15,7 @@ class StatsResponse {
   int currentStudyStreak;
   int longestStudyStreak;
   int longestStudySession;
-  double averageStudySessionDuration;
+  num averageStudySessionDuration;
 
   StatsResponse({
     required this.totalDecksCreated,

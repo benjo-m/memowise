@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/stats_response.dart';
 import 'package:mobile/services/auth/current_user.dart';
@@ -35,6 +37,9 @@ class _StatsViewState extends State<StatsView> {
           child: FutureBuilder(
               future: _statsFuture,
               builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  log(snapshot.error!.toString());
+                }
                 if (snapshot.hasData) {
                   final stats = snapshot.data!;
                   return SingleChildScrollView(
@@ -66,10 +71,15 @@ class _StatsViewState extends State<StatsView> {
                               "Average deck size: ${stats.averageDeckSize}",
                               style: regularTextStyle,
                             ),
-                            Text(
-                              "Favorite deck: ${stats.mostStudiedDecks[0].deckName} (studied ${stats.mostStudiedDecks[0].timesStudied} times)",
-                              style: regularTextStyle,
-                            ),
+                            stats.mostStudiedDecks.isNotEmpty
+                                ? Text(
+                                    "Favorite deck: ${stats.mostStudiedDecks[0].deckName} (studied ${stats.mostStudiedDecks[0].timesStudied} times)",
+                                    style: regularTextStyle,
+                                  )
+                                : Text(
+                                    "Favorite deck: No Data",
+                                    style: regularTextStyle,
+                                  ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -223,17 +233,19 @@ class _StatsViewState extends State<StatsView> {
           Column(
             children: [
               SizedBox(
-                height: 150,
-                child: PieChart(
-                  PieChartData(
-                    sections: pieChartSections(stats.totalDecksCreatedManually,
-                        stats.totalDecksGenerated),
-                    sectionsSpace: 0,
-                    startDegreeOffset: 90,
-                    centerSpaceRadius: 40,
-                  ),
-                ),
-              ),
+                  height: 150,
+                  child: stats.totalCardsCreated > 0
+                      ? PieChart(
+                          PieChartData(
+                            sections: pieChartSections(
+                                stats.totalDecksCreatedManually,
+                                stats.totalDecksGenerated),
+                            sectionsSpace: 0,
+                            startDegreeOffset: 90,
+                            centerSpaceRadius: 40,
+                          ),
+                        )
+                      : const Center(child: Text("0 decks created"))),
               const SizedBox(
                 height: 25,
               ),

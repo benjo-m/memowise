@@ -5,6 +5,7 @@ import 'package:mobile/config/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/dtos/change_password_request.dart';
 import 'package:mobile/dtos/delete_user_request.dart';
+import 'package:mobile/dtos/stats_response.dart';
 import 'package:mobile/dtos/update_user_request.dart';
 import 'package:mobile/services/auth/current_user.dart';
 
@@ -70,9 +71,9 @@ class UserService {
     );
   }
 
-  Future<void> upgradeToPremium() async {
+  Future<void> upgradeToPremium(int userId) async {
     final response = await http.get(
-      Uri.parse("$baseUrl/users/premium-upgrade/${CurrentUser.userId}"),
+      Uri.parse("$baseUrl/users/premium-upgrade/$userId"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
@@ -82,5 +83,17 @@ class UserService {
     if (response.statusCode == 200) {
       CurrentUser.isPremium = true;
     }
+  }
+
+  Future<StatsResponse> getStats(int userId) async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/users/stats/${CurrentUser.userId}"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      },
+    );
+
+    return StatsResponse.fromJson(jsonDecode(response.body));
   }
 }

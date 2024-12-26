@@ -19,14 +19,7 @@ class DecksView extends StatefulWidget {
 }
 
 class _DecksViewState extends State<DecksView> {
-  late Future<List<DeckSummary>> _decksFuture;
-  final _searchBarController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _decksFuture = DeckService().getDecks();
-  }
+  Future<List<DeckSummary>> _decksFuture = DeckService().getDecks();
 
   @override
   Widget build(BuildContext context) {
@@ -355,11 +348,11 @@ class _DecksViewState extends State<DecksView> {
   SizedBox noDecksMessage() {
     return SizedBox(
       width: MediaQuery.sizeOf(context).height * 0.5,
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             "No decks found!",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -368,18 +361,13 @@ class _DecksViewState extends State<DecksView> {
               color: Color.fromARGB(255, 78, 78, 78),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
-          _searchBarController.text.isEmpty
-              ? const Text(
-                  "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
-                  textAlign: TextAlign.center,
-                )
-              : const Text(
-                  "You don't have any decks that match your\nsearch criteria",
-                  textAlign: TextAlign.center,
-                )
+          Text(
+            "It looks like you don't have any decks yet.\nYou can create one manually or let AI generate a deck for you",
+            textAlign: TextAlign.center,
+          )
         ],
       ),
     );

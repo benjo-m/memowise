@@ -48,7 +48,7 @@ class StripeService {
   Future<void> _processPayment() async {
     try {
       await Stripe.instance.presentPaymentSheet();
-      await UserService().upgradeToPremium();
+      await UserService().upgradeToPremium(CurrentUser.userId ?? -1);
     } catch (e) {
       log(e.toString());
     }

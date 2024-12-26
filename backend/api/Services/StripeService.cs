@@ -1,18 +1,22 @@
-﻿using api.DTO;
+﻿using api.Data;
+using api.DTO;
+using api.Models;
 using Stripe;
 
 namespace api.Services;
 
 public class StripeService
 {
+    private readonly ApplicationDbContext _dbContext;
     private readonly IConfiguration _configuration;
 
-    public StripeService(IConfiguration configuration)
+    public StripeService(IConfiguration configuration, ApplicationDbContext dbContext)
     {
         _configuration = configuration;
+        _dbContext = dbContext;
     }
 
-    public StripePaymentResponse UpgradeToPremium()
+    public PaymentIntentResponse CreatePaymentIntent(int userId)
     {
         StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"] ?? "";
 
@@ -25,9 +29,22 @@ public class StripeService
         var paymentIntentService = new PaymentIntentService();
         PaymentIntent paymentIntent = paymentIntentService.Create(paymentIntentOptions);
 
-        return new StripePaymentResponse()
+        return new PaymentIntentResponse()
         {
-            ClientSecret = paymentIntent.ClientSecret
+            PaymentIntentId = paymentIntent.Id,
+            ClientSecret = paymentIntent.ClientSecret,
+            UserId = userId,
+            Amount = paymentIntent.Amount,
+            Currency = paymentIntent.Currency,
+            CreatedAt = DateTime.UtcNow,
         };
+    }
+
+    public async Task SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
+    {
+        var paymentRecord = new PaymentRecord(paymentRecordCreateRequest);
+
+        _dbContext.PaymentRecords.Add(paymentRecord);
+        await _dbContext.SaveChangesAsync();
     }
 }

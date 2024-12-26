@@ -17,4 +17,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<StudySession> StudySessions { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserStats> UserStats { get; set; }
+    public DbSet<PaymentRecord> PaymentRecords { get; set; }
 }

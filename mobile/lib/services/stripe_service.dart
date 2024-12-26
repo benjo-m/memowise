@@ -1,12 +1,14 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/dtos/payment_intent_response.dart';
+import 'package:mobile/dtos/payment_record_create_request.dart';
 import 'dart:convert';
 
 import 'package:mobile/services/auth/current_user.dart';
+import 'package:mobile/services/payment_service.dart';
 import 'package:mobile/services/user_service.dart';
 
 class StripeService {
@@ -15,21 +17,25 @@ class StripeService {
 
   Future<void> makePayment() async {
     try {
-      String? paymentIntentClientSecret = await createPaymentIntent();
+      PaymentIntentResponse paymentIntentResponse = await createPaymentIntent();
       await Stripe.instance.initPaymentSheet(
           paymentSheetParameters: SetupPaymentSheetParameters(
-        paymentIntentClientSecret: paymentIntentClientSecret!,
+        paymentIntentClientSecret: paymentIntentResponse.clientSecret,
         merchantDisplayName: "MemoWise",
       ));
       await _processPayment();
+      await UserService().upgradeToPremium(CurrentUser.userId ?? -1);
+      await PaymentService().savePaymentRecord(
+          PaymentRecordCreateRequest.fromPaymentIntentResponse(
+              paymentIntentResponse));
     } catch (e) {
-      log(e.toString());
+      rethrow;
     }
   }
 
-  Future<String?> createPaymentIntent() async {
+  Future<PaymentIntentResponse> createPaymentIntent() async {
     final response = await http.post(
-      Uri.parse('$baseUrl/stripe/premium-upgrade'),
+      Uri.parse('$baseUrl/stripe/payment-intent/${CurrentUser.userId}'),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
@@ -40,17 +46,14 @@ class StripeService {
       throw Exception('Failed to create payment intent');
     }
 
-    final clientSecret = jsonDecode(response.body)['clientSecret'];
-
-    return clientSecret;
+    return PaymentIntentResponse.fromJson(jsonDecode(response.body));
   }
 
   Future<void> _processPayment() async {
     try {
       await Stripe.instance.presentPaymentSheet();
-      await UserService().upgradeToPremium(CurrentUser.userId ?? -1);
     } catch (e) {
-      log(e.toString());
+      rethrow;
     }
   }
 }

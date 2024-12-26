@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.Models;
+using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
@@ -15,17 +16,88 @@ public class SeedDataService
 
     public void PopulateDatabase()
     {
-        GenerateMockStudySessions();
+        GenerateUsers();
+        GenerateDecks();
+        GenerateStudySessions();
         PopulateAchievementsTable();
     }
 
-    public void GenerateMockStudySessions()
+    public void GenerateUsers()
+    {
+        if (_dbContext.Users.Any())
+        {
+            return;
+        }
+
+        var users = new List<User>();
+        var random = new Random();
+
+        for (int i = 0; i < 10; i++)
+        {
+            var username = "user" + i;
+            var email = "user" + i + "@example.com";
+            var passwordHashed = BCrypt.Net.BCrypt.HashPassword("password");
+            var isPremium = false;
+            var isAdmin = false;
+
+            var user = new User
+            {
+                Username = username,
+                Email = email,
+                PasswordHashed = passwordHashed,
+                IsPremium = isPremium,
+                IsAdmin = isAdmin
+            };
+
+            users.Add(user);
+        }
+
+        _dbContext.Users.AddRange(users);
+        _dbContext.SaveChanges();
+    }
+
+    public void GenerateDecks() 
+    {
+        if (_dbContext.Decks.Any())
+        {
+            return;
+        }
+
+        var userIds = _dbContext.Users
+            .Select(u => u.Id)
+            .ToList();
+
+        var decks = new List<Deck>();
+        var random = new Random();
+
+        for (int i = 0; i < 50; i++)
+        {
+            var name = $"Deck {i + 1}";
+            var userId = userIds[random.Next(userIds.Count)];
+
+            var deck = new Deck
+            {
+                Name = name,
+                UserId = userId
+            };
+
+            decks.Add(deck);
+        }
+
+        _dbContext.Decks.AddRange(decks);
+        _dbContext.SaveChanges();
+    }
+
+    public void GenerateStudySessions()
     {
         if (_dbContext.StudySessions.Any())
         {
             return;
         }
 
+        var deckIds = _dbContext.Decks
+            .Select(d => d.Id)
+            .ToList();
         var random = new Random();
         var mockData = new List<StudySession>();
 
@@ -42,6 +114,7 @@ public class SeedDataService
             var studySession = new StudySession
             {
                 UserId = random.Next(10, 20),
+                DeckId = deckIds[random.Next(deckIds.Count)],
                 CardCount = cardCount,
                 Duration = duration,
                 AverageEaseFactor = easeFactor,

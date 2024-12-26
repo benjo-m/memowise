@@ -1,4 +1,5 @@
 ﻿using api.DTO;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +14,9 @@ public class StripeController : BaseController
         _stripeService = stripeService;
     }
 
-    [HttpPost("premium-upgrade")]
-    public ActionResult<StripePaymentResponse> UpgradeToPremium()
+    [HttpPost("payment-intent/{userId}")]
+    public ActionResult<PaymentIntentResponse> CreatePaymentIntent(int userId)
     {
-        return _stripeService.UpgradeToPremium();
+        return _stripeService.CreatePaymentIntent(userId);
     }
 }

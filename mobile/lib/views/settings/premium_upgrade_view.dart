@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/stripe_service.dart';
+import 'package:mobile/views/main_view.dart';
 
 class PremiumUpgradeView extends StatefulWidget {
   const PremiumUpgradeView({super.key});
@@ -137,7 +138,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                   height: 10,
                 ),
                 TextButton(
-                  onPressed: () => StripeService.instance.makePayment(),
+                  onPressed: () => upgradeToPremium(),
                   style: ButtonStyle(
                     backgroundColor: const WidgetStatePropertyAll(
                       Color.fromARGB(255, 241, 183, 7),
@@ -166,5 +167,67 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
         ),
       ),
     );
+  }
+
+  upgradeToPremium() async {
+    try {
+      await StripeService.instance.makePayment();
+      showDialog(
+          context: context,
+          builder: (context) => SimpleDialog(
+                title: const Text(
+                  "Upgraded to premium",
+                  textAlign: TextAlign.center,
+                ),
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      "Upgrade to premium verison successful. Enjoy!",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MainView())),
+                          child: const Text("Close")),
+                    ],
+                  )
+                ],
+              ));
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) => SimpleDialog(
+                title: const Text(
+                  "Transaction Cancelled",
+                  textAlign: TextAlign.center,
+                ),
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      "The premium upgrade transaction has been cancelled",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Close")),
+                    ],
+                  )
+                ],
+              ));
+    }
   }
 }

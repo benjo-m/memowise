@@ -49,11 +49,11 @@ builder.Services.AddScoped<SeedDataService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var seedDataService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
-    seedDataService.PopulateDatabase();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var seedDataService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
+//    seedDataService.PopulateDatabase();
+//}
 
 
 if (app.Environment.IsDevelopment())

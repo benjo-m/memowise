@@ -30,7 +30,9 @@ public class StudySessionService
 
     public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
     {
+        var deck = _dbContext.Decks.First(d => d.Id == studySessionCreateRequest.DeckId);
         var studySession = new StudySession(studySessionCreateRequest);
+        studySession.Deck = deck;
 
         await UpdateUserStats(studySession);
 

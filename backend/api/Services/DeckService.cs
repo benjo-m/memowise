@@ -2,7 +2,6 @@
 using api.DTO;
 using api.Exceptions;
 using api.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
@@ -10,19 +9,19 @@ namespace api.Services;
 public class DeckService
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly UserService _userService;
+    private readonly AuthService _authService;
     private readonly StudySessionService _studySessionService;
 
-    public DeckService(ApplicationDbContext dbContext, UserService userService, StudySessionService studySessionService)
+    public DeckService(ApplicationDbContext dbContext, StudySessionService studySessionService, AuthService authService)
     {
         _dbContext = dbContext;
-        _userService = userService;
         _studySessionService = studySessionService;
+        _authService = authService;
     }
 
     public async Task<List<DeckSummary>> GetDecksByUser(int userId)
     {
-        var currentUser = await _userService.GetCurrentUser();
+        var currentUser = await _authService.GetCurrentUser();
 
         if (currentUser!.Id != userId)
         {
@@ -58,7 +57,7 @@ public class DeckService
 
     public async Task<Deck?> CreateDeck(DeckCreateRequest deckCreateRequest)
     {
-        User? user = await _userService.GetCurrentUser();
+        User? user = await _authService.GetCurrentUser();
 
         if (user == null)
         {

@@ -40,6 +40,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<DeckService>();
 builder.Services.AddScoped<CardService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<RegressionModel>();
 builder.Services.AddScoped<StudySessionService>();
 builder.Services.AddScoped<AchievementsService>();

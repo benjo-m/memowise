@@ -3,105 +3,24 @@ using api.DTO;
 using api.Exceptions;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using LoginRequest = api.DTO.LoginRequest;
-using RegisterRequest = api.DTO.RegisterRequest;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Services;
 
 public class UserService
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly AuthService _authService;
 
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public UserService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public UserService(ApplicationDbContext dbContext, AuthService authService)
     {
         _dbContext = dbContext;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
-    public async Task<UserDto?> Login(LoginRequest loginRequest)
-    {
-        var user = await _dbContext.Users
-            .Include(u => u.UserStats)
-            .Where(u => u.Username == loginRequest.Username)
-            .FirstOrDefaultAsync();
-
-        if (user == null || !BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHashed)) 
-        {
-            return null;
-        }
-
-        await CheckStudyStreak(user);
-
-        var userDto = new UserDto(user);
-
-        return userDto;
-    }
-    
-    public async Task<UserDto?> Register(RegisterRequest registerRequest)
-    {
-        if (registerRequest.Password != registerRequest.PasswordConfirmation)
-        {
-            throw new PasswordsNotMatchingException("Passwords do not match");
-        }
-
-        if (await _dbContext.Users.AnyAsync(u => u.Username == registerRequest.Username))
-        {
-            throw new UsernameTakenException("Username taken");
-        }
-
-        if (await _dbContext.Users.AnyAsync(u => u.Email == registerRequest.Email))
-        {
-            throw new EmailAlreadyInUseException("Email already in use");
-        }
-
-        var user = new User(registerRequest);
-
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
-
-        return new UserDto(user);
-    }
-
-    public async Task<User?> GetCurrentUser()
-    {
-        var userId = _httpContextAccessor.HttpContext!.User
-            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (userId == null)
-        {
-            return null;
-        }
-
-        var user = await _dbContext.Users
-            .Include(u => u.UserStats)
-            .Include(u => u.Achievements)
-            .SingleOrDefaultAsync(u => u.Id == int.Parse(userId));
-
-        return user;
-    }
-
-    private async Task CheckStudyStreak(User user)
-    {
-        var lastStudySession = await _dbContext.StudySessions
-            .Where(ss => ss.UserId == user.Id)
-            .OrderByDescending(ss => ss.StudiedAt)
-            .FirstOrDefaultAsync();
-
-        if (lastStudySession != null && lastStudySession.StudiedAt.Date < DateTime.Now.Date.AddDays(-1))
-        {
-            user.UserStats.StudyStreak = 0;
-
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
-        }
+        _authService = authService;
     }
 
     public async Task UpdateUser(UpdateUserRequest updateUserRequest)
     {
-        var user = await GetCurrentUser();
+        var user = await _authService.GetCurrentUser();
 
         if (user == null)
         {
@@ -130,7 +49,7 @@ public class UserService
 
     public async Task ChangePassword(ChangePasswordRequest changePasswordRequest)
     {
-        var user = await GetCurrentUser();
+        var user = await _authService.GetCurrentUser();
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(changePasswordRequest.CurrentPassword, user.PasswordHashed))
         {
@@ -150,7 +69,7 @@ public class UserService
 
     public async Task DeleteUser(DeleteUserRequest deleteUserRequest)
     {
-        var user = await GetCurrentUser();
+        var user = await _authService.GetCurrentUser();
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(deleteUserRequest.Password, user.PasswordHashed))
         {
@@ -163,7 +82,7 @@ public class UserService
 
     public async Task DeleteAllData()
     {
-        var user = await GetCurrentUser();
+        var user = await _authService.GetCurrentUser();
 
         if (user == null)
         {
@@ -208,11 +127,75 @@ public class UserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<UserStats?> GetStats(int userId)
+    public async Task<StatsResponse> GetStats(int userId)
     {
         var userStats = await _dbContext.UserStats
             .FirstOrDefaultAsync(us => us.UserId == userId);
 
-        return userStats;
+        var userDecks = await _dbContext.Decks
+            .Include(d => d.Cards)
+            .Where(deck => deck.UserId == userId)
+            .ToListAsync();
+
+        var averageDeckSize = userDecks
+            .Select(deck => deck.Cards.Count)
+            .DefaultIfEmpty(0)
+            .Average();
+
+        var userStudySessions = await _dbContext.StudySessions
+            .Include(ss => ss.Deck)
+            .Where(ss => ss.UserId == userId)
+            .ToListAsync();
+
+        var totalCardsRated1 = userStudySessions.Sum(ss => ss.CardsRated1);
+        var totalCardsRated2 = userStudySessions.Sum(ss => ss.CardsRated2);
+        var totalCardsRated3 = userStudySessions.Sum(ss => ss.CardsRated3);
+        var totalCardsRated4 = userStudySessions.Sum(ss => ss.CardsRated4);
+        var totalCardsRated5 = userStudySessions.Sum(ss => ss.CardsRated5);
+
+        var mostStudiedDecks = userStudySessions
+            .GroupBy(ss => ss.Deck)
+            .Select(group => new MostStudiedDeck
+            {
+                DeckName = group.Key.Name,
+                TimesStudied = group.Count()
+            })
+            .OrderByDescending(x => x.TimesStudied)
+            .Take(5)
+            .ToList();
+
+        var timeSpentStudying = userStudySessions.Sum(ss => ss.Duration);
+
+        var longestStudySession = userStudySessions
+            .OrderByDescending(ss => ss.Duration)
+            .FirstOrDefault()?.Duration ?? 0;
+
+        var durations = userStudySessions
+            .Select(ss => ss.Duration)
+            .ToList();
+
+
+        var averageStudySessionDuration = durations.IsNullOrEmpty() ? 0 : Math.Round(durations.Average(), 2);
+
+        return new StatsResponse()
+        {
+            TotalDecksCreated = userStats!.TotalDecksCreated,
+            TotalDecksCreatedManually = userStats.TotalDecksCreated - userStats.TotalDecksGenerated,
+            TotalDecksGenerated = userStats.TotalDecksGenerated,
+            MostStudiedDecks = mostStudiedDecks,
+            AverageDeckSize = averageDeckSize,
+            TotalCardsCreated = userStats.TotalCardsCreated,
+            TotalCardsLearned = userStats.TotalCardsLearned,
+            TotalCardsRated1 = totalCardsRated1,
+            TotalCardsRated2 = totalCardsRated2,
+            TotalCardsRated3 = totalCardsRated3,
+            TotalCardsRated4 = totalCardsRated4,
+            TotalCardsRated5 = totalCardsRated5,
+            TimeSpentStudying = timeSpentStudying,
+            CurrentStudyStreak = userStats.StudyStreak,
+            LongestStudyStreak = userStats.LongestStudyStreak,
+            LongestStudySession = longestStudySession,
+            AverageStudySessionDuration = averageStudySessionDuration
+        };
     }
 }

@@ -15,29 +15,6 @@ public class UsersController : BaseController
         _userService = userService;
     }
 
-    [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<ActionResult<UserDto?>> Login(LoginRequest loginRequest)
-    {
-        var user = await _userService.Login(loginRequest);
-
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        return Ok(user);
-    }
-
-    [AllowAnonymous]
-    [HttpPost("register")]
-    public async Task<ActionResult<UserDto?>> Register(RegisterRequest registerRequest)
-    {
-        var userDto = await _userService.Register(registerRequest);
-        return Ok(userDto);
-    }
-
-
     [HttpPut]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest updateUserRequest)
     {
@@ -75,7 +52,7 @@ public class UsersController : BaseController
 
     [AllowAnonymous]
     [HttpGet("stats/{userId}")]
-    public async Task<ActionResult<UserStats>> GetStats(int userId)
+    public async Task<ActionResult<StatsResponse>> GetStats(int userId)
     {
         return await _userService.GetStats(userId);
     }

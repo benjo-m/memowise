@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mobile/config/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:mobile/services/auth/auth_service.dart';
 import 'dart:convert';
 
 import 'package:mobile/services/auth/current_user.dart';
+import 'package:mobile/services/user_service.dart';
 
 class StripeService {
   StripeService._();
@@ -48,7 +48,7 @@ class StripeService {
   Future<void> _processPayment() async {
     try {
       await Stripe.instance.presentPaymentSheet();
-      await AuthService().upgradeToPremium();
+      await UserService().upgradeToPremium();
     } catch (e) {
       log(e.toString());
     }

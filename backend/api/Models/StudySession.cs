@@ -7,6 +7,7 @@ public class StudySession
     public int Id { get; set; }
     public int UserId { get; set; }
     public int DeckId { get; set; }
+    public Deck Deck { get; set; }
     public int Duration { get; set; }
     public int CardCount { get; set; }
     public float AverageEaseFactor { get; set; }

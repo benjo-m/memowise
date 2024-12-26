@@ -6,6 +6,7 @@ import 'package:mobile/dtos/update_user_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
+import 'package:mobile/services/user_service.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:mobile/views/settings/change_password_view.dart';
 import 'package:mobile/views/settings/premium_upgrade_view.dart';
@@ -404,7 +405,7 @@ class _SettingsViewState extends State<SettingsView> {
       );
 
       try {
-        await AuthService().updateUser(updateUserRequest);
+        await UserService().updateUser(updateUserRequest);
         CurrentUser.username = _usernameController.text.trim();
         CurrentUser.email = _emailController.text.trim();
         CurrentUser.authHeader =
@@ -482,7 +483,7 @@ class _SettingsViewState extends State<SettingsView> {
                           return;
                         }
 
-                        await AuthService().deleteUser(DeleteUserRequest(
+                        await UserService().deleteUser(DeleteUserRequest(
                             password: passwordController.text));
 
                         AuthService().logout();
@@ -530,7 +531,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await AuthService().deleteAllData();
+                    await UserService().deleteAllData();
                     if (context.mounted) {
                       Navigator.of(context).pop();
                     }

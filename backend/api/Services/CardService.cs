@@ -13,15 +13,15 @@ public class CardService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IConfiguration _configuration;
-    private readonly UserService _userService;
+    private readonly AuthService _authService;
     private readonly AchievementsService _achievementService;
 
-    public CardService(ApplicationDbContext dbContext, IConfiguration configuration, UserService userService, AchievementsService achievementService)
+    public CardService(ApplicationDbContext dbContext, IConfiguration configuration, AchievementsService achievementService, AuthService authService)
     {
         _dbContext = dbContext;
         _configuration = configuration;
-        _userService = userService;
         _achievementService = achievementService;
+        _authService = authService;
     }
 
     public async Task<List<Card>> GetCardsByDeck(int deckId)
@@ -40,7 +40,7 @@ public class CardService
         var deck = await _dbContext.Decks
             .Include(d => d.Cards)
             .FirstOrDefaultAsync(x => x.Id == deckId);
-        var user = await _userService.GetCurrentUser();
+        var user = await _authService.GetCurrentUser();
 
         if (deck == null || user == null)
         {
@@ -97,7 +97,7 @@ public class CardService
 
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
-        var user = await _userService.GetCurrentUser();
+        var user = await _authService.GetCurrentUser();
 
         var groqApi = new GroqApiClient(_configuration["Groq:ApiKey"]!);
 

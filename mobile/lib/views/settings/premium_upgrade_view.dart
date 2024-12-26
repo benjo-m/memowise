@@ -133,15 +133,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                     'One-time purchase',
                   ),
                 ),
-                // Center(
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       StripeService.instance.makePayment();
-                //     },
-                //     child: const Text('Upgrade Now'),
-                //   ),
-                // ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 TextButton(

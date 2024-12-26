@@ -76,8 +76,9 @@ class _LoginFormState extends State<LoginView> {
                     onPressed: () async => await login(context),
                     style: ButtonStyle(
                       backgroundColor:
-                          WidgetStatePropertyAll(Color(0xff03AED2)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          const WidgetStatePropertyAll(Color(0xff03AED2)),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
                       padding: WidgetStatePropertyAll(
                         EdgeInsets.all(
                             MediaQuery.sizeOf(context).height * 0.013),
@@ -87,7 +88,7 @@ class _LoginFormState extends State<LoginView> {
                           MediaQuery.sizeOf(context).width * 0.4,
                         ),
                       ),
-                      side: WidgetStatePropertyAll(
+                      side: const WidgetStatePropertyAll(
                         BorderSide(
                           width: 2,
                           color: Colors.lightBlue,

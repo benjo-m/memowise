@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/change_password_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
-import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
+import 'package:mobile/services/user_service.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -77,7 +77,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         newPassword: newPassword,
                       );
                       try {
-                        await AuthService()
+                        await UserService()
                             .changePassword(changePasswordRequest);
                         CurrentUser.password = newPassword;
                         CurrentUser.authHeader =

@@ -14,7 +14,7 @@ class _StatsViewState extends State<StatsView> {
       appBar: AppBar(
         title: const Text("Stats"),
       ),
-      body: Center(
+      body: const Center(
         child: Text("stats"),
       ),
     );

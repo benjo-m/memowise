@@ -10,12 +10,12 @@ namespace api.Services;
 
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    UserService _userService;
+    AuthService _authService;
 
-    public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, UserService userService) 
+    public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, AuthService authService) 
         : base(options, logger, encoder)
     {
-        _userService = userService;
+        _authService = authService;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -32,7 +32,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var username = credentials[0];
         var password = credentials[1];
 
-        var user = await _userService.Login(new LoginRequest()
+        var user = await _authService.Login(new LoginRequest()
         {
             Username = username,
             Password = password

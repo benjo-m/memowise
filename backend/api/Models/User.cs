@@ -13,6 +13,7 @@ public class User
     public ICollection<Deck> Decks { get; set; } = new List<Deck>();
     public List<Achievement> Achievements { get; set; } = [];
     public UserStats UserStats { get; set; } = new UserStats();
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public User() {}
 

@@ -16,27 +16,25 @@ public class SeedDataService
 
     public void PopulateDatabase()
     {
-        GenerateUsers();
-        GenerateDecks();
-        GenerateStudySessions();
-        PopulateAchievementsTable();
+        if (!_dbContext.Users.Any())
+        {
+            GenerateUsers();
+            GenerateDecks();
+            GenerateStudySessions();
+            GenerateAchievements();
+        }
     }
 
     public void GenerateUsers()
     {
-        if (_dbContext.Users.Any())
-        {
-            return;
-        }
-
         var users = new List<User>();
         var random = new Random();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
         {
             var username = "user" + i;
             var email = "user" + i + "@example.com";
-            var passwordHashed = BCrypt.Net.BCrypt.HashPassword("password");
+            var passwordHashed = BCrypt.Net.BCrypt.HashPassword("test");
             var isPremium = false;
             var isAdmin = false;
 
@@ -46,7 +44,8 @@ public class SeedDataService
                 Email = email,
                 PasswordHashed = passwordHashed,
                 IsPremium = isPremium,
-                IsAdmin = isAdmin
+                IsAdmin = isAdmin,
+                CreatedAt = DateTime.Now.AddDays(-random.Next(1, 90)),
             };
 
             users.Add(user);
@@ -58,11 +57,6 @@ public class SeedDataService
 
     public void GenerateDecks() 
     {
-        if (_dbContext.Decks.Any())
-        {
-            return;
-        }
-
         var userIds = _dbContext.Users
             .Select(u => u.Id)
             .ToList();
@@ -70,7 +64,7 @@ public class SeedDataService
         var decks = new List<Deck>();
         var random = new Random();
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 500; i++)
         {
             var name = $"Deck {i + 1}";
             var userId = userIds[random.Next(userIds.Count)];
@@ -90,11 +84,6 @@ public class SeedDataService
 
     public void GenerateStudySessions()
     {
-        if (_dbContext.StudySessions.Any())
-        {
-            return;
-        }
-
         var deckIds = _dbContext.Decks
             .Select(d => d.Id)
             .ToList();
@@ -119,7 +108,7 @@ public class SeedDataService
                 Duration = duration,
                 AverageEaseFactor = easeFactor,
                 AverageRepetitions = repetitions,
-                StudiedAt = DateTime.Now.AddDays(-random.Next(1, 30)).AddHours(-random.Next(1, 24))
+                StudiedAt = DateTime.Now.AddDays(-random.Next(1, 90)).AddHours(-random.Next(1, 24))
             };
 
             mockData.Add(studySession);
@@ -129,13 +118,8 @@ public class SeedDataService
         _dbContext.SaveChanges();
     }
 
-    public void PopulateAchievementsTable()
+    public void GenerateAchievements()
     {
-        if (_dbContext.Achievements.Any())
-        {
-            return;
-        }
-
         var achievements = new List<Achievement>
         {
             new Achievement

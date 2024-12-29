@@ -34,6 +34,8 @@ public class AuthService
 
         var userDto = new UserDto(user);
 
+        await SaveLoginRecord(user.Id);
+
         return userDto;
     }
 
@@ -94,5 +96,16 @@ public class AuthService
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
         }
+    }
+    private async Task SaveLoginRecord(int userId)
+    {
+        var loginRecord = new LoginRecord()
+        {
+            UserId = userId,
+            LoginDateTime = DateTime.Now
+        };
+
+        _dbContext.LoginRecords.Add(loginRecord);
+        await _dbContext.SaveChangesAsync();
     }
 }

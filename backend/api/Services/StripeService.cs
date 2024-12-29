@@ -36,7 +36,7 @@ public class StripeService
             UserId = userId,
             Amount = paymentIntent.Amount,
             Currency = paymentIntent.Currency,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.Now,
         };
     }
 

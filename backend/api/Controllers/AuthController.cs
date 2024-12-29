@@ -8,12 +8,10 @@ namespace api.Controllers;
 public class AuthController : BaseController
 {
     private readonly AuthService _authService;
-    private readonly SeedDataService _seedDataService;
 
-    public AuthController(AuthService authService, SeedDataService seedDataService)
+    public AuthController(AuthService authService)
     {
         _authService = authService;
-        _seedDataService = seedDataService;
     }
 
     [AllowAnonymous]
@@ -36,12 +34,5 @@ public class AuthController : BaseController
     {
         var userDto = await _authService.Register(registerRequest);
         return Ok(userDto);
-    }
-
-    [AllowAnonymous]
-    [HttpGet]
-    public void PopulateDatabase()
-    {
-        _seedDataService.PopulateDatabase();
     }
 }

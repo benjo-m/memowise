@@ -68,7 +68,7 @@ class _StatsViewState extends State<StatsView> {
                               height: 10,
                             ),
                             Text(
-                              "Average deck size: ${stats.averageDeckSize}",
+                              "Average deck size: ${stats.averageDeckSize} cards",
                               style: regularTextStyle,
                             ),
                             stats.mostStudiedDecks.isNotEmpty
@@ -234,7 +234,7 @@ class _StatsViewState extends State<StatsView> {
             children: [
               SizedBox(
                   height: 150,
-                  child: stats.totalCardsCreated > 0
+                  child: stats.totalDecksCreated > 0
                       ? PieChart(
                           PieChartData(
                             sections: pieChartSections(

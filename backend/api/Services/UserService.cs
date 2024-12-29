@@ -110,6 +110,7 @@ public class UserService
     private void ResetUserStats(User user)
     {
         user.UserStats.TotalDecksCreated = 0;
+        user.UserStats.TotalDecksGenerated = 0;
         user.UserStats.TotalCardsCreated = 0;
         user.UserStats.TotalCardsLearned = 0;
         user.UserStats.StudyStreak = 0;
@@ -143,10 +144,10 @@ public class UserService
             .Where(deck => deck.UserId == userId)
             .ToListAsync();
 
-        var averageDeckSize = userDecks
+        var averageDeckSize = Math.Round(userDecks
             .Select(deck => deck.Cards.Count)
             .DefaultIfEmpty(0)
-            .Average();
+            .Average(), 1);
 
         var userStudySessions = await _dbContext.StudySessions
             .Include(ss => ss.Deck)

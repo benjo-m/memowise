@@ -46,6 +46,7 @@ builder.Services.AddScoped<StudySessionService>();
 builder.Services.AddScoped<AchievementsService>();
 builder.Services.AddScoped<StripeService>();
 builder.Services.AddScoped<SeedDataService>();
+builder.Services.AddScoped<AnalyticsService>();
 
 var app = builder.Build();
 

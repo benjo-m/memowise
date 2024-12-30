@@ -41,22 +41,27 @@ class _MainViewState extends State<MainView> {
             backgroundColor: Color.fromARGB(255, 240, 240, 240),
             destinations: const [
               NavigationRailDestination(
+                padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(Icons.dashboard_rounded),
                 label: Text('Dashboard'),
               ),
               NavigationRailDestination(
+                padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(Icons.bar_chart_rounded),
                 label: Text('Analytics'),
               ),
               NavigationRailDestination(
+                padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(FontAwesomeIcons.database),
                 label: Text('Data'),
               ),
               NavigationRailDestination(
-                icon: Icon(FontAwesomeIcons.fileLines),
+                padding: EdgeInsets.only(bottom: 20),
+                icon: Icon(FontAwesomeIcons.solidFileLines),
                 label: Text('Reporting'),
               ),
               NavigationRailDestination(
+                padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(Icons.thumbs_up_down_rounded),
                 label: Text('Feedback'),
               ),

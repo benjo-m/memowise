@@ -45,7 +45,7 @@ public class SeedDataService
                 PasswordHashed = passwordHashed,
                 IsPremium = isPremium,
                 IsAdmin = isAdmin,
-                CreatedAt = DateTime.Now.AddDays(-random.Next(1, 90)),
+                CreatedAt = DateTime.Now.AddDays(-random.Next(1, 120)),
             };
 
             users.Add(user);

@@ -35,23 +35,29 @@ class _DashboardViewState extends State<DashboardView> {
                       children: [
                         statCard(
                           title: "New Users",
-                          quantity: 12245,
-                          bottomText: "12% up vs last month",
+                          quantity: data.newUsers.userCount,
+                          bottomText: data.newUsers.userCountChange < 0
+                              ? "${data.newUsers.userCountChange}% down vs last 30 days"
+                              : "${data.newUsers.userCountChange}% up vs last 30 days",
                         ),
                         statCard(
-                          title: "New Users",
-                          quantity: 12245,
-                          bottomText: "12% up vs last month",
+                          title: "Active Users",
+                          quantity: data.activeUsers.count,
+                          bottomText: data.activeUsers.change < 0
+                              ? "${data.activeUsers.change}% down vs last 30 days"
+                              : "${data.activeUsers.change}% up vs last 30 days",
                         ),
                         statCard(
-                          title: "New Users",
-                          quantity: 12245,
-                          bottomText: "12% up vs last month",
+                          title: "New Premium Users",
+                          quantity: data.newUsers.premiumUserCount,
+                          bottomText: data.newUsers.premiumUserCountChange < 0
+                              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
+                              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
                         ),
                         statCard(
-                          title: "New Users",
-                          quantity: 12245,
-                          bottomText: "12% up vs last month",
+                          title: "Pending Feedback",
+                          quantity: 34,
+                          bottomText: "",
                         ),
                       ],
                     ),

@@ -14,44 +14,17 @@ public class AnalyticsService
         _dbContext = dbContext;
     }
 
-    public async Task<UserGrowthResponse> GetUserGrowth()
+    public async Task<DashboardData> GetDashboardData()
     {
-        var threeMonthsAgo = DateTime.Now.AddMonths(-4);
-        var monthlyUserCounts = await _dbContext.Users
-            .Where(u => u.CreatedAt >= threeMonthsAgo)
-            .GroupBy(u => new { u.CreatedAt.Year, u.CreatedAt.Month })
-            .Select(g => new
-            {
-                Year = g.Key.Year,
-                Month = g.Key.Month,
-                Count = g.Count()
-            })
-            .ToListAsync();
-
-        // Generate a complete list of months for the last 3 months
-        var results = Enumerable.Range(0, 4)
-            .Select(offset =>
-            {
-                var date = DateTime.Now.AddMonths(-offset);
-                return new UserGrowthDataPoint
-                {
-                    Year = date.Year,
-                    Month = date.Month,
-                    Count = monthlyUserCounts
-                        .FirstOrDefault(x => x.Year == date.Year && x.Month == date.Month)?.Count ?? 0
-                };
-            })
-            .OrderBy(x => x.Year)
-            .ThenBy(x => x.Month)
-            .ToList();
-
-        return new UserGrowthResponse()
+        return new DashboardData()
         {
-            Data = results
+            UserGrowth = await GetUserGrowth(),
+            UserDistribution = await GetUserDistribution(),
+            NewUsers = await GetNewUsers(),
+            ActiveUsers = await GetActiveUsers(),
         };
     }
-
-    public async Task<UserDistributionResponse> GetUserDistribution()
+    private async Task<UserDistributionResponse> GetUserDistribution()
     {
         var totalUsers = await _dbContext.Users.CountAsync();
 
@@ -74,12 +47,117 @@ public class AnalyticsService
         };
     }
 
-    public async Task<DashboardData> GetDashboardData()
+    private async Task<UserGrowthResponse> GetUserGrowth()
     {
-        return new DashboardData()
+        var threeMonthsAgo = DateTime.Now.AddMonths(-4);
+        var monthlyUserCounts = await _dbContext.Users
+            .Where(u => u.CreatedAt >= threeMonthsAgo)
+            .GroupBy(u => new { u.CreatedAt.Year, u.CreatedAt.Month })
+            .Select(g => new
+            {
+                Year = g.Key.Year,
+                Month = g.Key.Month,
+                Count = g.Count()
+            })
+            .ToListAsync();
+
+        var results = Enumerable.Range(0, 4)
+            .Select(offset =>
+            {
+                var date = DateTime.Now.AddMonths(-offset);
+                return new UserGrowthDataPoint
+                {
+                    Year = date.Year,
+                    Month = date.Month,
+                    Count = monthlyUserCounts
+                        .FirstOrDefault(x => x.Year == date.Year && x.Month == date.Month)?.Count ?? 0
+                };
+            })
+            .OrderBy(x => x.Year)
+            .ThenBy(x => x.Month)
+            .ToList();
+
+        return new UserGrowthResponse()
         {
-            UserGrowth = await GetUserGrowth(),
-            UserDistribution = await GetUserDistribution(),
+            Data = results
+        };
+    }
+
+    private async Task<NewUsers> GetNewUsers()
+    {
+        var now = DateTime.UtcNow;
+        var thirtyDaysAgo = now.AddDays(-30);
+        var sixtyDaysAgo = now.AddDays(-60);
+
+        var userCountLast30Days = await _dbContext.Users
+            .CountAsync(u => u.CreatedAt >= thirtyDaysAgo && u.CreatedAt < now);
+
+        var userCountPrevious30Days = await _dbContext.Users
+            .CountAsync(u => u.CreatedAt >= sixtyDaysAgo && u.CreatedAt < thirtyDaysAgo);
+
+        double userCountChange;
+        if (userCountPrevious30Days == 0)
+        {
+            userCountChange = userCountLast30Days > 0 ? 100 : 0;
+        }
+        else
+        {
+            userCountChange = ((double)(userCountLast30Days - userCountPrevious30Days) / userCountPrevious30Days) * 100;
+        }
+
+        var premiumUserCountLast30Days = await _dbContext.Users
+            .Where(u => u.IsPremium == true)
+            .CountAsync(u => u.CreatedAt >= thirtyDaysAgo && u.CreatedAt < now);
+
+        var pemiumUserCountPrevious30Days = await _dbContext.Users
+            .Where(u => u.IsPremium == true)
+            .CountAsync(u => u.CreatedAt >= sixtyDaysAgo && u.CreatedAt < thirtyDaysAgo);
+
+        double premiumUserCountChange;
+        if (pemiumUserCountPrevious30Days == 0)
+        {
+            premiumUserCountChange = premiumUserCountLast30Days > 0 ? 100 : 0;
+        }
+        else
+        {
+            premiumUserCountChange = ((double)(premiumUserCountLast30Days - pemiumUserCountPrevious30Days) / pemiumUserCountPrevious30Days) * 100;
+        }
+
+        return new NewUsers
+        {
+            UserCount = userCountLast30Days,
+            UserCountChange = Math.Round(userCountChange, 1),
+            PremiumUserCount = premiumUserCountLast30Days,
+            PremiumUserCountChange = Math.Round(premiumUserCountChange, 1),
+        };
+    }
+
+    private async Task<ActiveUsers> GetActiveUsers()
+    {
+        var now = DateTime.UtcNow;
+        var thirtyDaysAgo = now.AddDays(-30);
+        var sixtyDaysAgo = now.AddDays(-60);
+
+        var activeUserCountLast30Days = await _dbContext.LoginRecords
+            .CountAsync(lr => lr.LoginDateTime >= thirtyDaysAgo && lr.LoginDateTime < now);
+
+        var activeUserCountPrevious30Days = await _dbContext.LoginRecords
+            .CountAsync(lr => lr.LoginDateTime >= sixtyDaysAgo && lr.LoginDateTime < thirtyDaysAgo);
+
+        double change;
+        if (activeUserCountPrevious30Days == 0)
+        {
+            change = activeUserCountLast30Days > 0 ? 100 : 0;
+        }
+        else
+        {
+            change = ((double)(activeUserCountLast30Days - activeUserCountPrevious30Days) / activeUserCountPrevious30Days) * 100;
+        }
+
+        return new ActiveUsers
+        {
+            Count = activeUserCountLast30Days,
+            Change = Math.Round(change, 1)
         };
     }
 

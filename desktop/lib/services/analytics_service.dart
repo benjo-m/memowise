@@ -11,7 +11,6 @@ class AnalyticsService {
       'Content-Type': 'application/json',
     });
     final dashboardData = DashboardData.fromJson(jsonDecode(response.body));
-
     return dashboardData;
   }
 }

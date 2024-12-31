@@ -19,5 +19,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserStats> UserStats { get; set; }
     public DbSet<LoginRecord> LoginRecords { get; set; }
     public DbSet<PaymentRecord> PaymentRecords { get; set; }
+    public DbSet<Feedback> Feedbacks { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .Entity<Feedback>()
+            .Property(f => f.FeedbackStatus)
+            .HasConversion<string>();
+    }
 }

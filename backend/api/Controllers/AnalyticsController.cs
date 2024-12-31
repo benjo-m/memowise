@@ -15,18 +15,6 @@ public class AnalyticsController : BaseController
         _analyticsService = analyticsService;
     }
 
-    [HttpGet("user-growth")]
-    public async Task<ActionResult<UserGrowthResponse>> GetUserGrowth()
-    {
-       return await _analyticsService.GetUserGrowth();
-    }
-
-    [HttpGet("user-distribution")]
-    public async Task<ActionResult<UserDistributionResponse>> GetUserDistribution()
-    {
-        return await _analyticsService.GetUserDistribution();
-    }
-
     [HttpGet("dashboard-data")]
     public async Task<ActionResult<DashboardData>> GetDashboardData()
     {

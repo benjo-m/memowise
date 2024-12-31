@@ -1,26 +1,82 @@
 class DashboardData {
   UserGrowth userGrowth;
   UserDistribution userDistribution;
+  NewUsers newUsers;
+  ActiveUsers activeUsers;
 
   DashboardData({
     required this.userGrowth,
     required this.userDistribution,
+    required this.newUsers,
+    required this.activeUsers,
   });
 
   factory DashboardData.fromJson(Map<String, dynamic> json) => DashboardData(
         userGrowth: UserGrowth.fromJson(json["userGrowth"]),
         userDistribution: UserDistribution.fromJson(json["userDistribution"]),
+        newUsers: NewUsers.fromJson(json["newUsers"]),
+        activeUsers: ActiveUsers.fromJson(json["activeUsers"]),
       );
 
   Map<String, dynamic> toJson() => {
         "userGrowth": userGrowth.toJson(),
         "userDistribution": userDistribution.toJson(),
+        "newUsers": newUsers.toJson(),
+        "activeUsers": activeUsers.toJson(),
+      };
+}
+
+class ActiveUsers {
+  int count;
+  num change;
+
+  ActiveUsers({
+    required this.count,
+    required this.change,
+  });
+
+  factory ActiveUsers.fromJson(Map<String, dynamic> json) => ActiveUsers(
+        count: json["count"],
+        change: json["change"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "count": count,
+        "change": change,
+      };
+}
+
+class NewUsers {
+  int userCount;
+  num userCountChange;
+  int premiumUserCount;
+  num premiumUserCountChange;
+
+  NewUsers({
+    required this.userCount,
+    required this.userCountChange,
+    required this.premiumUserCount,
+    required this.premiumUserCountChange,
+  });
+
+  factory NewUsers.fromJson(Map<String, dynamic> json) => NewUsers(
+        userCount: json["userCount"],
+        userCountChange: json["userCountChange"],
+        premiumUserCount: json["premiumUserCount"],
+        premiumUserCountChange: json["premiumUserCountChange"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "userCount": userCount,
+        "userCountChange": userCountChange,
+        "premiumUserCount": premiumUserCount,
+        "premiumUserCountChange": premiumUserCountChange,
       };
 }
 
 class UserDistribution {
-  int freeUsersPercentage;
-  int premiumUsersPercentage;
+  num freeUsersPercentage;
+  num premiumUsersPercentage;
 
   UserDistribution({
     required this.freeUsersPercentage,

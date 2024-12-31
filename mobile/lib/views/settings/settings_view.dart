@@ -9,6 +9,7 @@ import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/user_service.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:mobile/views/settings/change_password_view.dart';
+import 'package:mobile/views/settings/feedback_view.dart';
 import 'package:mobile/views/settings/premium_upgrade_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -301,9 +302,10 @@ class _SettingsViewState extends State<SettingsView> {
                       width: 10,
                     ),
                     TextButton(
-                      onPressed: () {
-                        CurrentUser.isPremium = !CurrentUser.isPremium!;
-                      },
+                      onPressed: () async => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const FeedbackView())),
                       style: ButtonStyle(
                         backgroundColor:
                             const WidgetStatePropertyAll(Color(0xff03AED2)),

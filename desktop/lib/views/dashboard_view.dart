@@ -81,7 +81,7 @@ class _DashboardViewState extends State<DashboardView> {
                               userGrowthChart(data.userGrowth),
                               userDistributionChart(data.userDistribution),
                             ],
-                          )
+                          ),
                   ],
                 ),
               );
@@ -122,7 +122,6 @@ class _DashboardViewState extends State<DashboardView> {
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color.fromARGB(255, 195, 236, 255),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +146,6 @@ class _DashboardViewState extends State<DashboardView> {
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color.fromARGB(255, 195, 236, 255),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

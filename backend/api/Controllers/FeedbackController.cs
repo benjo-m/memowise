@@ -17,9 +17,9 @@ public class FeedbackController : BaseController
     }
 
     [HttpGet]
-    public async Task<List<Feedback>> GetAllFeedback()
+    public async Task<PaginatedList<Feedback>> GetAllFeedback(int page = 1, int pageSize = 10)
     {
-        return await _feedbackService.GetAllFeedback();
+        return await _feedbackService.GetPaginatedFeedback(page, pageSize);
     }
 
     [HttpPost]

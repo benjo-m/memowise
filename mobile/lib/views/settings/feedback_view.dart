@@ -95,7 +95,6 @@ class _FeedbackViewState extends State<FeedbackView> {
   void sendFeedback(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final feedback = FeedbackCreateRequest(
-          userId: CurrentUser.userId!,
           title: _titleController.text,
           description: _descriptionController.text);
 

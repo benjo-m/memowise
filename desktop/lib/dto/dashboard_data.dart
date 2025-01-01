@@ -3,12 +3,14 @@ class DashboardData {
   UserDistribution userDistribution;
   NewUsers newUsers;
   ActiveUsers activeUsers;
+  FeedbackCount feedbackCount;
 
   DashboardData({
     required this.userGrowth,
     required this.userDistribution,
     required this.newUsers,
     required this.activeUsers,
+    required this.feedbackCount,
   });
 
   factory DashboardData.fromJson(Map<String, dynamic> json) => DashboardData(
@@ -16,6 +18,7 @@ class DashboardData {
         userDistribution: UserDistribution.fromJson(json["userDistribution"]),
         newUsers: NewUsers.fromJson(json["newUsers"]),
         activeUsers: ActiveUsers.fromJson(json["activeUsers"]),
+        feedbackCount: FeedbackCount.fromJson(json["feedbackCount"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -23,12 +26,13 @@ class DashboardData {
         "userDistribution": userDistribution.toJson(),
         "newUsers": newUsers.toJson(),
         "activeUsers": activeUsers.toJson(),
+        "feedbackCount": feedbackCount.toJson(),
       };
 }
 
 class ActiveUsers {
   int count;
-  num change;
+  int change;
 
   ActiveUsers({
     required this.count,
@@ -46,11 +50,31 @@ class ActiveUsers {
       };
 }
 
+class FeedbackCount {
+  int pendingFeedback;
+  int savedFeedback;
+
+  FeedbackCount({
+    required this.pendingFeedback,
+    required this.savedFeedback,
+  });
+
+  factory FeedbackCount.fromJson(Map<String, dynamic> json) => FeedbackCount(
+        pendingFeedback: json["pendingFeedback"],
+        savedFeedback: json["savedFeedback"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "pendingFeedback": pendingFeedback,
+        "savedFeedback": savedFeedback,
+      };
+}
+
 class NewUsers {
   int userCount;
-  num userCountChange;
+  int userCountChange;
   int premiumUserCount;
-  num premiumUserCountChange;
+  int premiumUserCountChange;
 
   NewUsers({
     required this.userCount,
@@ -75,8 +99,8 @@ class NewUsers {
 }
 
 class UserDistribution {
-  num freeUsersPercentage;
-  num premiumUsersPercentage;
+  int freeUsersPercentage;
+  int premiumUsersPercentage;
 
   UserDistribution({
     required this.freeUsersPercentage,

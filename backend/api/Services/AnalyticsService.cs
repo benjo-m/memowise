@@ -1,7 +1,7 @@
 ﻿using api.Data;
 using api.DTO;
+using api.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.ML;
 
 namespace api.Services;
 
@@ -22,6 +22,7 @@ public class AnalyticsService
             UserDistribution = await GetUserDistribution(),
             NewUsers = await GetNewUsers(),
             ActiveUsers = await GetActiveUsers(),
+            FeedbackCount = await GetFeedbackCount()
         };
     }
     private async Task<UserDistributionResponse> GetUserDistribution()
@@ -161,4 +162,15 @@ public class AnalyticsService
         };
     }
 
+    private async Task<FeedbackCount> GetFeedbackCount()
+    {
+        var pendingFeedbackCount = await _dbContext.Feedbacks.Where(f => f.FeedbackStatus == FeedbackStatus.PENDING).CountAsync();
+        var savedFeedbackCount = await _dbContext.Feedbacks.Where(f => f.FeedbackStatus == FeedbackStatus.SAVED).CountAsync();
+
+        return new FeedbackCount
+        {
+            PendingFeedback = pendingFeedbackCount,
+            SavedFeedback = savedFeedbackCount
+        };
+    }
 }

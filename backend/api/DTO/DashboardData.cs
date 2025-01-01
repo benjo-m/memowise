@@ -6,4 +6,5 @@ public class DashboardData
     public UserDistributionResponse UserDistribution { get; set; }
     public NewUsers NewUsers { get; set; }
     public ActiveUsers ActiveUsers { get; set; }
+    public FeedbackCount FeedbackCount { get; set; }
 }

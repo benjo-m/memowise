@@ -14,43 +14,58 @@ class UserDistributionChart extends StatefulWidget {
 class _UserDistributionChartState extends State<UserDistributionChart> {
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 0.86,
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Center(
-                child: PieChart(
-                  PieChartData(
-                    startDegreeOffset: 90,
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 5,
-                    centerSpaceRadius: 40,
-                    sections: showingSections(),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "User Distribution",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: MediaQuery.sizeOf(context).height * 0.4,
+              constraints: const BoxConstraints(
+                minHeight: 300,
+              ),
+              child: PieChart(
+                PieChartData(
+                  startDegreeOffset: 90,
+                  borderData: FlBorderData(
+                    show: false,
                   ),
+                  sectionsSpace: 5,
+                  centerSpaceRadius: 70,
+                  sections: showingSections(),
                 ),
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              indicator(Colors.greenAccent, "Free"),
-              indicator(Colors.blueAccent, "Premium"),
-            ],
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                indicator(Colors.lightGreen, "Regular"),
+                indicator(Colors.blueAccent, "Premium"),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   List<PieChartSectionData> showingSections() {
-    double radius = 70;
+    double radius = 50;
 
     return <PieChartSectionData>[
       PieChartSectionData(

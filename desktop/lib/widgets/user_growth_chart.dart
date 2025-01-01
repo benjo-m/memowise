@@ -14,30 +14,43 @@ class UserGrowthChart extends StatefulWidget {
 class _UserGrowthChartState extends State<UserGrowthChart> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 3,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 24,
-              bottom: 12,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Recent User Growth",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            child: LineChart(
-              mainData(),
+            const SizedBox(
+              height: 20,
             ),
-          ),
+            Container(
+              height: MediaQuery.sizeOf(context).height * 0.4,
+              constraints: const BoxConstraints(
+                minHeight: 300,
+              ),
+              child: LineChart(
+                mainData(),
+              ),
+            ),
+            const Text(""),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 12,
     );
     Widget text;
     switch (value.toInt()) {
@@ -71,7 +84,7 @@ class _UserGrowthChartState extends State<UserGrowthChart> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: 12,
     );
 
     final int maxCount = getLargestCount(widget.userGrowth);

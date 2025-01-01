@@ -32,59 +32,15 @@ class _DashboardViewState extends State<DashboardView> {
               final data = snapshot.data!;
               return SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        statCard(
-                          title: "New Users",
-                          quantity: data.newUsers.userCount,
-                          bottomText: data.newUsers.userCountChange < 0
-                              ? "${data.newUsers.userCountChange}% down vs last 30 days"
-                              : "${data.newUsers.userCountChange}% up vs last 30 days",
-                        ),
-                        statCard(
-                          title: "Active Users",
-                          quantity: data.activeUsers.count,
-                          bottomText: data.activeUsers.change < 0
-                              ? "${data.activeUsers.change}% down vs last 30 days"
-                              : "${data.activeUsers.change}% up vs last 30 days",
-                        ),
-                        statCard(
-                          title: "New Premium Users",
-                          quantity: data.newUsers.premiumUserCount,
-                          bottomText: data.newUsers.premiumUserCountChange < 0
-                              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
-                              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
-                        ),
-                        statCard(
-                          title: "Pending Feedback",
-                          quantity: 34,
-                          bottomText: "",
-                        ),
-                      ],
-                    ),
+                    MediaQuery.sizeOf(context).width > 1150
+                        ? statCardsRow(data)
+                        : statCardsWrap(data),
                     const SizedBox(height: 50),
-                    MediaQuery.sizeOf(context).width > 1200
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Flexible(
-                                  flex: 3,
-                                  child: userGrowthChart(data.userGrowth)),
-                              const SizedBox(width: 50),
-                              Flexible(
-                                  child: userDistributionChart(
-                                      data.userDistribution)),
-                            ],
-                          )
-                        : Wrap(
-                            runSpacing: 50,
-                            children: [
-                              userGrowthChart(data.userGrowth),
-                              userDistributionChart(data.userDistribution),
-                            ],
-                          ),
+                    MediaQuery.sizeOf(context).width > 1150
+                        ? chartsRow(data)
+                        : chartsWrap(data),
                   ],
                 ),
               );
@@ -98,66 +54,120 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
-  Flexible statCard(
+  Wrap chartsWrap(DashboardData data) {
+    return Wrap(
+      spacing: 50,
+      runSpacing: 50,
+      children: [
+        UserGrowthChart(userGrowth: data.userGrowth),
+        UserDistributionChart(userDistribution: data.userDistribution),
+      ],
+    );
+  }
+
+  Row chartsRow(DashboardData data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          flex: 2,
+          child: UserGrowthChart(userGrowth: data.userGrowth),
+        ),
+        const SizedBox(width: 50),
+        Flexible(
+          flex: 1,
+          child: UserDistributionChart(userDistribution: data.userDistribution),
+        ),
+      ],
+    );
+  }
+
+  Wrap statCardsWrap(DashboardData data) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        statCard(
+          title: "New Users",
+          quantity: data.newUsers.userCount,
+          bottomText: data.newUsers.userCountChange < 0
+              ? "${data.newUsers.userCountChange}% down vs last 30 days"
+              : "${data.newUsers.userCountChange}% up vs last 30 days",
+        ),
+        statCard(
+          title: "Active Users",
+          quantity: data.activeUsers.count,
+          bottomText: data.activeUsers.change < 0
+              ? "${data.activeUsers.change}% down vs last 30 days"
+              : "${data.activeUsers.change}% up vs last 30 days",
+        ),
+        statCard(
+          title: "New Premium Users",
+          quantity: data.newUsers.premiumUserCount,
+          bottomText: data.newUsers.premiumUserCountChange < 0
+              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
+              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
+        ),
+        statCard(
+          title: "Pending Feedback",
+          quantity: data.feedbackCount.pendingFeedback,
+          bottomText: "${data.feedbackCount.savedFeedback} saved",
+        ),
+      ],
+    );
+  }
+
+  Row statCardsRow(DashboardData data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        statCard(
+          title: "New Users",
+          quantity: data.newUsers.userCount,
+          bottomText: data.newUsers.userCountChange < 0
+              ? "${data.newUsers.userCountChange}% down vs last 30 days"
+              : "${data.newUsers.userCountChange}% up vs last 30 days",
+        ),
+        statCard(
+          title: "Active Users",
+          quantity: data.activeUsers.count,
+          bottomText: data.activeUsers.change < 0
+              ? "${data.activeUsers.change}% down vs last 30 days"
+              : "${data.activeUsers.change}% up vs last 30 days",
+        ),
+        statCard(
+          title: "New Premium Users",
+          quantity: data.newUsers.premiumUserCount,
+          bottomText: data.newUsers.premiumUserCountChange < 0
+              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
+              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
+        ),
+        statCard(
+          title: "Pending Feedback",
+          quantity: data.feedbackCount.pendingFeedback,
+          bottomText: "${data.feedbackCount.savedFeedback} saved",
+        ),
+      ],
+    );
+  }
+
+  Container statCard(
       {required String title,
       required int quantity,
       required String bottomText}) {
-    return Flexible(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.lightBlueAccent,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Column(
-          children: [
-            Text(title),
-            Text(quantity.toString()),
-            Text(bottomText),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container userGrowthChart(UserGrowth userGrowth) {
     return Container(
+      width: 250,
+      height: 150,
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Recent User Growth",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          UserGrowthChart(
-            userGrowth: userGrowth,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container userDistributionChart(UserDistribution userDistribution) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "User Distribution",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          UserDistributionChart(userDistribution: userDistribution),
+          Text(title),
+          Text(quantity.toString()),
+          Text(bottomText),
         ],
       ),
     );

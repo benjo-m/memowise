@@ -22,6 +22,7 @@ public class SeedDataService
             GenerateDecks();
             GenerateStudySessions();
             GenerateAchievements();
+            GenerateFeedback();
         }
     }
 
@@ -116,6 +117,62 @@ public class SeedDataService
 
         _dbContext.StudySessions.AddRange(mockData);
         _dbContext.SaveChanges();
+    }
+
+    public List<Feedback> GenerateFeedback()
+    {
+        var titles = new[]
+        {
+        "Improve User Interface", "Feature Request: Dark Mode", "Bug Report: Login Issue",
+        "Database Optimization Needed", "Feedback on Customer Support", "Add Export Feature",
+        "Enhance Security Options", "Mobile App Improvements", "Request for API Documentation",
+        "Enhance Analytics Dashboard", "Improve Notification System", "Add Multi-language Support",
+        "Add Payment Gateway Integration", "Feedback on Training Materials", "Improve Search Functionality",
+        "Suggestion for New Themes", "Add Two-factor Authentication", "Feedback on Performance Issues",
+        "Feature Request: Offline Mode", "Update Privacy Policy"
+    };
+
+        var descriptions = new[]
+        {
+        "The user interface currently feels outdated and non-intuitive. Modernizing the UI with a cleaner and more accessible design could greatly enhance user experience and make navigation more seamless.",
+        "Many users have requested a dark mode feature to reduce eye strain, especially when using the application at night. This feature has become a standard in modern applications and could significantly improve user satisfaction.",
+        "There seems to be a recurring issue with the login process where users encounter timeout errors. This bug is not only frustrating but could lead to potential loss of users if not resolved promptly.",
+        "The current database queries are slow and could benefit from optimization. Indexing frequently queried columns or rewriting complex queries might help improve overall performance.",
+        "Customer support is responsive, but there is room for improvement in terms of resolution times. Implementing a better ticketing system could streamline the process and increase user trust.",
+        "An export feature would allow users to save their data in various formats such as CSV or PDF. This would be especially useful for businesses that need to analyze their data offline.",
+        "Security is a top concern for our users. Enhancing options such as biometric authentication and better encryption protocols will ensure user data remains secure.",
+        "The mobile app could use several improvements, such as faster load times and better optimization for different screen sizes. Users have also reported crashes on older devices.",
+        "The API documentation is currently incomplete and difficult to follow. Providing clear examples, detailed descriptions, and updated versions of the documentation will make it easier for developers to integrate.",
+        "The analytics dashboard lacks detailed reporting features. Adding more customizable reports and visualizations will allow users to gain deeper insights into their data.",
+        "Notifications are often delayed or sometimes not received by users. Ensuring real-time delivery and adding more notification settings will enhance the reliability of this feature.",
+        "Multi-language support is critical for reaching a global audience. Adding translations for key languages and ensuring they are contextually accurate will greatly expand the application's user base.",
+        "Integrating a payment gateway would streamline the checkout process and allow users to make payments directly within the app. This feature is essential for e-commerce functionality.",
+        "The training materials provided are helpful but lack depth in certain areas. Adding more video tutorials and interactive examples would make the learning process much more engaging.",
+        "The search functionality currently does not return relevant results for many queries. Improving the algorithm and adding filters will make it easier for users to find what they are looking for.",
+        "Users have requested the ability to customize themes to better suit their preferences. Providing multiple pre-built themes and an option to create custom ones would greatly enhance personalization.",
+        "Two-factor authentication is a critical security feature that is currently missing. Adding this feature will significantly reduce the risk of unauthorized account access.",
+        "Performance issues have been reported, especially during peak usage times. Optimizing server resources and implementing load balancing could help address these problems.",
+        "Offline mode is a highly requested feature, especially for users who work in environments with limited connectivity. Allowing users to access and edit their data offline would add tremendous value.",
+        "The privacy policy needs to be updated to ensure compliance with GDPR and other data protection regulations. Providing users with clear information about how their data is used is crucial for building trust."
+    };
+
+        var random = new Random();
+        var feedbackList = new List<Feedback>();
+
+        for (int i = 0; i < titles.Length; i++)
+        {
+            feedbackList.Add(new Feedback
+            {
+                Title = titles[i],
+                Description = descriptions[i],
+                SubmittedAt = DateTime.Now.AddMinutes(-random.Next(0, 100000))
+            });
+        }
+
+        _dbContext.AddRangeAsync(feedbackList);
+        _dbContext.SaveChanges();
+
+        return feedbackList;
     }
 
     public void GenerateAchievements()

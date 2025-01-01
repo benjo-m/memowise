@@ -6,6 +6,7 @@ public enum FeedbackStatus
 {
     PENDING,
     SAVED,
+    COMPLETED,
 }
 
 public class Feedback

@@ -22,9 +22,28 @@ public class FeedbackController : BaseController
         return await _feedbackService.GetPaginatedFeedback(page, pageSize);
     }
 
+    [HttpGet("{id}")]
+    public async Task<Feedback> GetFeedbackById(int id)
+    {
+        return await _feedbackService.GetFeedbackById(id);
+    }
+
+    [HttpPut("{id}/status")]
+    public async Task<Feedback> UpdateFeedbackStatus(int id, FeedbackStatusUpdateRequest feedbackUpdateRequest)
+    {
+        return await _feedbackService.UpdateFeedbackStatus(id, feedbackUpdateRequest);
+    }
+
     [HttpPost]
     public async Task PostFeedback(FeedbackCreateRequest feedbackCreateRequest)
     {
         await _feedbackService.PostFeedback(feedbackCreateRequest);
     }
+
+    [HttpDelete("{feedbackId}")]
+    public async Task<Feedback> RemoveFeedback(int feedbackId)
+    {
+        return await _feedbackService.RemoveFeedback(feedbackId);
+    }
+
 }

@@ -18,7 +18,10 @@ class _DashboardViewState extends State<DashboardView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard"),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text("Dashboard"),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),

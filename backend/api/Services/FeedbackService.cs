@@ -14,21 +14,30 @@ public class FeedbackService
         _dbContext = dbContext;
     }
 
-    public async Task<List<Feedback>> GetAllFeedback()
+    public async Task<PaginatedList<Feedback>> GetPaginatedFeedback
+        (int page, int pageSize, string? filterByStatus, string? sortBy, bool sortDescending)
     {
-        return await _dbContext.Feedbacks.ToListAsync();
-    }
+        var query = _dbContext.Feedbacks.AsQueryable();
 
+        if (!string.IsNullOrEmpty(filterByStatus) && Enum.TryParse<FeedbackStatus>(filterByStatus, true, out var status))
+        {
+            query = query.Where(f => f.FeedbackStatus == status);
+        }
 
-    public async Task<PaginatedList<Feedback>> GetPaginatedFeedback(int page, int pageSize)
-    {
-        var feedbackList = await _dbContext.Feedbacks
-            .OrderBy(b => b.Id)
+        query = sortBy switch
+        {
+            "title" => sortDescending ? query.OrderByDescending(f => f.Title) : query.OrderBy(f => f.Title),
+            "date" => sortDescending ? query.OrderByDescending(f => f.SubmittedAt) : query.OrderBy(f => f.SubmittedAt),
+            "status" => sortDescending ? query.OrderByDescending(f => f.FeedbackStatus) : query.OrderBy(f => f.FeedbackStatus),
+            _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
+        };
+
+        var feedbackList = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
-        var count = await _dbContext.Feedbacks.CountAsync();
+        var count = await query.CountAsync();
         var totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
         return new PaginatedList<Feedback>(feedbackList, page, totalPages);

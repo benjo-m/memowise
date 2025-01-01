@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:desktop/dto/feedback_paginated_response.dart';
 import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/dto/feedback_status_update_request.dart';
@@ -16,18 +14,36 @@ class FeedbackView extends StatefulWidget {
 class _FeedbackViewState extends State<FeedbackView> {
   int _currentPage = 1;
 
-  Future<FeedbackPaginatedResponse> _fetchFeedback(int page) async {
-    return await FeedbackService().getAllFeedback(page);
+  Future<FeedbackPaginatedResponse> _feedbackFuture =
+      FeedbackService().getAllFeedback(1, "id", false, "");
+
+  _fetchFeedback(
+      int page, String sortBy, bool orderDescending, String status) async {
+    setState(() {
+      _feedbackFuture = FeedbackService()
+          .getAllFeedback(page, sortBy, orderDescending, status);
+    });
   }
+
+  final _statusController = TextEditingController(text: "All");
+  final _sortByController = TextEditingController(text: "Id");
+  final _sortOrderController = TextEditingController(text: "Ascending");
+
+  String _selectedStatus = "All";
+  String _selectedSortBy = "Id";
+  bool _sortDescending = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Feedback"),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text("Feedback"),
+        ),
       ),
       body: FutureBuilder(
-        future: _fetchFeedback(_currentPage),
+        future: _feedbackFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final feedbackData = snapshot.data!;
@@ -37,6 +53,18 @@ class _FeedbackViewState extends State<FeedbackView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Wrap(
+                      spacing: 20,
+                      runSpacing: 20,
+                      children: [
+                        sortByDropdown(),
+                        sortOrderDropdown(),
+                        statusDropdown(),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     table(feedbackData.data),
                     const SizedBox(
                       height: 50,
@@ -46,14 +74,12 @@ class _FeedbackViewState extends State<FeedbackView> {
                       children: [
                         ElevatedButton(
                           onPressed: feedbackData.hasPreviousPage
-                              ? () => setState(() => _currentPage--)
+                              ? previousPage
                               : null,
                           child: const Text("Previous page"),
                         ),
                         ElevatedButton(
-                          onPressed: feedbackData.hasNextPage
-                              ? () => setState(() => _currentPage++)
-                              : null,
+                          onPressed: feedbackData.hasNextPage ? nextPage : null,
                           child: const Text("Next page"),
                         ),
                       ],
@@ -74,6 +100,22 @@ class _FeedbackViewState extends State<FeedbackView> {
         },
       ),
     );
+  }
+
+  nextPage() {
+    setState(() {
+      _currentPage++;
+      _feedbackFuture = FeedbackService().getAllFeedback(
+          _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+    });
+  }
+
+  previousPage() {
+    setState(() {
+      _currentPage--;
+      _feedbackFuture = FeedbackService().getAllFeedback(
+          _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+    });
   }
 
   DataTable table(List<FeedbackResponse> data) {
@@ -205,23 +247,25 @@ class _FeedbackViewState extends State<FeedbackView> {
                           const SizedBox(
                             width: 20,
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              updateFeedbackStatus(feedback.id, "SAVED");
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Save"),
-                          ),
+                          if (feedback.feedbackStatus == "PENDING")
+                            ElevatedButton(
+                              onPressed: () {
+                                updateFeedbackStatus(feedback.id, "SAVED");
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Save"),
+                            ),
                           const SizedBox(
                             width: 20,
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              updateFeedbackStatus(feedback.id, "COMPLETED");
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Complete"),
-                          ),
+                          if (feedback.feedbackStatus != "COMPLETED")
+                            ElevatedButton(
+                              onPressed: () {
+                                updateFeedbackStatus(feedback.id, "COMPLETED");
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Complete"),
+                            ),
                         ],
                       )
                     ],
@@ -238,7 +282,7 @@ class _FeedbackViewState extends State<FeedbackView> {
     await FeedbackService()
         .updateFeedbackStatus(feedbackId, req)
         .then((value) => setState(() {
-              _fetchFeedback(_currentPage);
+              _fetchFeedback(_currentPage, "id", false, "");
             }));
   }
 
@@ -246,7 +290,73 @@ class _FeedbackViewState extends State<FeedbackView> {
     await FeedbackService()
         .removeFeedback(feedbackId)
         .then((value) => setState(() {
-              _fetchFeedback(_currentPage);
+              _fetchFeedback(_currentPage, "id", false, "");
             }));
+  }
+
+  DropdownMenu sortByDropdown() {
+    return DropdownMenu<String>(
+      label: const Text("Sort By"),
+      controller: _sortByController,
+      initialSelection: "Id",
+      onSelected: (String? item) {
+        if (item == _selectedSortBy) return;
+        setState(() {
+          _selectedSortBy = item!;
+          _currentPage = 1;
+          _feedbackFuture = FeedbackService().getAllFeedback(
+              _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "id", label: "Id"),
+        DropdownMenuEntry(value: "title", label: "Title"),
+        DropdownMenuEntry(value: "date", label: "Date"),
+        DropdownMenuEntry(value: "status", label: "Status"),
+      ],
+    );
+  }
+
+  DropdownMenu sortOrderDropdown() {
+    return DropdownMenu<String>(
+      controller: _sortOrderController,
+      label: const Text("Sort Order"),
+      onSelected: (String? status) {
+        if (_sortDescending == true && status == "Descending") return;
+        setState(() {
+          _sortDescending = status == "Ascending" ? false : true;
+          _currentPage = 1;
+          _feedbackFuture = FeedbackService().getAllFeedback(
+              _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "Ascending", label: "Ascending"),
+        DropdownMenuEntry(value: "Descending", label: "Descending"),
+      ],
+    );
+  }
+
+  DropdownMenu statusDropdown() {
+    return DropdownMenu<String>(
+      controller: _statusController,
+      initialSelection: "All",
+      label: const Text("Status"),
+      onSelected: (String? status) {
+        if (status == _selectedStatus) return;
+        setState(() {
+          _selectedStatus = status!;
+          _currentPage = 1;
+          _feedbackFuture = FeedbackService().getAllFeedback(
+              _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "All", label: "All"),
+        DropdownMenuEntry(value: "Pending", label: "Pending"),
+        DropdownMenuEntry(value: "Saved", label: "Saved"),
+        DropdownMenuEntry(value: "Completed", label: "Completed"),
+      ],
+    );
   }
 }

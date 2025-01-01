@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/feedback_paginated_response.dart';
@@ -8,11 +7,14 @@ import 'package:desktop/dto/feedback_status_update_request.dart';
 import 'package:http/http.dart' as http;
 
 class FeedbackService {
-  Future<FeedbackPaginatedResponse> getAllFeedback(int page) async {
-    final response = await http
-        .get(Uri.parse('$baseUrl/feedback?page=$page&pageSize=15'), headers: {
-      'Content-Type': 'application/json',
-    });
+  Future<FeedbackPaginatedResponse> getAllFeedback(
+      int page, String sortBy, bool sortDescending, String status) async {
+    final response = await http.get(
+        Uri.parse(
+            '$baseUrl/feedback?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&filterByStatus=$status'),
+        headers: {
+          'Content-Type': 'application/json',
+        });
 
     final feedbackPaginatedResponse =
         FeedbackPaginatedResponse.fromJson(jsonDecode(response.body));

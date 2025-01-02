@@ -205,4 +205,9 @@ public class UserService
             AverageStudySessionDuration = averageStudySessionDuration
         };
     }
+
+    public async Task<List<int>> GetUserIds()
+    {
+        return await _dbContext.Users.Select(u => u.Id).ToListAsync();
+    }
 }

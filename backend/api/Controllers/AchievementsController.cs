@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
+
+[AllowAnonymous]
 public class AchievementsController : BaseController
 {
     private readonly AchievementsService _achievementsService;
@@ -13,10 +15,12 @@ public class AchievementsController : BaseController
         _achievementsService = achievementsService;
     }
 
+    
     [HttpGet]
-    public async Task<IActionResult> GetAllAchievements()
+    public async Task<IActionResult> GetAllAchievements
+        (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false)
     {
-        var achievements = await _achievementsService.GetAllAchievements();
+        var achievements = await _achievementsService.GetAllAchievements(page, pageSize, sortBy, sortDescending);
         return Ok(achievements);
     }
 

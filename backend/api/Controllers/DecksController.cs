@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using api.Data;
 using api.Models;
 using api.DTO;
-using Microsoft.AspNetCore.Authorization;
 using api.Services;
-using System.Security.Claims;
-using api.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers;
 
@@ -17,6 +13,15 @@ public class DecksController : BaseController
     public DecksController(DeckService deckService)
     {
         _deckService = deckService;
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetAllDecks
+    (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? user = null)
+    {
+        var decks = await _deckService.GetAllDecks(page, pageSize, sortBy, sortDescending, user);
+        return Ok(decks);
     }
 
     [HttpGet("user/{userId}")]

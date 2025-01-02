@@ -1,23 +1,30 @@
 import 'dart:convert';
 
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/feedback_paginated_response.dart';
 import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/dto/feedback_status_update_request.dart';
+import 'package:desktop/dto/paginated_response.dart';
 import 'package:http/http.dart' as http;
 
 class FeedbackService {
-  Future<FeedbackPaginatedResponse> getAllFeedback(
-      int page, String sortBy, bool sortDescending, String status) async {
+  Future<PaginatedResponse<FeedbackResponse>> getAllFeedback({
+    int page = 1,
+    String sortBy = "id",
+    bool sortDescending = false,
+    String status = "Any",
+  }) async {
     final response = await http.get(
         Uri.parse(
-            '$baseUrl/feedback?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&filterByStatus=$status'),
+            '$baseUrl/feedback?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&status=$status'),
         headers: {
           'Content-Type': 'application/json',
         });
 
     final feedbackPaginatedResponse =
-        FeedbackPaginatedResponse.fromJson(jsonDecode(response.body));
+        PaginatedResponse<FeedbackResponse>.fromJson(
+      jsonDecode(response.body),
+      (json) => FeedbackResponse.fromJson(json),
+    );
 
     return feedbackPaginatedResponse;
   }

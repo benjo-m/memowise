@@ -16,10 +16,27 @@ public class AchievementsService
         _userService = userService;
     }
 
-    public async Task<List<Achievement>> GetAllAchievements()
+    public async Task<PaginatedResponse<Achievement>> GetAllAchievements
+        (int page, int pageSize, string? sortBy, bool sortDescending)
     {
-        return await _dbContext.Achievements
+        var query = _dbContext.Achievements.AsQueryable();
+
+        query = sortBy switch
+        {
+            "name" => sortDescending ? query.OrderByDescending(a => a.Name) : query.OrderBy(a => a.Name),
+            "description" => sortDescending ? query.OrderByDescending(a => a.Description) : query.OrderBy(a => a.Description),
+            _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
+        };
+
+        var achievements = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        var count = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+
+        return new PaginatedResponse<Achievement>(achievements, page, totalPages);
     }
 
     public async Task<UnlockedAchievementsResponse> GetUnlockedAchievements(int userId)
@@ -64,7 +81,8 @@ public class AchievementsService
     {
         var unlockedAchievementsResponse = await GetUnlockedAchievements(userId);
         var unlockedAchievements = unlockedAchievementsResponse.Achievements;
-        var achievements = await GetAllAchievements();
+        var achievementsPaginated = await GetAllAchievements(1, 20, "id", false);
+        var achievements = achievementsPaginated.Data;
         var userStats = await _dbContext.UserStats
             .SingleAsync(us => us.UserId == userId);
         var lastSession = await _dbContext.StudySessions

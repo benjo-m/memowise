@@ -3,6 +3,7 @@ using api.DTO;
 using api.Exceptions;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace api.Services;
 
@@ -17,6 +18,40 @@ public class DeckService
         _dbContext = dbContext;
         _studySessionService = studySessionService;
         _authService = authService;
+    }
+
+    public async Task<PaginatedResponse<DeckDto>> GetAllDecks
+        (int page, int pageSize, string? sortBy, bool sortDescending, int? user)
+    {
+        var query = _dbContext.Decks
+            .Select(deck => new DeckDto
+            {
+                Id = deck.Id,
+                Name = deck.Name, 
+                UserId = deck.UserId
+            });
+
+        if (user != null)
+        {
+            query = query.Where(d => d.UserId == user);
+        }
+
+        query = sortBy switch
+        {
+            "name" => sortDescending ? query.OrderByDescending(d => d.Name) : query.OrderBy(d => d.Name),
+            "user" => sortDescending ? query.OrderByDescending(d => d.UserId) : query.OrderBy(d => d.UserId),
+            _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
+        };
+
+        var decks = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var count = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+
+        return new PaginatedResponse<DeckDto>(decks, page, totalPages);
     }
 
     public async Task<List<DeckSummary>> GetDecksByUser(int userId)

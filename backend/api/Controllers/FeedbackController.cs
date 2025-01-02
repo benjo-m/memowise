@@ -17,10 +17,10 @@ public class FeedbackController : BaseController
     }
 
     [HttpGet]
-    public async Task<PaginatedList<Feedback>> GetAllFeedback
-        (int page = 1, int pageSize = 10, string? filterByStatus = null, string? sortBy = "id", bool sortDescending = false)
+    public async Task<PaginatedResponse<Feedback>> GetAllFeedback
+        (int page = 1, int pageSize = 10, string? status = null, string? sortBy = "id", bool sortDescending = false)
     {
-        return await _feedbackService.GetPaginatedFeedback(page, pageSize, filterByStatus, sortBy, sortDescending);
+        return await _feedbackService.GetAllFeedback(page, pageSize, status, sortBy, sortDescending);
     }
 
     [HttpGet("{id}")]

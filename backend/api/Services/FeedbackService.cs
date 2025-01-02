@@ -14,14 +14,14 @@ public class FeedbackService
         _dbContext = dbContext;
     }
 
-    public async Task<PaginatedList<Feedback>> GetPaginatedFeedback
-        (int page, int pageSize, string? filterByStatus, string? sortBy, bool sortDescending)
+    public async Task<PaginatedResponse<Feedback>> GetAllFeedback
+        (int page, int pageSize, string? status, string? sortBy, bool sortDescending)
     {
         var query = _dbContext.Feedbacks.AsQueryable();
 
-        if (!string.IsNullOrEmpty(filterByStatus) && Enum.TryParse<FeedbackStatus>(filterByStatus, true, out var status))
+        if (!string.IsNullOrEmpty(status) && Enum.TryParse<FeedbackStatus>(status, true, out var feedbackStatus))
         {
-            query = query.Where(f => f.FeedbackStatus == status);
+            query = query.Where(f => f.FeedbackStatus == feedbackStatus);
         }
 
         query = sortBy switch
@@ -40,7 +40,7 @@ public class FeedbackService
         var count = await query.CountAsync();
         var totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
-        return new PaginatedList<Feedback>(feedbackList, page, totalPages);
+        return new PaginatedResponse<Feedback>(feedbackList, page, totalPages);
     }
 
     public async Task<Feedback> GetFeedbackById(int id)

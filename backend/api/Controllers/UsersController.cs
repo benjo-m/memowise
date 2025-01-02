@@ -50,10 +50,16 @@ public class UsersController : BaseController
         return Ok();
     }
 
-    [AllowAnonymous]
     [HttpGet("stats/{userId}")]
     public async Task<ActionResult<StatsResponse>> GetStats(int userId)
     {
         return await _userService.GetStats(userId);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("ids")]
+    public async Task<ActionResult<List<int>>> GetUserIds()
+    {
+        return await _userService.GetUserIds();
     }
 }

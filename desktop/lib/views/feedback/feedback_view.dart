@@ -1,4 +1,3 @@
-import 'package:desktop/dto/feedback_paginated_response.dart';
 import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/dto/feedback_status_update_request.dart';
 import 'package:desktop/services/feedback_service.dart';
@@ -14,22 +13,13 @@ class FeedbackView extends StatefulWidget {
 class _FeedbackViewState extends State<FeedbackView> {
   int _currentPage = 1;
 
-  Future<FeedbackPaginatedResponse> _feedbackFuture =
-      FeedbackService().getAllFeedback(1, "id", false, "");
+  var _feedbackFuture = FeedbackService().getAllFeedback();
 
-  _fetchFeedback(
-      int page, String sortBy, bool orderDescending, String status) async {
-    setState(() {
-      _feedbackFuture = FeedbackService()
-          .getAllFeedback(page, sortBy, orderDescending, status);
-    });
-  }
-
-  final _statusController = TextEditingController(text: "All");
+  final _statusController = TextEditingController(text: "Any");
   final _sortByController = TextEditingController(text: "Id");
   final _sortOrderController = TextEditingController(text: "Ascending");
 
-  String _selectedStatus = "All";
+  String _selectedStatus = "Any";
   String _selectedSortBy = "Id";
   bool _sortDescending = false;
 
@@ -106,7 +96,10 @@ class _FeedbackViewState extends State<FeedbackView> {
     setState(() {
       _currentPage++;
       _feedbackFuture = FeedbackService().getAllFeedback(
-          _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+          page: _currentPage,
+          sortBy: _selectedSortBy,
+          sortDescending: _sortDescending,
+          status: _selectedStatus);
     });
   }
 
@@ -114,7 +107,10 @@ class _FeedbackViewState extends State<FeedbackView> {
     setState(() {
       _currentPage--;
       _feedbackFuture = FeedbackService().getAllFeedback(
-          _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+          page: _currentPage,
+          sortBy: _selectedSortBy,
+          sortDescending: _sortDescending,
+          status: _selectedStatus);
     });
   }
 
@@ -282,7 +278,11 @@ class _FeedbackViewState extends State<FeedbackView> {
     await FeedbackService()
         .updateFeedbackStatus(feedbackId, req)
         .then((value) => setState(() {
-              _fetchFeedback(_currentPage, "id", false, "");
+              _feedbackFuture = FeedbackService().getAllFeedback(
+                  page: _currentPage,
+                  sortBy: _selectedSortBy,
+                  sortDescending: _sortDescending,
+                  status: _selectedStatus);
             }));
   }
 
@@ -290,7 +290,11 @@ class _FeedbackViewState extends State<FeedbackView> {
     await FeedbackService()
         .removeFeedback(feedbackId)
         .then((value) => setState(() {
-              _fetchFeedback(_currentPage, "id", false, "");
+              _feedbackFuture = FeedbackService().getAllFeedback(
+                  page: _currentPage,
+                  sortBy: _selectedSortBy,
+                  sortDescending: _sortDescending,
+                  status: _selectedStatus);
             }));
   }
 
@@ -305,7 +309,10 @@ class _FeedbackViewState extends State<FeedbackView> {
           _selectedSortBy = item!;
           _currentPage = 1;
           _feedbackFuture = FeedbackService().getAllFeedback(
-              _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+              page: _currentPage,
+              sortBy: _selectedSortBy,
+              sortDescending: _sortDescending,
+              status: _selectedStatus);
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
@@ -327,7 +334,10 @@ class _FeedbackViewState extends State<FeedbackView> {
           _sortDescending = status == "Ascending" ? false : true;
           _currentPage = 1;
           _feedbackFuture = FeedbackService().getAllFeedback(
-              _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+              page: _currentPage,
+              sortBy: _selectedSortBy,
+              sortDescending: _sortDescending,
+              status: _selectedStatus);
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
@@ -340,7 +350,7 @@ class _FeedbackViewState extends State<FeedbackView> {
   DropdownMenu statusDropdown() {
     return DropdownMenu<String>(
       controller: _statusController,
-      initialSelection: "All",
+      initialSelection: "Any",
       label: const Text("Status"),
       onSelected: (String? status) {
         if (status == _selectedStatus) return;
@@ -348,11 +358,14 @@ class _FeedbackViewState extends State<FeedbackView> {
           _selectedStatus = status!;
           _currentPage = 1;
           _feedbackFuture = FeedbackService().getAllFeedback(
-              _currentPage, _selectedSortBy, _sortDescending, _selectedStatus);
+              page: _currentPage,
+              sortBy: _selectedSortBy,
+              sortDescending: _sortDescending,
+              status: _selectedStatus);
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
-        DropdownMenuEntry(value: "All", label: "All"),
+        DropdownMenuEntry(value: "Any", label: "Any"),
         DropdownMenuEntry(value: "Pending", label: "Pending"),
         DropdownMenuEntry(value: "Saved", label: "Saved"),
         DropdownMenuEntry(value: "Completed", label: "Completed"),

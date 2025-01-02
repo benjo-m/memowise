@@ -1,12 +1,11 @@
-import 'dart:developer';
-
 import 'package:desktop/services/achievements_service.dart';
 import 'package:desktop/services/deck_service.dart';
+import 'package:desktop/services/login_record_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/widgets/achievements_table.dart';
 import 'package:desktop/widgets/decks_table.dart';
+import 'package:desktop/widgets/login_records_table.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class DataView extends StatefulWidget {
   const DataView({super.key});
@@ -17,7 +16,7 @@ class DataView extends StatefulWidget {
 
 class _DataViewState extends State<DataView> {
   // Shared
-  final List<String> _tables = ["Achievements", "Decks"];
+  final List<String> _tables = ["Achievements", "Decks", "Login Records"];
   int _currentPage = 1;
   final _tableController = TextEditingController();
   String _selectedTable = "Achievements";
@@ -26,23 +25,27 @@ class _DataViewState extends State<DataView> {
   final _sortOrderController = TextEditingController(text: "Ascending");
   bool _sortDescending = false;
   List<String> _sortByList = ["Id", "Name", "Description"];
-
-  // Achievements Table
-  List<String> achievementsSortBy = ["Id", "Name", "Description"];
-
-  // Decks Table
-  List<String> decksSortBy = ["Id", "Name", "User"];
-  final _userIdController = TextEditingController(text: "Any");
   late List<int> _userIds;
+  final _userIdController = TextEditingController(text: "Any");
   int? _userId;
   Future<void> _fetchUserIds() async {
     List<int> fetchedIds = await UserService().getUserIds();
     setState(() => _userIds = fetchedIds.map((id) => id).toList());
   }
 
+  // Achievements Table
+  final _achievementsSortByList = ["Id", "Name", "Description"];
+
+  // Decks Table
+  final _decksSortByList = ["Id", "Name", "User"];
+
+  // Login Records Table
+  final _loginRecordsSortByList = ["Id", "User", "Date"];
+
   // Futures
   var _achievementsFuture = AchievementService().getAllAchievements();
   var _decksFuture = DeckService().getAllDecks();
+  var _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
   late Future<dynamic> _currentFuture = _achievementsFuture;
 
   @override
@@ -72,7 +75,8 @@ class _DataViewState extends State<DataView> {
                 tableDropdown(),
                 sortByDropdown(),
                 sortOrderDropdown(),
-                if (_selectedTable == "Decks") userFilterDropdown(),
+                if (<String>["Decks", "Login Records"].contains(_selectedTable))
+                  userFilterDropdown(),
               ],
             ),
             FutureBuilder(
@@ -88,20 +92,20 @@ class _DataViewState extends State<DataView> {
                         const SizedBox(height: 20),
                         table(data.data),
                         const SizedBox(height: 50),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     ElevatedButton(
-                        //       onPressed:
-                        //           data.hasPreviousPage ? previousPage : null,
-                        //       child: const Text("Previous page"),
-                        //     ),
-                        //     ElevatedButton(
-                        //       onPressed: data.hasNextPage ? nextPage : null,
-                        //       child: const Text("Next page"),
-                        //     ),
-                        //   ],
-                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed:
+                                  data.hasPreviousPage ? previousPage : null,
+                              child: const Text("Previous page"),
+                            ),
+                            ElevatedButton(
+                              onPressed: data.hasNextPage ? nextPage : null,
+                              child: const Text("Next page"),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   );
@@ -128,6 +132,8 @@ class _DataViewState extends State<DataView> {
         return AchievementsTable(data: data);
       case "Decks":
         return DecksTable(data: data);
+      case "Login Records":
+        return LoginRecordsTable(data: data);
     }
   }
 
@@ -154,14 +160,21 @@ class _DataViewState extends State<DataView> {
             setState(() {
               _achievementsFuture = AchievementService().getAllAchievements();
               _currentFuture = _achievementsFuture;
-              _sortByList = achievementsSortBy;
+              _sortByList = _achievementsSortByList;
             });
             return;
           case "Decks":
             setState(() {
               _decksFuture = DeckService().getAllDecks();
               _currentFuture = _decksFuture;
-              _sortByList = decksSortBy;
+              _sortByList = _decksSortByList;
+            });
+            return;
+          case "Login Records":
+            setState(() {
+              _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
+              _currentFuture = _loginRecordsFuture;
+              _sortByList = _loginRecordsSortByList;
             });
             return;
         }
@@ -175,21 +188,14 @@ class _DataViewState extends State<DataView> {
   nextPage() {
     setState(() {
       _currentPage++;
-      _achievementsFuture = AchievementService().getAllAchievements(
-        page: _currentPage,
-        sortBy: _selectedSortBy,
-        sortDescending: _sortDescending,
-      );
+      sortCurrentTable();
     });
   }
 
   previousPage() {
     setState(() {
       _currentPage--;
-      _achievementsFuture = AchievementService().getAllAchievements(
-          page: _currentPage,
-          sortBy: _selectedSortBy,
-          sortDescending: _sortDescending);
+      sortCurrentTable();
     });
   }
 
@@ -235,6 +241,17 @@ class _DataViewState extends State<DataView> {
           _currentFuture = _decksFuture;
         });
         break;
+      case "Login Records":
+        setState(() {
+          _loginRecordsFuture = LoginRecordService().getAllLoginRecords(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            user: _userId,
+          );
+          _currentFuture = _loginRecordsFuture;
+        });
+        break;
     }
   }
 
@@ -262,16 +279,10 @@ class _DataViewState extends State<DataView> {
       controller: _userIdController,
       label: const Text("User"),
       onSelected: (String? userId) {
-        log(userId!);
         setState(() {
           _currentPage = 1;
           _userId = userId == "-1" ? null : int.parse(userId!);
-          _decksFuture = DeckService().getAllDecks(
-              page: _currentPage,
-              sortBy: _selectedSortBy,
-              sortDescending: _sortDescending,
-              user: userId == "-1" ? null : int.parse(userId));
-          _currentFuture = _decksFuture;
+          sortCurrentTable();
         });
       },
       dropdownMenuEntries: <DropdownMenuEntry<String>>[

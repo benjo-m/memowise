@@ -32,7 +32,7 @@ class DashboardData {
 
 class ActiveUsers {
   int count;
-  int change;
+  num change;
 
   ActiveUsers({
     required this.count,
@@ -72,9 +72,9 @@ class FeedbackCount {
 
 class NewUsers {
   int userCount;
-  int userCountChange;
+  num userCountChange;
   int premiumUserCount;
-  int premiumUserCountChange;
+  num premiumUserCountChange;
 
   NewUsers({
     required this.userCount,

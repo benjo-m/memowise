@@ -48,6 +48,7 @@ builder.Services.AddScoped<StripeService>();
 builder.Services.AddScoped<SeedDataService>();
 builder.Services.AddScoped<AnalyticsService>();
 builder.Services.AddScoped<FeedbackService>();
+builder.Services.AddScoped<LoginRecordService>();
 
 var app = builder.Build();
 

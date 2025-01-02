@@ -1,14 +1,14 @@
 import 'dart:developer';
-import 'package:desktop/dto/deck_response.dart';
+import 'package:desktop/dto/login_record_response.dart';
 import 'package:flutter/material.dart';
 
-class DecksTable extends StatelessWidget {
-  const DecksTable({
+class LoginRecordsTable extends StatelessWidget {
+  const LoginRecordsTable({
     super.key,
     required this.data,
   });
 
-  final List<DeckResponse> data;
+  final List<LoginRecordResponse> data;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class DecksTable extends StatelessWidget {
         DataColumn(
           label: Expanded(
             child: Text(
-              "Name",
+              "User ID",
               textAlign: TextAlign.center,
             ),
           ),
@@ -36,7 +36,7 @@ class DecksTable extends StatelessWidget {
         DataColumn(
           label: Expanded(
             child: Text(
-              "User ID",
+              "Login Time",
               textAlign: TextAlign.center,
             ),
           ),
@@ -50,17 +50,19 @@ class DecksTable extends StatelessWidget {
           ),
         ),
       ],
-      rows: data.map((deck) {
+      rows: data.map((loginRecord) {
         return DataRow(
           cells: <DataCell>[
             DataCell(
-              Center(child: Text(deck.id.toString())),
+              Center(child: Text(loginRecord.id.toString())),
             ),
             DataCell(
-              Center(child: Text(deck.name)),
+              Center(child: Text(loginRecord.userId.toString())),
             ),
             DataCell(
-              Center(child: Text(deck.userId.toString())),
+              Center(
+                  child: Text(loginRecord.loginDateTime.toString().substring(
+                      0, loginRecord.loginDateTime.toString().length - 7))),
             ),
             DataCell(
               Center(

@@ -3,7 +3,6 @@ using api.DTO;
 using api.Exceptions;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace api.Services;
 

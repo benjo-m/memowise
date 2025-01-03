@@ -1,10 +1,18 @@
+import 'dart:developer';
+
 import 'package:desktop/services/achievements_service.dart';
+import 'package:desktop/services/cards_service.dart';
 import 'package:desktop/services/deck_service.dart';
 import 'package:desktop/services/login_record_service.dart';
+import 'package:desktop/services/payment_record_service.dart';
+import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/widgets/achievements_table.dart';
+import 'package:desktop/widgets/cards_table.dart';
 import 'package:desktop/widgets/decks_table.dart';
 import 'package:desktop/widgets/login_records_table.dart';
+import 'package:desktop/widgets/payment_records_table.dart';
+import 'package:desktop/widgets/study_sessions_table.dart';
 import 'package:flutter/material.dart';
 
 class DataView extends StatefulWidget {
@@ -16,7 +24,14 @@ class DataView extends StatefulWidget {
 
 class _DataViewState extends State<DataView> {
   // Shared
-  final List<String> _tables = ["Achievements", "Decks", "Login Records"];
+  final List<String> _tables = [
+    "Achievements",
+    "Decks",
+    "Cards",
+    "Study Sessions",
+    "Login Records",
+    "Payment Records",
+  ];
   int _currentPage = 1;
   final _tableController = TextEditingController();
   String _selectedTable = "Achievements";
@@ -25,13 +40,12 @@ class _DataViewState extends State<DataView> {
   final _sortOrderController = TextEditingController(text: "Ascending");
   bool _sortDescending = false;
   List<String> _sortByList = ["Id", "Name", "Description"];
-  late List<int> _userIds;
-  final _userIdController = TextEditingController(text: "Any");
+
+  final _userIdController = TextEditingController();
   int? _userId;
-  Future<void> _fetchUserIds() async {
-    List<int> fetchedIds = await UserService().getUserIds();
-    setState(() => _userIds = fetchedIds.map((id) => id).toList());
-  }
+
+  final _deckIdController = TextEditingController();
+  int? _deckId;
 
   // Achievements Table
   final _achievementsSortByList = ["Id", "Name", "Description"];
@@ -39,19 +53,50 @@ class _DataViewState extends State<DataView> {
   // Decks Table
   final _decksSortByList = ["Id", "Name", "User"];
 
+  // Cards Table
+  final _cardsSortBy = ["Id", "Question", "Answer", "Deck"];
+
   // Login Records Table
   final _loginRecordsSortByList = ["Id", "User", "Date"];
+
+  // Login Records Table
+  final _paymentRecordsSortByList = [
+    "Id",
+    "Payment Intent",
+    "User",
+    "Amount",
+    "Currency",
+    "Date"
+  ];
+
+  // Study Sessions Table
+  final _studySessionsSortByList = [
+    "Id",
+    "Duration",
+    "Card Count",
+    "AVG Ease Factor",
+    "AVG Repetitions",
+    "User",
+    "Deck",
+    "CR1",
+    "CR2",
+    "CR3",
+    "CR4",
+    "CR5",
+  ];
 
   // Futures
   var _achievementsFuture = AchievementService().getAllAchievements();
   var _decksFuture = DeckService().getAllDecks();
+  var _cardsFuture = CardService().getAllCards();
   var _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
+  var _paymentRecordsFuture = PaymentRecordService().getAllPaymentRecords();
+  var _studySessionsFuture = StudySessionService().getAllStudySessions();
   late Future<dynamic> _currentFuture = _achievementsFuture;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserIds();
   }
 
   @override
@@ -63,64 +108,74 @@ class _DataViewState extends State<DataView> {
           child: Text("Data"),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 20,
-              runSpacing: 20,
-              children: [
-                tableDropdown(),
-                sortByDropdown(),
-                sortOrderDropdown(),
-                if (<String>["Decks", "Login Records"].contains(_selectedTable))
-                  userFilterDropdown(),
-              ],
-            ),
-            FutureBuilder(
-              // key: ValueKey(_currentFuture),
-              future: _currentFuture,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final data = snapshot.data!;
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 20),
-                        table(data.data),
-                        const SizedBox(height: 50),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed:
-                                  data.hasPreviousPage ? previousPage : null,
-                              child: const Text("Previous page"),
-                            ),
-                            ElevatedButton(
-                              onPressed: data.hasNextPage ? nextPage : null,
-                              child: const Text("Next page"),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 20,
+                runSpacing: 20,
+                children: [
+                  tableDropdown(),
+                  sortByDropdown(),
+                  sortOrderDropdown(),
+                  if (<String>[
+                    "Decks",
+                    "Login Records",
+                    "Payment Records",
+                    "Study Sessions"
+                  ].contains(_selectedTable))
+                    userSearchTextField(),
+                  if (<String>["Cards", "Study Sessions"]
+                      .contains(_selectedTable))
+                    deckSearchTextField(),
+                ],
+              ),
+              FutureBuilder(
+                // key: ValueKey(_currentFuture),
+                future: _currentFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final data = snapshot.data!;
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 20),
+                          table(data.data),
+                          const SizedBox(height: 50),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                onPressed:
+                                    data.hasPreviousPage ? previousPage : null,
+                                child: const Text("Previous page"),
+                              ),
+                              ElevatedButton(
+                                onPressed: data.hasNextPage ? nextPage : null,
+                                child: const Text("Next page"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error!.toString());
+                  }
+
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                }
-
-                if (snapshot.hasError) {
-                  return Text(snapshot.error!.toString());
-                }
-
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -132,8 +187,14 @@ class _DataViewState extends State<DataView> {
         return AchievementsTable(data: data);
       case "Decks":
         return DecksTable(data: data);
+      case "Cards":
+        return CardsTable(data: data);
       case "Login Records":
         return LoginRecordsTable(data: data);
+      case "Payment Records":
+        return PaymentRecordsTable(data: data);
+      case "Study Sessions":
+        return StudySessionsTable(data: data);
     }
   }
 
@@ -152,7 +213,7 @@ class _DataViewState extends State<DataView> {
           _sortOrderController.text = "Ascending";
           _sortDescending = false;
           _userId = null;
-          _userIdController.text = "Any";
+          _deckId = null;
         });
 
         switch (item) {
@@ -170,6 +231,13 @@ class _DataViewState extends State<DataView> {
               _sortByList = _decksSortByList;
             });
             return;
+          case "Cards":
+            setState(() {
+              _cardsFuture = CardService().getAllCards();
+              _currentFuture = _cardsFuture;
+              _sortByList = _cardsSortBy;
+            });
+            return;
           case "Login Records":
             setState(() {
               _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
@@ -177,6 +245,21 @@ class _DataViewState extends State<DataView> {
               _sortByList = _loginRecordsSortByList;
             });
             return;
+          case "Payment Records":
+            setState(() {
+              _paymentRecordsFuture =
+                  PaymentRecordService().getAllPaymentRecords();
+              _currentFuture = _paymentRecordsFuture;
+              _sortByList = _paymentRecordsSortByList;
+            });
+            return;
+          case "Study Sessions":
+            setState(() {
+              _studySessionsFuture =
+                  StudySessionService().getAllStudySessions();
+              _currentFuture = _studySessionsFuture;
+              _sortByList = _studySessionsSortByList;
+            });
         }
       },
       dropdownMenuEntries: _tables
@@ -188,14 +271,14 @@ class _DataViewState extends State<DataView> {
   nextPage() {
     setState(() {
       _currentPage++;
-      sortCurrentTable();
+      refreshTable();
     });
   }
 
   previousPage() {
     setState(() {
       _currentPage--;
-      sortCurrentTable();
+      refreshTable();
     });
   }
 
@@ -204,21 +287,29 @@ class _DataViewState extends State<DataView> {
       label: const Text("Sort By"),
       controller: _sortByController,
       onSelected: (String? item) {
+        log(item!);
         if (item == _selectedSortBy) return;
         setState(() {
           _selectedSortBy = item!;
           _currentPage = 1;
-          sortCurrentTable();
+          refreshTable();
         });
       },
-      dropdownMenuEntries: _sortByList
-          .map((item) =>
-              DropdownMenuEntry(value: item.toLowerCase(), label: item))
-          .toList(),
+      dropdownMenuEntries: _sortByList.map((item) {
+        List<String> words = item.split(' ');
+        String formattedValue = words.asMap().entries.map((entry) {
+          int index = entry.key;
+          String word = entry.value;
+          return index == 0
+              ? word.toLowerCase()
+              : '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}';
+        }).join('');
+        return DropdownMenuEntry(value: formattedValue, label: item);
+      }).toList(),
     );
   }
 
-  void sortCurrentTable() {
+  void refreshTable() {
     switch (_selectedTable) {
       case "Achievements":
         setState(() {
@@ -241,6 +332,17 @@ class _DataViewState extends State<DataView> {
           _currentFuture = _decksFuture;
         });
         break;
+      case "Cards":
+        setState(() {
+          _cardsFuture = CardService().getAllCards(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            deck: _deckId,
+          );
+          _currentFuture = _cardsFuture;
+        });
+        break;
       case "Login Records":
         setState(() {
           _loginRecordsFuture = LoginRecordService().getAllLoginRecords(
@@ -250,6 +352,29 @@ class _DataViewState extends State<DataView> {
             user: _userId,
           );
           _currentFuture = _loginRecordsFuture;
+        });
+        break;
+      case "Payment Records":
+        setState(() {
+          _paymentRecordsFuture = PaymentRecordService().getAllPaymentRecords(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            user: _userId,
+          );
+          _currentFuture = _paymentRecordsFuture;
+        });
+        break;
+      case "Study Sessions":
+        setState(() {
+          _studySessionsFuture = StudySessionService().getAllStudySessions(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            user: _userId,
+            deck: _deckId,
+          );
+          _currentFuture = _studySessionsFuture;
         });
         break;
     }
@@ -264,7 +389,7 @@ class _DataViewState extends State<DataView> {
         setState(() {
           _sortDescending = status == "Ascending" ? false : true;
           _currentPage = 1;
-          sortCurrentTable();
+          refreshTable();
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
@@ -274,23 +399,57 @@ class _DataViewState extends State<DataView> {
     );
   }
 
-  DropdownMenu userFilterDropdown() {
-    return DropdownMenu<String>(
-      controller: _userIdController,
-      label: const Text("User"),
-      onSelected: (String? userId) {
-        setState(() {
-          _currentPage = 1;
-          _userId = userId == "-1" ? null : int.parse(userId!);
-          sortCurrentTable();
-        });
-      },
-      dropdownMenuEntries: <DropdownMenuEntry<String>>[
-        const DropdownMenuEntry(value: "-1", label: "Any"),
-        ..._userIds.map(
-          (id) => DropdownMenuEntry(value: id.toString(), label: id.toString()),
+  ConstrainedBox userSearchTextField() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 100),
+      child: IntrinsicWidth(
+        child: TextField(
+          controller: _userIdController,
+          decoration: const InputDecoration(
+            label: Text("User ID"),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            border: OutlineInputBorder(),
+            hintText: "Any",
+            hintStyle:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            setState(() {
+              _currentPage = 1;
+              _userId = value.isEmpty ? null : int.tryParse(value);
+              refreshTable();
+            });
+          },
         ),
-      ],
+      ),
+    );
+  }
+
+  ConstrainedBox deckSearchTextField() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 100),
+      child: IntrinsicWidth(
+        child: TextField(
+          controller: _deckIdController,
+          decoration: const InputDecoration(
+            label: Text("Deck ID"),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            border: OutlineInputBorder(),
+            hintText: "Any",
+            hintStyle:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            setState(() {
+              _currentPage = 1;
+              _deckId = value.isEmpty ? null : int.tryParse(value);
+              refreshTable();
+            });
+          },
+        ),
+      ),
     );
   }
 }

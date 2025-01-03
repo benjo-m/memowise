@@ -14,6 +14,15 @@ public class StudySessionsController : BaseController
         _studySessionService = studySessionService;
     }
 
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetAllDecks
+    (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? deck = null, int? user = null)
+    {
+        var studySessions = await _studySessionService.GetAllStudySessions(page, pageSize, sortBy, sortDescending, deck, user);
+        return Ok(studySessions);
+    }
+
     [HttpPost]
     public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
     {

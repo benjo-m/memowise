@@ -34,7 +34,6 @@ public class StudySession
         CardsRated2 = studySessionCreateRequest.CardsRated2;
         CardsRated3 = studySessionCreateRequest.CardsRated3;
         CardsRated4 = studySessionCreateRequest.CardsRated4;
-        CardsRated5 = studySessionCreateRequest.CardsRated5;
-        
+        CardsRated5 = studySessionCreateRequest.CardsRated5;   
     }
 }

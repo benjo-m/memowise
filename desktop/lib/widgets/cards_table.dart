@@ -1,20 +1,20 @@
 import 'dart:developer';
-import 'package:desktop/dto/deck_response.dart';
+import 'package:desktop/dto/card_response.dart';
 import 'package:flutter/material.dart';
 
-class DecksTable extends StatefulWidget {
-  const DecksTable({
+class CardsTable extends StatefulWidget {
+  const CardsTable({
     super.key,
     required this.data,
   });
 
-  final List<DeckResponse> data;
+  final List<CardResponse> data;
 
   @override
-  State<DecksTable> createState() => _DecksTableState();
+  State<CardsTable> createState() => _CardsTableState();
 }
 
-class _DecksTableState extends State<DecksTable> {
+class _CardsTableState extends State<CardsTable> {
   final _scrollController = ScrollController();
 
   @override
@@ -41,7 +41,7 @@ class _DecksTableState extends State<DecksTable> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  "Name",
+                  "Question",
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -49,7 +49,15 @@ class _DecksTableState extends State<DecksTable> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  "User ID",
+                  "Answer",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  "Deck ID",
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -63,17 +71,20 @@ class _DecksTableState extends State<DecksTable> {
               ),
             ),
           ],
-          rows: widget.data.map((deck) {
+          rows: widget.data.map((card) {
             return DataRow(
               cells: <DataCell>[
                 DataCell(
-                  Center(child: Text(deck.id.toString())),
+                  Center(child: Text(card.id.toString())),
                 ),
                 DataCell(
-                  Center(child: Text(deck.name)),
+                  Center(child: Text(card.question)),
                 ),
                 DataCell(
-                  Center(child: Text(deck.userId.toString())),
+                  Center(child: Text(card.answer)),
+                ),
+                DataCell(
+                  Center(child: Text(card.deckId.toString())),
                 ),
                 DataCell(
                   Center(

@@ -1,6 +1,7 @@
 ﻿using api.DTO;
 using api.Models;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -14,7 +15,16 @@ public class CardsController : BaseController
         _cardService = cardService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
+    public async Task<IActionResult> GetAllDecks
+        (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? deck = null)
+    {
+        var decks = await _cardService.GetAllCards(page, pageSize, sortBy, sortDescending, deck);
+        return Ok(decks);
+    }
+
+    [HttpGet("deck/{deckId}")]
     public async Task<ActionResult<List<Card>>> GetCardsByDeck(int deckId)
     {
         return await _cardService.GetCardsByDeck(deckId);

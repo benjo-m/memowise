@@ -28,6 +28,64 @@ public class StudySessionService
         _achievementService = achievementService;
     }
 
+    public async Task<PaginatedResponse<StudySessionDto>> GetAllStudySessions
+    (int page, int pageSize, string? sortBy, bool sortDescending, int? deck, int? user)
+    {
+        var query = _dbContext.StudySessions
+            .Select(session => new StudySessionDto
+            {
+                Id = session.Id,
+                UserId = session.UserId,
+                DeckId = session.DeckId,
+                CardCount = session.CardCount,
+                Duration = session.Duration,
+                AverageEaseFactor = session.AverageEaseFactor,
+                AverageRepetitions = session.AverageRepetitions,
+                StudiedAt = session.StudiedAt,
+                CardsRated1 = session.CardsRated1,
+                CardsRated2 = session.CardsRated2,
+                CardsRated3 = session.CardsRated3,
+                CardsRated4 = session.CardsRated4,
+                CardsRated5 = session.CardsRated5
+            });
+
+        if (deck != null)
+        {
+            query = query.Where(c => c.DeckId == deck);
+        }
+
+        if (user != null)
+        {
+            query = query.Where(c => c.UserId == user);
+        }
+
+        query = sortBy switch
+        {
+            "duration" => sortDescending ? query.OrderByDescending(c => c.Duration) : query.OrderBy(c => c.Duration),
+            "cardCount" => sortDescending ? query.OrderByDescending(c => c.CardCount) : query.OrderBy(c => c.CardCount),
+            "avgEaseFactor" => sortDescending ? query.OrderByDescending(c => c.AverageEaseFactor) : query.OrderBy(c => c.AverageEaseFactor),
+            "avgRepetitions" => sortDescending ? query.OrderByDescending(c => c.AverageRepetitions) : query.OrderBy(c => c.AverageRepetitions),
+            "user" => sortDescending ? query.OrderByDescending(c => c.UserId) : query.OrderBy(c => c.UserId),
+            "deck" => sortDescending ? query.OrderByDescending(c => c.DeckId) : query.OrderBy(c => c.DeckId),
+            "cr1" => sortDescending ? query.OrderByDescending(ss => ss.CardsRated1) : query.OrderBy(query => query.CardsRated1),
+            "cr2" => sortDescending ? query.OrderByDescending(ss => ss.CardsRated2) : query.OrderBy(query => query.CardsRated2),
+            "cr3" => sortDescending ? query.OrderByDescending(ss => ss.CardsRated3) : query.OrderBy(query => query.CardsRated3),
+            "cr4" => sortDescending ? query.OrderByDescending(ss => ss.CardsRated4) : query.OrderBy(query => query.CardsRated4),
+            "cr5" => sortDescending ? query.OrderByDescending(ss => ss.CardsRated5) : query.OrderBy(query => query.CardsRated5),
+            _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
+        };
+
+        var studySessions = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var count = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+
+        return new PaginatedResponse<StudySessionDto>(studySessions, page, totalPages);
+    }
+
     public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
     {
         var deck = _dbContext.Decks.First(d => d.Id == studySessionCreateRequest.DeckId);

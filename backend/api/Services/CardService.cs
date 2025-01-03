@@ -24,6 +24,42 @@ public class CardService
         _authService = authService;
     }
 
+    public async Task<PaginatedResponse<CardDto>> GetAllCards
+        (int page, int pageSize, string? sortBy, bool sortDescending, int? deck)
+    {
+        var query = _dbContext.Cards
+            .Select(card => new CardDto
+            {
+                Id = card.Id,
+                Question = card.Question, 
+                Answer = card.Answer,
+                DeckId = card.DeckId
+            });
+
+        if (deck != null)
+        {
+            query = query.Where(c => c.DeckId == deck);
+        }
+
+        query = sortBy switch
+        {
+            "question" => sortDescending ? query.OrderByDescending(c => c.Question) : query.OrderBy(c => c.Question),
+            "answer" => sortDescending ? query.OrderByDescending(c => c.Answer) : query.OrderBy(c => c.Answer),
+            "deck" => sortDescending ? query.OrderByDescending(c => c.DeckId) : query.OrderBy(c => c.DeckId),
+            _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
+        };
+
+        var cards = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var count = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+
+        return new PaginatedResponse<CardDto>(cards, page, totalPages);
+    }
+
     public async Task<List<Card>> GetCardsByDeck(int deckId)
     {
         var cards = await _dbContext.Decks

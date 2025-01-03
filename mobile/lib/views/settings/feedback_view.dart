@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/feeedback_create_request.dart';
-import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/feedback_service.dart';
 
 class FeedbackView extends StatefulWidget {

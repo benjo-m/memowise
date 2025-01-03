@@ -10,14 +10,16 @@ import 'package:mobile/services/auth/current_user.dart';
 class AchievementsService {
   Future<List<Achievement>> getAllAchievements() async {
     final response = await http.get(
-      Uri.parse("$baseUrl/achievements"),
+      Uri.parse(
+          "$baseUrl/achievements?page=1&pageSize=10&sortBy=id&sortDescending=false"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
     );
 
-    final List<dynamic> jsonList = jsonDecode(response.body);
+    final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+    final List<dynamic> jsonList = jsonResponse['data'];
 
     return jsonList.map((json) => Achievement.fromJson(json)).toList();
   }

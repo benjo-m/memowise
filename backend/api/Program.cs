@@ -49,6 +49,7 @@ builder.Services.AddScoped<SeedDataService>();
 builder.Services.AddScoped<AnalyticsService>();
 builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddScoped<LoginRecordService>();
+builder.Services.AddScoped<PaymentRecordService>();
 
 var app = builder.Build();
 

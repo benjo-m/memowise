@@ -6,17 +6,17 @@ namespace api.Controllers;
 
 public class PaymentRecordController : BaseController
 {
-    private readonly StripeService _stripeService;
+    private readonly PaymentRecordService _paymentRecordService;
 
-    public PaymentRecordController(StripeService stripeService)
+    public PaymentRecordController(PaymentRecordService paymentRecordService)
     {
-        _stripeService = stripeService;
+        _paymentRecordService = paymentRecordService;
     }
 
     [HttpPost]
     public async Task<IActionResult> SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
     {
-        await _stripeService.SavePaymentRecord(paymentRecordCreateRequest);
+        await _paymentRecordService.SavePaymentRecord(paymentRecordCreateRequest);
         return Ok();
     }
 }

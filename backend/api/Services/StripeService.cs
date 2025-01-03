@@ -40,11 +40,5 @@ public class StripeService
         };
     }
 
-    public async Task SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
-    {
-        var paymentRecord = new PaymentRecord(paymentRecordCreateRequest);
 
-        _dbContext.PaymentRecords.Add(paymentRecord);
-        await _dbContext.SaveChangesAsync();
-    }
 }

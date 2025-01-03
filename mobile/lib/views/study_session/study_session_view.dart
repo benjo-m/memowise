@@ -332,7 +332,7 @@ class _StudySessionViewState extends State<StudySessionView> {
 
         showAnswer = false;
         if (cards.isEmpty) {
-          finishStudySession();
+          finishStudySession(context);
         } else if (currentCardIndex > cards.length - 1) {
           setState(() {
             currentCardIndex = 0;
@@ -360,7 +360,7 @@ class _StudySessionViewState extends State<StudySessionView> {
     }
   }
 
-  void finishStudySession() async {
+  void finishStudySession(BuildContext context) async {
     stopwatch.stop();
     final studySession = StudySession(
       userId: CurrentUser.userId!,
@@ -386,12 +386,14 @@ class _StudySessionViewState extends State<StudySessionView> {
     await StudySessionService().saveSession(studySession);
     await CardService().updateCardStats(cardStatsList);
 
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => StudySessionResultsView(
-            studySession: studySession,
-          ),
-        ));
+    if (context.mounted) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudySessionResultsView(
+              studySession: studySession,
+            ),
+          ));
+    }
   }
 }

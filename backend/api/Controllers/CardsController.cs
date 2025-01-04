@@ -20,8 +20,8 @@ public class CardsController : BaseController
     public async Task<IActionResult> GetAllDecks
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? deck = null)
     {
-        var decks = await _cardService.GetAllCards(page, pageSize, sortBy, sortDescending, deck);
-        return Ok(decks);
+        var cards = await _cardService.GetAllCards(page, pageSize, sortBy, sortDescending, deck);
+        return Ok(cards);
     }
 
     [HttpGet("deck/{deckId}")]
@@ -60,11 +60,5 @@ public class CardsController : BaseController
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
         return await _cardService.GenerateCards(generateCardsRequest);
-    }
-
-    [HttpPut]
-    public async Task UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
-    {
-        await _cardService.UpdateCardStats(cardStatsUpdateRequests);
     }
 }

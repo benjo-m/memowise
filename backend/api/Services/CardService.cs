@@ -168,23 +168,4 @@ public class CardService
             return new GenerateCardsResponse { Cards = new List<CardCreateRequest>() };
         }
     }
-
-    public async Task UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
-    {
-        foreach (var cardStats in cardStatsUpdateRequests)
-        {
-            Card? card = await _dbContext.Cards
-                .Where(c => c.Id == cardStats.CardId)
-                .Include(c => c.CardStats)
-                .FirstOrDefaultAsync();
-
-            if (card != null)
-            {
-                card.UpdateLearningStats(cardStats);
-
-                _dbContext.Update(card);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-    }
 }

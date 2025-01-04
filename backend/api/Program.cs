@@ -21,7 +21,6 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.Http,
         Scheme = "basic"
     });
-
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         {
@@ -50,6 +49,8 @@ builder.Services.AddScoped<AnalyticsService>();
 builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddScoped<LoginRecordService>();
 builder.Services.AddScoped<PaymentRecordService>();
+builder.Services.AddScoped<UserStatsService>();
+builder.Services.AddScoped<CardStatsService>();
 
 var app = builder.Build();
 

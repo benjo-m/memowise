@@ -96,10 +96,11 @@ class _FeedbackViewState extends State<FeedbackView> {
     setState(() {
       _currentPage++;
       _feedbackFuture = FeedbackService().getAllFeedback(
-          page: _currentPage,
-          sortBy: _selectedSortBy,
-          sortDescending: _sortDescending,
-          status: _selectedStatus);
+        page: _currentPage,
+        sortBy: _selectedSortBy,
+        sortDescending: _sortDescending,
+        status: _selectedStatus,
+      );
     });
   }
 
@@ -107,10 +108,11 @@ class _FeedbackViewState extends State<FeedbackView> {
     setState(() {
       _currentPage--;
       _feedbackFuture = FeedbackService().getAllFeedback(
-          page: _currentPage,
-          sortBy: _selectedSortBy,
-          sortDescending: _sortDescending,
-          status: _selectedStatus);
+        page: _currentPage,
+        sortBy: _selectedSortBy,
+        sortDescending: _sortDescending,
+        status: _selectedStatus,
+      );
     });
   }
 
@@ -161,11 +163,8 @@ class _FeedbackViewState extends State<FeedbackView> {
             ),
             DataCell(
               Center(
-                  child: Text(DateTime(
-                feedback.submittedAt.year,
-                feedback.submittedAt.month,
-                feedback.submittedAt.day,
-              ).toString().replaceAll("00:00:00.000", ""))),
+                  child: Text(feedback.submittedAt.toString().substring(
+                      0, feedback.submittedAt.toString().length - 7))),
             ),
             DataCell(
               Center(child: Text(feedback.feedbackStatus)),

@@ -3,16 +3,21 @@ import 'dart:developer';
 import 'package:desktop/services/achievements_service.dart';
 import 'package:desktop/services/cards_service.dart';
 import 'package:desktop/services/deck_service.dart';
+import 'package:desktop/services/feedback_service.dart';
 import 'package:desktop/services/login_record_service.dart';
 import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/widgets/achievements_table.dart';
+import 'package:desktop/widgets/card_stats_table.dart';
 import 'package:desktop/widgets/cards_table.dart';
 import 'package:desktop/widgets/decks_table.dart';
+import 'package:desktop/widgets/feedback_table.dart';
 import 'package:desktop/widgets/login_records_table.dart';
 import 'package:desktop/widgets/payment_records_table.dart';
 import 'package:desktop/widgets/study_sessions_table.dart';
+import 'package:desktop/widgets/user_stats_table.dart';
+import 'package:desktop/widgets/users_table.dart';
 import 'package:flutter/material.dart';
 
 class DataView extends StatefulWidget {
@@ -31,6 +36,10 @@ class _DataViewState extends State<DataView> {
     "Study Sessions",
     "Login Records",
     "Payment Records",
+    "Users",
+    "Feedback",
+    "User Stats",
+    "Card Stats",
   ];
   int _currentPage = 1;
   final _tableController = TextEditingController();
@@ -54,7 +63,7 @@ class _DataViewState extends State<DataView> {
   final _decksSortByList = ["Id", "Name", "User"];
 
   // Cards Table
-  final _cardsSortBy = ["Id", "Question", "Answer", "Deck"];
+  final _cardsSortByList = ["Id", "Question", "Answer", "Deck"];
 
   // Login Records Table
   final _loginRecordsSortByList = ["Id", "User", "Date"];
@@ -78,11 +87,57 @@ class _DataViewState extends State<DataView> {
     "AVG Repetitions",
     "User",
     "Deck",
-    "CR1",
-    "CR2",
-    "CR3",
-    "CR4",
-    "CR5",
+    // "CR1",
+    // "CR2",
+    // "CR3",
+    // "CR4",
+    // "CR5",
+  ];
+
+  // Users Table
+  final _usersSortByList = [
+    "Id",
+    "Username",
+    "Email",
+    "Is Admin",
+    "Is Premium",
+    "Date"
+  ];
+
+  // Feedback Table
+  final _statusController = TextEditingController(text: "Any");
+  String _selectedStatus = "Any";
+  final _feedbackSortByList = [
+    "Id",
+    "Title",
+    "Date",
+    "Status",
+  ];
+
+  // User Stats Table
+  final _userStatsSortByList = [
+    "Id",
+    "User",
+    "Total Decks Created",
+    "Total Cards Created",
+    "Total Cards Learned",
+    "Study Streak",
+    "Total Sessions Completed",
+    "Total Correct Answers",
+    "Total Decks Generated",
+    "Longest Study Streak"
+  ];
+
+  // Card Stats Table
+  final _cardIdController = TextEditingController(text: "Any");
+  int? _cardId;
+  final _cardStatsSortByList = [
+    "Id",
+    "Repetitions",
+    "Interval",
+    "Ease Factor",
+    "Due Date",
+    "Card",
   ];
 
   // Futures
@@ -92,6 +147,11 @@ class _DataViewState extends State<DataView> {
   var _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
   var _paymentRecordsFuture = PaymentRecordService().getAllPaymentRecords();
   var _studySessionsFuture = StudySessionService().getAllStudySessions();
+  var _usersFuture = UserService().getAllUsers();
+  var _feedbackFuture = FeedbackService().getAllFeedback();
+  var _userStatsFuture = UserService().getAllUserStats();
+  var _cardStatsFuture = CardService().getAllCardsStats();
+
   late Future<dynamic> _currentFuture = _achievementsFuture;
 
   @override
@@ -125,12 +185,15 @@ class _DataViewState extends State<DataView> {
                     "Decks",
                     "Login Records",
                     "Payment Records",
-                    "Study Sessions"
+                    "Study Sessions",
+                    "User Stats"
                   ].contains(_selectedTable))
                     userSearchTextField(),
                   if (<String>["Cards", "Study Sessions"]
                       .contains(_selectedTable))
                     deckSearchTextField(),
+                  if (_selectedTable == "Feedback") feedbackStatusDropdown(),
+                  if (_selectedTable == "Card Stats") cardSearchTextField(),
                 ],
               ),
               FutureBuilder(
@@ -195,6 +258,14 @@ class _DataViewState extends State<DataView> {
         return PaymentRecordsTable(data: data);
       case "Study Sessions":
         return StudySessionsTable(data: data);
+      case "Users":
+        return UsersTable(data: data);
+      case "Feedback":
+        return FeedbackTable(data: data);
+      case "User Stats":
+        return UserStatsTable(data: data);
+      case "Card Stats":
+        return CardStatsTable(data: data);
     }
   }
 
@@ -212,55 +283,15 @@ class _DataViewState extends State<DataView> {
           _selectedSortBy = "Id";
           _sortOrderController.text = "Ascending";
           _sortDescending = false;
+          _userIdController.text = "";
           _userId = null;
+          _deckIdController.text = "";
           _deckId = null;
+          _cardIdController.text = "";
+          _cardId = null;
+          _selectedStatus = "Any";
         });
-
-        switch (item) {
-          case "Achievements":
-            setState(() {
-              _achievementsFuture = AchievementService().getAllAchievements();
-              _currentFuture = _achievementsFuture;
-              _sortByList = _achievementsSortByList;
-            });
-            return;
-          case "Decks":
-            setState(() {
-              _decksFuture = DeckService().getAllDecks();
-              _currentFuture = _decksFuture;
-              _sortByList = _decksSortByList;
-            });
-            return;
-          case "Cards":
-            setState(() {
-              _cardsFuture = CardService().getAllCards();
-              _currentFuture = _cardsFuture;
-              _sortByList = _cardsSortBy;
-            });
-            return;
-          case "Login Records":
-            setState(() {
-              _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
-              _currentFuture = _loginRecordsFuture;
-              _sortByList = _loginRecordsSortByList;
-            });
-            return;
-          case "Payment Records":
-            setState(() {
-              _paymentRecordsFuture =
-                  PaymentRecordService().getAllPaymentRecords();
-              _currentFuture = _paymentRecordsFuture;
-              _sortByList = _paymentRecordsSortByList;
-            });
-            return;
-          case "Study Sessions":
-            setState(() {
-              _studySessionsFuture =
-                  StudySessionService().getAllStudySessions();
-              _currentFuture = _studySessionsFuture;
-              _sortByList = _studySessionsSortByList;
-            });
-        }
+        refreshTable();
       },
       dropdownMenuEntries: _tables
           .map((table) => DropdownMenuEntry(value: table, label: table))
@@ -287,7 +318,6 @@ class _DataViewState extends State<DataView> {
       label: const Text("Sort By"),
       controller: _sortByController,
       onSelected: (String? item) {
-        log(item!);
         if (item == _selectedSortBy) return;
         setState(() {
           _selectedSortBy = item!;
@@ -319,6 +349,7 @@ class _DataViewState extends State<DataView> {
             sortDescending: _sortDescending,
           );
           _currentFuture = _achievementsFuture;
+          _sortByList = _achievementsSortByList;
         });
         break;
       case "Decks":
@@ -330,6 +361,7 @@ class _DataViewState extends State<DataView> {
             user: _userId,
           );
           _currentFuture = _decksFuture;
+          _sortByList = _decksSortByList;
         });
         break;
       case "Cards":
@@ -341,6 +373,7 @@ class _DataViewState extends State<DataView> {
             deck: _deckId,
           );
           _currentFuture = _cardsFuture;
+          _sortByList = _cardsSortByList;
         });
         break;
       case "Login Records":
@@ -352,6 +385,7 @@ class _DataViewState extends State<DataView> {
             user: _userId,
           );
           _currentFuture = _loginRecordsFuture;
+          _sortByList = _loginRecordsSortByList;
         });
         break;
       case "Payment Records":
@@ -363,6 +397,7 @@ class _DataViewState extends State<DataView> {
             user: _userId,
           );
           _currentFuture = _paymentRecordsFuture;
+          _sortByList = _paymentRecordsSortByList;
         });
         break;
       case "Study Sessions":
@@ -375,8 +410,52 @@ class _DataViewState extends State<DataView> {
             deck: _deckId,
           );
           _currentFuture = _studySessionsFuture;
+          _sortByList = _studySessionsSortByList;
         });
         break;
+      case "Users":
+        setState(() {
+          _usersFuture = UserService().getAllUsers(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+          );
+          _currentFuture = _usersFuture;
+          _sortByList = _usersSortByList;
+        });
+      case "Feedback":
+        setState(() {
+          _feedbackFuture = FeedbackService().getAllFeedback(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            status: _selectedStatus,
+          );
+          _currentFuture = _feedbackFuture;
+          _sortByList = _feedbackSortByList;
+        });
+      case "User Stats":
+        setState(() {
+          _userStatsFuture = UserService().getAllUserStats(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            user: _userId,
+          );
+          _currentFuture = _userStatsFuture;
+          _sortByList = _userStatsSortByList;
+        });
+      case "Card Stats":
+        setState(() {
+          _cardStatsFuture = CardService().getAllCardsStats(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            card: _cardId,
+          );
+          _currentFuture = _cardStatsFuture;
+          _sortByList = _cardStatsSortByList;
+        });
     }
   }
 
@@ -450,6 +529,55 @@ class _DataViewState extends State<DataView> {
           },
         ),
       ),
+    );
+  }
+
+  ConstrainedBox cardSearchTextField() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 100),
+      child: IntrinsicWidth(
+        child: TextField(
+          controller: _cardIdController,
+          decoration: const InputDecoration(
+            label: Text("Card ID"),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            border: OutlineInputBorder(),
+            hintText: "Any",
+            hintStyle:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            setState(() {
+              _currentPage = 1;
+              _cardId = value.isEmpty ? null : int.tryParse(value);
+              refreshTable();
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  DropdownMenu feedbackStatusDropdown() {
+    return DropdownMenu<String>(
+      controller: _statusController,
+      initialSelection: "Any",
+      label: const Text("Status"),
+      onSelected: (String? status) {
+        if (status == _selectedStatus) return;
+        setState(() {
+          _selectedStatus = status!;
+          _currentPage = 1;
+          refreshTable();
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "Any", label: "Any"),
+        DropdownMenuEntry(value: "Pending", label: "Pending"),
+        DropdownMenuEntry(value: "Saved", label: "Saved"),
+        DropdownMenuEntry(value: "Completed", label: "Completed"),
+      ],
     );
   }
 }

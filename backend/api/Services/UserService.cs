@@ -1,7 +1,6 @@
 ﻿using api.Data;
 using api.DTO;
 using api.Exceptions;
-using api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,6 +15,53 @@ public class UserService
     {
         _dbContext = dbContext;
         _authService = authService;
+    }
+
+    public async Task<PaginatedResponse<UserResponse>> GetAllUsers
+        (int page, int pageSize, string? sortBy, bool sortDescending, string? accountType)
+    {
+        var query = _dbContext.Users
+            .Select(user => new UserResponse
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                IsPremium = user.IsPremium,
+                IsAdmin = user.IsAdmin,
+                CreatedAt = user.CreatedAt
+            });
+
+        if (!accountType.IsNullOrEmpty())
+        {
+            if (accountType == "premium")
+            {
+                query = query.Where(u => u.IsPremium);
+            }
+            else if (accountType == "free")
+            {
+                query = query.Where(u => !u.IsPremium);
+            }
+        }
+
+        query = sortBy switch
+        {
+            "username" => sortDescending ? query.OrderByDescending(d => d.Username) : query.OrderBy(d => d.Username),
+            "email" => sortDescending ? query.OrderByDescending(d => d.Email) : query.OrderBy(d => d.Email),
+            "isPremium" => sortDescending ? query.OrderByDescending(d => d.IsPremium) : query.OrderBy(d => d.IsPremium),
+            "isAdmin" => sortDescending ? query.OrderByDescending(d => d.IsAdmin) : query.OrderBy(d => d.IsAdmin),
+            "date" => sortDescending ? query.OrderByDescending(d => d.CreatedAt) : query.OrderBy(d => d.CreatedAt),
+            _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
+        };
+
+        var users = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var count = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+
+        return new PaginatedResponse<UserResponse>(users, page, totalPages);
     }
 
     public async Task UpdateUser(UpdateUserRequest updateUserRequest)
@@ -80,45 +126,6 @@ public class UserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAllData()
-    {
-        var user = await _authService.GetCurrentUser();
-
-        if (user == null)
-        {
-            return;
-        }
-
-        ResetUserStats(user);
-
-        var decks = await _dbContext.Decks
-            .Where(d => d.UserId == user.Id)
-            .ToListAsync();
-
-        var studySessions = await _dbContext.StudySessions
-            .Where(d => d.UserId == user.Id)
-            .ToListAsync();
-
-        await _dbContext.Database.ExecuteSqlRawAsync("DELETE FROM AchievementUser WHERE UsersId = {0}", user.Id);
-
-        _dbContext.Decks.RemoveRange(decks);
-        _dbContext.StudySessions.RemoveRange(studySessions);
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync();
-    }
-
-    private void ResetUserStats(User user)
-    {
-        user.UserStats.TotalDecksCreated = 0;
-        user.UserStats.TotalDecksGenerated = 0;
-        user.UserStats.TotalCardsCreated = 0;
-        user.UserStats.TotalCardsLearned = 0;
-        user.UserStats.StudyStreak = 0;
-        user.UserStats.LongestStudyStreak = 0;
-        user.UserStats.TotalSessionsCompleted = 0;
-        user.UserStats.TotalCorrectAnswers = 0;
-    }
-
     public async Task UpgradeToPremium(int userId)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -132,82 +139,5 @@ public class UserService
 
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task<StatsResponse> GetStats(int userId)
-    {
-        var userStats = await _dbContext.UserStats
-            .FirstOrDefaultAsync(us => us.UserId == userId);
-
-        var userDecks = await _dbContext.Decks
-            .Include(d => d.Cards)
-            .Where(deck => deck.UserId == userId)
-            .ToListAsync();
-
-        var averageDeckSize = Math.Round(userDecks
-            .Select(deck => deck.Cards.Count)
-            .DefaultIfEmpty(0)
-            .Average(), 1);
-
-        var userStudySessions = await _dbContext.StudySessions
-            .Include(ss => ss.Deck)
-            .Where(ss => ss.UserId == userId)
-            .ToListAsync();
-
-        var totalCardsRated1 = userStudySessions.Sum(ss => ss.CardsRated1);
-        var totalCardsRated2 = userStudySessions.Sum(ss => ss.CardsRated2);
-        var totalCardsRated3 = userStudySessions.Sum(ss => ss.CardsRated3);
-        var totalCardsRated4 = userStudySessions.Sum(ss => ss.CardsRated4);
-        var totalCardsRated5 = userStudySessions.Sum(ss => ss.CardsRated5);
-
-        var mostStudiedDecks = userStudySessions
-            .GroupBy(ss => ss.Deck)
-            .Select(group => new MostStudiedDeck
-            {
-                DeckName = group.Key.Name,
-                TimesStudied = group.Count()
-            })
-            .OrderByDescending(x => x.TimesStudied)
-            .Take(5)
-            .ToList();
-
-        var timeSpentStudying = userStudySessions.Sum(ss => ss.Duration);
-
-        var longestStudySession = userStudySessions
-            .OrderByDescending(ss => ss.Duration)
-            .FirstOrDefault()?.Duration ?? 0;
-
-        var durations = userStudySessions
-            .Select(ss => ss.Duration)
-            .ToList();
-
-
-        var averageStudySessionDuration = durations.IsNullOrEmpty() ? 0 : Math.Round(durations.Average(), 2);
-
-        return new StatsResponse()
-        {
-            TotalDecksCreated = userStats!.TotalDecksCreated,
-            TotalDecksCreatedManually = userStats.TotalDecksCreated - userStats.TotalDecksGenerated,
-            TotalDecksGenerated = userStats.TotalDecksGenerated,
-            MostStudiedDecks = mostStudiedDecks,
-            AverageDeckSize = averageDeckSize,
-            TotalCardsCreated = userStats.TotalCardsCreated,
-            TotalCardsLearned = userStats.TotalCardsLearned,
-            TotalCardsRated1 = totalCardsRated1,
-            TotalCardsRated2 = totalCardsRated2,
-            TotalCardsRated3 = totalCardsRated3,
-            TotalCardsRated4 = totalCardsRated4,
-            TotalCardsRated5 = totalCardsRated5,
-            TimeSpentStudying = timeSpentStudying,
-            CurrentStudyStreak = userStats.StudyStreak,
-            LongestStudyStreak = userStats.LongestStudyStreak,
-            LongestStudySession = longestStudySession,
-            AverageStudySessionDuration = averageStudySessionDuration
-        };
-    }
-
-    public async Task<List<int>> GetUserIds()
-    {
-        return await _dbContext.Users.Select(u => u.Id).ToListAsync();
     }
 }

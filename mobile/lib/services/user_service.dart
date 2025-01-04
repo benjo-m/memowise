@@ -63,7 +63,7 @@ class UserService {
 
   Future<void> deleteAllData() async {
     await http.put(
-      Uri.parse("$baseUrl/users/delete-data"),
+      Uri.parse("$baseUrl/userstats/delete-data/${CurrentUser.userId}"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
@@ -87,7 +87,7 @@ class UserService {
 
   Future<StatsResponse> getStats(int userId) async {
     final response = await http.get(
-      Uri.parse("$baseUrl/users/stats/${CurrentUser.userId}"),
+      Uri.parse("$baseUrl/userstats/${CurrentUser.userId}"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

@@ -8,6 +8,7 @@ import 'package:mobile/services/auth/auth_service.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/user_service.dart';
 import 'package:mobile/views/login_view.dart';
+import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/settings/change_password_view.dart';
 import 'package:mobile/views/settings/feedback_view.dart';
 import 'package:mobile/views/settings/premium_upgrade_view.dart';
@@ -514,35 +515,70 @@ class _SettingsViewState extends State<SettingsView> {
     showDialog(
       context: context,
       builder: (context) {
-        return SimpleDialog(
-          title: const Center(child: Text("Delete Data")),
-          children: [
-            const Center(
-              child: Text(
-                "This action will delete all your decks, cards, and achievements.\nAre you sure you want to proceed?",
-                textAlign: TextAlign.center,
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SimpleDialog(
+            title: const Center(child: Text("Delete Data")),
+            children: [
+              const Center(
+                child: Text(
+                  "This action will delete all your decks, cards, and achievements.\nAre you sure you want to proceed?",
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("Cancel"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await UserService().deleteAllData();
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text("Delete"),
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("Cancel"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await UserService().deleteAllData();
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MainView()));
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return SimpleDialog(
+                              title: const Center(child: Text("Fresh Start")),
+                              children: [
+                                const Center(
+                                  child: Text(
+                                    "All data deleted.\nEnjoy a fresh start!",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text("Close"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );

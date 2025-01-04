@@ -15,6 +15,15 @@ public class UsersController : BaseController
         _userService = userService;
     }
 
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers
+        (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, string? accountType = null)
+    {
+        var users = await _userService.GetAllUsers(page, pageSize, sortBy, sortDescending, accountType);
+        return Ok(users);
+    }
+
     [HttpPut]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest updateUserRequest)
     {
@@ -22,7 +31,7 @@ public class UsersController : BaseController
         return Ok();
     }
 
-    [HttpPut("password")]
+    [HttpPut("password-change")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest changePasswordRequest)
     {
         await _userService.ChangePassword(changePasswordRequest);
@@ -36,30 +45,10 @@ public class UsersController : BaseController
         return Ok();
     }
 
-    [HttpPut("delete-data")]
-    public async Task<IActionResult> DeleteAllData()
-    {
-        await _userService.DeleteAllData();
-        return Ok();
-    }
-
     [HttpGet("premium-upgrade/{userId}")]
     public async Task<IActionResult> UpgradeToPremium(int userId)
     {
         await _userService.UpgradeToPremium(userId);
         return Ok();
-    }
-
-    [HttpGet("stats/{userId}")]
-    public async Task<ActionResult<StatsResponse>> GetStats(int userId)
-    {
-        return await _userService.GetStats(userId);
-    }
-
-    [AllowAnonymous]
-    [HttpGet("ids")]
-    public async Task<ActionResult<List<int>>> GetUserIds()
-    {
-        return await _userService.GetUserIds();
     }
 }

@@ -10,6 +10,10 @@ public class UserDto
     public bool IsPremium { get; set; }
     public bool IsAdmin { get; set; }
 
+    public UserDto()
+    {
+    }
+
     public UserDto(User user)
     {
         Id = user.Id;

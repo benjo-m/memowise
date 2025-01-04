@@ -25,86 +25,90 @@ class _CardsTableState extends State<CardsTable> {
       child: SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          showBottomBorder: true,
-          headingRowColor:
-              const WidgetStatePropertyAll(Color.fromARGB(255, 226, 246, 255)),
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Id",
-                  textAlign: TextAlign.center,
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.sizeOf(context).width * 0.93),
+          child: DataTable(
+            showBottomBorder: true,
+            headingRowColor: const WidgetStatePropertyAll(
+                Color.fromARGB(255, 226, 246, 255)),
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Id",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Question",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Question",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Answer",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Answer",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Deck ID",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Deck ID",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Actions",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Actions",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-          ],
-          rows: widget.data.map((card) {
-            return DataRow(
-              cells: <DataCell>[
-                DataCell(
-                  Center(child: Text(card.id.toString())),
-                ),
-                DataCell(
-                  Center(child: Text(card.question)),
-                ),
-                DataCell(
-                  Center(child: Text(card.answer)),
-                ),
-                DataCell(
-                  Center(child: Text(card.deckId.toString())),
-                ),
-                DataCell(
-                  Center(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => log("edit"),
-                        child: const Text("Edit"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => log("delete"),
-                        child: const Text("Delete"),
-                      ),
-                    ],
-                  )),
-                ),
-              ],
-            );
-          }).toList(),
+            ],
+            rows: widget.data.map((card) {
+              return DataRow(
+                cells: <DataCell>[
+                  DataCell(
+                    Center(child: Text(card.id.toString())),
+                  ),
+                  DataCell(
+                    Center(child: Text(card.question)),
+                  ),
+                  DataCell(
+                    Center(child: Text(card.answer)),
+                  ),
+                  DataCell(
+                    Center(child: Text(card.deckId.toString())),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => log("edit"),
+                          child: const Text("Edit"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => log("delete"),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    )),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

@@ -25,75 +25,79 @@ class _AchievementsTableState extends State<AchievementsTable> {
       child: SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          showBottomBorder: true,
-          headingRowColor:
-              const WidgetStatePropertyAll(Color.fromARGB(255, 226, 246, 255)),
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Id",
-                  textAlign: TextAlign.center,
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.sizeOf(context).width * 0.93),
+          child: DataTable(
+            showBottomBorder: true,
+            headingRowColor: const WidgetStatePropertyAll(
+                Color.fromARGB(255, 226, 246, 255)),
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Id",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Name",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Name",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Description",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Description",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Actions",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Actions",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-          ],
-          rows: widget.data.map((achievement) {
-            return DataRow(
-              cells: <DataCell>[
-                DataCell(
-                  Center(child: Text(achievement.id.toString())),
-                ),
-                DataCell(
-                  Center(child: Text(achievement.name)),
-                ),
-                DataCell(
-                  Center(child: Text(achievement.description)),
-                ),
-                DataCell(
-                  Center(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => log("edit"),
-                        child: const Text("Edit"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => log("delete"),
-                        child: const Text("Delete"),
-                      ),
-                    ],
-                  )),
-                ),
-              ],
-            );
-          }).toList(),
+            ],
+            rows: widget.data.map((achievement) {
+              return DataRow(
+                cells: <DataCell>[
+                  DataCell(
+                    Center(child: Text(achievement.id.toString())),
+                  ),
+                  DataCell(
+                    Center(child: Text(achievement.name)),
+                  ),
+                  DataCell(
+                    Center(child: Text(achievement.description)),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => log("edit"),
+                          child: const Text("Edit"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => log("delete"),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    )),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

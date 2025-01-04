@@ -25,111 +25,114 @@ class _UsersTableState extends State<UsersTable> {
       child: SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          showBottomBorder: true,
-          headingRowColor:
-              const WidgetStatePropertyAll(Color.fromARGB(255, 226, 246, 255)),
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Id",
-                  textAlign: TextAlign.center,
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.sizeOf(context).width * 0.93),
+          child: DataTable(
+            showBottomBorder: true,
+            headingRowColor: const WidgetStatePropertyAll(
+                Color.fromARGB(255, 226, 246, 255)),
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Id",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Username",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Username",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Email",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Email",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Is Admin",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Is Admin",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Is Premium",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Is Premium",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Created At",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Created At",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Actions",
-                  textAlign: TextAlign.center,
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Actions",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-          ],
-          rows: widget.data.map((user) {
-            return DataRow(
-              cells: <DataCell>[
-                DataCell(
-                  Center(child: Text(user.id.toString())),
-                ),
-                DataCell(
-                  Center(child: Text(user.username)),
-                ),
-                DataCell(
-                  Center(child: Text(user.email)),
-                ),
-                DataCell(
-                  Center(child: Text(user.isAdmin.toString())),
-                ),
-                DataCell(
-                  Center(child: Text(user.isPremium.toString())),
-                ),
-                DataCell(
-                  Center(
-                      child: Text(user.createdAt
-                          .toString()
-                          .substring(0, user.createdAt.toString().length - 7))),
-                ),
-                DataCell(
-                  Center(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => log("edit"),
-                        child: const Text("Edit"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => log("delete"),
-                        child: const Text("Delete"),
-                      ),
-                    ],
-                  )),
-                ),
-              ],
-            );
-          }).toList(),
+            ],
+            rows: widget.data.map((user) {
+              return DataRow(
+                cells: <DataCell>[
+                  DataCell(
+                    Center(child: Text(user.id.toString())),
+                  ),
+                  DataCell(
+                    Center(child: Text(user.username)),
+                  ),
+                  DataCell(
+                    Center(child: Text(user.email)),
+                  ),
+                  DataCell(
+                    Center(child: Text(user.isAdmin.toString())),
+                  ),
+                  DataCell(
+                    Center(child: Text(user.isPremium.toString())),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Text(user.createdAt.toString().substring(
+                            0, user.createdAt.toString().length - 7))),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => log("edit"),
+                          child: const Text("Edit"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => log("delete"),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    )),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

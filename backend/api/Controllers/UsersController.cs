@@ -18,9 +18,9 @@ public class UsersController : BaseController
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllUsers
-        (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, string? accountType = null)
+        (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, string? accountType = null, string? role = null)
     {
-        var users = await _userService.GetAllUsers(page, pageSize, sortBy, sortDescending, accountType);
+        var users = await _userService.GetAllUsers(page, pageSize, sortBy, sortDescending, accountType, role);
         return Ok(users);
     }
 

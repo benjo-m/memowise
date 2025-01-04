@@ -11,12 +11,12 @@ class UserService {
     int page = 1,
     String sortBy = "id",
     bool sortDescending = false,
-    String? username,
-    String? email,
+    String? accountType,
+    String? role,
   }) async {
     final response = await http.get(
         Uri.parse(
-            '$baseUrl/users?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&username=${username ?? ""}&email=${email ?? ""}'),
+            '$baseUrl/users?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&accountType=${accountType ?? ""}&role=${role ?? ""}'),
         headers: {
           'Content-Type': 'application/json',
         });

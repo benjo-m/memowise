@@ -18,7 +18,7 @@ public class UserService
     }
 
     public async Task<PaginatedResponse<UserResponse>> GetAllUsers
-        (int page, int pageSize, string? sortBy, bool sortDescending, string? accountType)
+        (int page, int pageSize, string? sortBy, bool sortDescending, string? accountType, string? role)
     {
         var query = _dbContext.Users
             .Select(user => new UserResponse
@@ -43,12 +43,24 @@ public class UserService
             }
         }
 
+        if (!role.IsNullOrEmpty())
+        {
+            if (role == "user")
+            {
+                query = query.Where(u => !u.IsAdmin);
+            }
+            else if (role == "admin")
+            {
+                query = query.Where(u => u.IsAdmin);
+            }
+        }
+
         query = sortBy switch
         {
             "username" => sortDescending ? query.OrderByDescending(d => d.Username) : query.OrderBy(d => d.Username),
             "email" => sortDescending ? query.OrderByDescending(d => d.Email) : query.OrderBy(d => d.Email),
-            "isPremium" => sortDescending ? query.OrderByDescending(d => d.IsPremium) : query.OrderBy(d => d.IsPremium),
-            "isAdmin" => sortDescending ? query.OrderByDescending(d => d.IsAdmin) : query.OrderBy(d => d.IsAdmin),
+            "accountType" => sortDescending ? query.OrderByDescending(d => d.IsPremium) : query.OrderBy(d => d.IsPremium),
+            "role" => sortDescending ? query.OrderByDescending(d => d.IsAdmin) : query.OrderBy(d => d.IsAdmin),
             "date" => sortDescending ? query.OrderByDescending(d => d.CreatedAt) : query.OrderBy(d => d.CreatedAt),
             _ => sortDescending ? query.OrderByDescending(f => f.Id) : query.OrderBy(f => f.Id)
         };

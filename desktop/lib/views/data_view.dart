@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:desktop/services/achievements_service.dart';
 import 'package:desktop/services/cards_service.dart';
@@ -31,15 +31,15 @@ class _DataViewState extends State<DataView> {
   // Shared
   final List<String> _tables = [
     "Achievements",
-    "Decks",
     "Cards",
-    "Study Sessions",
+    "Card Stats",
+    "Decks",
+    "Feedback",
     "Login Records",
     "Payment Records",
+    "Study Sessions",
     "Users",
-    "Feedback",
     "User Stats",
-    "Card Stats",
   ];
   int _currentPage = 1;
   final _tableController = TextEditingController();
@@ -87,11 +87,6 @@ class _DataViewState extends State<DataView> {
     "AVG Repetitions",
     "User",
     "Deck",
-    // "CR1",
-    // "CR2",
-    // "CR3",
-    // "CR4",
-    // "CR5",
   ];
 
   // Users Table
@@ -99,10 +94,14 @@ class _DataViewState extends State<DataView> {
     "Id",
     "Username",
     "Email",
-    "Is Admin",
-    "Is Premium",
+    "Account Type",
+    "Role",
     "Date"
   ];
+  final _accountTypeController = TextEditingController(text: "Any");
+  String _accountType = "Any";
+  final _roleController = TextEditingController(text: "Any");
+  String _role = "Any";
 
   // Feedback Table
   final _statusController = TextEditingController(text: "Any");
@@ -155,11 +154,6 @@ class _DataViewState extends State<DataView> {
   late Future<dynamic> _currentFuture = _achievementsFuture;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -172,7 +166,7 @@ class _DataViewState extends State<DataView> {
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Wrap(
                 spacing: 20,
@@ -194,10 +188,12 @@ class _DataViewState extends State<DataView> {
                     deckSearchTextField(),
                   if (_selectedTable == "Feedback") feedbackStatusDropdown(),
                   if (_selectedTable == "Card Stats") cardSearchTextField(),
+                  if (_selectedTable == "Users") roleDropdownMenu(),
+                  if (_selectedTable == "Users") accountTypeDropdownMenu(),
                 ],
               ),
               FutureBuilder(
-                // key: ValueKey(_currentFuture),
+                key: ValueKey(_currentFuture),
                 future: _currentFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -290,6 +286,10 @@ class _DataViewState extends State<DataView> {
           _cardIdController.text = "";
           _cardId = null;
           _selectedStatus = "Any";
+          _roleController.text = "";
+          _role = "Any";
+          _accountTypeController.text = "";
+          _accountType = "Any";
         });
         refreshTable();
       },
@@ -419,6 +419,8 @@ class _DataViewState extends State<DataView> {
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
+            accountType: _accountType,
+            role: _role,
           );
           _currentFuture = _usersFuture;
           _sortByList = _usersSortByList;
@@ -577,6 +579,48 @@ class _DataViewState extends State<DataView> {
         DropdownMenuEntry(value: "Pending", label: "Pending"),
         DropdownMenuEntry(value: "Saved", label: "Saved"),
         DropdownMenuEntry(value: "Completed", label: "Completed"),
+      ],
+    );
+  }
+
+  DropdownMenu roleDropdownMenu() {
+    return DropdownMenu<String>(
+      controller: _roleController,
+      initialSelection: "Any",
+      label: const Text("Role"),
+      onSelected: (String? role) {
+        if (role == _role) return;
+        setState(() {
+          _role = role!;
+          _currentPage = 1;
+          refreshTable();
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "Any", label: "Any"),
+        DropdownMenuEntry(value: "user", label: "User"),
+        DropdownMenuEntry(value: "admin", label: "Admin"),
+      ],
+    );
+  }
+
+  DropdownMenu accountTypeDropdownMenu() {
+    return DropdownMenu<String>(
+      controller: _accountTypeController,
+      initialSelection: "Any",
+      label: const Text("Account Type"),
+      onSelected: (String? accType) {
+        if (accType == _accountType) return;
+        setState(() {
+          _accountType = accType!;
+          _currentPage = 1;
+          refreshTable();
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "Any", label: "Any"),
+        DropdownMenuEntry(value: "free", label: "Free"),
+        DropdownMenuEntry(value: "premium", label: "Premium"),
       ],
     );
   }

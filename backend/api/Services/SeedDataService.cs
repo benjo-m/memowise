@@ -241,7 +241,7 @@ public class SeedDataService
             },
             new Achievement
             {
-                Name = "Deck designer",
+                Name = "Deck Designer",
                 Description = "Manually add 100 cards to your decks.",
                 Icon = "deck_designer.png"
             },

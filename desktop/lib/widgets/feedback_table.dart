@@ -71,14 +71,6 @@ class _FeedbackTableState extends State<FeedbackTable> {
                   ),
                 ),
               ),
-              DataColumn(
-                label: Expanded(
-                  child: Text(
-                    "Actions",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ],
             rows: widget.data.map((feedback) {
               return DataRow(
@@ -105,22 +97,6 @@ class _FeedbackTableState extends State<FeedbackTable> {
                   ),
                   DataCell(
                     Center(child: Text(feedback.feedbackStatus)),
-                  ),
-                  DataCell(
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
-                          child: const Text("Edit"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
                   ),
                 ],
               );

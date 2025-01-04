@@ -71,7 +71,7 @@ class CardService {
   Future<void> updateCardStats(
       List<CardStatsUpdateRequest> cardStatsUpdateRequest) async {
     http.put(
-      Uri.parse("$baseUrl/cards"),
+      Uri.parse("$baseUrl/cardstats"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

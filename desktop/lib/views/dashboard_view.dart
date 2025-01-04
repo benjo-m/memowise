@@ -12,6 +12,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  final fontColor = const Color.fromARGB(255, 58, 58, 58);
   final Future<DashboardData> _dashboardDataFuture =
       AnalyticsService().getDashboardData();
   @override
@@ -151,23 +152,45 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
-  Container statCard(
-      {required String title,
-      required int quantity,
-      required String bottomText}) {
+  Container statCard({
+    required String title,
+    required int quantity,
+    required String bottomText,
+  }) {
     return Container(
       width: 250,
-      height: 150,
+      height: 250,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.blue[100],
         borderRadius: const BorderRadius.all(Radius.circular(5)),
+        border: Border.all(
+          width: 3,
+        ),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title),
-          Text(quantity.toString()),
-          Text(bottomText),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: fontColor,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            quantity.toString(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          ),
+          Text(
+            bottomText,
+            style: TextStyle(
+              color: fontColor,
+            ),
+          ),
         ],
       ),
     );

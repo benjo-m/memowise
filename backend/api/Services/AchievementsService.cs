@@ -8,7 +8,6 @@ namespace api.Services;
 public class AchievementsService
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly UserService _userService;
 
     public AchievementsService(ApplicationDbContext dbContext, UserService userService)
     {
@@ -140,7 +139,7 @@ public class AchievementsService
             {
                 await UnlockAchievement(achievement.Id, userId);
             }
-            else if (achievement.Name == "Deck designer" && userStats.TotalCardsCreated >= 20)
+            else if (achievement.Name == "Deck Designer" && userStats.TotalCardsCreated >= 20)
             {
                 await UnlockAchievement(achievement.Id, userId);
             }

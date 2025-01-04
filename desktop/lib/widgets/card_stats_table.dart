@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:desktop/dto/card_stats_response.dart';
-import 'package:desktop/dto/user_response.dart';
 import 'package:flutter/material.dart';
 
 class CardStatsTable extends StatefulWidget {
@@ -82,14 +81,6 @@ class _CardStatsTableState extends State<CardStatsTable> {
                   ),
                 ),
               ),
-              DataColumn(
-                label: Expanded(
-                  child: Text(
-                    "Actions",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ],
             rows: widget.data.map((stats) {
               return DataRow(
@@ -113,22 +104,6 @@ class _CardStatsTableState extends State<CardStatsTable> {
                   ),
                   DataCell(
                     Center(child: Text(stats.cardId.toString())),
-                  ),
-                  DataCell(
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
-                          child: const Text("Edit"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
                   ),
                 ],
               );

@@ -16,7 +16,7 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue[100],
+        border: Border.all(width: 3),
         borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       child: Padding(

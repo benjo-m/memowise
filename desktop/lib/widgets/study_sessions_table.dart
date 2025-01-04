@@ -98,59 +98,6 @@ class _StudySessionsTableState extends State<StudySessionsTable> {
                   ),
                 ),
               ),
-              // DataColumn(
-              //   label: Expanded(
-              //     child: Text(
-              //       "CR1",
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              //   tooltip: "Cards Rated 1",
-              // ),
-              // DataColumn(
-              //   label: Expanded(
-              //     child: Text(
-              //       "CR2",
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              //   tooltip: "Cards Rated 2",
-              // ),
-              // DataColumn(
-              //   label: Expanded(
-              //     child: Text(
-              //       "CR3",
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              //   tooltip: "Cards Rated 3",
-              // ),
-              // DataColumn(
-              //   label: Expanded(
-              //     child: Text(
-              //       "CR4",
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              //   tooltip: "Cards Rated 4",
-              // ),
-              // DataColumn(
-              //   label: Expanded(
-              //     child: Text(
-              //       "CR5",
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              //   tooltip: "Cards Rated 5",
-              // ),
-              DataColumn(
-                label: Expanded(
-                  child: Text(
-                    "Actions",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ],
             rows: widget.data.map((session) {
               return DataRow(
@@ -180,37 +127,6 @@ class _StudySessionsTableState extends State<StudySessionsTable> {
                   ),
                   DataCell(
                     Center(child: Text(session.deckId.toString())),
-                  ),
-                  // DataCell(
-                  //   Center(child: Text(session.cardsRated1.toString())),
-                  // ),
-                  // DataCell(
-                  //   Center(child: Text(session.cardsRated2.toString())),
-                  // ),
-                  // DataCell(
-                  //   Center(child: Text(session.cardsRated3.toString())),
-                  // ),
-                  // DataCell(
-                  //   Center(child: Text(session.cardsRated4.toString())),
-                  // ),
-                  // DataCell(
-                  //   Center(child: Text(session.cardsRated5.toString())),
-                  // ),
-                  DataCell(
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
-                          child: const Text("Edit"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
                   ),
                 ],
               );

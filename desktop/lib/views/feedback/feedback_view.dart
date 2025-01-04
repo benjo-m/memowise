@@ -60,20 +60,27 @@ class _FeedbackViewState extends State<FeedbackView> {
                       height: 50,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
+                        IconButton(
+                          tooltip: "Previous Page",
                           onPressed: feedbackData.hasPreviousPage
                               ? previousPage
                               : null,
-                          child: const Text("Previous page"),
+                          icon: const Icon(Icons.navigate_before_rounded),
+                          iconSize: 30,
                         ),
-                        ElevatedButton(
+                        const SizedBox(
+                          width: 100,
+                        ),
+                        IconButton(
+                          tooltip: "Next Page",
                           onPressed: feedbackData.hasNextPage ? nextPage : null,
-                          child: const Text("Next page"),
+                          icon: const Icon(Icons.navigate_next_rounded),
+                          iconSize: 30,
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

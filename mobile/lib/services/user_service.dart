@@ -33,7 +33,7 @@ class UserService {
   Future<void> changePassword(
       ChangePasswordRequest changePasswordRequest) async {
     final response = await http.put(
-      Uri.parse("$baseUrl/users/password"),
+      Uri.parse("$baseUrl/users/password-change"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

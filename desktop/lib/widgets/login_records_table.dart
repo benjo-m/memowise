@@ -57,14 +57,6 @@ class _LoginRecordsTableState extends State<LoginRecordsTable> {
                   ),
                 ),
               ),
-              DataColumn(
-                label: Expanded(
-                  child: Text(
-                    "Actions",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ],
             rows: widget.data.map((loginRecord) {
               return DataRow(
@@ -83,22 +75,6 @@ class _LoginRecordsTableState extends State<LoginRecordsTable> {
                                 0,
                                 loginRecord.loginDateTime.toString().length -
                                     7))),
-                  ),
-                  DataCell(
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
-                          child: const Text("Edit"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
                   ),
                 ],
               );

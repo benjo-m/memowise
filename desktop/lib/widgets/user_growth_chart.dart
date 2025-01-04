@@ -16,8 +16,8 @@ class _UserGrowthChartState extends State<UserGrowthChart> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue[100],
         borderRadius: const BorderRadius.all(Radius.circular(5)),
+        border: Border.all(width: 3),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),

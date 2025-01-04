@@ -140,10 +140,16 @@ public class AnalyticsService
         var sixtyDaysAgo = now.AddDays(-60);
 
         var activeUserCountLast30Days = await _dbContext.LoginRecords
-            .CountAsync(lr => lr.LoginDateTime >= thirtyDaysAgo && lr.LoginDateTime < now);
+            .Where(lr => lr.LoginDateTime >= thirtyDaysAgo && lr.LoginDateTime < now)
+            .Select(lr => lr.UserId)
+            .Distinct()
+            .CountAsync();
 
         var activeUserCountPrevious30Days = await _dbContext.LoginRecords
-            .CountAsync(lr => lr.LoginDateTime >= sixtyDaysAgo && lr.LoginDateTime < thirtyDaysAgo);
+            .Where(lr => lr.LoginDateTime >= sixtyDaysAgo && lr.LoginDateTime < thirtyDaysAgo)
+            .Select(lr => lr.UserId)
+            .Distinct()
+            .CountAsync();
 
         double change;
         if (activeUserCountPrevious30Days == 0)

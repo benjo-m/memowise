@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/change_password_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
 import 'package:mobile/services/auth/current_user.dart';
@@ -84,6 +85,15 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                             "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
                         if (context.mounted) {
                           Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            msg: "Feedback Sent!",
+                            gravity: ToastGravity.TOP,
+                            toastLength: Toast.LENGTH_SHORT,
+                            backgroundColor:
+                                const Color.fromARGB(255, 188, 234, 255),
+                            textColor: Colors.black,
+                            fontSize: 16,
+                          );
                         }
                       } on WrongPasswordException catch (_) {
                         setState(() {

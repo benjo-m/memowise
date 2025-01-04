@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:desktop/services/achievements_service.dart';
 import 'package:desktop/services/cards_service.dart';
 import 'package:desktop/services/deck_service.dart';
@@ -206,16 +204,23 @@ class _DataViewState extends State<DataView> {
                           table(data.data),
                           const SizedBox(height: 50),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ElevatedButton(
+                              IconButton(
+                                tooltip: "Previous Page",
                                 onPressed:
                                     data.hasPreviousPage ? previousPage : null,
-                                child: const Text("Previous page"),
+                                icon: const Icon(Icons.navigate_before_rounded),
+                                iconSize: 30,
                               ),
-                              ElevatedButton(
+                              const SizedBox(
+                                width: 100,
+                              ),
+                              IconButton(
+                                tooltip: "Next Page",
                                 onPressed: data.hasNextPage ? nextPage : null,
-                                child: const Text("Next page"),
+                                icon: const Icon(Icons.navigate_next_rounded),
+                                iconSize: 30,
                               ),
                             ],
                           ),

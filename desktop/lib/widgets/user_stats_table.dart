@@ -114,14 +114,6 @@ class _UserStatsTableState extends State<UserStatsTable> {
                   ),
                 ),
               ),
-              DataColumn(
-                label: Expanded(
-                  child: Text(
-                    "Actions",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ],
             rows: widget.data.map((stats) {
               return DataRow(
@@ -156,22 +148,6 @@ class _UserStatsTableState extends State<UserStatsTable> {
                   ),
                   DataCell(
                     Center(child: Text(stats.longestStudyStreak.toString())),
-                  ),
-                  DataCell(
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
-                          child: const Text("Edit"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
                   ),
                 ],
               );

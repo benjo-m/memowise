@@ -17,7 +17,7 @@ public class Card
 
     public Card() {}
     
-    public Card(CardCreateRequest cardCreateRequest)
+    public Card(CardAddRequest cardCreateRequest)
     {
         Question = cardCreateRequest.Question;
         Answer = cardCreateRequest.Answer;
@@ -31,5 +31,20 @@ public class Card
         CardStats.Interval = request.Interval;
         CardStats.EaseFactor = request.EaseFactor;
         CardStats.DueDate = DateTime.Now.AddDays(request.Interval);
+    }
+
+    public Card(CardCreateRequest request)
+    {
+        Question = request.Question;
+        Answer = request.Answer;
+        DeckId = request.DeckId;
+    }
+
+    public Card Update(CardUpdateRequest request)
+    {
+        Question = request.Question;
+        Answer = request.Answer;
+        DeckId = request.DeckId;
+        return this;
     }
 }

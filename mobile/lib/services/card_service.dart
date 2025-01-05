@@ -11,9 +11,9 @@ import 'package:mobile/services/auth/current_user.dart';
 import 'package:http/http.dart' as http;
 
 class CardService {
-  Future<void> editCard(int deckId, int cardId, CardDto cardDto) async {
+  Future<void> editCard(int cardId, CardDto cardDto) async {
     http.put(
-      Uri.parse("$baseUrl/cards/$cardId"),
+      Uri.parse("$baseUrl/cards/edit/$cardId"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
@@ -71,7 +71,7 @@ class CardService {
   Future<void> updateCardStats(
       List<CardStatsUpdateRequest> cardStatsUpdateRequest) async {
     http.put(
-      Uri.parse("$baseUrl/cardstats"),
+      Uri.parse("$baseUrl/cardstats/bulk-update"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

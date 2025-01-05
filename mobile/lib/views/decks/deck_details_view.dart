@@ -312,7 +312,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
               builder: (context) => EditCardView(
                 cardDto: CardDto.fromCard(card),
                 onEdit: (CardDto cardDto) async {
-                  await CardService().editCard(deck.id, card.id, cardDto);
+                  await CardService().editCard(card.id, cardDto);
                   final cardToEdit = deck.cards[i];
                   cardToEdit.editCard(cardDto);
                   setState(() {

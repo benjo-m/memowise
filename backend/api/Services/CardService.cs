@@ -9,14 +9,14 @@ using System.Text.Json.Nodes;
 
 namespace api.Services;
 
-public class CardService
+public class CardService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IConfiguration _configuration;
     private readonly AuthService _authService;
     private readonly AchievementsService _achievementService;
 
-    public CardService(ApplicationDbContext dbContext, IConfiguration configuration, AchievementsService achievementService, AuthService authService)
+    public CardService(ApplicationDbContext dbContext, IConfiguration configuration, AchievementsService achievementService, AuthService authService) : base(dbContext)
     {
         _dbContext = dbContext;
         _configuration = configuration;
@@ -70,7 +70,7 @@ public class CardService
         return cards;
     }
 
-    public async Task<Card?> AddCard(int deckId, CardCreateRequest cardCreateRequest)
+    public async Task<Card?> AddCard(int deckId, CardAddRequest cardCreateRequest)
     {
         Card card = new Card(cardCreateRequest);
         var deck = await _dbContext.Decks
@@ -119,18 +119,6 @@ public class CardService
         }
     }
 
-    public async Task<Card> DeleteCard(int cardId)
-    {
-        Card card = await _dbContext.Cards
-            .Where(c => c.Id == cardId)
-            .FirstAsync();
-
-        _dbContext.Cards.Remove(card);
-        await _dbContext.SaveChangesAsync();
-
-        return card;
-    }
-
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
         var user = await _authService.GetCurrentUser();
@@ -165,7 +153,7 @@ public class CardService
         }
         catch (Exception)
         {
-            return new GenerateCardsResponse { Cards = new List<CardCreateRequest>() };
+            return new GenerateCardsResponse { Cards = new List<CardAddRequest>() };
         }
     }
 }

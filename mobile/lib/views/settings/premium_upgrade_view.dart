@@ -107,7 +107,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                 ),
                 Flexible(
                   child: Text(
-                    'Premium users\' feedback is prioritized',
+                    'Premium users\' feedback is emphasized',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

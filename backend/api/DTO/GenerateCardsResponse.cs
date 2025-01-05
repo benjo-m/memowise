@@ -2,6 +2,6 @@
 
 public class GenerateCardsResponse
 {
-    public List<CardCreateRequest> Cards { get; set; }
+    public List<CardAddRequest> Cards { get; set; }
 }
 

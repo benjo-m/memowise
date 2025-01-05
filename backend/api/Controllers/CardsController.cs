@@ -6,18 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-public class CardsController : BaseController
+public class CardsController : BaseControllerTest<Card, CardCreateRequest, CardUpdateRequest>
 {
     private readonly CardService _cardService;
 
-    public CardsController(CardService cardService)
+    public CardsController(CardService cardService) : base(cardService)
     {
         _cardService = cardService;
     }
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAllDecks
+    public async Task<IActionResult> GetAllCards
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? deck = null)
     {
         var cards = await _cardService.GetAllCards(page, pageSize, sortBy, sortDescending, deck);
@@ -31,7 +31,7 @@ public class CardsController : BaseController
     }
 
     [HttpPost("{deckId}")]
-    public async Task<ActionResult<Card>> AddCard(int deckId, CardCreateRequest cardCreateRequest)
+    public async Task<ActionResult<Card>> AddCard(int deckId, CardAddRequest cardCreateRequest)
     {
 
         var card = await _cardService.AddCard(deckId, cardCreateRequest);
@@ -44,16 +44,10 @@ public class CardsController : BaseController
         return Ok(card);
     }
 
-    [HttpPut("{cardId}")]
+    [HttpPut("edit/{cardId}")]
     public async Task EditCard(int cardId, CardEditRequest cardEditRequest)
     {
         await _cardService.EditCard(cardId, cardEditRequest);
-    }
-
-    [HttpDelete("{cardId}")]
-    public async Task<ActionResult<Card>> DeleteCard(int cardId)
-    {
-        return await _cardService.DeleteCard(cardId);
     }
 
     [HttpPost("generate")]

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using api.DTO;
+using System.Text.Json.Serialization;
 
 namespace api.Models;
 
@@ -12,4 +13,28 @@ public class CardStats
     public int CardId { get; set; }
     [JsonIgnore]
     public Card Card { get; set; }
+
+    public CardStats()
+    {
+    }
+
+    public CardStats(CardStatsCreateRequest request) 
+    {
+        Repetitions = request.Repetitions;
+        Interval = request.Interval;
+        EaseFactor = request.EaseFactor;
+        CardId = request.CardId;
+        DueDate = request.DueDate;
+    }
+
+    public CardStats Update(CardStatsUpdateRequestAdmin request)
+    {
+        CardId = request.CardId;
+        EaseFactor = request.EaseFactor;
+        Interval = request.Interval;
+        DueDate = request.DueDate;
+        Repetitions = request.Repetitions;
+        return this;
+    }   
 }
+

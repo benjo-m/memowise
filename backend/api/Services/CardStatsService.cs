@@ -5,14 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
-public class CardStatsService
+public class CardStatsService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public CardStatsService(ApplicationDbContext dbContext)
+    public CardStatsService(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
+
 
     public async Task<PaginatedResponse<CardStats>> GetAllCardStats
         (int page, int pageSize, string? sortBy, bool sortDescending, int? card)
@@ -45,7 +46,7 @@ public class CardStatsService
         return new PaginatedResponse<CardStats>(cardStats, page, totalPages);
     }
 
-    public async Task UpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
+    public async Task BulkUpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
     {
         foreach (var cardStats in cardStatsUpdateRequests)
         {

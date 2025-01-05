@@ -1,23 +1,28 @@
-import 'package:desktop/dto/dashboard_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class UserDistributionChart extends StatefulWidget {
-  const UserDistributionChart({super.key, required this.userDistribution});
+class DeckCreationChart extends StatefulWidget {
+  const DeckCreationChart(
+      {super.key,
+      required this.percentageCreatedManually,
+      required this.percentageGenerated});
 
-  final UserDistribution userDistribution;
+  final num percentageCreatedManually;
+  final num percentageGenerated;
 
   @override
-  State<UserDistributionChart> createState() => _UserDistributionChartState();
+  State<DeckCreationChart> createState() => _DeckCreationChartState();
 }
 
-class _UserDistributionChartState extends State<UserDistributionChart> {
+class _DeckCreationChartState extends State<DeckCreationChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(width: 3),
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(5),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -25,7 +30,7 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "User Distribution",
+              "Deck Creation Method Distribution",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -53,8 +58,8 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                indicator(Colors.greenAccent, "Free"),
-                indicator(Colors.blueAccent, "Premium"),
+                indicator(Colors.lightGreen, "Manually"),
+                indicator(Colors.blueAccent, "Generated"),
               ],
             ),
           ],
@@ -68,8 +73,8 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
 
     return <PieChartSectionData>[
       PieChartSectionData(
-        title: '${widget.userDistribution.freeUsersPercentage}%',
-        value: widget.userDistribution.freeUsersPercentage.toDouble(),
+        title: '${widget.percentageCreatedManually}%',
+        value: widget.percentageCreatedManually.toDouble(),
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.white,
@@ -78,8 +83,8 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
         radius: radius,
       ),
       PieChartSectionData(
-        title: "${widget.userDistribution.premiumUsersPercentage}%",
-        value: widget.userDistribution.premiumUsersPercentage.toDouble(),
+        title: "${widget.percentageGenerated}%",
+        value: widget.percentageGenerated.toDouble(),
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.white,

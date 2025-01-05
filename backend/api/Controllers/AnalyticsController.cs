@@ -20,4 +20,10 @@ public class AnalyticsController : BaseController
     {
         return await _analyticsService.GetDashboardData();
     }
+
+    [HttpGet("analytics-data")]
+    public async Task<ActionResult<AnalyticsData>> GetAnalyticsData(int year)
+    {
+        return await _analyticsService.GetAnalyticsData(year);
+    }
 }

@@ -1,17 +1,20 @@
-import 'package:desktop/dto/dashboard_data.dart';
+import 'package:desktop/dto/analytics_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class UserDistributionChart extends StatefulWidget {
-  const UserDistributionChart({super.key, required this.userDistribution});
+class StudyTimesChart extends StatefulWidget {
+  const StudyTimesChart({
+    super.key,
+    required this.studySessionSegments,
+  });
 
-  final UserDistribution userDistribution;
+  final List<StudySessionSegment> studySessionSegments;
 
   @override
-  State<UserDistributionChart> createState() => _UserDistributionChartState();
+  State<StudyTimesChart> createState() => _StudyTimesChartState();
 }
 
-class _UserDistributionChartState extends State<UserDistributionChart> {
+class _StudyTimesChartState extends State<StudyTimesChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +28,7 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "User Distribution",
+              "Study Times",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -53,8 +56,10 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                indicator(Colors.greenAccent, "Free"),
-                indicator(Colors.blueAccent, "Premium"),
+                indicator(Colors.greenAccent, "Morning"),
+                indicator(Colors.orangeAccent, "Afternoon"),
+                indicator(Colors.blueAccent, "Evening"),
+                indicator(Colors.deepPurpleAccent, "Night"),
               ],
             ),
           ],
@@ -68,8 +73,18 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
 
     return <PieChartSectionData>[
       PieChartSectionData(
-        title: '${widget.userDistribution.freeUsersPercentage}%',
-        value: widget.userDistribution.freeUsersPercentage.toDouble(),
+        title: '${widget.studySessionSegments[0].percentage}%',
+        value: widget.studySessionSegments[0].percentage.toDouble(),
+        titleStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+        color: Colors.deepPurpleAccent,
+        radius: radius,
+      ),
+      PieChartSectionData(
+        title: "${widget.studySessionSegments[1].percentage}%",
+        value: widget.studySessionSegments[1].percentage.toDouble(),
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.white,
@@ -78,13 +93,23 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
         radius: radius,
       ),
       PieChartSectionData(
-        title: "${widget.userDistribution.premiumUsersPercentage}%",
-        value: widget.userDistribution.premiumUsersPercentage.toDouble(),
+        title: "${widget.studySessionSegments[2].percentage}%",
+        value: widget.studySessionSegments[2].percentage.toDouble(),
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
         color: Colors.blueAccent,
+        radius: radius,
+      ),
+      PieChartSectionData(
+        title: "${widget.studySessionSegments[3].percentage}%",
+        value: widget.studySessionSegments[3].percentage.toDouble(),
+        titleStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+        color: Colors.orangeAccent,
         radius: radius,
       ),
     ];

@@ -2,6 +2,7 @@
 using api.DTO;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace api.Services;
 
@@ -25,6 +26,37 @@ public class AnalyticsService
             FeedbackCount = await GetFeedbackCount()
         };
     }
+
+    public async Task<AnalyticsData> GetAnalyticsData(int year)
+    {
+        double averageEaseFactor = await _dbContext.CardStats.AverageAsync(cs => cs.EaseFactor);
+        int totalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated);
+        int generatedDecksCount = await _dbContext.UserStats.SumAsync(us => us.TotalDecksGenerated);
+        int manuallyCreatedDecksCount = totalDecksCreated - generatedDecksCount;
+        double averageSessionDuration = await _dbContext.StudySessions.AverageAsync(ss => ss.Duration);
+        double averageStudyStreak = await _dbContext.UserStats.AverageAsync(us => us.StudyStreak);
+
+        return new AnalyticsData
+        {
+            TotalUsers = await _dbContext.Users.CountAsync(),
+            DailyActiveUsers = await GetActiveUsersByTimePeriod(1),
+            MonthlyActiveUsers = await GetActiveUsersByTimePeriod(30),
+            NewUsersByMonth = await GetNewUsersByMonth(year),
+            TotalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated),
+            TotalCardsCreated = await _dbContext.UserStats.SumAsync(us => us.TotalCardsCreated),
+            AverageEaseFactor = Math.Round(averageEaseFactor, 2),
+            ManuallyCreatedDecksPercentage = Math.Round((double)manuallyCreatedDecksCount / totalDecksCreated * 100, 1),
+            GeneratedDecksPercentage = Math.Round((double)generatedDecksCount / totalDecksCreated * 100, 1),
+            TotalStudySessions = await _dbContext.StudySessions.CountAsync(),
+            TotalTimeSpentStudying = await _dbContext.StudySessions.SumAsync(ss => ss.Duration),
+            AverageSessionDuration = Math.Round(averageSessionDuration, 2),
+            AverageStudyStreak = Math.Round(averageStudyStreak, 2),
+            LongestStudyStreak = await _dbContext.UserStats.MaxAsync(us => us.LongestStudyStreak),
+            StudySessionSegments = await GetStudySessionSegments(),
+            AchievementUnlockPercentages = await GetAchievementsUnlockPercentages()
+        };
+    }
+
     private async Task<UserDistributionResponse> GetUserDistribution()
     {
         var totalUsers = await _dbContext.Users.CountAsync();
@@ -178,5 +210,87 @@ public class AnalyticsService
             PendingFeedback = pendingFeedbackCount,
             SavedFeedback = savedFeedbackCount
         };
+    }
+
+    private async Task<int> GetActiveUsersByTimePeriod(int days)
+    {
+        var now = DateTime.UtcNow;
+        var period = now.AddDays(-days);
+
+        var activeUserCount = await _dbContext.LoginRecords
+            .Where(lr => lr.LoginDateTime >= period && lr.LoginDateTime < now)
+            .Select(lr => lr.UserId)
+            .Distinct()
+            .CountAsync();
+
+        return activeUserCount;
+    }
+
+    private async Task<List<NewUsersByMonth>> GetNewUsersByMonth(int year)
+    {
+        var allMonths = Enumerable.Range(1, 12)
+            .Select(month => new NewUsersByMonth
+            {
+                Month = new DateTime(year, month, 1).ToString("MMMM yyyy", CultureInfo.InvariantCulture),
+                Count = 0
+            })
+            .ToList();
+
+        var data = await _dbContext.Users
+            .Where(u => u.CreatedAt.Year == year)
+            .GroupBy(u => u.CreatedAt.Month)
+            .Select(g => new
+            {
+                Month = g.Key,
+                Count = g.Count()
+            })
+            .ToListAsync();
+
+        foreach (var entry in data)
+        {
+            allMonths[entry.Month - 1].Count = entry.Count;
+        }
+
+        return allMonths;
+    }
+
+    private async Task<List<StudySessionSegment>> GetStudySessionSegments()
+    {
+        var totalSessions = await _dbContext.StudySessions.CountAsync();
+
+        var segments = await _dbContext.StudySessions
+            .GroupBy(ss =>
+                ss.StudiedAt.Hour >= 5 && ss.StudiedAt.Hour < 12 ? "Morning" :
+                ss.StudiedAt.Hour >= 12 && ss.StudiedAt.Hour < 17 ? "Afternoon" :
+                ss.StudiedAt.Hour >= 17 && ss.StudiedAt.Hour < 21 ? "Evening" :
+                "Night"
+            )
+            .Select(g => new StudySessionSegment
+            {
+                Segment = g.Key,
+                Count = g.Count(),
+                Percentage = Math.Round((double)g.Count() / totalSessions * 100, 1)
+            })
+            .OrderByDescending(s => s.Segment) 
+            .ToListAsync();
+
+        return segments;
+    }
+
+    private async Task<List<AchievementUnlockPercentage>> GetAchievementsUnlockPercentages()
+    {
+        var totalUsers = await _dbContext.Users.CountAsync();
+
+        var achievementStats = await _dbContext.Achievements
+            .Select(achievement => new AchievementUnlockPercentage
+            {
+                Name = achievement.Name,
+                Percentage = totalUsers == 0
+                    ? 0
+                    : Math.Round((double)achievement.Users.Count() / totalUsers * 100,1)
+            })
+            .ToListAsync();
+
+        return achievementStats;
     }
 }

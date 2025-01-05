@@ -1,4 +1,4 @@
-﻿namespace api.Controllers;
+﻿namespace api.DTO;
 
 public class AchievementUpdateRequest
 {

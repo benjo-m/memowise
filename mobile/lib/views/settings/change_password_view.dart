@@ -86,8 +86,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         if (context.mounted) {
                           Navigator.pop(context);
                           Fluttertoast.showToast(
-                            msg: "Feedback Sent!",
-                            gravity: ToastGravity.TOP,
+                            msg: "Password Changed!",
+                            gravity: ToastGravity.CENTER,
                             toastLength: Toast.LENGTH_SHORT,
                             backgroundColor:
                                 const Color.fromARGB(255, 188, 234, 255),

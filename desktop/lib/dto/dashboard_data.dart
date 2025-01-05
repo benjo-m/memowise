@@ -99,8 +99,8 @@ class NewUsers {
 }
 
 class UserDistribution {
-  int freeUsersPercentage;
-  int premiumUsersPercentage;
+  num freeUsersPercentage;
+  num premiumUsersPercentage;
 
   UserDistribution({
     required this.freeUsersPercentage,

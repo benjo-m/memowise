@@ -25,7 +25,7 @@ class _UserGrowthChartState extends State<UserGrowthChart> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Recent User Growth",
+              "User Growth",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(

@@ -105,7 +105,7 @@ class _FeedbackViewState extends State<FeedbackView> {
 
       Fluttertoast.showToast(
         msg: "Feedback Sent!",
-        gravity: ToastGravity.TOP,
+        gravity: ToastGravity.CENTER,
         toastLength: Toast.LENGTH_SHORT,
         backgroundColor: const Color.fromARGB(255, 188, 234, 255),
         textColor: Colors.black,

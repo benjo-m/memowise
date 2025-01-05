@@ -12,7 +12,10 @@ class _AnalyticsViewState extends State<AnalyticsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Analytics"),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text("Analytics"),
+        ),
       ),
     );
   }

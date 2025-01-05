@@ -12,7 +12,6 @@ public class AchievementsService
     public AchievementsService(ApplicationDbContext dbContext, UserService userService)
     {
         _dbContext = dbContext;
-        _userService = userService;
     }
 
     public async Task<PaginatedResponse<Achievement>> GetAllAchievements

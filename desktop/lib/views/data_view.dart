@@ -202,7 +202,7 @@ class _DataViewState extends State<DataView> {
                         children: [
                           const SizedBox(height: 20),
                           table(data.data),
-                          const SizedBox(height: 50),
+                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

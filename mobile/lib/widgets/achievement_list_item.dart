@@ -73,12 +73,13 @@ class AchievementListItem extends StatelessWidget {
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                   ),
-                  child: Image(
-                    image: AssetImage(
-                        'lib/assets/achievements/${achievement.icon}'),
-                    filterQuality: FilterQuality.high,
-                    // width: 50,
-                    // height: 50,
+                  child: Image.asset(
+                    'lib/assets/achievements/${achievement.icon}',
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      return Image.asset(
+                          'lib/assets/achievements/fallback.png');
+                    },
                   ),
                 ),
                 const SizedBox(width: 10),

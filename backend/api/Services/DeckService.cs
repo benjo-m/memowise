@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
-public class DeckService
+public class DeckService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly AuthService _authService;
     private readonly StudySessionService _studySessionService;
 
-    public DeckService(ApplicationDbContext dbContext, StudySessionService studySessionService, AuthService authService)
+    public DeckService(ApplicationDbContext dbContext, StudySessionService studySessionService, AuthService authService) : base(dbContext)
     {
         _dbContext = dbContext;
         _studySessionService = studySessionService;
@@ -81,7 +81,7 @@ public class DeckService
         return deckSummaries;
     }
 
-    public async Task<Deck?> GetDeckById(int deckId)
+    public async Task<Deck?> GetDeckWithCards(int deckId)
     {
         return await _dbContext.Decks
             .Include(d => d.Cards)
@@ -89,7 +89,7 @@ public class DeckService
             .FirstOrDefaultAsync(d => d.Id == deckId);
     }
 
-    public async Task<Deck?> CreateDeck(DeckCreateRequest deckCreateRequest)
+    public async Task<Deck?> CreateDeckWithCards(DeckCreateRequestWithCards deckCreateRequest)
     {
         User? user = await _authService.GetCurrentUser();
 
@@ -115,38 +115,6 @@ public class DeckService
 
         _dbContext.Decks.Add(deck);
         _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync();
-
-        return deck;
-    }
-
-    public async Task<Deck?> UpdateDeck(int deckId, DeckUpdateRequest deckUpdateRequest)
-    {
-        Deck? deck = await _dbContext.Decks.FindAsync(deckId);
-
-        if (deck == null)
-        {
-            return null;
-        }
-
-        deck.Name = deckUpdateRequest.Name;
-
-        _dbContext.Decks.Update(deck);
-        await _dbContext.SaveChangesAsync();
-
-        return deck;
-    }
-
-    public async Task<Deck?> DeleteDeck(int deckId)
-    {
-        Deck? deck = await _dbContext.Decks.FindAsync(deckId);
-
-        if (deck == null)
-        {
-            return null;
-        }
-
-        _dbContext.Decks.Remove(deck);
         await _dbContext.SaveChangesAsync();
 
         return deck;

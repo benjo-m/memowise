@@ -51,6 +51,7 @@ builder.Services.AddScoped<LoginRecordService>();
 builder.Services.AddScoped<PaymentRecordService>();
 builder.Services.AddScoped<UserStatsService>();
 builder.Services.AddScoped<CardStatsService>();
+builder.Services.AddScoped<CRUDService>();
 
 var app = builder.Build();
 

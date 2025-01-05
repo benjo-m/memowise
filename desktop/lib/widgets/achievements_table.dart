@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:desktop/dto/achievement_response.dart';
+import 'package:desktop/services/achievements_service.dart';
 import 'package:flutter/material.dart';
 
 class AchievementsTable extends StatefulWidget {
@@ -84,7 +85,7 @@ class _AchievementsTableState extends State<AchievementsTable> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () => log("edit"),
+                          onPressed: () => edit(achievement.id),
                           child: const Text("Edit"),
                         ),
                         ElevatedButton(
@@ -101,5 +102,10 @@ class _AchievementsTableState extends State<AchievementsTable> {
         ),
       ),
     );
+  }
+
+  edit(int id) async {
+    final a = await AchievementService().getById(id);
+    log(a.toJson().toString());
   }
 }

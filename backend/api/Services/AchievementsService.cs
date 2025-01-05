@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
-public class AchievementsService
+public class AchievementsService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public AchievementsService(ApplicationDbContext dbContext, UserService userService)
+    public AchievementsService(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }

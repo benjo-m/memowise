@@ -138,7 +138,7 @@ class _DataViewState extends State<DataView> {
   ];
 
   // Futures
-  var _achievementsFuture = AchievementService().getAllAchievements();
+  var _achievementsFuture = AchievementService().getAll();
   var _decksFuture = DeckService().getAllDecks();
   var _cardsFuture = CardService().getAllCards();
   var _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
@@ -348,7 +348,7 @@ class _DataViewState extends State<DataView> {
     switch (_selectedTable) {
       case "Achievements":
         setState(() {
-          _achievementsFuture = AchievementService().getAllAchievements(
+          _achievementsFuture = AchievementService().getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,

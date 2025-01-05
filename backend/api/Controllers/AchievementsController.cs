@@ -1,4 +1,6 @@
-﻿using api.Services;
+﻿using api.DTO;
+using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,16 +8,15 @@ namespace api.Controllers;
 
 
 [AllowAnonymous]
-public class AchievementsController : BaseController
+public class AchievementsController : BaseControllerTest<Achievement, AchievementCreateRequest, AchievementUpdateRequest>
 {
     private readonly AchievementsService _achievementsService;
 
-    public AchievementsController(AchievementsService achievementsService)
+    public AchievementsController(AchievementsService achievementsService) : base(achievementsService)
     {
         _achievementsService = achievementsService;
     }
 
-    
     [HttpGet]
     public async Task<IActionResult> GetAllAchievements
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false)

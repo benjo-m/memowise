@@ -291,7 +291,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
 
     await DeckService().updateDeck(
       deck.id,
-      DeckUpdateRequest(name: deckName),
+      DeckUpdateRequest(name: deckName, userId: CurrentUser.userId!),
     );
     setState(() {
       _deckNameError = null;

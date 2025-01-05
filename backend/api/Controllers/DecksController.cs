@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers;
 
-public class DecksController : BaseController
+public class DecksController : BaseControllerTest<Deck, DeckCreateRequest, DeckUpdateRequest>
 {
     private readonly DeckService _deckService;
 
-    public DecksController(DeckService deckService)
+    public DecksController(DeckService deckService) : base(deckService)
     {
         _deckService = deckService;
     }
@@ -31,10 +31,10 @@ public class DecksController : BaseController
         return Ok(decks);
     }
 
-    [HttpGet("{deckId}")]
-    public async Task<ActionResult<Deck>> GetDeckById(int deckId)
+    [HttpGet("{deckId}/cards")]
+    public async Task<ActionResult<Deck>> GetDeckWithCards(int deckId)
     {
-        var deck = await _deckService.GetDeckById(deckId);
+        var deck = await _deckService.GetDeckWithCards(deckId);
 
         if (deck == null)
         {
@@ -44,10 +44,10 @@ public class DecksController : BaseController
         return Ok(deck);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Deck>> CreateDeck(DeckCreateRequest deckCreateRequest)
+    [HttpPost("with-cards")]
+    public async Task<ActionResult<Deck>> CreateDeckWithCards(DeckCreateRequestWithCards deckCreateRequest)
     {
-        var deck = await _deckService.CreateDeck(deckCreateRequest);
+        var deck = await _deckService.CreateDeckWithCards(deckCreateRequest);
 
         if (deck == null)
         {
@@ -57,29 +57,29 @@ public class DecksController : BaseController
         return Ok(deck);
     }
 
-    [HttpPut("{deckId}")]
-    public async Task<ActionResult<Deck>> UpdateDeck(int deckId, DeckUpdateRequest deckUpdateRequest)
-    {
-        var deck = await _deckService.UpdateDeck(deckId, deckUpdateRequest);
+    //[HttpPut("{deckId}")]
+    //public async Task<ActionResult<Deck>> UpdateDeck(int deckId, DeckUpdateRequest deckUpdateRequest)
+    //{
+    //    var deck = await _deckService.UpdateDeck(deckId, deckUpdateRequest);
 
-        if (deck == null)
-        {
-            return BadRequest();
-        }
+    //    if (deck == null)
+    //    {
+    //        return BadRequest();
+    //    }
 
-        return Ok(deck);
-    }
+    //    return Ok(deck);
+    //}
 
-    [HttpDelete("{deckId}")]
-    public async Task<ActionResult<Deck>> DeleteDeck(int deckId)
-    {
-        var deck = await _deckService.DeleteDeck(deckId);
+    //[HttpDelete("{deckId}")]
+    //public async Task<ActionResult<Deck>> DeleteDeck(int deckId)
+    //{
+    //    var deck = await _deckService.DeleteDeck(deckId);
 
-        if (deck == null)
-        {
-            return NotFound();
-        }
+    //    if (deck == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        return Ok(deck);
-    }
+    //    return Ok(deck);
+    //}
 }

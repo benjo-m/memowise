@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using api.DTO;
+using System.Text.Json.Serialization;
 
 namespace api.Models;
 
@@ -10,4 +11,12 @@ public class Achievement
     public string Icon { get; set; }
     [JsonIgnore]
     public List<User> Users { get; set; } = [];
+
+    public Achievement Update(AchievementUpdateRequest request)
+    {
+        Name = request.Name;
+        Description = request.Description;
+        Icon = request.Icon;
+        return this;
+    }
 }

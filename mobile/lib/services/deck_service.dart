@@ -26,7 +26,7 @@ class DeckService {
 
   Future<Deck> getDeckById(int deckId) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/decks/$deckId'),
+      Uri.parse('$baseUrl/decks/$deckId/cards'),
       headers: {
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
@@ -37,7 +37,7 @@ class DeckService {
   }
 
   Future<Deck> createDeck(DeckCreateRequest deckCreateRequest) async {
-    final response = await http.post(Uri.parse("$baseUrl/decks"),
+    final response = await http.post(Uri.parse("$baseUrl/decks/with-cards"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

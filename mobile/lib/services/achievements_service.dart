@@ -11,7 +11,7 @@ class AchievementsService {
   Future<List<Achievement>> getAllAchievements() async {
     final response = await http.get(
       Uri.parse(
-          "$baseUrl/achievements?page=1&pageSize=10&sortBy=id&sortDescending=false"),
+          "$baseUrl/achievements?page=1&pageSize=20&sortBy=id&sortDescending=false"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

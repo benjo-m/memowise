@@ -14,11 +14,24 @@ public class Deck
 
     public Deck() {}
 
-    public Deck(DeckCreateRequest deckCreateRequest)
+    public Deck(DeckCreateRequestWithCards deckCreateRequest)
     {
         Name = deckCreateRequest.Name;
         Cards = deckCreateRequest.Cards
             .Select(card => new Card(card))
             .ToList();
+    }
+
+    public Deck(DeckCreateRequest deck)
+    {
+        Name = deck.Name;
+        UserId = deck.UserId;
+    }
+
+    public Deck Update(DeckUpdateRequest request)
+    {
+        Name = request.Name;
+        UserId = request.UserId;
+        return this;
     }
 }

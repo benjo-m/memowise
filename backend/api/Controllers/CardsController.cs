@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-public class CardsController : BaseControllerTest<Card, CardCreateRequest, CardUpdateRequest>
+public class CardsController : BaseCRUDController<Card, CardCreateRequest, CardUpdateRequest>
 {
     private readonly CardService _cardService;
 

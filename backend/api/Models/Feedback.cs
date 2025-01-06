@@ -21,9 +21,20 @@ public class Feedback
     {
     }
 
-    public Feedback(FeedbackCreateRequest feedbackCreateRequest)
+    public Feedback(FeedbackCreateRequest request)
     {
-        Title = feedbackCreateRequest.Title;
-        Description = feedbackCreateRequest.Description;
+        Title = request.Title;
+        Description = request.Description;
+        SubmittedAt = request.SubmittedAt;
+        FeedbackStatus = request.Status;
+    }
+
+    public Feedback Update(FeedbackUpdateRequest request)
+    {
+        Title = request.Title;
+        Description = request.Description;
+        SubmittedAt = request.SubmittedAt;
+        FeedbackStatus = request.Status;
+        return this;
     }
 }

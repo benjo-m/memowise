@@ -9,7 +9,7 @@ import 'package:mobile/services/auth/current_user.dart';
 class PaymentService {
   Future<void> savePaymentRecord(PaymentRecordCreateRequest req) async {
     await http.post(
-      Uri.parse("$baseUrl/paymentrecord"),
+      Uri.parse("$baseUrl/paymentrecords"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

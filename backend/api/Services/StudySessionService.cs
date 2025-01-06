@@ -3,11 +3,11 @@ using api.DTO;
 using api.ML;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.ML;
+using Microsoft.ML; 
 
 namespace api.Services;
 
-public class StudySessionService
+public class StudySessionService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly RegressionModel _regressionModel;
@@ -19,7 +19,7 @@ public class StudySessionService
     private readonly string _modelPath;
 
 
-    public StudySessionService(ApplicationDbContext dbContext, RegressionModel regressionModel, UserService userService, AchievementsService achievementService)
+    public StudySessionService(ApplicationDbContext dbContext, RegressionModel regressionModel, UserService userService, AchievementsService achievementService) : base(dbContext)
     {
         _dbContext = dbContext;
         _regressionModel = regressionModel;
@@ -86,7 +86,7 @@ public class StudySessionService
         return new PaginatedResponse<StudySessionDto>(studySessions, page, totalPages);
     }
 
-    public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
+    public async Task CompleteStudySession(StudySessionCreateRequest studySessionCreateRequest)
     {
         var deck = _dbContext.Decks.First(d => d.Id == studySessionCreateRequest.DeckId);
         var studySession = new StudySession(studySessionCreateRequest);

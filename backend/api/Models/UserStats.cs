@@ -1,4 +1,6 @@
-﻿namespace api.Models;
+﻿using api.DTO;
+
+namespace api.Models;
 
 public class UserStats
 {
@@ -13,4 +15,35 @@ public class UserStats
     public int LongestStudyStreak { get; set; } = 0;
     public int TotalSessionsCompleted { get; set; } = 0;
     public int TotalCorrectAnswers { get; set; } = 0;
+
+    public UserStats()
+    {
+    }
+
+    public UserStats(UserStatsCreateRequest request)
+    {
+        UserId = request.UserId;
+        TotalDecksCreated = request.TotalDecksCreated;
+        TotalDecksGenerated = request.TotalDecksGenerated;
+        TotalCardsCreated = request.TotalCardsCreated;
+        TotalCardsLearned = request.TotalCardsLearned;
+        TotalSessionsCompleted = request.TotalSessionsCompleted;
+        TotalCorrectAnswers = request.TotalCorrectAnswers;
+        StudyStreak = request.StudyStreak;
+        LongestStudyStreak = request.LongestStudyStreak;
+    }
+
+    public UserStats Update(UserStatsUpdateRequest request)
+    {
+        UserId = request.UserId;
+        TotalDecksCreated = request.TotalDecksCreated;
+        TotalDecksGenerated = request.TotalDecksGenerated;
+        TotalCardsCreated = request.TotalCardsCreated;
+        TotalCardsLearned = request.TotalCardsLearned;
+        TotalSessionsCompleted = request.TotalSessionsCompleted;
+        TotalCorrectAnswers = request.TotalCorrectAnswers;
+        StudyStreak = request.StudyStreak;
+        LongestStudyStreak = request.LongestStudyStreak;
+        return this;
+    }
 }

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
-public class FeedbackService
+public class FeedbackService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public FeedbackService(ApplicationDbContext dbContext)
+    public FeedbackService(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
@@ -43,22 +43,6 @@ public class FeedbackService
         return new PaginatedResponse<Feedback>(feedbackList, page, totalPages);
     }
 
-    public async Task<Feedback> GetFeedbackById(int id)
-    {
-        var feedback = await _dbContext.Feedbacks
-            .FirstAsync(f => f.Id == id);
-
-        return feedback;
-    }
-
-    public async Task PostFeedback(FeedbackCreateRequest feedbackCreateRequest)
-    {
-        var feedback = new Feedback(feedbackCreateRequest);
-
-        _dbContext.Feedbacks.Add(feedback);
-        await _dbContext.SaveChangesAsync();
-    }
-
     public async Task<Feedback> UpdateFeedbackStatus(int feedbackId, FeedbackStatusUpdateRequest feedbackUpdateRequest)
     {
         var feedback = await _dbContext.Feedbacks
@@ -69,17 +53,6 @@ public class FeedbackService
         _dbContext.Feedbacks.Update(feedback);
         await _dbContext.SaveChangesAsync();
         
-        return feedback;
-    }
-
-    public async Task<Feedback> RemoveFeedback(int feedbackId)
-    {
-        var feedback = await _dbContext.Feedbacks
-            .FirstAsync(f => f.Id == feedbackId);
-
-        _dbContext.Feedbacks.Remove(feedback);
-        await _dbContext.SaveChangesAsync();
-
         return feedback;
     }
 }

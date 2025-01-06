@@ -7,11 +7,11 @@ namespace api.Controllers;
 [Authorize]
 [Route("[controller]")]
 [ApiController]
-public abstract class BaseControllerTest<TEntity, TCreateRequest, TUpdateRequest> : ControllerBase where TEntity : class where TCreateRequest : class where TUpdateRequest : class
+public abstract class BaseCRUDController<TEntity, TCreateRequest, TUpdateRequest> : ControllerBase where TEntity : class where TCreateRequest : class where TUpdateRequest : class
 {
     private readonly CRUDService _crudService;
 
-    public BaseControllerTest(CRUDService crudService)
+    public BaseCRUDController(CRUDService crudService)
     {
         _crudService = crudService;
     }

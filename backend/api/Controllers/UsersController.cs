@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-public class UsersController : BaseController
+public class UsersController : BaseCRUDController<User, UserCreateRequest, UserUpdateRequest>
 {
     private readonly UserService _userService;
 
-    public UsersController(UserService userService)
+    public UsersController(UserService userService) : base(userService) 
     {
         _userService = userService;
     }
@@ -25,9 +25,9 @@ public class UsersController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateUser(UpdateUserRequest updateUserRequest)
+    public async Task<IActionResult> UpdateCredentials(UpdateUserRequest updateUserRequest)
     {
-        await _userService.UpdateUser(updateUserRequest);
+        await _userService.UpdateCredentials(updateUserRequest);
         return Ok();
     }
 
@@ -39,9 +39,9 @@ public class UsersController : BaseController
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteUser(DeleteUserRequest deleteUserRequest)
+    public async Task<IActionResult> DeleteAccount(DeleteUserRequest deleteUserRequest)
     {
-        await _userService.DeleteUser(deleteUserRequest);
+        await _userService.DeleteAccount(deleteUserRequest);
         return Ok();
     }
 

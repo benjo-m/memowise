@@ -1,14 +1,16 @@
-﻿using api.Services;
+﻿using api.DTO;
+using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
 [AllowAnonymous]
-public class LoginRecordsController : BaseController
+public class LoginRecordsController : BaseCRUDController<LoginRecord, LoginRecordCreateRequest, LoginRecordUpdateRequest>
 {
     private readonly LoginRecordService _loginRecordService;
-    public LoginRecordsController(LoginRecordService loginRecordService)
+    public LoginRecordsController(LoginRecordService loginRecordService) : base(loginRecordService)
     {
         _loginRecordService = loginRecordService;
     }

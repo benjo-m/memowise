@@ -15,12 +15,22 @@ public class PaymentRecord
     {
     }
 
-    public PaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
+    public PaymentRecord(PaymentRecordCreateRequest request)
     {
-        PaymentIntentId = paymentRecordCreateRequest.PaymentIntentId;
-        UserId = paymentRecordCreateRequest.UserId;
-        Amount = paymentRecordCreateRequest.Amount;
-        Currency = paymentRecordCreateRequest.Currency;
-        CreatedAt = paymentRecordCreateRequest.CreatedAt;
+        PaymentIntentId = request.PaymentIntentId;
+        UserId = request.UserId;
+        Amount = request.Amount;
+        Currency = request.Currency;
+        CreatedAt = request.CreatedAt;
+    }
+
+    public PaymentRecord Update(PaymentRecordUpdateRequest request)
+    {
+        PaymentIntentId = request.PaymentIntentId;
+        UserId = request.UserId;
+        Amount = request.Amount;
+        Currency = request.Currency;
+        CreatedAt = request.CreatedAt;
+        return this;
     }
 }

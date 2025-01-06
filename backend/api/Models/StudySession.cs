@@ -21,19 +21,36 @@ public class StudySession
 
     public StudySession() {}
 
-    public StudySession(StudySessionCreateRequest studySessionCreateRequest)
+    public StudySession(StudySessionCreateRequest request)
     {
-        UserId = studySessionCreateRequest.UserId;
-        DeckId = studySessionCreateRequest.DeckId;
-        Duration = studySessionCreateRequest.Duration;
-        CardCount = studySessionCreateRequest.CardCount;
-        AverageEaseFactor = studySessionCreateRequest.AverageEaseFactor;
-        AverageRepetitions = studySessionCreateRequest.AverageRepetitions;
-        StudiedAt = studySessionCreateRequest.StudiedAt;
-        CardsRated1 = studySessionCreateRequest.CardsRated1;
-        CardsRated2 = studySessionCreateRequest.CardsRated2;
-        CardsRated3 = studySessionCreateRequest.CardsRated3;
-        CardsRated4 = studySessionCreateRequest.CardsRated4;
-        CardsRated5 = studySessionCreateRequest.CardsRated5;   
+        UserId = request.UserId;
+        DeckId = request.DeckId;
+        Duration = request.Duration;
+        CardCount = request.CardCount;
+        AverageEaseFactor = request.AverageEaseFactor;
+        AverageRepetitions = request.AverageRepetitions;
+        StudiedAt = request.StudiedAt;
+        CardsRated1 = request.CardsRated1;
+        CardsRated2 = request.CardsRated2;
+        CardsRated3 = request.CardsRated3;
+        CardsRated4 = request.CardsRated4;
+        CardsRated5 = request.CardsRated5;   
+    }
+
+    public StudySession Update(StudySessionUpdateRequest request)
+    {
+        UserId = request.UserId;
+        DeckId = request.DeckId;
+        Duration = request.Duration;
+        CardCount = request.CardCount;
+        AverageEaseFactor = request.AverageEaseFactor;
+        AverageRepetitions = request.AverageRepetitions;
+        StudiedAt = request.StudiedAt;
+        CardsRated1 = request.CardsRated1;
+        CardsRated2 = request.CardsRated2;
+        CardsRated3 = request.CardsRated3;
+        CardsRated4 = request.CardsRated4;
+        CardsRated5 = request.CardsRated5;
+        return this;
     }
 }

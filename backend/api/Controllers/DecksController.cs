@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers;
 
-public class DecksController : BaseControllerTest<Deck, DeckCreateRequest, DeckUpdateRequest>
+public class DecksController : BaseCRUDController<Deck, DeckCreateRequest, DeckUpdateRequest>
 {
     private readonly DeckService _deckService;
 

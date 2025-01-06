@@ -6,12 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace api.Services;
 
-public class UserService
+public class UserService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly AuthService _authService;
 
-    public UserService(ApplicationDbContext dbContext, AuthService authService)
+    public UserService(ApplicationDbContext dbContext, AuthService authService) : base(dbContext)
     {
         _dbContext = dbContext;
         _authService = authService;
@@ -76,7 +76,7 @@ public class UserService
         return new PaginatedResponse<UserResponse>(users, page, totalPages);
     }
 
-    public async Task UpdateUser(UpdateUserRequest updateUserRequest)
+    public async Task UpdateCredentials(UpdateUserRequest updateUserRequest)
     {
         var user = await _authService.GetCurrentUser();
 
@@ -125,7 +125,7 @@ public class UserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteUser(DeleteUserRequest deleteUserRequest)
+    public async Task DeleteAccount(DeleteUserRequest deleteUserRequest)
     {
         var user = await _authService.GetCurrentUser();
 

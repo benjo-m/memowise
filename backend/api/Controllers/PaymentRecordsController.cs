@@ -1,4 +1,5 @@
 ﻿using api.DTO;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +8,11 @@ namespace api.Controllers;
 
 
 [AllowAnonymous]
-public class PaymentRecordsController : BaseController
+public class PaymentRecordsController : BaseCRUDController<PaymentRecord, PaymentRecordCreateRequest, PaymentRecordUpdateRequest>
 {
     private readonly PaymentRecordService _paymentRecordService;
 
-    public PaymentRecordsController(PaymentRecordService paymentRecordService)
+    public PaymentRecordsController(PaymentRecordService paymentRecordService) : base(paymentRecordService)
     {
         _paymentRecordService = paymentRecordService;
     }
@@ -24,10 +25,10 @@ public class PaymentRecordsController : BaseController
         return Ok(paymentRecords);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
-    {
-        await _paymentRecordService.SavePaymentRecord(paymentRecordCreateRequest);
-        return Ok();
-    }
+    //[HttpPost]
+    //public async Task<IActionResult> SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
+    //{
+    //    await _paymentRecordService.SavePaymentRecord(paymentRecordCreateRequest);
+    //    return Ok();
+    //}
 }

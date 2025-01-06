@@ -6,11 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace api.Services;
 
-public class UserStatsService
+public class UserStatsService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public UserStatsService(ApplicationDbContext dbContext)
+    public UserStatsService(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }

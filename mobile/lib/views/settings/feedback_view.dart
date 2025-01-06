@@ -94,8 +94,11 @@ class _FeedbackViewState extends State<FeedbackView> {
   void sendFeedback(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final feedback = FeedbackCreateRequest(
-          title: _titleController.text,
-          description: _descriptionController.text);
+        title: _titleController.text,
+        description: _descriptionController.text,
+        status: "PENDING",
+        submittedAt: DateTime.now(),
+      );
 
       await FeedbackService().postFeedback(feedback);
 

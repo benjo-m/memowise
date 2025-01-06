@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
-public class PaymentRecordService
+public class PaymentRecordService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
-    public PaymentRecordService(ApplicationDbContext dbContext)
+    public PaymentRecordService(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
@@ -41,11 +41,11 @@ public class PaymentRecordService
         return new PaginatedResponse<PaymentRecord>(paymentRecords, page, totalPages);
     }
 
-    public async Task SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
-    {
-        var paymentRecord = new PaymentRecord(paymentRecordCreateRequest);
+    //public async Task SavePaymentRecord(PaymentRecordCreateRequest paymentRecordCreateRequest)
+    //{
+    //    var paymentRecord = new PaymentRecord(paymentRecordCreateRequest);
 
-        _dbContext.PaymentRecords.Add(paymentRecord);
-        await _dbContext.SaveChangesAsync();
-    }
+    //    _dbContext.PaymentRecords.Add(paymentRecord);
+    //    await _dbContext.SaveChangesAsync();
+    //}
 }

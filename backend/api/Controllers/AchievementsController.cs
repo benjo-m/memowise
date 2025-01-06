@@ -8,7 +8,7 @@ namespace api.Controllers;
 
 
 [AllowAnonymous]
-public class AchievementsController : BaseControllerTest<Achievement, AchievementCreateRequest, AchievementUpdateRequest>
+public class AchievementsController : BaseCRUDController<Achievement, AchievementCreateRequest, AchievementUpdateRequest>
 {
     private readonly AchievementsService _achievementsService;
 

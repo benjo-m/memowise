@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
-public class LoginRecordService
+public class LoginRecordService : CRUDService
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public LoginRecordService(ApplicationDbContext dbContext)
+    public LoginRecordService(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }

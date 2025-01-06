@@ -1,13 +1,15 @@
-﻿using api.Services;
+﻿using api.DTO;
+using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-public class UserStatsController : BaseController
+public class UserStatsController : BaseCRUDController<UserStats, UserStatsCreateRequest, UserStatsUpdateRequest>
 {
     private readonly UserStatsService _userStatsService;
-    public UserStatsController(UserStatsService userStatsService)
+    public UserStatsController(UserStatsService userStatsService) : base(userStatsService) 
     {
         _userStatsService = userStatsService;
     }
@@ -21,7 +23,7 @@ public class UserStatsController : BaseController
         return Ok(userStats);
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetStatsByUser(int userId)
     {
         var userStats = await _userStatsService.GetStatsByUser(userId);

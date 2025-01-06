@@ -9,7 +9,7 @@ import 'package:mobile/services/auth/current_user.dart';
 class StudySessionService {
   Future<void> saveSession(StudySession studySession) async {
     await http.post(
-      Uri.parse("$baseUrl/studysessions"),
+      Uri.parse("$baseUrl/studysessions/complete"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

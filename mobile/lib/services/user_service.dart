@@ -87,7 +87,7 @@ class UserService {
 
   Future<StatsResponse> getStats(int userId) async {
     final response = await http.get(
-      Uri.parse("$baseUrl/userstats/${CurrentUser.userId}"),
+      Uri.parse("$baseUrl/userstats/user/${CurrentUser.userId}"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",

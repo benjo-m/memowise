@@ -39,9 +39,12 @@ public class AnalyticsService
         return new AnalyticsData
         {
             TotalUsers = await _dbContext.Users.CountAsync(),
+            TotalPremiumUsers = await _dbContext.Users.Where(u => u.IsPremium == true).CountAsync(),
             DailyActiveUsers = await GetActiveUsersByTimePeriod(1),
             MonthlyActiveUsers = await GetActiveUsersByTimePeriod(30),
             NewUsersByMonth = await GetNewUsersByMonth(year),
+            UserDistribution = await GetUserDistribution(),
+            UserGrowth = await GetUserGrowth(),
             TotalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated),
             TotalCardsCreated = await _dbContext.UserStats.SumAsync(us => us.TotalCardsCreated),
             AverageEaseFactor = Math.Round(averageEaseFactor, 2),

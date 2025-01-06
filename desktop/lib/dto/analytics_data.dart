@@ -1,8 +1,13 @@
+import 'package:desktop/dto/dashboard_data.dart';
+
 class AnalyticsData {
   int totalUsers;
+  int totalPremiumUsers;
   int monthlyActiveUsers;
   int dailyActiveUsers;
   List<NewUsersByMonth> newUsersByMonth;
+  UserDistribution userDistribution;
+  UserGrowth userGrowth;
   int totalDecksCreated;
   int totalCardsCreated;
   num averageDecksPerUser;
@@ -20,9 +25,12 @@ class AnalyticsData {
 
   AnalyticsData({
     required this.totalUsers,
+    required this.totalPremiumUsers,
     required this.monthlyActiveUsers,
     required this.dailyActiveUsers,
     required this.newUsersByMonth,
+    required this.userDistribution,
+    required this.userGrowth,
     required this.totalDecksCreated,
     required this.totalCardsCreated,
     required this.averageDecksPerUser,
@@ -41,10 +49,13 @@ class AnalyticsData {
 
   factory AnalyticsData.fromJson(Map<String, dynamic> json) => AnalyticsData(
         totalUsers: json["totalUsers"],
+        totalPremiumUsers: json["totalPremiumUsers"],
         monthlyActiveUsers: json["monthlyActiveUsers"],
         dailyActiveUsers: json["dailyActiveUsers"],
         newUsersByMonth: List<NewUsersByMonth>.from(
             json["newUsersByMonth"].map((x) => NewUsersByMonth.fromJson(x))),
+        userDistribution: UserDistribution.fromJson(json["userDistribution"]),
+        userGrowth: UserGrowth.fromJson(json["userGrowth"]),
         totalDecksCreated: json["totalDecksCreated"],
         totalCardsCreated: json["totalCardsCreated"],
         averageDecksPerUser: json["averageDecksPerUser"],
@@ -67,10 +78,13 @@ class AnalyticsData {
 
   Map<String, dynamic> toJson() => {
         "totalUsers": totalUsers,
+        "totalPremiumUsers": totalPremiumUsers,
         "monthlyActiveUsers": monthlyActiveUsers,
         "dailyActiveUsers": dailyActiveUsers,
         "newUsersByMonth":
             List<dynamic>.from(newUsersByMonth.map((x) => x.toJson())),
+        "userDistribution": userDistribution.toJson(),
+        "userGrowth": userGrowth.toJson(),
         "totalDecksCreated": totalDecksCreated,
         "totalCardsCreated": totalCardsCreated,
         "averageDecksPerUser": averageDecksPerUser,

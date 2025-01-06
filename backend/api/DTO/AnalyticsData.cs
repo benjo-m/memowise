@@ -4,9 +4,12 @@ public class AnalyticsData
 {
     // Users
     public int TotalUsers { get; set; }
+    public int TotalPremiumUsers { get; set; }
     public int MonthlyActiveUsers { get; set; }
     public int DailyActiveUsers { get; set; }
     public List<NewUsersByMonth> NewUsersByMonth { get; set; }
+    public UserDistributionResponse UserDistribution { get; set; }
+    public UserGrowthResponse UserGrowth { get; set; }
     // Decks & Cards
     public int TotalDecksCreated { get; set; }
     public int TotalCardsCreated { get; set; }

@@ -95,7 +95,7 @@ class _UserGrowthChartState extends State<UserGrowthChart> {
     } else if (value == maxCount.toDouble() + 20) {
       text = '${(maxCount + 20).toInt().toString()} users';
     } else if (value == (maxCount + 20) ~/ 2.toDouble()) {
-      text = '${((maxCount + 20) / 2).toInt().toString()} users';
+      text = '${((maxCount + 20) ~/ 2).toString()} users';
     } else {
       return Container();
     }

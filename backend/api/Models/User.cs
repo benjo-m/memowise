@@ -14,6 +14,7 @@ public class User
     public bool IsAdmin { get; set; }
     public ICollection<Deck> Decks { get; set; } = new List<Deck>();
     public List<Achievement> Achievements { get; set; } = [];
+    [JsonIgnore]
     public UserStats UserStats { get; set; } = new UserStats();
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

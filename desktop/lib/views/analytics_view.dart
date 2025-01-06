@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:desktop/dto/analytics_data.dart';
 import 'package:desktop/services/analytics_service.dart';
+import 'package:desktop/services/report_service.dart';
 import 'package:desktop/widgets/deck_creation_chart.dart';
 import 'package:desktop/widgets/new_users_by_month_chart.dart';
 import 'package:desktop/widgets/study_times_chart.dart';
+import 'package:desktop/widgets/user_distribution_chart.dart';
+import 'package:desktop/widgets/user_growth_chart.dart';
 import 'package:flutter/material.dart';
 
 class AnalyticsView extends StatefulWidget {
@@ -18,6 +21,7 @@ class _AnalyticsViewState extends State<AnalyticsView> {
   final _yearController = TextEditingController();
   Future<AnalyticsData> _analyticsFuture =
       AnalyticsService().getAnalyticsData(2024);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +43,13 @@ class _AnalyticsViewState extends State<AnalyticsView> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            final pdfFile =
+                                await ReportService.generateReport(data);
+                            ReportService.openFile(pdfFile);
+                          },
+                          child: const Text("Report")),
                       usersStats(data),
                       Column(
                         children: [
@@ -49,6 +60,11 @@ class _AnalyticsViewState extends State<AnalyticsView> {
                           yearDropdown(),
                         ],
                       ),
+                      const SizedBox(height: 50),
+                      UserDistributionChart(
+                          userDistribution: data.userDistribution),
+                      const SizedBox(height: 50),
+                      UserGrowthChart(userGrowth: data.userGrowth),
                       const SizedBox(height: 50),
                       decksCardsStats(data),
                       DeckCreationChart(
@@ -137,6 +153,7 @@ class _AnalyticsViewState extends State<AnalyticsView> {
     return Column(
       children: [
         Text("Total Users: ${data.totalUsers.toString()}"),
+        Text("Total Premium Users: ${data.totalPremiumUsers.toString()}"),
         Text("Monthly Active Users: ${data.monthlyActiveUsers.toString()}"),
         Text("Daily Active Users: ${data.dailyActiveUsers.toString()}"),
       ],

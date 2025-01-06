@@ -2,26 +2,24 @@ import 'package:desktop/views/analytics_view.dart';
 import 'package:desktop/views/dashboard_view.dart';
 import 'package:desktop/views/data_view.dart';
 import 'package:desktop/views/feedback/feedback_view.dart';
-import 'package:desktop/views/reporting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainView extends StatefulWidget {
-  const MainView({Key? key}) : super(key: key);
+  const MainView({super.key});
 
   @override
-  _MainViewState createState() => _MainViewState();
+  State<MainView> createState() => _MainViewState();
 }
 
 class _MainViewState extends State<MainView> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    DashboardView(),
-    AnalyticsView(),
-    DataView(),
-    ReportingView(),
-    FeedbackView(),
+    const DashboardView(),
+    const AnalyticsView(),
+    const DataView(),
+    const FeedbackView(),
   ];
 
   @override
@@ -37,7 +35,7 @@ class _MainViewState extends State<MainView> {
               });
             },
             labelType: NavigationRailLabelType.all,
-            backgroundColor: Color.fromARGB(255, 240, 240, 240),
+            backgroundColor: const Color.fromARGB(255, 240, 240, 240),
             destinations: const [
               NavigationRailDestination(
                 padding: EdgeInsets.only(bottom: 20),
@@ -53,11 +51,6 @@ class _MainViewState extends State<MainView> {
                 padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(FontAwesomeIcons.database),
                 label: Text('Data'),
-              ),
-              NavigationRailDestination(
-                padding: EdgeInsets.only(bottom: 20),
-                icon: Icon(FontAwesomeIcons.solidFileLines),
-                label: Text('Reporting'),
               ),
               NavigationRailDestination(
                 padding: EdgeInsets.only(bottom: 20),

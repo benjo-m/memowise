@@ -58,7 +58,7 @@ class _DeckCreationChartState extends State<DeckCreationChart> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                indicator(Colors.lightGreen, "Manually"),
+                indicator(Colors.greenAccent, "Manually"),
                 indicator(Colors.blueAccent, "Generated"),
               ],
             ),

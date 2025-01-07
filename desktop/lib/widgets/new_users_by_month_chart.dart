@@ -14,7 +14,7 @@ class NewUsersByMonthChart extends StatelessWidget {
 
   int getMax() {
     if (newUsersData.isEmpty) {
-      throw Exception("The list is empty");
+      return 50;
     }
     return newUsersData.map((entry) => entry.count).reduce(max);
   }
@@ -22,20 +22,43 @@ class NewUsersByMonthChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
       decoration: BoxDecoration(
         border: Border.all(width: 3),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
-      child: BarChart(
-        BarChartData(
-          titlesData: titlesData,
-          borderData: borderData,
-          barTouchData: barTouchData,
-          barGroups: barGroups(),
-          gridData: const FlGridData(show: false),
-          alignment: BarChartAlignment.spaceAround,
-          maxY: getMax().toDouble() + 10,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            const Text(
+              "New Users per Month",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: MediaQuery.sizeOf(context).height * 0.315,
+              constraints: const BoxConstraints(
+                minHeight: 235,
+              ),
+              child: BarChart(
+                BarChartData(
+                  titlesData: titlesData,
+                  borderData: borderData,
+                  barTouchData: barTouchData,
+                  barGroups: barGroups(),
+                  gridData: const FlGridData(show: false),
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: getMax().toDouble() + 10,
+                ),
+              ),
+            ),
+            const Text(""),
+          ],
         ),
       ),
     );

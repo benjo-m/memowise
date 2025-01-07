@@ -10,8 +10,8 @@ class AnalyticsData {
   UserGrowth userGrowth;
   int totalDecksCreated;
   int totalCardsCreated;
-  num averageDecksPerUser;
-  num averageCardsPerUser;
+  num deckPerUser;
+  num averageDeckSize;
   num averageEaseFactor;
   num manuallyCreatedDecksPercentage;
   num generatedDecksPercentage;
@@ -33,8 +33,8 @@ class AnalyticsData {
     required this.userGrowth,
     required this.totalDecksCreated,
     required this.totalCardsCreated,
-    required this.averageDecksPerUser,
-    required this.averageCardsPerUser,
+    required this.deckPerUser,
+    required this.averageDeckSize,
     required this.averageEaseFactor,
     required this.manuallyCreatedDecksPercentage,
     required this.generatedDecksPercentage,
@@ -58,8 +58,8 @@ class AnalyticsData {
         userGrowth: UserGrowth.fromJson(json["userGrowth"]),
         totalDecksCreated: json["totalDecksCreated"],
         totalCardsCreated: json["totalCardsCreated"],
-        averageDecksPerUser: json["averageDecksPerUser"],
-        averageCardsPerUser: json["averageCardsPerUser"],
+        deckPerUser: json["deckPerUser"],
+        averageDeckSize: json["averageDeckSize"],
         averageEaseFactor: json["averageEaseFactor"],
         manuallyCreatedDecksPercentage: json["manuallyCreatedDecksPercentage"],
         generatedDecksPercentage: json["generatedDecksPercentage"],
@@ -87,8 +87,8 @@ class AnalyticsData {
         "userGrowth": userGrowth.toJson(),
         "totalDecksCreated": totalDecksCreated,
         "totalCardsCreated": totalCardsCreated,
-        "averageDecksPerUser": averageDecksPerUser,
-        "averageCardsPerUser": averageCardsPerUser,
+        "deckPerUser": deckPerUser,
+        "averageDeckSize": averageDeckSize,
         "averageEaseFactor": averageEaseFactor,
         "manuallyCreatedDecksPercentage": manuallyCreatedDecksPercentage,
         "generatedDecksPercentage": generatedDecksPercentage,

@@ -22,7 +22,6 @@ class _UserDistributionChartState extends State<UserDistributionChart> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "User Distribution",

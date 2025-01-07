@@ -35,7 +35,7 @@ class _DashboardViewState extends State<DashboardView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MediaQuery.sizeOf(context).width > 1150
+                    MediaQuery.sizeOf(context).width > 1400
                         ? statCardsRow(data)
                         : statCardsWrap(data),
                     const SizedBox(height: 50),
@@ -96,6 +96,13 @@ class _DashboardViewState extends State<DashboardView> {
               : "${data.newUsers.userCountChange}% up vs last 30 days",
         ),
         statCard(
+          title: "PETA KARTICA",
+          quantity: 0.0,
+          bottomText: data.newUsers.premiumUserCountChange < 0
+              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
+              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
+        ),
+        statCard(
           title: "Active Users",
           quantity: data.activeUsers.count,
           bottomText: data.activeUsers.change < 0
@@ -130,18 +137,25 @@ class _DashboardViewState extends State<DashboardView> {
               : "${data.newUsers.userCountChange}% up vs last 30 days",
         ),
         statCard(
-          title: "Active Users",
-          quantity: data.activeUsers.count,
-          bottomText: data.activeUsers.change < 0
-              ? "${data.activeUsers.change}% down vs last 30 days"
-              : "${data.activeUsers.change}% up vs last 30 days",
-        ),
-        statCard(
           title: "New Premium Users",
           quantity: data.newUsers.premiumUserCount,
           bottomText: data.newUsers.premiumUserCountChange < 0
               ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
               : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
+        ),
+        statCard(
+          title: "PETA KARTICA",
+          quantity: 0.0,
+          bottomText: data.newUsers.premiumUserCountChange < 0
+              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
+              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
+        ),
+        statCard(
+          title: "Active Users",
+          quantity: data.activeUsers.count,
+          bottomText: data.activeUsers.change < 0
+              ? "${data.activeUsers.change}% down vs last 30 days"
+              : "${data.activeUsers.change}% up vs last 30 days",
         ),
         statCard(
           title: "Pending Feedback",
@@ -154,7 +168,7 @@ class _DashboardViewState extends State<DashboardView> {
 
   Container statCard({
     required String title,
-    required int quantity,
+    required num quantity,
     required String bottomText,
   }) {
     return Container(
@@ -182,7 +196,7 @@ class _DashboardViewState extends State<DashboardView> {
             quantity.toString(),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 32,
             ),
           ),
           Text(

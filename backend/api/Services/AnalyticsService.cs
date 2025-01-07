@@ -35,6 +35,8 @@ public class AnalyticsService
         int manuallyCreatedDecksCount = totalDecksCreated - generatedDecksCount;
         double averageSessionDuration = await _dbContext.StudySessions.AverageAsync(ss => ss.Duration);
         double averageStudyStreak = await _dbContext.UserStats.AverageAsync(us => us.StudyStreak);
+        var cardCount = await _dbContext.Cards.CountAsync();
+        var deckCount = await _dbContext.Decks.CountAsync();
 
         return new AnalyticsData
         {
@@ -47,6 +49,7 @@ public class AnalyticsService
             UserGrowth = await GetUserGrowth(),
             TotalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated),
             TotalCardsCreated = await _dbContext.UserStats.SumAsync(us => us.TotalCardsCreated),
+            AverageDeckSize = deckCount == 0 ? 0 : Math.Round((double)cardCount / (double)deckCount, 2),
             AverageEaseFactor = Math.Round(averageEaseFactor, 2),
             ManuallyCreatedDecksPercentage = Math.Round((double)manuallyCreatedDecksCount / totalDecksCreated * 100, 1),
             GeneratedDecksPercentage = Math.Round((double)generatedDecksCount / totalDecksCreated * 100, 1),

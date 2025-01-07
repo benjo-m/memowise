@@ -27,7 +27,6 @@ class _DeckCreationChartState extends State<DeckCreationChart> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "Deck Creation Method Distribution",

@@ -9,6 +9,7 @@ import 'package:desktop/widgets/study_times_chart.dart';
 import 'package:desktop/widgets/user_distribution_chart.dart';
 import 'package:desktop/widgets/user_growth_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AnalyticsView extends StatefulWidget {
   const AnalyticsView({super.key});
@@ -18,14 +19,20 @@ class AnalyticsView extends StatefulWidget {
 }
 
 class _AnalyticsViewState extends State<AnalyticsView> {
+  final fontColor = const Color.fromARGB(255, 70, 70, 70);
   final _yearController = TextEditingController();
-  Future<AnalyticsData> _analyticsFuture =
-      AnalyticsService().getAnalyticsData(2024);
+  var _analyticsFuture = AnalyticsService().getAnalyticsData(2024);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: generateReportButton(),
+          )
+        ],
         title: const Padding(
           padding: EdgeInsets.only(left: 10),
           child: Text("Analytics"),
@@ -40,46 +47,56 @@ class _AnalyticsViewState extends State<AnalyticsView> {
                 if (snapshot.hasError) log(snapshot.error.toString());
                 if (snapshot.hasData) {
                   final data = snapshot.data!;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () async {
-                            final pdfFile =
-                                await ReportService.generateReport(data);
-                            ReportService.openFile(pdfFile);
-                          },
-                          child: const Text("Report")),
-                      usersStats(data),
-                      Column(
+                  return LayoutBuilder(builder: (context, constraints) {
+                    if (MediaQuery.sizeOf(context).width >= 1400) {
+                      return Column(
                         children: [
-                          NewUsersByMonthChart(
-                            newUsersData: data.newUsersByMonth,
+                          userStatsCardsRow(data),
+                          const SizedBox(height: 50),
+                          userChartsOneRow(data),
+                          const SizedBox(height: 50),
+                          userChartsTwoRow(data),
+                          const SizedBox(height: 50),
+                          studySessionStatsRow(data),
+                          const SizedBox(height: 50),
+                          StudyTimesChart(
+                              studySessionSegments: data.studySessionSegments),
+                          const SizedBox(height: 50),
+                          decksAndCardsStatsCardsRow(data),
+                          const SizedBox(height: 50),
+                          DeckCreationChart(
+                            percentageCreatedManually:
+                                data.manuallyCreatedDecksPercentage,
+                            percentageGenerated: data.generatedDecksPercentage,
                           ),
-                          const SizedBox(height: 20),
-                          yearDropdown(),
                         ],
-                      ),
-                      const SizedBox(height: 50),
-                      UserDistributionChart(
-                          userDistribution: data.userDistribution),
-                      const SizedBox(height: 50),
-                      UserGrowthChart(userGrowth: data.userGrowth),
-                      const SizedBox(height: 50),
-                      decksCardsStats(data),
-                      DeckCreationChart(
-                        percentageCreatedManually:
-                            data.manuallyCreatedDecksPercentage,
-                        percentageGenerated: data.generatedDecksPercentage,
-                      ),
-                      const SizedBox(height: 50),
-                      studySessionsStats(data),
-                      StudyTimesChart(
-                          studySessionSegments: data.studySessionSegments),
-                      const SizedBox(height: 50),
-                      achievementsUnlockPercentages(data),
-                    ],
-                  );
+                      );
+                    } else {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          userStatsCardsWrap(data),
+                          const SizedBox(height: 50),
+                          userChartsOneWrap(data),
+                          const SizedBox(height: 50),
+                          userChartsTwoWrap(data),
+                          const SizedBox(height: 50),
+                          studySessionStatsWrap(data),
+                          const SizedBox(height: 50),
+                          StudyTimesChart(
+                              studySessionSegments: data.studySessionSegments),
+                          const SizedBox(height: 50),
+                          decksAndCardsStatsCardsWrap(data),
+                          const SizedBox(height: 50),
+                          DeckCreationChart(
+                            percentageCreatedManually:
+                                data.manuallyCreatedDecksPercentage,
+                            percentageGenerated: data.generatedDecksPercentage,
+                          ),
+                        ],
+                      );
+                    }
+                  });
                 }
                 return const Center(child: CircularProgressIndicator());
               }),
@@ -88,98 +105,390 @@ class _AnalyticsViewState extends State<AnalyticsView> {
     );
   }
 
-  Column achievementsUnlockPercentages(AnalyticsData data) {
-    return Column(
-      children: data.achievementUnlockPercentages
-          .map((achievement) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(achievement.name),
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: 200,
-                    child: Stack(children: [
-                      Positioned.fill(
-                        child: LinearProgressIndicator(
-                          value: achievement.percentage / 100,
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(5),
+  Row userChartsOneRow(AnalyticsData data) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          flex: 1,
+          child: UserDistributionChart(
+            userDistribution: data.userDistribution,
+          ),
+        ),
+        const SizedBox(width: 50),
+        Flexible(
+          flex: 2,
+          child: Column(
+            children: [
+              NewUsersByMonthChart(
+                newUsersData: data.newUsersByMonth,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              yearDropdown(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Wrap userChartsOneWrap(AnalyticsData data) {
+    return Wrap(
+      spacing: 50,
+      runSpacing: 50,
+      children: [
+        UserDistributionChart(
+          userDistribution: data.userDistribution,
+        ),
+        Column(
+          children: [
+            NewUsersByMonthChart(
+              newUsersData: data.newUsersByMonth,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            yearDropdown(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Row userChartsTwoRow(AnalyticsData data) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          flex: 2,
+          child: UserGrowthChart(userGrowth: data.userGrowth),
+        ),
+        const SizedBox(width: 50),
+        Flexible(
+          flex: 1,
+          child: achievementsUnlockPercentages(data),
+        ),
+      ],
+    );
+  }
+
+  Wrap userChartsTwoWrap(AnalyticsData data) {
+    return Wrap(
+      spacing: 50,
+      runSpacing: 50,
+      children: [
+        UserGrowthChart(userGrowth: data.userGrowth),
+        achievementsUnlockPercentages(data),
+      ],
+    );
+  }
+
+  TextButton generateReportButton() {
+    return TextButton(
+        style: const ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+          foregroundColor: WidgetStatePropertyAll(Colors.white),
+        ),
+        onPressed: () async {
+          final pdfFile = await ReportService.generateReport(
+              await AnalyticsService()
+                  .getAnalyticsData(int.parse(_yearController.text)));
+          ReportService.openFile(pdfFile);
+        },
+        child: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Icon(FontAwesomeIcons.solidFileLines),
+              SizedBox(
+                width: 5,
+              ),
+              Text("Generate Report"),
+            ],
+          ),
+        ));
+  }
+
+  Container achievementsUnlockPercentages(AnalyticsData data) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 3),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(children: [
+          const Text(
+            "User Unlock Rates for Achievements",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: MediaQuery.sizeOf(context).height * 0.42,
+            constraints: const BoxConstraints(
+              minHeight: 319,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ...data.achievementUnlockPercentages.map((achievement) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          child: Text(achievement.name),
                         ),
-                      ),
-                      Center(
-                          child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Text(
-                          "${achievement.percentage}%",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )),
-                    ]),
-                  )
-                ],
-              ))
-          .toList(),
+                        const SizedBox(width: 20),
+                        SizedBox(
+                          width: 200,
+                          child: Stack(children: [
+                            Positioned.fill(
+                              child: LinearProgressIndicator(
+                                value: achievement.percentage / 100,
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            Center(
+                                child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                "${achievement.percentage}%",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )),
+                          ]),
+                        )
+                      ],
+                    )),
+              ],
+            ),
+          )
+        ]),
+      ),
     );
   }
 
-  Column studySessionsStats(AnalyticsData data) {
-    return Column(
+  Container statCard({
+    required String title,
+    required String quantity,
+  }) {
+    return Container(
+      width: 250,
+      height: 200,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+        border: Border.all(
+          width: 3,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: fontColor,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            quantity.toString(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 32,
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Row userStatsCardsRow(AnalyticsData data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          "Total Study Sessions Completed: ${data.totalStudySessions}",
+        statCard(
+          title: "Total Users",
+          quantity: data.totalUsers.toString(),
         ),
-        Text(
-          "Total Time Spent Studying: ${formatTime(data.totalTimeSpentStudying)}",
+        statCard(
+          title: "PETA KARTICA",
+          quantity: "0000000",
         ),
-        Text(
-          "Average Study Session Duration: ${formatTime(data.averageSessionDuration)}",
+        statCard(
+          title: "Total Premium Users",
+          quantity: data.totalPremiumUsers.toString(),
         ),
-        Text(
-          "Average Study Streak: ${data.averageStudyStreak}",
+        statCard(
+          title: "Monthly Users",
+          quantity: data.monthlyActiveUsers.toString(),
         ),
-        Text(
-          "Longest Study Streak: ${data.longestStudyStreak}",
+        statCard(
+          title: "Daily Users",
+          quantity: data.dailyActiveUsers.toString(),
         ),
       ],
     );
   }
 
-  Column usersStats(AnalyticsData data) {
-    return Column(
+  Wrap userStatsCardsWrap(AnalyticsData data) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
       children: [
-        Text("Total Users: ${data.totalUsers.toString()}"),
-        Text("Total Premium Users: ${data.totalPremiumUsers.toString()}"),
-        Text("Monthly Active Users: ${data.monthlyActiveUsers.toString()}"),
-        Text("Daily Active Users: ${data.dailyActiveUsers.toString()}"),
+        statCard(
+          title: "Total Users",
+          quantity: data.totalUsers.toString(),
+        ),
+        statCard(
+          title: "PETA KARTICA",
+          quantity: "0000000",
+        ),
+        statCard(
+          title: "Total Premium Users",
+          quantity: data.totalPremiumUsers.toString(),
+        ),
+        statCard(
+          title: "Monthly Users",
+          quantity: data.monthlyActiveUsers.toString(),
+        ),
+        statCard(
+          title: "Daily Users",
+          quantity: data.dailyActiveUsers.toString(),
+        ),
       ],
     );
   }
 
-  Column decksCardsStats(AnalyticsData data) {
-    return Column(
+  Row decksAndCardsStatsCardsRow(AnalyticsData data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          "Total Decks Created ${data.totalDecksCreated.toString()}",
+        statCard(
+          title: "Total Decks Created",
+          quantity: data.totalDecksCreated.toString(),
         ),
-        Text(
-          "Total Cards Created ${data.totalCardsCreated.toString()}",
+        statCard(
+          title: "Total Cards Created",
+          quantity: data.totalCardsCreated.toString(),
         ),
-        Text(
-          "Avg Decks per User ${data.averageDecksPerUser.toString()}",
+        statCard(
+          title: "Decks per User",
+          quantity: data.deckPerUser.toString(),
         ),
-        Text(
-          "Avg Cards per User ${data.averageCardsPerUser.toString()}",
+        statCard(
+          title: "Average Deck Size",
+          quantity: data.averageDeckSize.toString(),
         ),
-        Text(
-          "Avg Card Ease Factor ${data.averageEaseFactor.toString()}",
+        statCard(
+          title: "Average Ease Factor",
+          quantity: data.averageEaseFactor.toString(),
         ),
       ],
     );
+  }
+
+  Wrap decksAndCardsStatsCardsWrap(AnalyticsData data) {
+    return Wrap(
+      runSpacing: 10,
+      spacing: 10,
+      children: [
+        statCard(
+          title: "Total Decks Created",
+          quantity: data.totalDecksCreated.toString(),
+        ),
+        statCard(
+          title: "Total Cards Created",
+          quantity: data.totalCardsCreated.toString(),
+        ),
+        statCard(
+          title: "Decks per User",
+          quantity: data.deckPerUser.toString(),
+        ),
+        statCard(
+          title: "Average Deck Size",
+          quantity: data.averageDeckSize.toString(),
+        ),
+        statCard(
+          title: "Average Ease Factor",
+          quantity: data.averageEaseFactor.toString(),
+        ),
+      ],
+    );
+  }
+
+  Row studySessionStatsRow(AnalyticsData data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        statCard(
+          title: "Study Sessions Completed",
+          quantity: data.totalStudySessions.toString(),
+        ),
+        statCard(
+          title: "Time Spent Studying",
+          quantity: formatTime(data.totalTimeSpentStudying, true),
+        ),
+        statCard(
+          title: "Average Session Duration",
+          quantity: formatTime(data.averageSessionDuration, true),
+        ),
+        statCard(
+          title: "Average Study Streak",
+          quantity: data.averageStudyStreak.toString(),
+        ),
+        statCard(
+          title: "Longest Study Streak",
+          quantity: data.longestStudyStreak.toString(),
+        ),
+      ],
+    );
+  }
+
+  Wrap studySessionStatsWrap(AnalyticsData data) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        statCard(
+          title: "Study Sessions Completed",
+          quantity: data.totalStudySessions.toString(),
+        ),
+        statCard(
+          title: "Time Spent Studying",
+          quantity: formatTime(data.totalTimeSpentStudying, true),
+        ),
+        statCard(
+          title: "Average Session Duration",
+          quantity: formatTime(data.averageSessionDuration, true),
+        ),
+        statCard(
+          title: "Average Study Streak",
+          quantity: data.averageStudyStreak.toString(),
+        ),
+        statCard(
+          title: "Longest Study Streak",
+          quantity: data.longestStudyStreak.toString(),
+        ),
+      ],
+    );
+  }
+
+  onYearChanged(int year) {
+    setState(() {
+      _analyticsFuture = AnalyticsService().getAnalyticsData(year);
+    });
   }
 
   DropdownMenu yearDropdown() {
@@ -200,11 +509,19 @@ class _AnalyticsViewState extends State<AnalyticsView> {
     );
   }
 
-  String formatTime(num seconds) {
-    if (seconds < 3600) {
+  String formatTime(num seconds, bool short) {
+    if (seconds < 3600 && !short) {
       num minutes = (seconds ~/ 60);
       num remainingSeconds = (seconds % 60).toInt();
       return "$minutes:${remainingSeconds.toString().padLeft(2, '0')} minutes";
+    } else if (seconds < 3600 && short) {
+      num minutes = (seconds ~/ 60);
+      num remainingSeconds = (seconds % 60).toInt();
+      return "$minutes:${remainingSeconds.toString().padLeft(2, '0')}m";
+    } else if (seconds > 3600 && short) {
+      num hours = (seconds ~/ 3600);
+      num remainingMinutes = ((seconds % 3600) ~/ 60).toInt();
+      return "$hours:${remainingMinutes.toString().padLeft(2, '0')}h";
     } else {
       num hours = (seconds ~/ 3600);
       num remainingMinutes = ((seconds % 3600) ~/ 60).toInt();

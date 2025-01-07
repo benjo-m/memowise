@@ -106,15 +106,15 @@ class ReportService {
         "Decks Created",
         "Cards Created",
         "Decks per User",
-        "Cards per User",
+        "Average Deck Size",
         "Average Card Ease Factor",
       ],
       data: [
         [
           data.totalDecksCreated,
           data.totalCardsCreated,
-          data.averageDecksPerUser,
-          data.averageCardsPerUser,
+          data.deckPerUser,
+          data.averageDeckSize,
           data.averageEaseFactor,
         ]
       ],

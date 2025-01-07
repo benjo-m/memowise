@@ -13,8 +13,8 @@ public class AnalyticsData
     // Decks & Cards
     public int TotalDecksCreated { get; set; }
     public int TotalCardsCreated { get; set; }
-    public double AverageDecksPerUser => Math.Round((TotalDecksCreated / (double)TotalUsers), 2);
-    public double AverageCardsPerUser => Math.Round((TotalCardsCreated / (double)TotalUsers), 2);
+    public double DeckPerUser => Math.Round((TotalDecksCreated / (double)TotalUsers), 2);
+    public double AverageDeckSize {  get; set; }
     public double AverageEaseFactor { get; set; }
     public double ManuallyCreatedDecksPercentage { get; set; }
     public double GeneratedDecksPercentage { get; set; }

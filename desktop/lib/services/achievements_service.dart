@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/dto/paginated_response.dart';
+import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
-class AchievementService {
+class AchievementService extends BaseCRUDService<AchievementResponse> {
   Future<PaginatedResponse<AchievementResponse>> getAll(
       {int page = 1, String sortBy = "id", bool sortDescending = false}) async {
     final response = await http.get(
@@ -23,40 +24,17 @@ class AchievementService {
     return achievements;
   }
 
-  Future<AchievementResponse> getById(int id) async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/achievements/$id'), headers: {
-      'Content-Type': 'application/json',
-    });
+  AchievementService(super.baseUrl, super.client);
 
-    final achievementResponse =
-        AchievementResponse.fromJson(jsonDecode(response.body));
+  // Future<AchievementResponse> getById(int id) async {
+  //   final response =
+  //       await http.get(Uri.parse('$baseUrl/achievements/$id'), headers: {
+  //     'Content-Type': 'application/json',
+  //   });
 
-    return achievementResponse;
-  }
+  //   final achievementResponse =
+  //       AchievementResponse.fromJson(jsonDecode(response.body));
 
-  // Future<void> updateFeedbackStatus(
-  //     int id, FeedbackStatusUpdateRequest req) async {
-  //   await http.put(
-  //     Uri.parse('$baseUrl/feedback/$id/status'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: jsonEncode(req),
-  //   );
-  // }
-
-  // Future<FeedbackResponse> removeFeedback(int id) async {
-  //   final response = await http.delete(
-  //     Uri.parse('$baseUrl/feedback/$id'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   );
-
-  //   final feedbackResponse =
-  //       FeedbackResponse.fromJson(jsonDecode(response.body));
-
-  //   return feedbackResponse;
+  //   return achievementResponse;
   // }
 }

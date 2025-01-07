@@ -1,7 +1,10 @@
 import 'dart:developer';
+import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/services/achievements_service.dart';
+import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AchievementsTable extends StatefulWidget {
   const AchievementsTable({
@@ -17,6 +20,7 @@ class AchievementsTable extends StatefulWidget {
 
 class _AchievementsTableState extends State<AchievementsTable> {
   final _scrollController = ScrollController();
+  final _achievementService = AchievementService(baseUrl, http.Client());
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +88,14 @@ class _AchievementsTableState extends State<AchievementsTable> {
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
+                        TextButton(
+                          style: blueButtonStyle,
                           onPressed: () => edit(achievement.id),
                           child: const Text("Edit"),
                         ),
-                        ElevatedButton(
+                        const SizedBox(width: 10),
+                        TextButton(
+                          style: redButtonStyle,
                           onPressed: () => log("delete"),
                           child: const Text("Delete"),
                         ),
@@ -105,7 +112,7 @@ class _AchievementsTableState extends State<AchievementsTable> {
   }
 
   edit(int id) async {
-    final a = await AchievementService().getById(id);
-    log(a.toJson().toString());
+    final a = await _achievementService.getById(id);
+    log(a!.toJson().toString());
   }
 }

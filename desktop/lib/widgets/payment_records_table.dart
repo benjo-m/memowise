@@ -82,6 +82,14 @@ class _PaymentRecordsTableState extends State<PaymentRecordsTable> {
                   ),
                 ),
               ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Actions",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ],
             rows: widget.data.map((paymentRecord) {
               return DataRow(
@@ -110,6 +118,22 @@ class _PaymentRecordsTableState extends State<PaymentRecordsTable> {
                                 0,
                                 paymentRecord.createdAt.toString().length -
                                     7))),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => log("edit"),
+                          child: const Text("Edit"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => log("delete"),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    )),
                   ),
                 ],
               );

@@ -98,6 +98,14 @@ class _StudySessionsTableState extends State<StudySessionsTable> {
                   ),
                 ),
               ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Actions",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ],
             rows: widget.data.map((session) {
               return DataRow(
@@ -127,6 +135,22 @@ class _StudySessionsTableState extends State<StudySessionsTable> {
                   ),
                   DataCell(
                     Center(child: Text(session.deckId.toString())),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => log("edit"),
+                          child: const Text("Edit"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => log("delete"),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    )),
                   ),
                 ],
               );

@@ -1,4 +1,17 @@
+import 'package:desktop/config/constants.dart';
+import 'package:desktop/dto/achievement_response.dart';
+import 'package:desktop/dto/card_response.dart';
+import 'package:desktop/dto/card_stats_response.dart';
+import 'package:desktop/dto/deck_response.dart';
+import 'package:desktop/dto/feedback_response.dart';
+import 'package:desktop/dto/login_record_response.dart';
+import 'package:desktop/dto/paginated_response.dart';
+import 'package:desktop/dto/payment_record_response.dart';
+import 'package:desktop/dto/study_session_response.dart';
+import 'package:desktop/dto/user_response.dart';
+import 'package:desktop/dto/user_stats_response.dart';
 import 'package:desktop/services/achievements_service.dart';
+import 'package:desktop/services/card_stats_service.dart';
 import 'package:desktop/services/cards_service.dart';
 import 'package:desktop/services/deck_service.dart';
 import 'package:desktop/services/feedback_service.dart';
@@ -6,6 +19,7 @@ import 'package:desktop/services/login_record_service.dart';
 import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
+import 'package:desktop/services/user_stats_service.dart';
 import 'package:desktop/widgets/achievements_table.dart';
 import 'package:desktop/widgets/card_stats_table.dart';
 import 'package:desktop/widgets/cards_table.dart';
@@ -17,6 +31,7 @@ import 'package:desktop/widgets/study_sessions_table.dart';
 import 'package:desktop/widgets/user_stats_table.dart';
 import 'package:desktop/widgets/users_table.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DataView extends StatefulWidget {
   const DataView({super.key});
@@ -137,19 +152,44 @@ class _DataViewState extends State<DataView> {
     "Card",
   ];
 
-  // Futures
-  var _achievementsFuture = AchievementService().getAll();
-  var _decksFuture = DeckService().getAllDecks();
-  var _cardsFuture = CardService().getAllCards();
-  var _loginRecordsFuture = LoginRecordService().getAllLoginRecords();
-  var _paymentRecordsFuture = PaymentRecordService().getAllPaymentRecords();
-  var _studySessionsFuture = StudySessionService().getAllStudySessions();
-  var _usersFuture = UserService().getAllUsers();
-  var _feedbackFuture = FeedbackService().getAllFeedback();
-  var _userStatsFuture = UserService().getAllUserStats();
-  var _cardStatsFuture = CardService().getAllCardsStats();
+  final _userService = UserService(baseUrl, http.Client());
+  final _achievementService = AchievementService(baseUrl, http.Client());
+  final _decksService = DeckService(baseUrl, http.Client());
+  final _cardService = CardService(baseUrl, http.Client());
+  final _cardStatsService = CardStatsService(baseUrl, http.Client());
+  final _loginRecordService = LoginRecordService(baseUrl, http.Client());
+  final _paymnetRecordService = PaymentRecordService(baseUrl, http.Client());
+  final _studySessionService = StudySessionService(baseUrl, http.Client());
+  final _feedbackService = FeedbackService(baseUrl, http.Client());
+  final _userStatsService = UserStatsService(baseUrl, http.Client());
+
+  late Future<PaginatedResponse<AchievementResponse>> _achievementsFuture;
+  late Future<PaginatedResponse<DeckResponse>> _decksFuture;
+  late Future<PaginatedResponse<CardResponse>> _cardsFuture;
+  late Future<PaginatedResponse<UserResponse>> _usersFuture;
+  late Future<PaginatedResponse<LoginRecordResponse>> _loginRecordsFuture;
+  late Future<PaginatedResponse<PaymentRecordResponse>> _paymentRecordsFuture;
+  late Future<PaginatedResponse<StudySessionResponse>> _studySessionsFuture;
+  late Future<PaginatedResponse<FeedbackResponse>> _feedbackFuture;
+  late Future<PaginatedResponse<CardStatsResponse>> _cardStatsFuture;
+  late Future<PaginatedResponse<UserStatsResponse>> _userStatsFuture;
 
   late Future<dynamic> _currentFuture = _achievementsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _achievementsFuture = _achievementService.getAll();
+    _decksFuture = _decksService.getAll();
+    _cardsFuture = _cardService.getAll();
+    _cardStatsFuture = _cardStatsService.getAll();
+    _loginRecordsFuture = _loginRecordService.getAll();
+    _paymentRecordsFuture = _paymnetRecordService.getAll();
+    _studySessionsFuture = _studySessionService.getAll();
+    _feedbackFuture = _feedbackService.getAll();
+    _usersFuture = _userService.getAll();
+    _userStatsFuture = _userStatsService.getAll();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,27 +243,7 @@ class _DataViewState extends State<DataView> {
                           const SizedBox(height: 20),
                           table(data.data),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                tooltip: "Previous Page",
-                                onPressed:
-                                    data.hasPreviousPage ? previousPage : null,
-                                icon: const Icon(Icons.navigate_before_rounded),
-                                iconSize: 30,
-                              ),
-                              const SizedBox(
-                                width: 100,
-                              ),
-                              IconButton(
-                                tooltip: "Next Page",
-                                onPressed: data.hasNextPage ? nextPage : null,
-                                icon: const Icon(Icons.navigate_next_rounded),
-                                iconSize: 30,
-                              ),
-                            ],
-                          ),
+                          navigationButtonsRow(data),
                         ],
                       ),
                     );
@@ -242,6 +262,29 @@ class _DataViewState extends State<DataView> {
           ),
         ),
       ),
+    );
+  }
+
+  Row navigationButtonsRow(data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          tooltip: "Previous Page",
+          onPressed: data.hasPreviousPage ? previousPage : null,
+          icon: const Icon(Icons.navigate_before_rounded),
+          iconSize: 30,
+        ),
+        const SizedBox(
+          width: 100,
+        ),
+        IconButton(
+          tooltip: "Next Page",
+          onPressed: data.hasNextPage ? nextPage : null,
+          icon: const Icon(Icons.navigate_next_rounded),
+          iconSize: 30,
+        ),
+      ],
     );
   }
 
@@ -348,7 +391,7 @@ class _DataViewState extends State<DataView> {
     switch (_selectedTable) {
       case "Achievements":
         setState(() {
-          _achievementsFuture = AchievementService().getAll(
+          _achievementsFuture = _achievementService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -359,7 +402,7 @@ class _DataViewState extends State<DataView> {
         break;
       case "Decks":
         setState(() {
-          _decksFuture = DeckService().getAllDecks(
+          _decksFuture = _decksService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -371,7 +414,7 @@ class _DataViewState extends State<DataView> {
         break;
       case "Cards":
         setState(() {
-          _cardsFuture = CardService().getAllCards(
+          _cardsFuture = _cardService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -383,7 +426,7 @@ class _DataViewState extends State<DataView> {
         break;
       case "Login Records":
         setState(() {
-          _loginRecordsFuture = LoginRecordService().getAllLoginRecords(
+          _loginRecordsFuture = _loginRecordService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -395,7 +438,7 @@ class _DataViewState extends State<DataView> {
         break;
       case "Payment Records":
         setState(() {
-          _paymentRecordsFuture = PaymentRecordService().getAllPaymentRecords(
+          _paymentRecordsFuture = _paymnetRecordService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -407,7 +450,7 @@ class _DataViewState extends State<DataView> {
         break;
       case "Study Sessions":
         setState(() {
-          _studySessionsFuture = StudySessionService().getAllStudySessions(
+          _studySessionsFuture = _studySessionService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -420,7 +463,7 @@ class _DataViewState extends State<DataView> {
         break;
       case "Users":
         setState(() {
-          _usersFuture = UserService().getAllUsers(
+          _usersFuture = _userService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -432,7 +475,7 @@ class _DataViewState extends State<DataView> {
         });
       case "Feedback":
         setState(() {
-          _feedbackFuture = FeedbackService().getAllFeedback(
+          _feedbackFuture = _feedbackService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -443,7 +486,7 @@ class _DataViewState extends State<DataView> {
         });
       case "User Stats":
         setState(() {
-          _userStatsFuture = UserService().getAllUserStats(
+          _userStatsFuture = _userStatsService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,
@@ -454,7 +497,7 @@ class _DataViewState extends State<DataView> {
         });
       case "Card Stats":
         setState(() {
-          _cardStatsFuture = CardService().getAllCardsStats(
+          _cardStatsFuture = _cardStatsService.getAll(
             page: _currentPage,
             sortBy: _selectedSortBy,
             sortDescending: _sortDescending,

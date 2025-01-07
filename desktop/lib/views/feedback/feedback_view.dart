@@ -1,7 +1,11 @@
+import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/dto/feedback_status_update_request.dart';
+import 'package:desktop/dto/paginated_response.dart';
 import 'package:desktop/services/feedback_service.dart';
+import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class FeedbackView extends StatefulWidget {
   const FeedbackView({super.key});
@@ -13,7 +17,9 @@ class FeedbackView extends StatefulWidget {
 class _FeedbackViewState extends State<FeedbackView> {
   int _currentPage = 1;
 
-  var _feedbackFuture = FeedbackService().getAllFeedback();
+  final _feedbackService = FeedbackService(baseUrl, http.Client());
+
+  late Future<PaginatedResponse<FeedbackResponse>> _feedbackFuture;
 
   final _statusController = TextEditingController(text: "Any");
   final _sortByController = TextEditingController(text: "Id");
@@ -22,6 +28,12 @@ class _FeedbackViewState extends State<FeedbackView> {
   String _selectedStatus = "Any";
   String _selectedSortBy = "Id";
   bool _sortDescending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _feedbackFuture = _feedbackService.getAll();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,35 +64,10 @@ class _FeedbackViewState extends State<FeedbackView> {
                         statusDropdown(),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     table(feedbackData.data),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          tooltip: "Previous Page",
-                          onPressed: feedbackData.hasPreviousPage
-                              ? previousPage
-                              : null,
-                          icon: const Icon(Icons.navigate_before_rounded),
-                          iconSize: 30,
-                        ),
-                        const SizedBox(
-                          width: 100,
-                        ),
-                        IconButton(
-                          tooltip: "Next Page",
-                          onPressed: feedbackData.hasNextPage ? nextPage : null,
-                          icon: const Icon(Icons.navigate_next_rounded),
-                          iconSize: 30,
-                        ),
-                      ],
-                    ),
+                    const SizedBox(height: 20),
+                    navigationButtonsRow(feedbackData),
                   ],
                 ),
               ),
@@ -99,10 +86,33 @@ class _FeedbackViewState extends State<FeedbackView> {
     );
   }
 
+  Row navigationButtonsRow(PaginatedResponse<FeedbackResponse> feedbackData) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          tooltip: "Previous Page",
+          onPressed: feedbackData.hasPreviousPage ? previousPage : null,
+          icon: const Icon(Icons.navigate_before_rounded),
+          iconSize: 30,
+        ),
+        const SizedBox(
+          width: 100,
+        ),
+        IconButton(
+          tooltip: "Next Page",
+          onPressed: feedbackData.hasNextPage ? nextPage : null,
+          icon: const Icon(Icons.navigate_next_rounded),
+          iconSize: 30,
+        ),
+      ],
+    );
+  }
+
   nextPage() {
     setState(() {
       _currentPage++;
-      _feedbackFuture = FeedbackService().getAllFeedback(
+      _feedbackFuture = _feedbackService.getAll(
         page: _currentPage,
         sortBy: _selectedSortBy,
         sortDescending: _sortDescending,
@@ -114,7 +124,7 @@ class _FeedbackViewState extends State<FeedbackView> {
   previousPage() {
     setState(() {
       _currentPage--;
-      _feedbackFuture = FeedbackService().getAllFeedback(
+      _feedbackFuture = _feedbackService.getAll(
         page: _currentPage,
         sortBy: _selectedSortBy,
         sortDescending: _sortDescending,
@@ -181,8 +191,10 @@ class _FeedbackViewState extends State<FeedbackView> {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: () => feedbackDetailsDialog(feedback.id),
+                  TextButton(
+                    style: blueButtonStyle,
+                    onPressed: () =>
+                        feedbackDetailsDialog(context, feedback.id),
                     child: const Text("Details"),
                   ),
                 ],
@@ -194,97 +206,103 @@ class _FeedbackViewState extends State<FeedbackView> {
     );
   }
 
-  feedbackDetailsDialog(int id) async {
-    final feedback = await FeedbackService().getFeedbackById(id);
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            titlePadding: const EdgeInsets.all(25),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  feedbackDetailsDialog(BuildContext context, int id) async {
+    final feedback = await _feedbackService.getFeedbackById(id);
+    if (context.mounted) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              titlePadding: const EdgeInsets.all(25),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(feedback.title),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.close),
+                    ),
+                  )
+                ],
+              ),
               children: [
-                Text(feedback.title),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close),
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Description",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(feedback.description),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              style: redButtonStyle,
+                              onPressed: () {
+                                removeFeedback(feedback.id);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Remove"),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            if (feedback.feedbackStatus == "PENDING")
+                              TextButton(
+                                style: blueButtonStyle,
+                                onPressed: () {
+                                  updateFeedbackStatus(feedback.id, "SAVED");
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Save"),
+                              ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            if (feedback.feedbackStatus != "COMPLETED")
+                              TextButton(
+                                style: greenButtonStyle,
+                                onPressed: () {
+                                  updateFeedbackStatus(
+                                      feedback.id, "COMPLETED");
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Complete"),
+                              ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
-            ),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Description",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(feedback.description),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              removeFeedback(feedback.id);
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Remove"),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          if (feedback.feedbackStatus == "PENDING")
-                            ElevatedButton(
-                              onPressed: () {
-                                updateFeedbackStatus(feedback.id, "SAVED");
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Save"),
-                            ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          if (feedback.feedbackStatus != "COMPLETED")
-                            ElevatedButton(
-                              onPressed: () {
-                                updateFeedbackStatus(feedback.id, "COMPLETED");
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Complete"),
-                            ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          );
-        });
+            );
+          });
+    }
   }
 
   updateFeedbackStatus(int feedbackId, String status) async {
     final req = FeedbackStatusUpdateRequest(status: status);
-    await FeedbackService()
+    await _feedbackService
         .updateFeedbackStatus(feedbackId, req)
         .then((value) => setState(() {
-              _feedbackFuture = FeedbackService().getAllFeedback(
+              _feedbackFuture = _feedbackService.getAll(
                   page: _currentPage,
                   sortBy: _selectedSortBy,
                   sortDescending: _sortDescending,
@@ -293,10 +311,10 @@ class _FeedbackViewState extends State<FeedbackView> {
   }
 
   removeFeedback(int feedbackId) async {
-    await FeedbackService()
+    await _feedbackService
         .removeFeedback(feedbackId)
         .then((value) => setState(() {
-              _feedbackFuture = FeedbackService().getAllFeedback(
+              _feedbackFuture = _feedbackService.getAll(
                   page: _currentPage,
                   sortBy: _selectedSortBy,
                   sortDescending: _sortDescending,
@@ -314,7 +332,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         setState(() {
           _selectedSortBy = item!;
           _currentPage = 1;
-          _feedbackFuture = FeedbackService().getAllFeedback(
+          _feedbackFuture = _feedbackService.getAll(
               page: _currentPage,
               sortBy: _selectedSortBy,
               sortDescending: _sortDescending,
@@ -339,7 +357,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         setState(() {
           _sortDescending = status == "Ascending" ? false : true;
           _currentPage = 1;
-          _feedbackFuture = FeedbackService().getAllFeedback(
+          _feedbackFuture = _feedbackService.getAll(
               page: _currentPage,
               sortBy: _selectedSortBy,
               sortDescending: _sortDescending,
@@ -363,7 +381,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         setState(() {
           _selectedStatus = status!;
           _currentPage = 1;
-          _feedbackFuture = FeedbackService().getAllFeedback(
+          _feedbackFuture = _feedbackService.getAll(
               page: _currentPage,
               sortBy: _selectedSortBy,
               sortDescending: _sortDescending,

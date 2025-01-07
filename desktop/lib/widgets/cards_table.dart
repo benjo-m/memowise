@@ -65,6 +65,14 @@ class _CardsTableState extends State<CardsTable> {
                   ),
                 ),
               ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    "Actions",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ],
             rows: widget.data.map((card) {
               return DataRow(
@@ -80,6 +88,22 @@ class _CardsTableState extends State<CardsTable> {
                   ),
                   DataCell(
                     Center(child: Text(card.deckId.toString())),
+                  ),
+                  DataCell(
+                    Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => log("edit"),
+                          child: const Text("Edit"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => log("delete"),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    )),
                   ),
                 ],
               );

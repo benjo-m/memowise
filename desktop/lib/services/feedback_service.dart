@@ -4,10 +4,13 @@ import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/dto/feedback_status_update_request.dart';
 import 'package:desktop/dto/paginated_response.dart';
+import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
-class FeedbackService {
-  Future<PaginatedResponse<FeedbackResponse>> getAllFeedback({
+class FeedbackService extends BaseCRUDService<FeedbackResponse> {
+  FeedbackService(super.baseUrl, super.client);
+
+  Future<PaginatedResponse<FeedbackResponse>> getAll({
     int page = 1,
     String sortBy = "id",
     bool sortDescending = false,

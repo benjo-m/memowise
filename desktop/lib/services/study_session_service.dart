@@ -1,13 +1,15 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/paginated_response.dart';
 import 'package:desktop/dto/study_session_response.dart';
+import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
-class StudySessionService {
-  Future<PaginatedResponse<StudySessionResponse>> getAllStudySessions({
+class StudySessionService extends BaseCRUDService<StudySessionResponse> {
+  StudySessionService(super.baseUrl, super.client);
+
+  Future<PaginatedResponse<StudySessionResponse>> getAll({
     int page = 1,
     String sortBy = "id",
     bool sortDescending = false,

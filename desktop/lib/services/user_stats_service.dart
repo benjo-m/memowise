@@ -1,15 +1,14 @@
 import 'dart:convert';
 
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/deck_response.dart';
 import 'package:desktop/dto/paginated_response.dart';
+import 'package:desktop/dto/user_stats_response.dart';
 import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
-class DeckService extends BaseCRUDService<DeckResponse> {
-  DeckService(super.baseUrl, super.client);
-
-  Future<PaginatedResponse<DeckResponse>> getAll({
+class UserStatsService extends BaseCRUDService<UserStatsResponse> {
+  UserStatsService(super.baseUrl, super.client);
+  Future<PaginatedResponse<UserStatsResponse>> getAll({
     int page = 1,
     String sortBy = "id",
     bool sortDescending = false,
@@ -17,16 +16,16 @@ class DeckService extends BaseCRUDService<DeckResponse> {
   }) async {
     final response = await http.get(
         Uri.parse(
-            '$baseUrl/decks?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&user=${user ?? ""}'),
+            '$baseUrl/userstats?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&user=${user ?? ""}'),
         headers: {
           'Content-Type': 'application/json',
         });
 
-    final decks = PaginatedResponse<DeckResponse>.fromJson(
+    final userStats = PaginatedResponse<UserStatsResponse>.fromJson(
       jsonDecode(response.body),
-      (json) => DeckResponse.fromJson(json),
+      (json) => UserStatsResponse.fromJson(json),
     );
 
-    return decks;
+    return userStats;
   }
 }

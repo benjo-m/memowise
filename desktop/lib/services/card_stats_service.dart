@@ -2,29 +2,31 @@ import 'dart:convert';
 
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/card_response.dart';
+import 'package:desktop/dto/card_stats_response.dart';
+import 'package:desktop/dto/deck_response.dart';
 import 'package:desktop/dto/paginated_response.dart';
 import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
-class CardService extends BaseCRUDService<CardResponse> {
-  CardService(super.baseUrl, super.client);
+class CardStatsService extends BaseCRUDService<CardStatsResponse> {
+  CardStatsService(super.baseUrl, super.client);
 
-  Future<PaginatedResponse<CardResponse>> getAll({
+  Future<PaginatedResponse<CardStatsResponse>> getAll({
     int page = 1,
     String sortBy = "id",
     bool sortDescending = false,
-    int? deck,
+    int? card,
   }) async {
     final response = await http.get(
         Uri.parse(
-            '$baseUrl/cards?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&deck=${deck ?? ""}'),
+            '$baseUrl/cardstats?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&card=${card ?? ""}'),
         headers: {
           'Content-Type': 'application/json',
         });
 
-    final cards = PaginatedResponse<CardResponse>.fromJson(
+    final cards = PaginatedResponse<CardStatsResponse>.fromJson(
       jsonDecode(response.body),
-      (json) => CardResponse.fromJson(json),
+      (json) => CardStatsResponse.fromJson(json),
     );
 
     return cards;

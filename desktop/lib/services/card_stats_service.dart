@@ -1,15 +1,18 @@
 import 'dart:convert';
 
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/card_response.dart';
 import 'package:desktop/dto/card_stats_response.dart';
-import 'package:desktop/dto/deck_response.dart';
 import 'package:desktop/dto/paginated_response.dart';
 import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class CardStatsService extends BaseCRUDService<CardStatsResponse> {
-  CardStatsService(super.baseUrl, super.client);
+  CardStatsService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => CardStatsResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<CardStatsResponse>> getAll({
     int page = 1,

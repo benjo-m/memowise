@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class StudySessionService extends BaseCRUDService<StudySessionResponse> {
-  StudySessionService(super.baseUrl, super.client);
+  StudySessionService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => StudySessionResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<StudySessionResponse>> getAll({
     int page = 1,

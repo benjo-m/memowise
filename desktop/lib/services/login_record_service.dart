@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class LoginRecordService extends BaseCRUDService<LoginRecordResponse> {
-  LoginRecordService(super.baseUrl, super.client);
+  LoginRecordService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => LoginRecordResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<LoginRecordResponse>> getAll({
     int page = 1,

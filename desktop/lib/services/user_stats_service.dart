@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class UserStatsService extends BaseCRUDService<UserStatsResponse> {
-  UserStatsService(super.baseUrl, super.client);
+  UserStatsService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => UserStatsResponse.fromJson(json),
+        );
   Future<PaginatedResponse<UserStatsResponse>> getAll({
     int page = 1,
     String sortBy = "id",

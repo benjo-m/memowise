@@ -17,3 +17,9 @@ const redButtonStyle = ButtonStyle(
   foregroundColor: WidgetStatePropertyAll(Colors.white),
   fixedSize: WidgetStatePropertyAll(Size(100, 35)),
 );
+
+const greyButtonStyle = ButtonStyle(
+  backgroundColor: WidgetStatePropertyAll(Colors.grey),
+  foregroundColor: WidgetStatePropertyAll(Colors.white),
+  fixedSize: WidgetStatePropertyAll(Size(100, 35)),
+);

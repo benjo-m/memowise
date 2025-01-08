@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends BaseCRUDService<UserResponse> {
-  UserService(super.baseUrl, super.client);
+  UserService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => UserResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<UserResponse>> getAll({
     int page = 1,

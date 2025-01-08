@@ -8,7 +8,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class FeedbackService extends BaseCRUDService<FeedbackResponse> {
-  FeedbackService(super.baseUrl, super.client);
+  FeedbackService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => FeedbackResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<FeedbackResponse>> getAll({
     int page = 1,

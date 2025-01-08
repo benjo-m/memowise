@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:desktop/dto/card_response.dart';
 import 'package:desktop/dto/study_session_response.dart';
 import 'package:flutter/material.dart';
 

@@ -5,8 +5,13 @@ import 'package:http/http.dart' as http;
 class BaseCRUDService<TEntity> {
   final String baseUrl;
   final http.Client _client;
+  final TEntity Function(Map<String, dynamic>) fromJson;
 
-  BaseCRUDService(this.baseUrl, http.Client client) : _client = client;
+  BaseCRUDService(
+    this.baseUrl,
+    http.Client client,
+    this.fromJson,
+  ) : _client = client;
 
   Future<TEntity?> getById(int id) async {
     try {
@@ -50,7 +55,8 @@ class BaseCRUDService<TEntity> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as TEntity;
+        final json = jsonDecode(response.body);
+        return fromJson(json);
       } else {
         log('Failed to update entity: ${response.statusCode}');
         return null;

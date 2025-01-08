@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:desktop/dto/user_response.dart';
 import 'package:desktop/dto/user_stats_response.dart';
 import 'package:flutter/material.dart';
 

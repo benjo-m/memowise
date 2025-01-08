@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class CardService extends BaseCRUDService<CardResponse> {
-  CardService(super.baseUrl, super.client);
+  CardService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => CardResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<CardResponse>> getAll({
     int page = 1,

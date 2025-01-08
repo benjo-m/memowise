@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class DeckService extends BaseCRUDService<DeckResponse> {
-  DeckService(super.baseUrl, super.client);
+  DeckService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => DeckResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<DeckResponse>> getAll({
     int page = 1,

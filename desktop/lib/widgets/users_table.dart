@@ -122,7 +122,7 @@ class _UsersTableState extends State<UsersTable> {
                           onPressed: () => log("edit"),
                           child: const Text("Edit"),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         ElevatedButton(
                           onPressed: () => log("delete"),
                           child: const Text("Delete"),

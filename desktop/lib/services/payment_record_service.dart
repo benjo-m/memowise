@@ -7,7 +7,12 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class PaymentRecordService extends BaseCRUDService<PaymentRecordResponse> {
-  PaymentRecordService(super.baseUrl, super.client);
+  PaymentRecordService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => PaymentRecordResponse.fromJson(json),
+        );
 
   Future<PaginatedResponse<PaymentRecordResponse>> getAll({
     int page = 1,

@@ -7,6 +7,13 @@ import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
 class AchievementService extends BaseCRUDService<AchievementResponse> {
+  AchievementService(String baseUrl, http.Client client)
+      : super(
+          '$baseUrl/achievements',
+          client,
+          (json) => AchievementResponse.fromJson(json),
+        );
+
   Future<PaginatedResponse<AchievementResponse>> getAll(
       {int page = 1, String sortBy = "id", bool sortDescending = false}) async {
     final response = await http.get(
@@ -23,18 +30,4 @@ class AchievementService extends BaseCRUDService<AchievementResponse> {
 
     return achievements;
   }
-
-  AchievementService(super.baseUrl, super.client);
-
-  // Future<AchievementResponse> getById(int id) async {
-  //   final response =
-  //       await http.get(Uri.parse('$baseUrl/achievements/$id'), headers: {
-  //     'Content-Type': 'application/json',
-  //   });
-
-  //   final achievementResponse =
-  //       AchievementResponse.fromJson(jsonDecode(response.body));
-
-  //   return achievementResponse;
-  // }
 }

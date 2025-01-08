@@ -12,6 +12,17 @@ public class Achievement
     [JsonIgnore]
     public List<User> Users { get; set; } = [];
 
+    public Achievement()
+    {
+    }
+
+    public Achievement(AchievementCreateRequest request)
+    {
+        Name = request.Name;
+        Description = request.Description;
+        Icon = request.Icon;
+    }
+
     public Achievement Update(AchievementUpdateRequest request)
     {
         Name = request.Name;

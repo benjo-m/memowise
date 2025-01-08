@@ -1,7 +1,7 @@
 import 'package:desktop/dto/dashboard_data.dart';
 import 'package:desktop/services/analytics_service.dart';
-import 'package:desktop/widgets/user_distribution_chart.dart';
-import 'package:desktop/widgets/user_growth_chart.dart';
+import 'package:desktop/widgets/charts/user_distribution_chart.dart';
+import 'package:desktop/widgets/charts/user_growth_chart.dart';
 import 'package:flutter/material.dart';
 
 class DashboardView extends StatefulWidget {

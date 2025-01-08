@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/dto/card_response.dart';
@@ -20,16 +22,18 @@ import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/services/user_stats_service.dart';
-import 'package:desktop/widgets/achievements_table.dart';
-import 'package:desktop/widgets/card_stats_table.dart';
-import 'package:desktop/widgets/cards_table.dart';
-import 'package:desktop/widgets/decks_table.dart';
-import 'package:desktop/widgets/feedback_table.dart';
-import 'package:desktop/widgets/login_records_table.dart';
-import 'package:desktop/widgets/payment_records_table.dart';
-import 'package:desktop/widgets/study_sessions_table.dart';
-import 'package:desktop/widgets/user_stats_table.dart';
-import 'package:desktop/widgets/users_table.dart';
+import 'package:desktop/styles.dart';
+import 'package:desktop/widgets/add_achievement_dialog.dart';
+import 'package:desktop/widgets/tables/achievements_table.dart';
+import 'package:desktop/widgets/tables/card_stats_table.dart';
+import 'package:desktop/widgets/tables/cards_table.dart';
+import 'package:desktop/widgets/tables/decks_table.dart';
+import 'package:desktop/widgets/tables/feedback_table.dart';
+import 'package:desktop/widgets/tables/login_records_table.dart';
+import 'package:desktop/widgets/tables/payment_records_table.dart';
+import 'package:desktop/widgets/tables/study_sessions_table.dart';
+import 'package:desktop/widgets/tables/user_stats_table.dart';
+import 'package:desktop/widgets/tables/users_table.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -207,6 +211,7 @@ class _DataViewState extends State<DataView> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 20,
                 runSpacing: 20,
                 children: [
@@ -228,6 +233,51 @@ class _DataViewState extends State<DataView> {
                   if (_selectedTable == "Card Stats") cardSearchTextField(),
                   if (_selectedTable == "Users") roleDropdownMenu(),
                   if (_selectedTable == "Users") accountTypeDropdownMenu(),
+                  TextButton(
+                    style: const ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(Colors.greenAccent),
+                      foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      fixedSize: WidgetStatePropertyAll(
+                        Size(140, 43),
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (_selectedTable == "Achievements") {
+                        final data = await _achievementService.getAll(
+                            page: _currentPage,
+                            sortBy: _selectedSortBy,
+                            sortDescending: _sortDescending);
+
+                        showDialog(
+                          context: context,
+                          builder: (context) => AddAchievementDialog(
+                            data: data.data,
+                            onAdd: (response) {
+                              setState(() {
+                                data.data.add(response);
+                                // addRow(data.data, response);
+                              });
+                            },
+                          ),
+                        );
+                        refreshTable();
+                      } else if (_selectedTable == "Users") {
+                        log("users");
+                      }
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_circle_outline),
+                          SizedBox(width: 5),
+                          Text("Add Row"),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
               FutureBuilder(
@@ -264,6 +314,12 @@ class _DataViewState extends State<DataView> {
       ),
     );
   }
+
+  // void addRow(dynamic data, dynamic entity) {
+  //   setState(() {
+  //     data.add(entity);
+  //   });
+  // }
 
   Row navigationButtonsRow(data) {
     return Row(

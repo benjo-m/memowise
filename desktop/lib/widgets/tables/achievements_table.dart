@@ -189,9 +189,11 @@ class _AchievementsTableState extends State<AchievementsTable> {
                                 if (value == null || value.trim().isEmpty) {
                                   return "Name is required";
                                 }
-                                if (achievements.any((achievement) =>
-                                    achievement.name.toLowerCase() ==
-                                    value.toLowerCase())) {
+                                if (achievements.any((item) =>
+                                    item.name.toLowerCase() ==
+                                        value.toLowerCase() &&
+                                    achievement.name.toLowerCase() !=
+                                        value.toLowerCase())) {
                                   return "Name already taken";
                                 }
                                 return null;

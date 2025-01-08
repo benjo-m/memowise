@@ -36,7 +36,8 @@ class BaseCRUDService<TEntity> {
         body: jsonEncode(data),
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
-        return jsonDecode(response.body) as TEntity;
+        final json = jsonDecode(response.body);
+        return fromJson(json);
       } else {
         log('Failed to create entity: ${response.statusCode}');
         return null;

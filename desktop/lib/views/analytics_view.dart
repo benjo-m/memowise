@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:desktop/dto/analytics_data.dart';
 import 'package:desktop/services/analytics_service.dart';
 import 'package:desktop/services/report_service.dart';
-import 'package:desktop/widgets/deck_creation_chart.dart';
-import 'package:desktop/widgets/new_users_by_month_chart.dart';
-import 'package:desktop/widgets/study_times_chart.dart';
-import 'package:desktop/widgets/user_distribution_chart.dart';
-import 'package:desktop/widgets/user_growth_chart.dart';
+import 'package:desktop/widgets/charts/deck_creation_chart.dart';
+import 'package:desktop/widgets/charts/new_users_by_month_chart.dart';
+import 'package:desktop/widgets/charts/study_times_chart.dart';
+import 'package:desktop/widgets/charts/user_distribution_chart.dart';
+import 'package:desktop/widgets/charts/user_growth_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

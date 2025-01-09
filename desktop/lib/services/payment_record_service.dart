@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class PaymentRecordService extends BaseCRUDService<PaymentRecordResponse> {
   PaymentRecordService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/paymentrecords',
           client,
           (json) => PaymentRecordResponse.fromJson(json),
         );

@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class CardService extends BaseCRUDService<CardResponse> {
   CardService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/cards',
           client,
           (json) => CardResponse.fromJson(json),
         );

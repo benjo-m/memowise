@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class DeckService extends BaseCRUDService<DeckResponse> {
   DeckService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/decks',
           client,
           (json) => DeckResponse.fromJson(json),
         );

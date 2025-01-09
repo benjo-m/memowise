@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class LoginRecordService extends BaseCRUDService<LoginRecordResponse> {
   LoginRecordService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/loginrecords',
           client,
           (json) => LoginRecordResponse.fromJson(json),
         );

@@ -1,21 +1,28 @@
-import 'dart:developer';
-
+import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/deck_response.dart';
+import 'package:desktop/services/deck_service.dart';
+import 'package:desktop/styles.dart';
+import 'package:desktop/widgets/dialogs/edit_deck_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DecksTable extends StatefulWidget {
   const DecksTable({
     super.key,
     required this.data,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   final List<DeckResponse> data;
-
+  final Function() onEdit;
+  final Function() onDelete;
   @override
   State<DecksTable> createState() => _DecksTableState();
 }
 
 class _DecksTableState extends State<DecksTable> {
+  final _deckService = DeckService(baseUrl, http.Client());
   final _scrollController = ScrollController();
 
   @override
@@ -84,12 +91,19 @@ class _DecksTableState extends State<DecksTable> {
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
+                        TextButton(
+                          style: blueButtonStyle,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => EditDeckDialog(
+                                deck: deck, onEdit: () => widget.onEdit()),
+                          ),
                           child: const Text("Edit"),
                         ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          style: redButtonStyle,
+                          onPressed: () => showDeleteDialog(deck.id),
                           child: const Text("Delete"),
                         ),
                       ],
@@ -102,5 +116,48 @@ class _DecksTableState extends State<DecksTable> {
         ),
       ),
     );
+  }
+
+  showDeleteDialog(int id) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Center(child: Text("Delete Deck?")),
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text("Are you sure you want to delete this deck?"),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: greyButtonStyle,
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton(
+                    style: redButtonStyle,
+                    onPressed: () {
+                      delete(id);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
+  delete(int id) async {
+    await _deckService.delete(id);
+    widget.onDelete();
   }
 }

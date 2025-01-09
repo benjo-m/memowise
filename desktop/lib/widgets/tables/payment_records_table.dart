@@ -1,20 +1,30 @@
 import 'dart:developer';
+import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/payment_record_response.dart';
+import 'package:desktop/services/payment_record_service.dart';
+import 'package:desktop/styles.dart';
+import 'package:desktop/widgets/dialogs/edit_payment_record_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentRecordsTable extends StatefulWidget {
   const PaymentRecordsTable({
     super.key,
     required this.data,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   final List<PaymentRecordResponse> data;
+  final Function() onEdit;
+  final Function() onDelete;
 
   @override
   State<PaymentRecordsTable> createState() => _PaymentRecordsTableState();
 }
 
 class _PaymentRecordsTableState extends State<PaymentRecordsTable> {
+  final _paymentRecordService = PaymentRecordService(baseUrl, http.Client());
   final _scrollController = ScrollController();
 
   @override
@@ -119,20 +129,7 @@ class _PaymentRecordsTableState extends State<PaymentRecordsTable> {
                                     7))),
                   ),
                   DataCell(
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
-                          child: const Text("Edit"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
+                    Center(child: buttonsRow(paymentRecord)),
                   ),
                 ],
               );
@@ -141,5 +138,72 @@ class _PaymentRecordsTableState extends State<PaymentRecordsTable> {
         ),
       ),
     );
+  }
+
+  Row buttonsRow(PaymentRecordResponse paymentRecord) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          style: blueButtonStyle,
+          onPressed: () => showDialog(
+              context: context,
+              builder: (context) => EditPaymentRecordDialog(
+                    onEdit: () => widget.onEdit(),
+                    paymentRecord: paymentRecord,
+                  )),
+          child: const Text("Edit"),
+        ),
+        SizedBox(width: 10),
+        TextButton(
+          style: redButtonStyle,
+          onPressed: () => showDeleteDialog(paymentRecord.id),
+          child: const Text("Delete"),
+        ),
+      ],
+    );
+  }
+
+  showDeleteDialog(int id) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Center(child: Text("Delete Payment Record?")),
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text("Are you sure you want to delete this row?"),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: greyButtonStyle,
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton(
+                    style: redButtonStyle,
+                    onPressed: () {
+                      delete(id);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
+  delete(int id) async {
+    await _paymentRecordService.delete(id);
+    widget.onDelete();
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:desktop/dto/user_stats_response.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class UserStatsTable extends StatefulWidget {
   const UserStatsTable({

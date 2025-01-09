@@ -42,10 +42,17 @@ public class CRUDService
                 {
                     throw new DuplicateEntryException("EMAIL_TAKEN", "A user with the same email already exists.");
                 }
-
-               throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "An achievement with the same name already exists.");
+                if (sqlEx.Message.Contains("IX_CardStats_CardId"))
+                {
+                    throw new DuplicateEntryException("CARD_ID_TAKEN", "A card stats for this card already exists.");
+                }
+                throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "An achievement with the same name already exists.");
             }
-        }
+        } 
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        } 
 
         return entity;
     }

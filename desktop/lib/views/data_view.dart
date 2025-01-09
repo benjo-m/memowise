@@ -22,7 +22,13 @@ import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/services/user_stats_service.dart';
-import 'package:desktop/widgets/add_achievement_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_achievement_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_card_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_card_stats_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_deck_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_feedback_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_login_record_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_payment_record_dialog.dart';
 import 'package:desktop/widgets/tables/achievements_table.dart';
 import 'package:desktop/widgets/tables/card_stats_table.dart';
 import 'package:desktop/widgets/tables/cards_table.dart';
@@ -192,6 +198,8 @@ class _DataViewState extends State<DataView> {
     _feedbackFuture = _feedbackService.getAll();
     _usersFuture = _userService.getAll();
     _userStatsFuture = _userStatsService.getAll();
+
+    // dataViewWarningDialog(context);
   }
 
   @override
@@ -253,8 +261,60 @@ class _DataViewState extends State<DataView> {
                             },
                           ),
                         );
-                      } else if (_selectedTable == "Users") {
-                        log("users");
+                      } else if (_selectedTable == "Card Stats") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddCardStatsDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "Cards") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddCardDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "Decks") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddDeckDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "Feedback") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddFeedbackDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "Login Records") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddLoginRecordDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "Payment Records") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddPaymentRecordDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
                       }
                     },
                     child: const Padding(
@@ -338,23 +398,47 @@ class _DataViewState extends State<DataView> {
           onDelete: () => refreshTable(),
         );
       case "Decks":
-        return DecksTable(data: data);
+        return DecksTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Cards":
-        return CardsTable(data: data);
+        return CardsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Login Records":
-        return LoginRecordsTable(data: data);
+        return LoginRecordsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Payment Records":
-        return PaymentRecordsTable(data: data);
+        return PaymentRecordsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Study Sessions":
         return StudySessionsTable(data: data);
       case "Users":
         return UsersTable(data: data);
       case "Feedback":
-        return FeedbackTable(data: data);
+        return FeedbackTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "User Stats":
         return UserStatsTable(data: data);
       case "Card Stats":
-        return CardStatsTable(data: data);
+        return CardStatsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
     }
   }
 

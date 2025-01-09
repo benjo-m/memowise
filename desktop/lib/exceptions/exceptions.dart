@@ -5,3 +5,5 @@ class UsernameTakenException implements Exception {}
 class InvalidEmailException implements Exception {}
 
 class AchievementNameTakenException implements Exception {}
+
+class DuplicateException implements Exception {}

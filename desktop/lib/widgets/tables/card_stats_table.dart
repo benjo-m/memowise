@@ -1,12 +1,20 @@
-import 'dart:developer';
+import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/card_stats_response.dart';
+import 'package:desktop/services/card_stats_service.dart';
+import 'package:desktop/styles.dart';
+import 'package:desktop/widgets/dialogs/edit_card_stats_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class CardStatsTable extends StatefulWidget {
   const CardStatsTable({
     super.key,
     required this.data,
+    required this.onEdit,
+    required this.onDelete,
   });
+  final Function() onEdit;
+  final Function() onDelete;
 
   final List<CardStatsResponse> data;
 
@@ -15,6 +23,7 @@ class CardStatsTable extends StatefulWidget {
 }
 
 class _CardStatsTableState extends State<CardStatsTable> {
+  final _cardStatService = CardStatsService(baseUrl, http.Client());
   final _scrollController = ScrollController();
 
   @override
@@ -107,8 +116,7 @@ class _CardStatsTableState extends State<CardStatsTable> {
                   ),
                   DataCell(
                     Center(
-                        child: Text(stats.dueDate.toString().substring(
-                            0, stats.dueDate.toString().length - 7))),
+                        child: Text(stats.dueDate.toString().substring(0, 10))),
                   ),
                   DataCell(
                     Center(child: Text(stats.cardId.toString())),
@@ -118,12 +126,21 @@ class _CardStatsTableState extends State<CardStatsTable> {
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
+                        TextButton(
+                          style: blueButtonStyle,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => EditCardStatsDialog(
+                              cardStats: stats,
+                              onEdit: widget.onEdit,
+                            ),
+                          ),
                           child: const Text("Edit"),
                         ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          style: redButtonStyle,
+                          onPressed: () => showDeleteDialog(stats.id),
                           child: const Text("Delete"),
                         ),
                       ],
@@ -136,5 +153,50 @@ class _CardStatsTableState extends State<CardStatsTable> {
         ),
       ),
     );
+  }
+
+  showDeleteDialog(int id) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Center(child: Text("Delete Card Stats?")),
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    "Are you sure you want to delete this row?",
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: greyButtonStyle,
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton(
+                    style: redButtonStyle,
+                    onPressed: () {
+                      delete(id);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
+  delete(int id) async {
+    await _cardStatService.delete(id);
+    widget.onDelete();
   }
 }

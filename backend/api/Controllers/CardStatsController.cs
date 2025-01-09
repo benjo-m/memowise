@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
+[AllowAnonymous]
 public class CardStatsController : BaseCRUDController<CardStats, CardStatsCreateRequest, CardStatsUpdateRequestAdmin>
 {
     private readonly CardStatsService _cardStatsService;

@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class FeedbackService extends BaseCRUDService<FeedbackResponse> {
   FeedbackService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/feedback',
           client,
           (json) => FeedbackResponse.fromJson(json),
         );

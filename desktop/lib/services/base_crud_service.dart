@@ -50,8 +50,7 @@ class BaseCRUDService<TEntity> {
           case "ACHIEVEMENT_NAME_TAKEN":
             throw AchievementNameTakenException();
           default:
-            throw Exception(
-                "Unhandled 409 Error: ${responseBody['errorCode']}");
+            throw DuplicateException();
         }
       } else {
         log('Failed to create entity: ${response.statusCode}');
@@ -89,8 +88,7 @@ class BaseCRUDService<TEntity> {
           case "ACHIEVEMENT_NAME_TAKEN":
             throw AchievementNameTakenException();
           default:
-            throw Exception(
-                "Unhandled 409 Error: ${responseBody['errorCode']}");
+            throw DuplicateException();
         }
       } else {
         log('Failed to update entity: ${response.statusCode}');

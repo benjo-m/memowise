@@ -2,7 +2,7 @@ import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/services/achievements_service.dart';
 import 'package:desktop/styles.dart';
-import 'package:desktop/widgets/edit_achievement_dialog.dart';
+import 'package:desktop/widgets/dialogs/edit_achievement_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -96,28 +96,29 @@ class _AchievementsTableState extends State<AchievementsTable> {
                   ),
                   DataCell(
                     Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          style: blueButtonStyle,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => EditAchievementDialog(
-                              achievement: achievement,
-                              onEdit: () => widget.onEdit(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            style: blueButtonStyle,
+                            onPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => EditAchievementDialog(
+                                achievement: achievement,
+                                onEdit: () => widget.onEdit(),
+                              ),
                             ),
+                            child: const Text("Edit"),
                           ),
-                          child: const Text("Edit"),
-                        ),
-                        const SizedBox(width: 10),
-                        TextButton(
-                          style: redButtonStyle,
-                          onPressed: () => showDeleteDialog(achievement.id),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    )),
+                          const SizedBox(width: 10),
+                          TextButton(
+                            style: redButtonStyle,
+                            onPressed: () => showDeleteDialog(achievement.id),
+                            child: const Text("Delete"),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               );
@@ -169,9 +170,6 @@ class _AchievementsTableState extends State<AchievementsTable> {
 
   delete(int id) async {
     await _achievementService.delete(id);
-    setState(() {
-      achievements.removeWhere((achievement) => achievement.id == id);
-    });
     widget.onDelete();
   }
 }

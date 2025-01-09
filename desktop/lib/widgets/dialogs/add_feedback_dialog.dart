@@ -1,34 +1,40 @@
+import 'dart:developer';
+
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_dto.dart';
 import 'package:desktop/dto/achievement_response.dart';
+import 'package:desktop/dto/feedback_dto.dart';
+import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/achievements_service.dart';
+import 'package:desktop/services/feedback_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class AddAchievementDialog extends StatefulWidget {
-  const AddAchievementDialog({super.key, required this.onAdd});
+class AddFeedbackDialog extends StatefulWidget {
+  const AddFeedbackDialog({super.key, required this.onAdd});
 
-  final Function(AchievementResponse?) onAdd;
+  final Function(FeedbackResponse?) onAdd;
 
   @override
-  State<AddAchievementDialog> createState() => _AddAchievementDialogState();
+  State<AddFeedbackDialog> createState() => _AddFeedbackDialogState();
 }
 
-class _AddAchievementDialogState extends State<AddAchievementDialog> {
-  final _achievementService = AchievementService(baseUrl, http.Client());
+class _AddFeedbackDialogState extends State<AddFeedbackDialog> {
+  final _feedbackService = FeedbackService(baseUrl, http.Client());
 
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
+  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _iconController = TextEditingController();
-  String? _nameErrorText;
+
+  String _status = "PENDING";
+  DateTime _submittedAt = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Add Achievement")),
+      title: const Center(child: Text("Add Feedback")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,
@@ -39,18 +45,18 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
                 Form(
                   key: _formKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
-                        controller: _nameController,
+                        controller: _titleController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Name is required";
+                            return "Title is required";
                           }
                           return null;
                         },
-                        decoration: InputDecoration(
-                          label: const Text("Name"),
-                          errorText: _nameErrorText,
+                        decoration: const InputDecoration(
+                          label: Text("Title"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -67,17 +73,36 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _iconController,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Icon is required";
-                          }
-                          return null;
+                      InputDatePickerFormField(
+                        errorFormatText: "Invalid Date",
+                        onDateSaved: (DateTime date) {
+                          setState(() => _submittedAt = date);
                         },
+                        fieldLabelText: "Submitted At",
+                        initialDate: DateTime.now(),
+                        firstDate:
+                            DateTime.now().add(const Duration(days: -365)),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownButtonFormField<String>(
+                        value: _status,
                         decoration: const InputDecoration(
-                          label: Text("Icon"),
+                          labelText: "Status",
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            _status = value!;
+                          });
+                        },
+                        items: const [
+                          DropdownMenuItem(
+                              value: "PENDING", child: Text("PENDING")),
+                          DropdownMenuItem(
+                              value: "SAVED", child: Text("SAVED")),
+                          DropdownMenuItem(
+                              value: "COMPLETED", child: Text("COMPLETED")),
+                        ],
                       ),
                     ],
                   ),
@@ -106,14 +131,14 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
           style: blueButtonStyle,
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              final request = AchievementDto(
-                name: _nameController.text,
+              final request = FeedbackDto(
+                title: _titleController.text,
                 description: _descriptionController.text,
-                icon: _iconController.text,
+                submittedAt: _submittedAt,
+                status: _status,
               );
               final response = await create(request);
               if (response == null) {
-                setState(() => _nameErrorText = "Name taken");
                 return;
               }
               if (context.mounted) {
@@ -128,12 +153,11 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
     );
   }
 
-  Future<AchievementResponse?> create(AchievementDto updatedAchievement) async {
+  Future<FeedbackResponse?> create(FeedbackDto request) async {
     try {
-      final response =
-          await _achievementService.create(updatedAchievement.toJson());
-      return response!;
-    } on AchievementNameTakenException {
+      final response = await _feedbackService.create(request.toJson());
+      return response;
+    } on Exception {
       return null;
     }
   }

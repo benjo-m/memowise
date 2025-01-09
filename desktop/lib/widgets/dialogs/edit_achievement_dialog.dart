@@ -29,7 +29,6 @@ class _EditAchievementDialogState extends State<EditAchievementDialog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _nameController.text = widget.achievement.name;
     _descriptionController.text = widget.achievement.description;
@@ -145,17 +144,8 @@ class _EditAchievementDialogState extends State<EditAchievementDialog> {
     try {
       final response =
           await _achievementService.update(id, updatedAchievement.toJson());
-      // setState(() {
-      //   final index =
-      //       achievements.indexWhere((achievement) => achievement.id == id);
-      //   if (index != -1) {
-      //     achievements[index] = response!;
-      //   }
-      // });
-
       return response;
     } on AchievementNameTakenException {
-      // setState(() => _nameErrorText = "Name taken");
       return null;
     }
   }

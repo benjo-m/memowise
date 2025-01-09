@@ -1,12 +1,23 @@
 import 'dart:developer';
 
+import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/feedback_response.dart';
+import 'package:desktop/services/feedback_service.dart';
+import 'package:desktop/styles.dart';
+import 'package:desktop/widgets/dialogs/edit_feedback_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class FeedbackTable extends StatefulWidget {
-  const FeedbackTable({super.key, required this.data});
+  const FeedbackTable(
+      {super.key,
+      required this.data,
+      required this.onEdit,
+      required this.onDelete});
 
   final List<FeedbackResponse> data;
+  final Function() onEdit;
+  final Function() onDelete;
 
   @override
   State<FeedbackTable> createState() => _FeedbackTableState();
@@ -14,6 +25,7 @@ class FeedbackTable extends StatefulWidget {
 
 class _FeedbackTableState extends State<FeedbackTable> {
   final _scrollController = ScrollController();
+  final _feedbackService = FeedbackService(baseUrl, http.Client());
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +112,8 @@ class _FeedbackTableState extends State<FeedbackTable> {
                   ),
                   DataCell(
                     Center(
-                        child: Text(feedback.submittedAt.toString().substring(
-                            0, feedback.submittedAt.toString().length - 7))),
+                        child: Text(
+                            feedback.submittedAt.toString().substring(0, 10))),
                   ),
                   DataCell(
                     Center(child: Text(feedback.feedbackStatus)),
@@ -111,12 +123,20 @@ class _FeedbackTableState extends State<FeedbackTable> {
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () => log("edit"),
+                        TextButton(
+                          style: blueButtonStyle,
+                          onPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => EditFeedbackDialog(
+                                    feedback: feedback,
+                                    onEdit: () => widget.onEdit(),
+                                  )),
                           child: const Text("Edit"),
                         ),
-                        ElevatedButton(
-                          onPressed: () => log("delete"),
+                        SizedBox(width: 10),
+                        TextButton(
+                          style: redButtonStyle,
+                          onPressed: () => showDeleteDialog(feedback.id),
                           child: const Text("Delete"),
                         ),
                       ],
@@ -129,5 +149,48 @@ class _FeedbackTableState extends State<FeedbackTable> {
         ),
       ),
     );
+  }
+
+  showDeleteDialog(int id) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Center(child: Text("Delete Feedback?")),
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text("Are you sure you want to delete this feedback?"),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: greyButtonStyle,
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton(
+                    style: redButtonStyle,
+                    onPressed: () {
+                      delete(id);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
+  delete(int id) async {
+    await _feedbackService.delete(id);
+    widget.onDelete();
   }
 }

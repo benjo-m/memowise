@@ -22,7 +22,6 @@ import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/services/user_stats_service.dart';
-import 'package:desktop/styles.dart';
 import 'package:desktop/widgets/add_achievement_dialog.dart';
 import 'package:desktop/widgets/tables/achievements_table.dart';
 import 'package:desktop/widgets/tables/card_stats_table.dart';
@@ -243,25 +242,17 @@ class _DataViewState extends State<DataView> {
                       ),
                     ),
                     onPressed: () async {
-                      if (_selectedTable == "Achievements") {
-                        final data = await _achievementService.getAll(
-                            page: _currentPage,
-                            sortBy: _selectedSortBy,
-                            sortDescending: _sortDescending);
-
+                      if (_selectedTable == "Achievements" && context.mounted) {
                         showDialog(
                           context: context,
                           builder: (context) => AddAchievementDialog(
-                            data: data.data,
                             onAdd: (response) {
-                              setState(() {
-                                data.data.add(response);
-                                // addRow(data.data, response);
-                              });
+                              if (response != null) {
+                                refreshTable();
+                              }
                             },
                           ),
                         );
-                        refreshTable();
                       } else if (_selectedTable == "Users") {
                         log("users");
                       }
@@ -315,12 +306,6 @@ class _DataViewState extends State<DataView> {
     );
   }
 
-  // void addRow(dynamic data, dynamic entity) {
-  //   setState(() {
-  //     data.add(entity);
-  //   });
-  // }
-
   Row navigationButtonsRow(data) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +332,11 @@ class _DataViewState extends State<DataView> {
   table(dynamic data) {
     switch (_selectedTable) {
       case "Achievements":
-        return AchievementsTable(data: data);
+        return AchievementsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Decks":
         return DecksTable(data: data);
       case "Cards":

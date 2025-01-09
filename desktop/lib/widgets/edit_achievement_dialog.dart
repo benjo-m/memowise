@@ -7,16 +7,18 @@ import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class AddAchievementDialog extends StatefulWidget {
-  const AddAchievementDialog({super.key, required this.onAdd});
+class EditAchievementDialog extends StatefulWidget {
+  const EditAchievementDialog(
+      {super.key, required this.achievement, required this.onEdit});
 
-  final Function(AchievementResponse?) onAdd;
+  final AchievementResponse achievement;
+  final Function() onEdit;
 
   @override
-  State<AddAchievementDialog> createState() => _AddAchievementDialogState();
+  State<EditAchievementDialog> createState() => _EditAchievementDialogState();
 }
 
-class _AddAchievementDialogState extends State<AddAchievementDialog> {
+class _EditAchievementDialogState extends State<EditAchievementDialog> {
   final _achievementService = AchievementService(baseUrl, http.Client());
 
   final _formKey = GlobalKey<FormState>();
@@ -26,9 +28,18 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
   String? _nameErrorText;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _nameController.text = widget.achievement.name;
+    _descriptionController.text = widget.achievement.description;
+    _iconController.text = widget.achievement.icon;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Add Achievement")),
+      title: const Center(child: Text("Edit Achievement")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,
@@ -83,7 +94,44 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                buttonsRow(context)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      style: greyButtonStyle,
+                      onPressed: () {
+                        setState(() => _nameErrorText = null);
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                    const SizedBox(width: 20),
+                    TextButton(
+                      style: blueButtonStyle,
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          final request = AchievementDto(
+                            name: _nameController.text,
+                            description: _descriptionController.text,
+                            icon: _iconController.text,
+                          );
+                          final response =
+                              await edit(widget.achievement.id, request);
+                          if (response == null) {
+                            setState(() => _nameErrorText = "Name taken");
+
+                            return;
+                          } else if (context.mounted) {
+                            widget.onEdit();
+                            Navigator.pop(context);
+                            _nameErrorText = null;
+                          }
+                        }
+                      },
+                      child: const Text("Edit"),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -92,48 +140,22 @@ class _AddAchievementDialogState extends State<AddAchievementDialog> {
     );
   }
 
-  Row buttonsRow(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          style: greyButtonStyle,
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
-        const SizedBox(width: 20),
-        TextButton(
-          style: blueButtonStyle,
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              final request = AchievementDto(
-                name: _nameController.text,
-                description: _descriptionController.text,
-                icon: _iconController.text,
-              );
-              final response = await create(request);
-              if (response == null) {
-                setState(() => _nameErrorText = "Name taken");
-                return;
-              }
-              if (context.mounted) {
-                widget.onAdd(response);
-                Navigator.pop(context);
-              }
-            }
-          },
-          child: const Text("Add"),
-        ),
-      ],
-    );
-  }
-
-  Future<AchievementResponse?> create(AchievementDto updatedAchievement) async {
+  Future<AchievementResponse?> edit(
+      int id, AchievementDto updatedAchievement) async {
     try {
       final response =
-          await _achievementService.create(updatedAchievement.toJson());
-      return response!;
+          await _achievementService.update(id, updatedAchievement.toJson());
+      // setState(() {
+      //   final index =
+      //       achievements.indexWhere((achievement) => achievement.id == id);
+      //   if (index != -1) {
+      //     achievements[index] = response!;
+      //   }
+      // });
+
+      return response;
     } on AchievementNameTakenException {
+      // setState(() => _nameErrorText = "Name taken");
       return null;
     }
   }

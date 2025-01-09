@@ -15,15 +15,10 @@ public class ExceptionHandlingMiddleware
         {
             await _next(context);
         }
-        catch (UsernameTakenException ex)
+        catch (DuplicateEntryException ex)
         {
             context.Response.StatusCode = StatusCodes.Status409Conflict;
-            await context.Response.WriteAsJsonAsync(new { errorCode = "USERNAME_TAKEN", message = ex.Message });
-        }
-        catch (EmailAlreadyInUseException ex)
-        {
-            context.Response.StatusCode = StatusCodes.Status409Conflict;
-            await context.Response.WriteAsJsonAsync(new { errorCode = "EMAIL_TAKEN", message = ex.Message });
+            await context.Response.WriteAsJsonAsync(new { errorCode = ex.ErrorCode, message = ex.Message });
         }
         catch (WrongPasswordException)
         {

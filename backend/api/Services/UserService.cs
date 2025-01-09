@@ -90,12 +90,12 @@ public class UserService : CRUDService
 
         if (isUsernameTaken && user.Username != updateUserRequest.Username)
         {
-            throw new UsernameTakenException("Username taken");
+            throw new DuplicateEntryException("USERNAME_TAKEN", "Username taken");
         }
 
         if (isEmailTaken && user.Email != updateUserRequest.Email)
         {
-            throw new EmailAlreadyInUseException("Email already in use");
+            throw new DuplicateEntryException("EMAIL_TAKEN", "Email already in use");
         }
         
         user.Username = updateUserRequest.Username;

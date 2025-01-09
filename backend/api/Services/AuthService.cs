@@ -48,12 +48,12 @@ public class AuthService
 
         if (await _dbContext.Users.AnyAsync(u => u.Username == registerRequest.Username))
         {
-            throw new UsernameTakenException("Username taken");
+            throw new DuplicateEntryException("USERNAME_TAKEN", "Username taken");
         }
 
         if (await _dbContext.Users.AnyAsync(u => u.Email == registerRequest.Email))
         {
-            throw new EmailAlreadyInUseException("Email already in use");
+            throw new DuplicateEntryException("EMAIL_TAKEN", "Email already in use");
         }
 
         var user = new User(registerRequest);

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
 class BaseCRUDService<TEntity> {
@@ -35,15 +36,35 @@ class BaseCRUDService<TEntity> {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
+
       if (response.statusCode == 201 || response.statusCode == 200) {
         final json = jsonDecode(response.body);
         return fromJson(json);
+      } else if (response.statusCode == 409) {
+        final responseBody = jsonDecode(response.body);
+        switch (responseBody['errorCode']) {
+          case "USERNAME_TAKEN":
+            throw UsernameTakenException();
+          case "EMAIL_TAKEN":
+            throw EmailAlreadyInUseException();
+          case "ACHIEVEMENT_NAME_TAKEN":
+            throw AchievementNameTakenException();
+          default:
+            throw Exception(
+                "Unhandled 409 Error: ${responseBody['errorCode']}");
+        }
       } else {
         log('Failed to create entity: ${response.statusCode}');
         return null;
       }
+    } on UsernameTakenException {
+      rethrow;
+    } on EmailAlreadyInUseException {
+      rethrow;
+    } on AchievementNameTakenException {
+      rethrow;
     } catch (e) {
-      log('Error creating entity: $e');
+      log('Unexpected error: $e');
       return null;
     }
   }
@@ -58,10 +79,29 @@ class BaseCRUDService<TEntity> {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         return fromJson(json);
+      } else if (response.statusCode == 409) {
+        final responseBody = jsonDecode(response.body);
+        switch (responseBody['errorCode']) {
+          case "USERNAME_TAKEN":
+            throw UsernameTakenException();
+          case "EMAIL_TAKEN":
+            throw EmailAlreadyInUseException();
+          case "ACHIEVEMENT_NAME_TAKEN":
+            throw AchievementNameTakenException();
+          default:
+            throw Exception(
+                "Unhandled 409 Error: ${responseBody['errorCode']}");
+        }
       } else {
         log('Failed to update entity: ${response.statusCode}');
         return null;
       }
+    } on UsernameTakenException {
+      rethrow;
+    } on EmailAlreadyInUseException {
+      rethrow;
+    } on AchievementNameTakenException {
+      rethrow;
     } catch (e) {
       log('Error updating entity: $e');
       return null;

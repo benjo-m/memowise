@@ -42,9 +42,14 @@ class AuthService {
       return registerReponse;
     } else if (response.statusCode == 409) {
       final responseBody = jsonDecode(response.body);
-      responseBody['errorCode'] == "USERNAME_TAKEN"
-          ? throw UsernameTakenException()
-          : throw EmailAlreadyInUseException();
+      if (responseBody['errorCode'] == "USERNAME_TAKEN") {
+        throw UsernameTakenException();
+      }
+      if (responseBody['errorCode'] == "EMAIL_TAKEN") {
+        throw EmailAlreadyInUseException();
+      } else {
+        throw Exception("409 Error");
+      }
     } else if (response.statusCode == 400) {
       throw PasswordsNotMatching();
     } else {

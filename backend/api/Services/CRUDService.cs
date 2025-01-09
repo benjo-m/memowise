@@ -1,4 +1,7 @@
 ﻿using api.Data;
+using api.Exceptions;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
@@ -22,8 +25,27 @@ public class CRUDService
 
         TEntity entity = (TEntity)constructor!.Invoke(new object[] { req });
 
-        await _dbContext.Set<TEntity>().AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.Set<TEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601)
+            {
+                if (sqlEx.Message.Contains("IX_Users_Username"))
+                {
+                    throw new DuplicateEntryException("USERNAME_TAKEN", "A user with the same name already exists.");
+                }
+                if (sqlEx.Message.Contains("IX_Users_Email"))
+                {
+                    throw new DuplicateEntryException("EMAIL_TAKEN", "A user with the same email already exists.");
+                }
+
+               throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "An achievement with the same name already exists.");
+            }
+        }
 
         return entity;
     }
@@ -41,7 +63,26 @@ public class CRUDService
         
         updateMethod!.Invoke(entity, new object[] { req });
 
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601)
+            {
+                if (sqlEx.Message.Contains("IX_Users_Username"))
+                {
+                    throw new DuplicateEntryException("USERNAME_TAKEN", "A user with the same name already exists.");
+                }
+                if (sqlEx.Message.Contains("IX_Users_Email"))
+                {
+                    throw new DuplicateEntryException("EMAIL_TAKEN", "A user with the same email already exists.");
+                }
+
+                throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "An achievement with the same name already exists.");
+            }
+        }
 
         return entity;
     }

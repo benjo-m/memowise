@@ -162,7 +162,7 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("FeedbackStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -173,7 +173,12 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -193,6 +198,8 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("LoginRecords");
                 });
@@ -223,6 +230,8 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PaymentRecords");
                 });
@@ -297,6 +306,9 @@ namespace api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPremium")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHashed")
@@ -409,6 +421,39 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("api.Models.Feedback", b =>
+                {
+                    b.HasOne("api.Models.User", "User")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("api.Models.LoginRecord", b =>
+                {
+                    b.HasOne("api.Models.User", "User")
+                        .WithMany("LoginRecords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("api.Models.PaymentRecord", b =>
+                {
+                    b.HasOne("api.Models.User", "User")
+                        .WithMany("PaymentRecords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("api.Models.StudySession", b =>
                 {
                     b.HasOne("api.Models.Deck", "Deck")
@@ -445,6 +490,12 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.User", b =>
                 {
                     b.Navigation("Decks");
+
+                    b.Navigation("Feedbacks");
+
+                    b.Navigation("LoginRecords");
+
+                    b.Navigation("PaymentRecords");
 
                     b.Navigation("UserStats")
                         .IsRequired();

@@ -62,8 +62,12 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
                       TextFormField(
                         controller: _userIdController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "User ID is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },

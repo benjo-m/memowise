@@ -54,6 +54,7 @@ void dataViewWarningDialog(BuildContext context) {
           ),
         ],
       ),
+      barrierDismissible: false,
     );
   });
 }

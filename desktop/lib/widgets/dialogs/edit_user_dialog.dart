@@ -42,7 +42,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Add Payment Record")),
+      title: const Center(child: Text("Edit User")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,
@@ -170,7 +170,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
               }
             }
           },
-          child: const Text("Add"),
+          child: const Text("Edit"),
         ),
       ],
     );

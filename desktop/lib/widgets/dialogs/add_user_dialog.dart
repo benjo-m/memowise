@@ -31,7 +31,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Add Payment Record")),
+      title: const Center(child: Text("Add User")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,

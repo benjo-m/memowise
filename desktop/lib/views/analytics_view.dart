@@ -233,42 +233,50 @@ class _AnalyticsViewState extends State<AnalyticsView> {
             constraints: const BoxConstraints(
               minHeight: 319,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ...data.achievementUnlockPercentages.map((achievement) => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 120,
-                          child: Text(achievement.name),
-                        ),
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          width: 200,
-                          child: Stack(children: [
-                            Positioned.fill(
-                              child: LinearProgressIndicator(
-                                value: achievement.percentage / 100,
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.circular(5),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...data.achievementUnlockPercentages
+                      .map((achievement) => Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 140,
+                                    child: Text(achievement.name),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  SizedBox(
+                                    width: 200,
+                                    child: Stack(children: [
+                                      Positioned.fill(
+                                        child: LinearProgressIndicator(
+                                          value: achievement.percentage / 100,
+                                          color: Colors.blueAccent,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                      Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Text(
+                                          "${achievement.percentage}%",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )),
+                                    ]),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Center(
-                                child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                "${achievement.percentage}%",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )),
-                          ]),
-                        )
-                      ],
-                    )),
-              ],
+                              const SizedBox(height: 10),
+                            ],
+                          )),
+                ],
+              ),
             ),
           )
         ]),

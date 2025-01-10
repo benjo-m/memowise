@@ -39,15 +39,17 @@ class _EditUserStatsDialogState extends State<EditUserStatsDialog> {
   void initState() {
     super.initState();
     _decksCreatedController.text = widget.stats.totalDecksCreated.toString();
-    _cardCreatedController.text = widget.stats.totalDecksCreated.toString();
-    _cardsLearnedController.text = widget.stats.totalDecksCreated.toString();
-    _studyStreakController.text = widget.stats.totalDecksCreated.toString();
+    _cardCreatedController.text = widget.stats.totalCardsCreated.toString();
+    _cardsLearnedController.text = widget.stats.totalCardsLearned.toString();
+    _studyStreakController.text = widget.stats.studyStreak.toString();
     _sessionsCompletedController.text =
-        widget.stats.totalDecksCreated.toString();
-    _decksGeneratedController.text = widget.stats.totalDecksCreated.toString();
-    _longestStreakController.text = widget.stats.totalDecksCreated.toString();
-    _correctAnswersController.text = widget.stats.totalDecksCreated.toString();
-    _userIdController.text = widget.stats.totalDecksCreated.toString();
+        widget.stats.totalSessionsCompleted.toString();
+    _decksGeneratedController.text =
+        widget.stats.totalDecksGenerated.toString();
+    _longestStreakController.text = widget.stats.longestStudyStreak.toString();
+    _correctAnswersController.text =
+        widget.stats.totalCorrectAnswers.toString();
+    _userIdController.text = widget.stats.userId.toString();
   }
 
   @override
@@ -236,7 +238,7 @@ class _EditUserStatsDialogState extends State<EditUserStatsDialog> {
               }
             }
           },
-          child: const Text("Add"),
+          child: const Text("Edit"),
         ),
       ],
     );

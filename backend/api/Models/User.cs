@@ -12,11 +12,15 @@ public class User
     public string PasswordHashed { get; set; }
     public bool IsPremium { get; set; }
     public bool IsAdmin { get; set; }
+    public bool IsSuperAdmin { get; set; }
     public ICollection<Deck> Decks { get; set; } = new List<Deck>();
-    public List<Achievement> Achievements { get; set; } = [];
     [JsonIgnore]
     public UserStats UserStats { get; set; } = new UserStats();
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public List<Achievement> Achievements { get; set; } = [];
+    public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public ICollection<LoginRecord> LoginRecords { get; set; } = new List<LoginRecord>();
+    public ICollection<PaymentRecord> PaymentRecords {  get; set; } = new List<PaymentRecord>();
 
     public User() {}
 

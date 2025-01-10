@@ -29,14 +29,24 @@ public class AnalyticsService
 
     public async Task<AnalyticsData> GetAnalyticsData(int year)
     {
-        double averageEaseFactor = await _dbContext.CardStats.AverageAsync(cs => cs.EaseFactor);
+        double averageEaseFactor = await _dbContext.CardStats.AnyAsync()
+            ? await _dbContext.CardStats.AverageAsync(cs => (double?)cs.EaseFactor) ?? 0
+            : 0;
         int totalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated);
         int generatedDecksCount = await _dbContext.UserStats.SumAsync(us => us.TotalDecksGenerated);
         int manuallyCreatedDecksCount = totalDecksCreated - generatedDecksCount;
-        double averageSessionDuration = await _dbContext.StudySessions.AverageAsync(ss => ss.Duration);
-        double averageStudyStreak = await _dbContext.UserStats.AverageAsync(us => us.StudyStreak);
+        double averageSessionDuration = await _dbContext.StudySessions.AnyAsync()
+            ? await _dbContext.StudySessions.AverageAsync(ss => (double?)ss.Duration) ?? 0
+            : 0;
+        double averageStudyStreak = await _dbContext.UserStats.AnyAsync()
+            ? await _dbContext.UserStats.AverageAsync(us => (double?)us.StudyStreak) ?? 0
+            : 0;
         var cardCount = await _dbContext.Cards.CountAsync();
         var deckCount = await _dbContext.Decks.CountAsync();
+
+
+        var manuallyCreatedDecksPercentage = totalDecksCreated == 0 ? 0 : Math.Round((double)manuallyCreatedDecksCount / totalDecksCreated * 100, 1);
+        var generatedDecksPercentage = totalDecksCreated == 0 ? 0 : Math.Round((double)generatedDecksCount / totalDecksCreated * 100, 1);
 
         return new AnalyticsData
         {
@@ -51,8 +61,8 @@ public class AnalyticsService
             TotalCardsCreated = await _dbContext.UserStats.SumAsync(us => us.TotalCardsCreated),
             AverageDeckSize = deckCount == 0 ? 0 : Math.Round((double)cardCount / (double)deckCount, 2),
             AverageEaseFactor = Math.Round(averageEaseFactor, 2),
-            ManuallyCreatedDecksPercentage = Math.Round((double)manuallyCreatedDecksCount / totalDecksCreated * 100, 1),
-            GeneratedDecksPercentage = Math.Round((double)generatedDecksCount / totalDecksCreated * 100, 1),
+            ManuallyCreatedDecksPercentage = manuallyCreatedDecksPercentage,
+            GeneratedDecksPercentage = generatedDecksPercentage,
             TotalStudySessions = await _dbContext.StudySessions.CountAsync(),
             TotalTimeSpentStudying = await _dbContext.StudySessions.SumAsync(ss => ss.Duration),
             AverageSessionDuration = Math.Round(averageSessionDuration, 2),

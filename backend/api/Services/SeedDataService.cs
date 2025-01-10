@@ -156,6 +156,10 @@ public class SeedDataService
         "The privacy policy needs to be updated to ensure compliance with GDPR and other data protection regulations. Providing users with clear information about how their data is used is crucial for building trust."
     };
 
+        var userIds = _dbContext.Users
+            .Select(u => u.Id)
+            .ToList();
+
         var random = new Random();
         var feedbackList = new List<Feedback>();
 
@@ -165,7 +169,8 @@ public class SeedDataService
             {
                 Title = titles[i],
                 Description = descriptions[i],
-                SubmittedAt = DateTime.Now.AddMinutes(-random.Next(0, 100000))
+                SubmittedAt = DateTime.Now.AddMinutes(-random.Next(0, 100000)),
+                UserId = userIds[random.Next(userIds.Count)]
             });
         }
 

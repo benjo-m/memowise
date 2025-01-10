@@ -47,8 +47,12 @@ class _AddCardStatsDialogState extends State<AddCardStatsDialog> {
                       TextFormField(
                         controller: _repetitionsController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Repetitions field is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -60,8 +64,12 @@ class _AddCardStatsDialogState extends State<AddCardStatsDialog> {
                       TextFormField(
                         controller: _intervalController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Interval is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -73,8 +81,12 @@ class _AddCardStatsDialogState extends State<AddCardStatsDialog> {
                       TextFormField(
                         controller: _easeFactorController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Ease Factor is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          double? number = double.tryParse(value);
+                          if (number == null || number < 1.3 || number > 2.7) {
+                            return "Ease Factor must be between 1.3 & 2.7";
                           }
                           return null;
                         },
@@ -98,8 +110,12 @@ class _AddCardStatsDialogState extends State<AddCardStatsDialog> {
                       TextFormField(
                         controller: _cardIdController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Card ID is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },

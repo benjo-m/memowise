@@ -1,4 +1,4 @@
-import 'package:desktop/views/main_view.dart';
+import 'package:desktop/views/login_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainView(),
+      home: const LoginView(),
     );
   }
 }

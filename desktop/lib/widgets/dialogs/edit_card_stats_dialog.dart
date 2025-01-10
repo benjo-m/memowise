@@ -41,7 +41,7 @@ class _EditCardStatsDialogState extends State<EditCardStatsDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Edit Achievement")),
+      title: const Center(child: Text("Edit Card Stats")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,

@@ -9,6 +9,7 @@ public class UserDto
     public string Email { get; set; }
     public bool IsPremium { get; set; }
     public bool IsAdmin { get; set; }
+    public bool IsSuperAdmin { get; set; }
 
     public UserDto()
     {
@@ -21,5 +22,6 @@ public class UserDto
         Email = user.Email;
         IsPremium = user.IsPremium;
         IsAdmin = user.IsAdmin;
+        IsSuperAdmin = user.IsSuperAdmin;
     }
 }

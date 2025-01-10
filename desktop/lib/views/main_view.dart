@@ -2,6 +2,7 @@ import 'package:desktop/views/analytics_view.dart';
 import 'package:desktop/views/dashboard_view.dart';
 import 'package:desktop/views/data_view.dart';
 import 'package:desktop/views/feedback_view.dart';
+import 'package:desktop/widgets/dialogs/logout_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -28,6 +29,33 @@ class _MainViewState extends State<MainView> {
       body: Row(
         children: [
           NavigationRail(
+            trailing: Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                          child: const Icon(
+                            FontAwesomeIcons.rightFromBracket,
+                            color: Color.fromARGB(255, 54, 54, 54),
+                          ),
+                          onPressed: () => showDialog(
+                                context: context,
+                                builder: (context) => const LogoutDialog(),
+                              )),
+                      const Text(
+                        "Log Out",
+                        style: TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             selectedIndex: _selectedIndex,
             onDestinationSelected: (int index) {
               setState(() {

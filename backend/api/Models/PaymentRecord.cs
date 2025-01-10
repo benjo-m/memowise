@@ -1,4 +1,5 @@
 ﻿using api.DTO;
+using System.Text.Json.Serialization;
 
 namespace api.Models;
 
@@ -7,6 +8,8 @@ public class PaymentRecord
     public int Id { get; set; }
     public string PaymentIntentId { get; set; }
     public int UserId { get; set; }
+    [JsonIgnore]
+    public User User { get; set; }
     public long Amount { get; set; }
     public string Currency { get; set; }
     public DateTime CreatedAt { get; set; }

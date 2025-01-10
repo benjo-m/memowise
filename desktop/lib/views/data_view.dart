@@ -20,7 +20,7 @@ import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/services/user_stats_service.dart';
-import 'package:desktop/utils/data_view_warning_dialog.dart';
+import 'package:desktop/widgets/dialogs/data_view_warning_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_achievement_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_card_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_card_stats_dialog.dart';
@@ -383,8 +383,12 @@ class _DataViewState extends State<DataView> {
                     return Text(snapshot.error!.toString());
                   }
 
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.sizeOf(context).height * 0.3),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
                 },
               ),

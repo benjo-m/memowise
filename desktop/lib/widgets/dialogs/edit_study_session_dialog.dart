@@ -49,7 +49,7 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Add Payment Record")),
+      title: const Center(child: Text("Edit Study Session")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,
@@ -65,8 +65,12 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                       TextFormField(
                         controller: _durationController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Duration is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -78,8 +82,12 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                       TextFormField(
                         controller: _cardCountController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Card Count is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -91,8 +99,12 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                       TextFormField(
                         controller: _avgEfController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "AVG Ease Factor is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          double? number = double.tryParse(value);
+                          if (number == null || number < 1.3 || number > 2.7) {
+                            return "Ease Factor must be between 1.3 & 2.7";
                           }
                           return null;
                         },
@@ -104,8 +116,12 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                       TextFormField(
                         controller: _avgRepsController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "AVG Repetitions is required";
+                          if (value == null) {
+                            return "Please enter a valid positive number";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive number";
                           }
                           return null;
                         },
@@ -129,8 +145,12 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                       TextFormField(
                         controller: _userIdController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "User ID is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -142,8 +162,12 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                       TextFormField(
                         controller: _deckIdController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Deck ID is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -180,9 +204,9 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
               final request = StudySessionDto(
-                averageEaseFactor: int.parse(_avgEfController.text),
+                averageEaseFactor: double.parse(_avgEfController.text),
                 studiedAt: _studiedAt,
-                averageRepetitions: int.parse(_avgRepsController.text),
+                averageRepetitions: double.parse(_avgRepsController.text),
                 duration: int.parse(_durationController.text),
                 userId: int.parse(_cardCountController.text),
                 cardCount: int.parse(_cardCountController.text),
@@ -203,7 +227,7 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
               }
             }
           },
-          child: const Text("Add"),
+          child: const Text("Edit"),
         ),
       ],
     );

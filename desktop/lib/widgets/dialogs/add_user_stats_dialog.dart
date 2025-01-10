@@ -50,8 +50,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _userIdController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "User ID is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -63,8 +67,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _decksCreatedController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Decks Created is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -76,8 +84,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _cardCreatedController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Cards Created is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -89,8 +101,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _cardsLearnedController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Cards Learned is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -102,8 +118,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _studyStreakController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Study Streak is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -115,8 +135,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _sessionsCompletedController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Sessions Completed is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -128,8 +152,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _correctAnswersController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Correct Answers is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -141,8 +169,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _decksGeneratedController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Decks Generated is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },
@@ -154,8 +186,12 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                       TextFormField(
                         controller: _longestStreakController,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Longest Study Streak is required";
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
                           }
                           return null;
                         },

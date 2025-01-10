@@ -70,7 +70,7 @@ class _DeckCreationChartState extends State<DeckCreationChart> {
   List<PieChartSectionData> showingSections() {
     double radius = 50;
 
-    return <PieChartSectionData>[
+    var sections = <PieChartSectionData>[
       PieChartSectionData(
         title: '${widget.percentageCreatedManually}%',
         value: widget.percentageCreatedManually.toDouble(),
@@ -92,6 +92,26 @@ class _DeckCreationChartState extends State<DeckCreationChart> {
         radius: radius,
       ),
     ];
+
+    var empty = <PieChartSectionData>[
+      PieChartSectionData(
+        title: '0%',
+        value: 100,
+        titleStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+        color: Colors.grey,
+        radius: radius,
+      ),
+    ];
+
+    if (widget.percentageCreatedManually == 0 &&
+        widget.percentageGenerated == 0) {
+      return empty;
+    }
+
+    return sections;
   }
 
   Row indicator(Color color, String label) {

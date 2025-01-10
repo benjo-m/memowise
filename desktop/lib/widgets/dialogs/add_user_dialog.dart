@@ -1,48 +1,37 @@
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/payment_record_dto.dart';
-import 'package:desktop/dto/payment_record_response.dart';
-import 'package:desktop/services/payment_record_service.dart';
+import 'package:desktop/dto/user_dto.dart';
+import 'package:desktop/dto/user_response.dart';
+import 'package:desktop/services/user_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class EditPaymentRecordDialog extends StatefulWidget {
-  const EditPaymentRecordDialog(
-      {super.key, required this.onEdit, required this.paymentRecord});
+class AddUserDialog extends StatefulWidget {
+  const AddUserDialog({super.key, required this.onAdd});
 
-  final Function() onEdit;
-  final PaymentRecordResponse paymentRecord;
+  final Function(UserResponse?) onAdd;
 
   @override
-  State<EditPaymentRecordDialog> createState() =>
-      _EditPaymentRecordDialogState();
+  State<AddUserDialog> createState() => _AddUserDialogState();
 }
 
-class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
-  final _paymentRecordService = PaymentRecordService(baseUrl, http.Client());
+class _AddUserDialogState extends State<AddUserDialog> {
+  final _userService = UserService(baseUrl, http.Client());
 
   final _formKey = GlobalKey<FormState>();
-  final _intentController = TextEditingController();
-  final _userIdController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _currencyController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  late DateTime _createdAt;
+  bool _isAdmin = false;
+  bool _isPremium = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _intentController.text = widget.paymentRecord.paymentIntentId.toString();
-    _userIdController.text = widget.paymentRecord.userId.toString();
-    _amountController.text = widget.paymentRecord.amount.toString();
-    _currencyController.text = widget.paymentRecord.currency;
-    _createdAt = widget.paymentRecord.createdAt;
-  }
+  DateTime _createdAt = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Edit Payment Record")),
+      title: const Center(child: Text("Add Payment Record")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,
@@ -56,54 +45,41 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
-                        controller: _intentController,
+                        controller: _usernameController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Payment Intent is required";
+                            return "Username is required";
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
-                          label: Text("Payment Intent"),
+                          label: Text("Username"),
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        controller: _userIdController,
+                        controller: _emailController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "User ID is required";
+                            return "Email is required";
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
-                          label: Text("User ID"),
+                          label: Text("Email"),
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        controller: _amountController,
+                        controller: _passwordController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Amount is required";
+                            return "Password is required";
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
-                          label: Text("Amount"),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _currencyController,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Currency is required";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Currency"),
+                          label: Text("Password"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -113,10 +89,39 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
                           setState(() => _createdAt = date);
                         },
                         fieldLabelText: "Created At",
-                        initialDate: _createdAt,
+                        initialDate: DateTime.now(),
                         firstDate:
                             DateTime.now().add(const Duration(days: -365)),
                         lastDate: DateTime.now().add(const Duration(days: 365)),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Is Admin?"),
+                          Checkbox(
+                            activeColor: Colors.blueAccent,
+                            checkColor: Colors.white,
+                            value: _isAdmin,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isAdmin = value!;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          const Text("Is Premium?"),
+                          Checkbox(
+                            activeColor: Colors.blueAccent,
+                            checkColor: Colors.white,
+                            value: _isPremium,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isPremium = value!;
+                              });
+                            },
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -147,32 +152,33 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
-              final request = PaymentRecordDto(
-                amount: int.parse(_amountController.text),
+              final request = UserDto(
                 createdAt: _createdAt,
-                currency: _currencyController.text,
-                paymentIntentId: _intentController.text,
-                userId: int.parse(_userIdController.text),
+                email: _emailController.text,
+                username: _usernameController.text,
+                isAdmin: _isAdmin,
+                isPremium: _isPremium,
+                password: _passwordController.text,
               );
-              final response = await edit(widget.paymentRecord.id, request);
+              final response = await create(request);
               if (response == null) {
                 return;
               }
               if (context.mounted) {
-                widget.onEdit();
+                widget.onAdd(response);
                 Navigator.pop(context);
               }
             }
           },
-          child: const Text("Edit"),
+          child: const Text("Add"),
         ),
       ],
     );
   }
 
-  Future<PaymentRecordResponse?> edit(int id, PaymentRecordDto request) async {
+  Future<UserResponse?> create(UserDto request) async {
     try {
-      final response = await _paymentRecordService.update(id, request.toJson());
+      final response = await _userService.create(request.toJson());
       return response;
     } on Exception {
       return null;

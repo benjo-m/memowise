@@ -1,7 +1,7 @@
 import 'package:desktop/views/analytics_view.dart';
 import 'package:desktop/views/dashboard_view.dart';
 import 'package:desktop/views/data_view.dart';
-import 'package:desktop/views/feedback/feedback_view.dart';
+import 'package:desktop/views/feedback_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

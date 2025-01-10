@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/login_record_response.dart';
 import 'package:desktop/services/login_record_service.dart';
@@ -116,7 +115,7 @@ class _LoginRecordsTableState extends State<LoginRecordsTable> {
                   onEdit: () => widget.onEdit(), loginRecord: loginRecord)),
           child: const Text("Edit"),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         TextButton(
           style: redButtonStyle,
           onPressed: () => showDeleteDialog(loginRecord.id),

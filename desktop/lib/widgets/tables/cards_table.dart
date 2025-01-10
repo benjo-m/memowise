@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/card_response.dart';
 import 'package:desktop/services/cards_service.dart';
@@ -112,7 +111,7 @@ class _CardsTableState extends State<CardsTable> {
                                   card: card, onEdit: () => widget.onEdit())),
                           child: const Text("Edit"),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         TextButton(
                           style: redButtonStyle,
                           onPressed: () => showDeleteDialog(card.id),

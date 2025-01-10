@@ -41,7 +41,6 @@ public class User
     {
         Username = request.Username;
         Email = request.Email;
-        PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.Password);
         IsAdmin = request.IsAdmin;
         IsPremium = request.IsPremium;
         CreatedAt = request.CreatedAt;

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/feedback_response.dart';
 import 'package:desktop/services/feedback_service.dart';
@@ -133,7 +131,7 @@ class _FeedbackTableState extends State<FeedbackTable> {
                                   )),
                           child: const Text("Edit"),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         TextButton(
                           style: redButtonStyle,
                           onPressed: () => showDeleteDialog(feedback.id),

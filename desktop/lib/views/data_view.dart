@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/dto/card_response.dart';
@@ -22,6 +20,7 @@ import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/services/user_stats_service.dart';
+import 'package:desktop/utils/data_view_warning_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_achievement_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_card_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_card_stats_dialog.dart';
@@ -29,6 +28,9 @@ import 'package:desktop/widgets/dialogs/add_deck_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_feedback_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_login_record_dialog.dart';
 import 'package:desktop/widgets/dialogs/add_payment_record_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_study_session_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_user_dialog.dart';
+import 'package:desktop/widgets/dialogs/add_user_stats_dialog.dart';
 import 'package:desktop/widgets/tables/achievements_table.dart';
 import 'package:desktop/widgets/tables/card_stats_table.dart';
 import 'package:desktop/widgets/tables/cards_table.dart';
@@ -199,7 +201,7 @@ class _DataViewState extends State<DataView> {
     _usersFuture = _userService.getAll();
     _userStatsFuture = _userStatsService.getAll();
 
-    // dataViewWarningDialog(context);
+    dataViewWarningDialog(context);
   }
 
   @override
@@ -315,6 +317,33 @@ class _DataViewState extends State<DataView> {
                                     refreshTable();
                                   }
                                 }));
+                      } else if (_selectedTable == "Study Sessions") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddStudySessionDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "User Stats") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddUserStatsDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
+                      } else if (_selectedTable == "Users") {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                AddUserDialog(onAdd: (response) {
+                                  if (response != null) {
+                                    refreshTable();
+                                  }
+                                }));
                       }
                     },
                     child: const Padding(
@@ -422,9 +451,17 @@ class _DataViewState extends State<DataView> {
           onDelete: () => refreshTable(),
         );
       case "Study Sessions":
-        return StudySessionsTable(data: data);
+        return StudySessionsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Users":
-        return UsersTable(data: data);
+        return UsersTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Feedback":
         return FeedbackTable(
           data: data,
@@ -432,7 +469,11 @@ class _DataViewState extends State<DataView> {
           onDelete: () => refreshTable(),
         );
       case "User Stats":
-        return UserStatsTable(data: data);
+        return UserStatsTable(
+          data: data,
+          onEdit: () => refreshTable(),
+          onDelete: () => refreshTable(),
+        );
       case "Card Stats":
         return CardStatsTable(
           data: data,

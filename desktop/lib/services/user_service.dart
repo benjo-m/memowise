@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class UserService extends BaseCRUDService<UserResponse> {
   UserService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/users',
           client,
           (json) => UserResponse.fromJson(json),
         );

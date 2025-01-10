@@ -1,12 +1,8 @@
 import 'dart:developer';
 
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/achievement_dto.dart';
-import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/dto/card_stats_dto.dart';
 import 'package:desktop/dto/card_stats_response.dart';
-import 'package:desktop/exceptions/exceptions.dart';
-import 'package:desktop/services/achievements_service.dart';
 import 'package:desktop/services/card_stats_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';

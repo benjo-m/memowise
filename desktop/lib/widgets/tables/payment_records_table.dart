@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/payment_record_response.dart';
 import 'package:desktop/services/payment_record_service.dart';
@@ -154,7 +153,7 @@ class _PaymentRecordsTableState extends State<PaymentRecordsTable> {
                   )),
           child: const Text("Edit"),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         TextButton(
           style: redButtonStyle,
           onPressed: () => showDeleteDialog(paymentRecord.id),

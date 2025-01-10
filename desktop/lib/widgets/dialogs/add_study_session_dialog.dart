@@ -1,48 +1,37 @@
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/payment_record_dto.dart';
-import 'package:desktop/dto/payment_record_response.dart';
-import 'package:desktop/services/payment_record_service.dart';
+import 'package:desktop/dto/study_session_dto.dart';
+import 'package:desktop/dto/study_session_response.dart';
+import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class EditPaymentRecordDialog extends StatefulWidget {
-  const EditPaymentRecordDialog(
-      {super.key, required this.onEdit, required this.paymentRecord});
+class AddStudySessionDialog extends StatefulWidget {
+  const AddStudySessionDialog({super.key, required this.onAdd});
 
-  final Function() onEdit;
-  final PaymentRecordResponse paymentRecord;
+  final Function(StudySessionResponse?) onAdd;
 
   @override
-  State<EditPaymentRecordDialog> createState() =>
-      _EditPaymentRecordDialogState();
+  State<AddStudySessionDialog> createState() => _AddStudySessionDialogState();
 }
 
-class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
-  final _paymentRecordService = PaymentRecordService(baseUrl, http.Client());
+class _AddStudySessionDialogState extends State<AddStudySessionDialog> {
+  final _studySessionService = StudySessionService(baseUrl, http.Client());
 
   final _formKey = GlobalKey<FormState>();
-  final _intentController = TextEditingController();
+  final _durationController = TextEditingController();
+  final _cardCountController = TextEditingController();
+  final _avgEfController = TextEditingController();
+  final _avgRepsController = TextEditingController();
   final _userIdController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _currencyController = TextEditingController();
+  final _deckIdController = TextEditingController();
 
-  late DateTime _createdAt;
-
-  @override
-  void initState() {
-    super.initState();
-    _intentController.text = widget.paymentRecord.paymentIntentId.toString();
-    _userIdController.text = widget.paymentRecord.userId.toString();
-    _amountController.text = widget.paymentRecord.amount.toString();
-    _currencyController.text = widget.paymentRecord.currency;
-    _createdAt = widget.paymentRecord.createdAt;
-  }
+  DateTime _studiedAt = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: const Center(child: Text("Edit Payment Record")),
+      title: const Center(child: Text("Add Payment Record")),
       children: [
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.25,
@@ -56,16 +45,67 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
-                        controller: _intentController,
+                        controller: _durationController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Payment Intent is required";
+                            return "Duration is required";
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
-                          label: Text("Payment Intent"),
+                          label: Text("Duration"),
                         ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _cardCountController,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Card Count is required";
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Card Count"),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _avgEfController,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "AVG Ease Factor is required";
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("AVG Ease Factor"),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _avgRepsController,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "AVG Repetitions is required";
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("AVG Repetitions"),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      InputDatePickerFormField(
+                        errorFormatText: "Invalid Date",
+                        onDateSaved: (DateTime date) {
+                          setState(() => _studiedAt = date);
+                        },
+                        fieldLabelText: "Studied At",
+                        initialDate: DateTime.now(),
+                        firstDate:
+                            DateTime.now().add(const Duration(days: -365)),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -82,43 +122,17 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        controller: _amountController,
+                        controller: _deckIdController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Amount is required";
+                            return "Deck ID is required";
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
-                          label: Text("Amount"),
+                          label: Text("Deck ID"),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _currencyController,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Currency is required";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Currency"),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      InputDatePickerFormField(
-                        errorFormatText: "Invalid Date",
-                        onDateSaved: (DateTime date) {
-                          setState(() => _createdAt = date);
-                        },
-                        fieldLabelText: "Created At",
-                        initialDate: _createdAt,
-                        firstDate:
-                            DateTime.now().add(const Duration(days: -365)),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
-                      ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -146,33 +160,39 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
           style: blueButtonStyle,
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              final request = PaymentRecordDto(
-                amount: int.parse(_amountController.text),
-                createdAt: _createdAt,
-                currency: _currencyController.text,
-                paymentIntentId: _intentController.text,
-                userId: int.parse(_userIdController.text),
+              final request = StudySessionDto(
+                averageEaseFactor: int.parse(_avgEfController.text),
+                studiedAt: _studiedAt,
+                averageRepetitions: int.parse(_avgRepsController.text),
+                duration: int.parse(_durationController.text),
+                userId: int.parse(_cardCountController.text),
+                cardCount: int.parse(_cardCountController.text),
+                deckId: int.parse(_deckIdController.text),
+                cardsRated1: 0,
+                cardsRated2: 0,
+                cardsRated3: 0,
+                cardsRated4: 0,
+                cardsRated5: 0,
               );
-              final response = await edit(widget.paymentRecord.id, request);
+              final response = await create(request);
               if (response == null) {
                 return;
               }
               if (context.mounted) {
-                widget.onEdit();
+                widget.onAdd(response);
                 Navigator.pop(context);
               }
             }
           },
-          child: const Text("Edit"),
+          child: const Text("Add"),
         ),
       ],
     );
   }
 
-  Future<PaymentRecordResponse?> edit(int id, PaymentRecordDto request) async {
+  Future<StudySessionResponse?> create(StudySessionDto request) async {
     try {
-      final response = await _paymentRecordService.update(id, request.toJson());
+      final response = await _studySessionService.create(request.toJson());
       return response;
     } on Exception {
       return null;

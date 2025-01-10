@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class StudySessionService extends BaseCRUDService<StudySessionResponse> {
   StudySessionService(String baseUrl, http.Client client)
       : super(
-          '$baseUrl/achievements',
+          '$baseUrl/studysessions',
           client,
           (json) => StudySessionResponse.fromJson(json),
         );

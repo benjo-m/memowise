@@ -1,9 +1,6 @@
 import 'package:desktop/config/constants.dart';
-import 'package:desktop/dto/card_stats_dto.dart';
-import 'package:desktop/dto/card_stats_response.dart';
 import 'package:desktop/dto/feedback_dto.dart';
 import 'package:desktop/dto/feedback_response.dart';
-import 'package:desktop/services/card_stats_service.dart';
 import 'package:desktop/services/feedback_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +89,7 @@ class _EditFeedbackDialogState extends State<EditFeedbackDialog> {
                             DateTime.now().add(const Duration(days: -365)),
                         lastDate: DateTime.now().add(const Duration(days: 365)),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       DropdownButtonFormField<String>(
                         value: _status,
                         decoration: const InputDecoration(

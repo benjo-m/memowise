@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
@@ -20,6 +19,7 @@ class DecksView extends StatefulWidget {
 
 class _DecksViewState extends State<DecksView> {
   Future<List<DeckSummary>> _decksFuture = DeckService().getDecks();
+  int _currentDeck = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,12 @@ class _DecksViewState extends State<DecksView> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             showCarousel(decks, context),
+                            Text(
+                              "${_currentDeck.toString()}/${decks.length}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         )
                       : noDecksMessage(),
@@ -70,7 +76,7 @@ class _DecksViewState extends State<DecksView> {
     });
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -170,7 +176,7 @@ class _DecksViewState extends State<DecksView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        TextButton(
+        ElevatedButton(
           onPressed: () => deckLimitExceeded(decks)
               ? deckLimitExceededDialog()
               : createDeck(decks),
@@ -178,7 +184,7 @@ class _DecksViewState extends State<DecksView> {
             backgroundColor: deckLimitExceeded(decks)
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+                : const WidgetStatePropertyAll(Colors.lightBlue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -186,14 +192,6 @@ class _DecksViewState extends State<DecksView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: deckLimitExceeded(decks)
-                    ? const Color.fromARGB(255, 179, 179, 179)
-                    : Colors.lightBlue,
               ),
             ),
           ),
@@ -208,7 +206,7 @@ class _DecksViewState extends State<DecksView> {
             ],
           ),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () => deckLimitExceeded(decks)
               ? deckLimitExceededDialog()
               : generateDeck(),
@@ -216,7 +214,7 @@ class _DecksViewState extends State<DecksView> {
             backgroundColor: deckLimitExceeded(decks)
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+                : const WidgetStatePropertyAll(Colors.lightBlue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -224,14 +222,6 @@ class _DecksViewState extends State<DecksView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: deckLimitExceeded(decks)
-                    ? const Color.fromARGB(255, 179, 179, 179)
-                    : Colors.lightBlue,
               ),
             ),
           ),
@@ -341,6 +331,10 @@ class _DecksViewState extends State<DecksView> {
       options: CarouselOptions(
         height: MediaQuery.sizeOf(context).height * 0.4,
         viewportFraction: 0.7,
+        onPageChanged: (page, reason) => setState(() {
+          _currentDeck = page + 1;
+        }),
+        enableInfiniteScroll: true,
       ),
     );
   }

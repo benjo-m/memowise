@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[AllowAnonymous]
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public abstract class BaseCRUDController<TEntity, TCreateRequest, TUpdateRequest> : ControllerBase where TEntity : class where TCreateRequest : class where TUpdateRequest : class

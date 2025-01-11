@@ -97,11 +97,11 @@ class _CreateDeckViewState extends State<CreateDeckView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        TextButton(
+        ElevatedButton(
           onPressed: () async => await createDeck(context),
           style: ButtonStyle(
             backgroundColor: const WidgetStatePropertyAll(
-              Color.fromARGB(255, 95, 197, 98),
+              Colors.greenAccent,
             ),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
@@ -110,12 +110,6 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: const WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: Colors.green,
               ),
             ),
           ),
@@ -147,7 +141,7 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             backgroundColor: cardLimitExceeded()
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+                : const WidgetStatePropertyAll(Colors.lightBlue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -155,14 +149,6 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: cardLimitExceeded()
-                    ? const Color.fromARGB(255, 179, 179, 179)
-                    : Colors.lightBlue,
               ),
             ),
           ),

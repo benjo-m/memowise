@@ -8,6 +8,6 @@ public class GenerateCardsRequest
     [MaxLength(100)]
     public string Topic { get; set; }
     [Required]
-    [Range(1, 20)]
+    [Range(1, 30)]
     public int CardCount { get; set; }
 }

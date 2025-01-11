@@ -127,11 +127,11 @@ class _SettingsViewState extends State<SettingsView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () => showDeleteAccountDialog(),
                       style: ButtonStyle(
-                        backgroundColor: const WidgetStatePropertyAll(
-                            Color.fromARGB(255, 243, 83, 71)),
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Colors.redAccent),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -143,16 +143,10 @@ class _SettingsViewState extends State<SettingsView> {
                             MediaQuery.sizeOf(context).width * 0.4,
                           ),
                         ),
-                        side: const WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.red,
-                          ),
-                        ),
                       ),
                       child: const Text("Delete Account"),
                     ),
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () async => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -160,7 +154,7 @@ class _SettingsViewState extends State<SettingsView> {
                                   const ChangePasswordView())),
                       style: ButtonStyle(
                         backgroundColor:
-                            const WidgetStatePropertyAll(Color(0xff03AED2)),
+                            const WidgetStatePropertyAll(Colors.lightBlue),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -170,12 +164,6 @@ class _SettingsViewState extends State<SettingsView> {
                         fixedSize: WidgetStatePropertyAll(
                           Size.fromWidth(
                             MediaQuery.sizeOf(context).width * 0.4,
-                          ),
-                        ),
-                        side: const WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.lightBlue,
                           ),
                         ),
                       ),
@@ -206,7 +194,7 @@ class _SettingsViewState extends State<SettingsView> {
                       const SizedBox(
                         width: 10,
                       ),
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () async {
                           Navigator.push(
                             context,
@@ -216,8 +204,8 @@ class _SettingsViewState extends State<SettingsView> {
                           );
                         },
                         style: ButtonStyle(
-                          backgroundColor: const WidgetStatePropertyAll(
-                            Color.fromARGB(255, 241, 183, 7),
+                          backgroundColor: WidgetStatePropertyAll(
+                            Colors.amber[500],
                           ),
                           foregroundColor:
                               const WidgetStatePropertyAll(Colors.white),
@@ -228,12 +216,6 @@ class _SettingsViewState extends State<SettingsView> {
                           fixedSize: WidgetStatePropertyAll(
                             Size.fromWidth(
                               MediaQuery.sizeOf(context).width * 0.3,
-                            ),
-                          ),
-                          side: const WidgetStatePropertyAll(
-                            BorderSide(
-                              width: 2,
-                              color: Colors.amber,
                             ),
                           ),
                         ),
@@ -258,11 +240,11 @@ class _SettingsViewState extends State<SettingsView> {
                     const SizedBox(
                       width: 10,
                     ),
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () async => deleteData(),
                       style: ButtonStyle(
-                        backgroundColor: const WidgetStatePropertyAll(
-                            Color.fromARGB(255, 243, 83, 71)),
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Colors.redAccent),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -272,12 +254,6 @@ class _SettingsViewState extends State<SettingsView> {
                         fixedSize: WidgetStatePropertyAll(
                           Size.fromWidth(
                             MediaQuery.sizeOf(context).width * 0.3,
-                          ),
-                        ),
-                        side: const WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.red,
                           ),
                         ),
                       ),
@@ -302,14 +278,14 @@ class _SettingsViewState extends State<SettingsView> {
                     const SizedBox(
                       width: 10,
                     ),
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () async => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const FeedbackView())),
                       style: ButtonStyle(
                         backgroundColor:
-                            const WidgetStatePropertyAll(Color(0xff03AED2)),
+                            const WidgetStatePropertyAll(Colors.lightBlue),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -321,12 +297,6 @@ class _SettingsViewState extends State<SettingsView> {
                             MediaQuery.sizeOf(context).width * 0.3,
                           ),
                         ),
-                        side: const WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Colors.lightBlue,
-                          ),
-                        ),
                       ),
                       child: const Text("Feedback"),
                     ),
@@ -336,11 +306,11 @@ class _SettingsViewState extends State<SettingsView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () async => logout(),
                       style: ButtonStyle(
                         backgroundColor: const WidgetStatePropertyAll(
-                          Color.fromARGB(255, 173, 173, 173),
+                          Colors.grey,
                         ),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
@@ -351,12 +321,6 @@ class _SettingsViewState extends State<SettingsView> {
                         fixedSize: WidgetStatePropertyAll(
                           Size.fromWidth(
                             MediaQuery.sizeOf(context).width * 0.4,
-                          ),
-                        ),
-                        side: const WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 2,
-                            color: Color.fromARGB(255, 165, 165, 165),
                           ),
                         ),
                       ),

@@ -108,17 +108,11 @@ class DeckListItem extends StatelessWidget {
           Column(
             children: [
               timeToCompleteStudySession(context),
-              TextButton(
+              ElevatedButton(
                 style: ButtonStyle(
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
-                  backgroundColor: const WidgetStatePropertyAll(
-                      Color.fromARGB(255, 95, 197, 98)),
-                  side: const WidgetStatePropertyAll(
-                    BorderSide(
-                      width: 2,
-                      color: Colors.green,
-                    ),
-                  ),
+                  backgroundColor:
+                      const WidgetStatePropertyAll(Colors.greenAccent),
                   fixedSize: WidgetStatePropertyAll(
                       Size.fromWidth(MediaQuery.sizeOf(context).width * 0.35)),
                 ),

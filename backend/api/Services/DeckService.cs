@@ -55,13 +55,6 @@ public class DeckService : CRUDService
 
     public async Task<List<DeckSummary>> GetDecksByUser(int userId)
     {
-        var currentUser = await _authService.GetCurrentUser();
-
-        if (currentUser!.Id != userId)
-        {
-            throw new ResourceForbiddenException("Cannot access this deck");
-        }
-
         var decks = await _dbContext.Decks
             .Where(x => x.User.Id == userId)
             .Include(x => x.Cards)

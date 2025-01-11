@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/services/image_picker_service.dart';
 
@@ -288,11 +287,10 @@ class _EditCardViewState extends State<EditCardView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        TextButton(
+        ElevatedButton(
           onPressed: () => Navigator.pop(context),
           style: ButtonStyle(
-            backgroundColor:
-                const WidgetStatePropertyAll(Color.fromARGB(255, 243, 83, 71)),
+            backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -300,12 +298,6 @@ class _EditCardViewState extends State<EditCardView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: const WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: Colors.red,
               ),
             ),
           ),
@@ -320,12 +312,12 @@ class _EditCardViewState extends State<EditCardView> {
             ],
           ),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () {
             finishEdit(context);
           },
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(Color(blue)),
+            backgroundColor: const WidgetStatePropertyAll(Colors.lightBlue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -333,12 +325,6 @@ class _EditCardViewState extends State<EditCardView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: const WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: Colors.lightBlue,
               ),
             ),
           ),

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile/config/constants.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/image_picker_service.dart';
@@ -257,14 +256,14 @@ class _AddCardViewState extends State<AddCardView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        TextButton(
+        ElevatedButton(
           onPressed: () {
             addCard();
             Navigator.pop(context);
           },
           style: ButtonStyle(
             backgroundColor: const WidgetStatePropertyAll(
-              Color.fromARGB(255, 95, 197, 98),
+              Colors.greenAccent,
             ),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
@@ -275,12 +274,6 @@ class _AddCardViewState extends State<AddCardView> {
                 MediaQuery.sizeOf(context).width * 0.4,
               ),
             ),
-            side: const WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: Colors.green,
-              ),
-            ),
           ),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -289,15 +282,15 @@ class _AddCardViewState extends State<AddCardView> {
               SizedBox(
                 width: 5,
               ),
-              Text("Complete "),
+              Text("Complete"),
             ],
           ),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () =>
               cardLimitExceeded() ? Navigator.pop(context) : addCard(),
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(Color(blue)),
+            backgroundColor: const WidgetStatePropertyAll(Colors.lightBlue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -321,7 +314,7 @@ class _AddCardViewState extends State<AddCardView> {
               SizedBox(
                 width: 5,
               ),
-              Text("Add Card  "),
+              Text("Add Card"),
             ],
           ),
         ),

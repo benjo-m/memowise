@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
       title: 'MemoWise',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff03AED2)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xff03AED2),
+          backgroundColor: Colors.lightBlue,
           foregroundColor: Colors.white,
           titleTextStyle: TextStyle(
             fontWeight: FontWeight.bold,

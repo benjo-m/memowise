@@ -116,11 +116,11 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
               const SizedBox(
                 height: 20,
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () async => await generateDeck(context),
                 style: ButtonStyle(
                   backgroundColor: const WidgetStatePropertyAll(
-                    Color.fromARGB(255, 95, 197, 98),
+                    Colors.greenAccent,
                   ),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(
@@ -129,12 +129,6 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                   fixedSize: WidgetStatePropertyAll(
                     Size.fromWidth(
                       MediaQuery.sizeOf(context).width * 0.4,
-                    ),
-                  ),
-                  side: const WidgetStatePropertyAll(
-                    BorderSide(
-                      width: 2,
-                      color: Colors.green,
                     ),
                   ),
                 ),

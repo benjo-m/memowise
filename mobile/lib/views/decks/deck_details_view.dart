@@ -112,13 +112,12 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        TextButton(
+        ElevatedButton(
           onPressed: () async {
             await showDeletionConfirmationDialog(deck, context);
           },
           style: ButtonStyle(
-            backgroundColor:
-                const WidgetStatePropertyAll(Color.fromARGB(255, 243, 83, 71)),
+            backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -126,12 +125,6 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: const WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: Colors.red,
               ),
             ),
           ),
@@ -146,7 +139,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             ],
           ),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () => cardLimitExceeded(deck.cards.length)
               ? cardLimitExceededDialog()
               : Navigator.push(
@@ -168,7 +161,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             backgroundColor: cardLimitExceeded(deck.cards.length)
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Color(0xff03AED2)),
+                : const WidgetStatePropertyAll(Colors.lightBlue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -176,14 +169,6 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             fixedSize: WidgetStatePropertyAll(
               Size.fromWidth(
                 MediaQuery.sizeOf(context).width * 0.4,
-              ),
-            ),
-            side: WidgetStatePropertyAll(
-              BorderSide(
-                width: 2,
-                color: cardLimitExceeded(deck.cards.length)
-                    ? const Color.fromARGB(255, 179, 179, 179)
-                    : Colors.lightBlue,
               ),
             ),
           ),
@@ -194,7 +179,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
               SizedBox(
                 width: 5,
               ),
-              Text(" Add Cards "),
+              Text("Add Cards"),
             ],
           ),
         ),

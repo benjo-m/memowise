@@ -137,11 +137,11 @@ class _RegisterViewState extends State<RegisterView> {
                   const SizedBox(
                     height: 20,
                   ),
-                  TextButton(
+                  ElevatedButton(
                     onPressed: () async => await register(context),
                     style: ButtonStyle(
                       backgroundColor:
-                          const WidgetStatePropertyAll(Color(0xff03AED2)),
+                          const WidgetStatePropertyAll(Colors.lightBlue),
                       foregroundColor:
                           const WidgetStatePropertyAll(Colors.white),
                       padding: WidgetStatePropertyAll(
@@ -151,12 +151,6 @@ class _RegisterViewState extends State<RegisterView> {
                       fixedSize: WidgetStatePropertyAll(
                         Size.fromWidth(
                           MediaQuery.sizeOf(context).width * 0.4,
-                        ),
-                      ),
-                      side: const WidgetStatePropertyAll(
-                        BorderSide(
-                          width: 2,
-                          color: Colors.lightBlue,
                         ),
                       ),
                     ),

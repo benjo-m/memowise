@@ -137,11 +137,11 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                 const SizedBox(
                   height: 10,
                 ),
-                TextButton(
+                ElevatedButton(
                   onPressed: () => upgradeToPremium(context),
                   style: ButtonStyle(
-                    backgroundColor: const WidgetStatePropertyAll(
-                      Color.fromARGB(255, 241, 183, 7),
+                    backgroundColor: WidgetStatePropertyAll(
+                      Colors.amber[500],
                     ),
                     foregroundColor: const WidgetStatePropertyAll(Colors.white),
                     padding: WidgetStatePropertyAll(
@@ -150,12 +150,6 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                     fixedSize: WidgetStatePropertyAll(
                       Size.fromWidth(
                         MediaQuery.sizeOf(context).width * 0.4,
-                      ),
-                    ),
-                    side: const WidgetStatePropertyAll(
-                      BorderSide(
-                        width: 2,
-                        color: Colors.amber,
                       ),
                     ),
                   ),

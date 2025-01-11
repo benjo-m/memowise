@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-
-[AllowAnonymous]
 public class AchievementsController : BaseCRUDController<Achievement, AchievementCreateRequest, AchievementUpdateRequest>
 {
     private readonly AchievementsService _achievementsService;

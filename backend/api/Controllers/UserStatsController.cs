@@ -14,7 +14,7 @@ public class UserStatsController : BaseCRUDController<UserStats, UserStatsCreate
         _userStatsService = userStatsService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllUserStats
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? user = null)

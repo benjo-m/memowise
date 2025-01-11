@@ -15,7 +15,7 @@ public class UsersController : BaseCRUDController<User, UserCreateRequest, UserU
         _userService = userService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllUsers
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, string? accountType = null, string? role = null)

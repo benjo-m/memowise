@@ -15,7 +15,7 @@ public class DecksController : BaseCRUDController<Deck, DeckCreateRequest, DeckU
         _deckService = deckService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllDecks
     (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? user = null)
@@ -56,30 +56,4 @@ public class DecksController : BaseCRUDController<Deck, DeckCreateRequest, DeckU
 
         return Ok(deck);
     }
-
-    //[HttpPut("{deckId}")]
-    //public async Task<ActionResult<Deck>> UpdateDeck(int deckId, DeckUpdateRequest deckUpdateRequest)
-    //{
-    //    var deck = await _deckService.UpdateDeck(deckId, deckUpdateRequest);
-
-    //    if (deck == null)
-    //    {
-    //        return BadRequest();
-    //    }
-
-    //    return Ok(deck);
-    //}
-
-    //[HttpDelete("{deckId}")]
-    //public async Task<ActionResult<Deck>> DeleteDeck(int deckId)
-    //{
-    //    var deck = await _deckService.DeleteDeck(deckId);
-
-    //    if (deck == null)
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    return Ok(deck);
-    //}
 }

@@ -15,7 +15,7 @@ public class CardsController : BaseCRUDController<Card, CardCreateRequest, CardU
         _cardService = cardService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllCards
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? deck = null)

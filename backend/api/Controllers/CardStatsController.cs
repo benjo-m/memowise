@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[AllowAnonymous]
 public class CardStatsController : BaseCRUDController<CardStats, CardStatsCreateRequest, CardStatsUpdateRequestAdmin>
 {
     private readonly CardStatsService _cardStatsService;
@@ -16,7 +15,7 @@ public class CardStatsController : BaseCRUDController<CardStats, CardStatsCreate
         _cardStatsService = cardStatsService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllCardStats
     (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? card = null)

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:desktop/exceptions/exceptions.dart';
+import 'package:desktop/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 
 class BaseCRUDService<TEntity> {
@@ -16,7 +18,9 @@ class BaseCRUDService<TEntity> {
 
   Future<TEntity?> getById(int id) async {
     try {
-      final response = await _client.get(Uri.parse('$baseUrl/$id'));
+      final response = await _client.get(Uri.parse('$baseUrl/$id'), headers: {
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      });
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as TEntity;
       } else {
@@ -33,7 +37,10 @@ class BaseCRUDService<TEntity> {
     try {
       final response = await _client.post(
         Uri.parse(baseUrl),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+        },
         body: jsonEncode(data),
       );
 
@@ -92,7 +99,10 @@ class BaseCRUDService<TEntity> {
     try {
       final response = await _client.put(
         Uri.parse('$baseUrl/$id'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+        },
         body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
@@ -148,7 +158,10 @@ class BaseCRUDService<TEntity> {
 
   Future<bool> delete(int id) async {
     try {
-      final response = await _client.delete(Uri.parse('$baseUrl/$id'));
+      final response =
+          await _client.delete(Uri.parse('$baseUrl/$id'), headers: {
+        HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
+      });
       if (response.statusCode == 200 || response.statusCode == 204) {
         return true;
       } else {

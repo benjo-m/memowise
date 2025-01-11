@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[AllowAnonymous]
 public class AnalyticsController : BaseController
 {
     private readonly AnalyticsService _analyticsService;
@@ -15,12 +14,14 @@ public class AnalyticsController : BaseController
         _analyticsService = analyticsService;
     }
 
+    [Authorize(Roles = "SuperAdmin,Admin")]
     [HttpGet("dashboard-data")]
     public async Task<ActionResult<DashboardData>> GetDashboardData()
     {
         return await _analyticsService.GetDashboardData();
     }
 
+    [Authorize(Roles = "SuperAdmin,Admin")]
     [HttpGet("analytics-data")]
     public async Task<ActionResult<AnalyticsData>> GetAnalyticsData(int year)
     {

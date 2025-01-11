@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/paginated_response.dart';
 import 'package:desktop/dto/payment_record_response.dart';
+import 'package:desktop/services/auth_service.dart';
 import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,6 +27,7 @@ class PaymentRecordService extends BaseCRUDService<PaymentRecordResponse> {
             '$baseUrl/paymentrecords?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&user=${user ?? ""}'),
         headers: {
           'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
         });
 
     final paymentRecords = PaginatedResponse<PaymentRecordResponse>.fromJson(

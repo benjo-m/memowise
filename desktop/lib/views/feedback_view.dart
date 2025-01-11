@@ -201,8 +201,7 @@ class _FeedbackViewState extends State<FeedbackView> {
                 children: [
                   TextButton(
                     style: blueButtonStyle,
-                    onPressed: () =>
-                        feedbackDetailsDialog(context, feedback.id),
+                    onPressed: () => feedbackDetailsDialog(context, feedback),
                     child: const Text("Details"),
                   ),
                 ],
@@ -214,8 +213,7 @@ class _FeedbackViewState extends State<FeedbackView> {
     );
   }
 
-  feedbackDetailsDialog(BuildContext context, int id) async {
-    final feedback = await _feedbackService.getFeedbackById(id);
+  feedbackDetailsDialog(BuildContext context, FeedbackResponse feedback) async {
     if (context.mounted) {
       showDialog(
           barrierDismissible: false,
@@ -321,17 +319,15 @@ class _FeedbackViewState extends State<FeedbackView> {
   }
 
   removeFeedback(int feedbackId) async {
-    await _feedbackService
-        .removeFeedback(feedbackId)
-        .then((value) => setState(() {
-              _feedbackFuture = _feedbackService.getAll(
-                page: _currentPage,
-                sortBy: _selectedSortBy,
-                sortDescending: _sortDescending,
-                status: _selectedStatus,
-                accountType: _selectedAccountType,
-              );
-            }));
+    await _feedbackService.delete(feedbackId).then((value) => setState(() {
+          _feedbackFuture = _feedbackService.getAll(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            status: _selectedStatus,
+            accountType: _selectedAccountType,
+          );
+        }));
   }
 
   DropdownMenu sortByDropdown() {

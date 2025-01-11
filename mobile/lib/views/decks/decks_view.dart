@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';

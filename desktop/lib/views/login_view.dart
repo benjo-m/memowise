@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:desktop/dto/login_request.dart';
@@ -110,7 +111,11 @@ class _LoginFormState extends State<LoginView> {
         log(user!.toJson().toString());
         if (context.mounted) {
           CurrentUser.userId = user.id;
+          CurrentUser.username = user.username;
+          CurrentUser.password = _passwordController.text;
           CurrentUser.isSuperAdmin = user.isSuperAdmin;
+          CurrentUser.authHeader =
+              "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const MainView()),
             (route) => false,

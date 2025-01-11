@@ -7,7 +7,10 @@ import 'package:http/http.dart' as http;
 
 class CurrentUser {
   static int? userId;
+  static String? username;
+  static String? password;
   static bool? isSuperAdmin;
+  static String? authHeader;
 }
 
 class AuthService {

@@ -68,6 +68,9 @@ class _StudySessionViewState extends State<StudySessionView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Study"),
+          actions: [
+            helpDialog(context),
+          ],
         ),
         body: cards.isNotEmpty
             ? Padding(
@@ -395,5 +398,58 @@ class _StudySessionViewState extends State<StudySessionView> {
             ),
           ));
     }
+  }
+
+  GestureDetector helpDialog(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: const Center(
+                  child: Text("Study Sessions Help",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    "This is the Study Session View.\n\n"
+                    "Here you will be shown cards from a selected deck.\n\n"
+                    "You answer the question in your head (you don't enter the answer anywhere),\n"
+                    "then tap the \"Show Answer\" button.\n\n"
+                    "Next, the rating buttons will appear.\n"
+                    "Rate the answer you gave, and go to the next question\n\n"
+                    "It is important that you rate your answers honestly because that is how\n"
+                    "the SM2 algorithm calculates the interval after which the card will appear again.",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Colors.grey,
+                        ),
+                      ),
+                      child: const Text(
+                        "Close",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            barrierDismissible: false,
+          );
+        },
+        child: const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.help_outline_outlined),
+        ));
   }
 }

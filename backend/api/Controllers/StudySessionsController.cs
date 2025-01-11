@@ -15,7 +15,7 @@ public class StudySessionsController : BaseCRUDController<StudySession, StudySes
         _studySessionService = studySessionService;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllStudySessions
     (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? deck = null, int? user = null)

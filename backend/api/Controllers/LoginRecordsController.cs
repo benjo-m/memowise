@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[AllowAnonymous]
 public class LoginRecordsController : BaseCRUDController<LoginRecord, LoginRecordCreateRequest, LoginRecordUpdateRequest>
 {
     private readonly LoginRecordService _loginRecordService;
@@ -15,6 +14,7 @@ public class LoginRecordsController : BaseCRUDController<LoginRecord, LoginRecor
         _loginRecordService = loginRecordService;
     }
 
+    [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
     public async Task<IActionResult> GetAllLoginRecords
         (int page = 1, int pageSize = 10, string? sortBy = "id", bool sortDescending = false, int? user = null)

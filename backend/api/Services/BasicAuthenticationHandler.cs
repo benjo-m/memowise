@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Stripe;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
@@ -56,6 +57,24 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
+
+            if (!user.IsAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+            }
+
+            if (user.IsAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            }
+
+            if (user.IsSuperAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "SuperAdmin"));
+            }
+
+            Console.WriteLine(claims[1]);
+
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);

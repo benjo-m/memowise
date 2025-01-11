@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/achievement_response.dart';
 import 'package:desktop/dto/paginated_response.dart';
+import 'package:desktop/services/auth_service.dart';
 import 'package:desktop/services/base_crud_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,6 +23,7 @@ class AchievementService extends BaseCRUDService<AchievementResponse> {
             '$baseUrl/achievements?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending'),
         headers: {
           'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
         });
 
     final achievements = PaginatedResponse<AchievementResponse>.fromJson(

@@ -26,6 +26,8 @@ class _AddPaymentRecordDialogState extends State<AddPaymentRecordDialog> {
 
   DateTime _createdAt = DateTime.now();
 
+  String? _userIdErrorText;
+
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
@@ -67,8 +69,9 @@ class _AddPaymentRecordDialogState extends State<AddPaymentRecordDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -150,6 +153,8 @@ class _AddPaymentRecordDialogState extends State<AddPaymentRecordDialog> {
               );
               final response = await create(request);
               if (response == null) {
+                setState(() => _userIdErrorText = "User does not exist");
+
                 return;
               }
               if (context.mounted) {

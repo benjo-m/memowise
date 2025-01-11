@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/user_stats_dto.dart';
 import 'package:desktop/dto/user_stats_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/user_stats_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,9 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            label: const Text("User ID"),
-                            errorText: _userIdErrorText),
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -240,11 +242,6 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
               );
               final response = await create(request);
               if (response == null) {
-                if (response == null) {
-                  setState(() => _userIdErrorText =
-                      "User with this ID already has User Stats");
-                  return;
-                }
                 return;
               }
               if (context.mounted) {
@@ -263,7 +260,15 @@ class _AddUserStatsDialogState extends State<AddUserStatsDialog> {
     try {
       final response = await _userStatService.create(request.toJson());
       return response;
-    } on Exception {
+    } on DuplicateException {
+      setState(() {
+        _userIdErrorText = "User with this ID already has User Stats";
+      });
+      return null;
+    } on InvalidUserIdException {
+      setState(() {
+        _userIdErrorText = "User does not exist";
+      });
       return null;
     }
   }

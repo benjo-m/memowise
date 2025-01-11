@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/card_dto.dart';
 import 'package:desktop/dto/card_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/cards_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _EditCardDialogState extends State<EditCardDialog> {
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
   final _deckIdController = TextEditingController();
-  String? _nameErrorText;
+  String? _deckIdErrorText;
 
   @override
   void initState() {
@@ -55,9 +56,8 @@ class _EditCardDialogState extends State<EditCardDialog> {
                           }
                           return null;
                         },
-                        decoration: InputDecoration(
-                          label: const Text("Question"),
-                          errorText: _nameErrorText,
+                        decoration: const InputDecoration(
+                          label: Text("Question"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -86,8 +86,9 @@ class _EditCardDialogState extends State<EditCardDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("Deck ID"),
+                        decoration: InputDecoration(
+                          label: const Text("Deck ID"),
+                          errorText: _deckIdErrorText,
                         ),
                       ),
                     ],
@@ -100,7 +101,7 @@ class _EditCardDialogState extends State<EditCardDialog> {
                     TextButton(
                       style: greyButtonStyle,
                       onPressed: () {
-                        setState(() => _nameErrorText = null);
+                        setState(() => _deckIdErrorText = null);
                         Navigator.pop(context);
                       },
                       child: const Text("Cancel"),
@@ -117,12 +118,11 @@ class _EditCardDialogState extends State<EditCardDialog> {
                           );
                           final response = await edit(widget.card.id, request);
                           if (response == null) {
-                            setState(() => _nameErrorText = "Name taken");
                             return;
                           } else if (context.mounted) {
                             widget.onEdit();
                             Navigator.pop(context);
-                            _nameErrorText = null;
+                            _deckIdErrorText = null;
                           }
                         }
                       },
@@ -142,7 +142,8 @@ class _EditCardDialogState extends State<EditCardDialog> {
     try {
       final response = await _cardService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on InvalidDeckIdException {
+      setState(() => _deckIdErrorText = "Deck does not exist");
       return null;
     }
   }

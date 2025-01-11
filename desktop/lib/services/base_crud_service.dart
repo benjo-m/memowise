@@ -52,6 +52,18 @@ class BaseCRUDService<TEntity> {
           default:
             throw DuplicateException();
         }
+      } else if (response.statusCode == 400) {
+        final responseBody = jsonDecode(response.body);
+        switch (responseBody['errorCode']) {
+          case "USER_DOES_NOT_EXIST":
+            throw InvalidUserIdException();
+          case "DECK_DOES_NOT_EXIST":
+            throw InvalidDeckIdException();
+          case "CARD_DOES_NOT_EXIST":
+            throw InvalidCardIdException();
+          default:
+            throw Exception("Status kode 400");
+        }
       } else {
         log('Failed to create entity: ${response.statusCode}');
         return null;
@@ -61,6 +73,14 @@ class BaseCRUDService<TEntity> {
     } on EmailAlreadyInUseException {
       rethrow;
     } on AchievementNameTakenException {
+      rethrow;
+    } on InvalidUserIdException {
+      rethrow;
+    } on InvalidDeckIdException {
+      rethrow;
+    } on InvalidCardIdException {
+      rethrow;
+    } on DuplicateException {
       rethrow;
     } catch (e) {
       log('Unexpected error: $e');
@@ -90,6 +110,18 @@ class BaseCRUDService<TEntity> {
           default:
             throw DuplicateException();
         }
+      } else if (response.statusCode == 400) {
+        final responseBody = jsonDecode(response.body);
+        switch (responseBody['errorCode']) {
+          case "USER_DOES_NOT_EXIST":
+            throw InvalidUserIdException();
+          case "DECK_DOES_NOT_EXIST":
+            throw InvalidDeckIdException();
+          case "CARD_DOES_NOT_EXIST":
+            throw InvalidCardIdException();
+          default:
+            throw Exception("Status kode 400");
+        }
       } else {
         log('Failed to update entity: ${response.statusCode}');
         return null;
@@ -99,6 +131,14 @@ class BaseCRUDService<TEntity> {
     } on EmailAlreadyInUseException {
       rethrow;
     } on AchievementNameTakenException {
+      rethrow;
+    } on InvalidUserIdException {
+      rethrow;
+    } on InvalidDeckIdException {
+      rethrow;
+    } on InvalidCardIdException {
+      rethrow;
+    } on DuplicateException {
       rethrow;
     } catch (e) {
       log('Error updating entity: $e');

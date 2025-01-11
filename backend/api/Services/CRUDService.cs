@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.Exceptions;
+using api.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,35 +26,11 @@ public class CRUDService
 
         TEntity entity = (TEntity)constructor!.Invoke(new object[] { req });
 
-        try
-        {
-            await _dbContext.Set<TEntity>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601)
-            {
-                if (sqlEx.Message.Contains("IX_Users_Username"))
-                {
-                    throw new DuplicateEntryException("USERNAME_TAKEN", "A user with the same name already exists.");
-                }
-                if (sqlEx.Message.Contains("IX_Users_Email"))
-                {
-                    throw new DuplicateEntryException("EMAIL_TAKEN", "A user with the same email already exists.");
-                }
-                if (sqlEx.Message.Contains("IX_CardStats_CardId"))
-                {
-                    throw new DuplicateEntryException("CARD_ID_TAKEN", "A card stats for this card already exists.");
-                }
-                throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "An achievement with the same name already exists.");
-            }
-        } 
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        } 
+        await CheckExceptions(entity);
 
+        await _dbContext.Set<TEntity>().AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
+        
         return entity;
     }
 
@@ -70,26 +47,9 @@ public class CRUDService
         
         updateMethod!.Invoke(entity, new object[] { req });
 
-        try
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601)
-            {
-                if (sqlEx.Message.Contains("IX_Users_Username"))
-                {
-                    throw new DuplicateEntryException("USERNAME_TAKEN", "A user with the same name already exists.");
-                }
-                if (sqlEx.Message.Contains("IX_Users_Email"))
-                {
-                    throw new DuplicateEntryException("EMAIL_TAKEN", "A user with the same email already exists.");
-                }
+        await CheckExceptions(entity);
 
-                throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "An achievement with the same name already exists.");
-            }
-        }
+        await _dbContext.SaveChangesAsync();
 
         return entity;
     }
@@ -111,4 +71,126 @@ public class CRUDService
         return entity;
     }
 
+    private async Task CheckExceptions<TEntity>(TEntity entity) where TEntity : class
+    {
+        if (typeof(TEntity) == typeof(User))
+        {
+            var request = entity as User;
+
+            if (await _dbContext.Users.AnyAsync(u => u.Username == request!.Username && u.Id != request.Id))
+            {
+                throw new DuplicateEntryException("USERNAME_TAKEN", "User already exists");
+            }
+
+            if (await _dbContext.Users.AnyAsync(u => u.Email == request!.Email && u.Id != request.Id))
+            {
+                throw new DuplicateEntryException("EMAIL_TAKEN", "Email already in use");
+            }
+        }
+
+        if (typeof (TEntity) == typeof(Achievement))
+        {
+            var request = entity as Achievement;
+
+            if (await _dbContext.Achievements.AnyAsync(a => a.Name == request!.Name && a.Id != request.Id))
+            {
+                throw new DuplicateEntryException("ACHIEVEMENT_NAME_TAKEN", "Achievement with this name already exists");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(CardStats))
+        {
+            var request = entity as CardStats;
+
+            if (await _dbContext.CardStats.AnyAsync(cs => cs.CardId == request!.CardId))
+            {
+                throw new DuplicateEntryException("CARD_ID_TAKEN", "Card Stats already exists for this card");
+            }
+
+            if (!await _dbContext.Cards.AnyAsync(c => c.Id == request!.CardId))
+            {
+                throw new InvalidIdException("CARD_DOES_NOT_EXIST", "Card does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(UserStats))
+        {
+            var request = entity as UserStats;
+
+            if (await _dbContext.UserStats.AnyAsync(us => us.UserId == request!.UserId))
+            {
+                throw new DuplicateEntryException("USER_ID_TAKEN", "User Stats already exists for this user");
+            }
+
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == request!.UserId))
+            {
+                throw new InvalidIdException("USER_DOES_NOT_EXIST", "User does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(StudySession))
+        {
+            var request = entity as StudySession;
+
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == request!.UserId))
+            {
+                throw new InvalidIdException("USER_DOES_NOT_EXIST", "User does not exist");
+            }
+
+            if (!await _dbContext.Decks.AnyAsync(d => d.Id == request!.DeckId))
+            {
+                throw new InvalidIdException("DECK_DOES_NOT_EXIST", "Deck does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(Card))
+        {
+            var request = entity as Card;
+
+            if (!await _dbContext.Decks.AnyAsync(d => d.Id == request!.DeckId))
+            {
+                throw new InvalidIdException("DECK_DOES_NOT_EXIST", "Deck does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(Feedback))
+        {
+            var request = entity as Feedback;
+
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == request!.UserId))
+            {
+                throw new InvalidIdException("USER_DOES_NOT_EXIST", "User does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(Deck))
+        {
+            var request = entity as Deck;
+
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == request!.UserId))
+            {
+                throw new InvalidIdException("USER_DOES_NOT_EXIST", "User does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(LoginRecord))
+        {
+            var request = entity as LoginRecord;
+
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == request!.UserId))
+            {
+                throw new InvalidIdException("USER_DOES_NOT_EXIST", "User does not exist");
+            }
+        }
+
+        if (typeof(TEntity) == typeof(PaymentRecord))
+        {
+            var request = entity as PaymentRecord;
+
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == request!.UserId))
+            {
+                throw new InvalidIdException("USER_DOES_NOT_EXIST", "User does not exist");
+            }
+        }
+    }
 }

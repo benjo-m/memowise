@@ -34,7 +34,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
   void initState() {
     super.initState();
     _usernameController.text = widget.user.username;
-    _emailController.text = widget.user.username;
+    _emailController.text = widget.user.email;
     _isAdmin = widget.user.isAdmin;
     _isPremium = widget.user.isPremium;
   }

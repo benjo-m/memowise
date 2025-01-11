@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/user_stats_dto.dart';
 import 'package:desktop/dto/user_stats_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/user_stats_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -226,8 +227,6 @@ class _EditUserStatsDialogState extends State<EditUserStatsDialog> {
               final response = await edit(widget.stats.id, request);
               if (response == null) {
                 if (response == null) {
-                  setState(() => _userIdErrorText =
-                      "User with this ID already has User Stats");
                   return;
                 }
                 return;
@@ -248,7 +247,12 @@ class _EditUserStatsDialogState extends State<EditUserStatsDialog> {
     try {
       final response = await _userStatService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on DuplicateException {
+      setState(
+          () => _userIdErrorText = "User with this ID already has User Stats");
+      return null;
+    } on InvalidUserIdException {
+      setState(() => _userIdErrorText = "User does not exist");
       return null;
     }
   }

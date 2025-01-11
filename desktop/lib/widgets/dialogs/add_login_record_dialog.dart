@@ -20,7 +20,7 @@ class _AddLoginRecordDialogState extends State<AddLoginRecordDialog> {
 
   final _formKey = GlobalKey<FormState>();
   final _userIdController = TextEditingController();
-
+  String? _userIdErrorText;
   DateTime _loginDate = DateTime.now();
 
   @override
@@ -51,8 +51,9 @@ class _AddLoginRecordDialogState extends State<AddLoginRecordDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -102,6 +103,8 @@ class _AddLoginRecordDialogState extends State<AddLoginRecordDialog> {
               );
               final response = await create(request);
               if (response == null) {
+                setState(() => _userIdErrorText = "User does not exist");
+
                 return;
               }
               if (context.mounted) {

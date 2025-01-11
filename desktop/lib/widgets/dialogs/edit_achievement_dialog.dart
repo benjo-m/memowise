@@ -117,8 +117,6 @@ class _EditAchievementDialogState extends State<EditAchievementDialog> {
                           final response =
                               await edit(widget.achievement.id, request);
                           if (response == null) {
-                            setState(() => _nameErrorText = "Name taken");
-
                             return;
                           } else if (context.mounted) {
                             widget.onEdit();
@@ -146,6 +144,7 @@ class _EditAchievementDialogState extends State<EditAchievementDialog> {
           await _achievementService.update(id, updatedAchievement.toJson());
       return response;
     } on AchievementNameTakenException {
+      setState(() => _nameErrorText = "Name taken");
       return null;
     }
   }

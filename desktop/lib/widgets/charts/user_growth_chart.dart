@@ -30,14 +30,16 @@ class _UserGrowthChartState extends State<UserGrowthChart> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              height: MediaQuery.sizeOf(context).height * 0.4,
+            ConstrainedBox(
               constraints: const BoxConstraints(
-                minHeight: 300,
-                minWidth: 500,
+                minWidth: 500, // Enforce minimum width here
+                minHeight: 300, // Enforce minimum height here
               ),
-              child: LineChart(
-                mainData(),
+              child: SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.4,
+                child: LineChart(
+                  mainData(),
+                ),
               ),
             ),
             const Text(""),

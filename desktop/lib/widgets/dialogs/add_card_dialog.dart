@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/card_dto.dart';
 import 'package:desktop/dto/card_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/cards_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class _AddCardDialogState extends State<AddCardDialog> {
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
   final _deckIdController = TextEditingController();
-  String? _nameErrorText;
+  String? _deckIdErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +48,8 @@ class _AddCardDialogState extends State<AddCardDialog> {
                           }
                           return null;
                         },
-                        decoration: InputDecoration(
-                          label: const Text("Question"),
-                          errorText: _nameErrorText,
+                        decoration: const InputDecoration(
+                          label: Text("Question"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -80,8 +78,9 @@ class _AddCardDialogState extends State<AddCardDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("Deck ID"),
+                        decoration: InputDecoration(
+                          label: const Text("Deck ID"),
+                          errorText: _deckIdErrorText,
                         ),
                       ),
                     ],
@@ -118,8 +117,6 @@ class _AddCardDialogState extends State<AddCardDialog> {
               );
               final response = await create(request);
               if (response == null) {
-                setState(() => _nameErrorText = "Name taken");
-                log(_nameErrorText ?? "");
                 return;
               }
               if (context.mounted) {
@@ -138,7 +135,10 @@ class _AddCardDialogState extends State<AddCardDialog> {
     try {
       final response = await _cardService.create(request.toJson());
       return response;
-    } on Exception {
+    } on InvalidDeckIdException {
+      setState(() {
+        _deckIdErrorText = "Deck does not exist";
+      });
       return null;
     }
   }

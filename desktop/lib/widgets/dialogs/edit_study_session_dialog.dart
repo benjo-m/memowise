@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/study_session_dto.dart';
 import 'package:desktop/dto/study_session_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,10 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
   final _avgRepsController = TextEditingController();
   final _userIdController = TextEditingController();
   final _deckIdController = TextEditingController();
-
   late DateTime _studiedAt;
+
+  String? _deckIdErrorText;
+  String? _userIdErrorText;
 
   @override
   void initState() {
@@ -154,8 +157,9 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -171,8 +175,9 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("Deck ID"),
+                        decoration: InputDecoration(
+                          label: const Text("Deck ID"),
+                          errorText: _deckIdErrorText,
                         ),
                       ),
                     ],
@@ -208,7 +213,7 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
                 studiedAt: _studiedAt,
                 averageRepetitions: double.parse(_avgRepsController.text),
                 duration: int.parse(_durationController.text),
-                userId: int.parse(_cardCountController.text),
+                userId: int.parse(_userIdController.text),
                 cardCount: int.parse(_cardCountController.text),
                 deckId: int.parse(_deckIdController.text),
                 cardsRated1: 0,
@@ -237,7 +242,15 @@ class _EditStudySessionDialogState extends State<EditStudySessionDialog> {
     try {
       final response = await _studySessionService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on InvalidDeckIdException {
+      setState(() {
+        _deckIdErrorText = "Deck does not exist";
+      });
+      return null;
+    } on InvalidUserIdException {
+      setState(() {
+        _userIdErrorText = "User does not exist";
+      });
       return null;
     }
   }

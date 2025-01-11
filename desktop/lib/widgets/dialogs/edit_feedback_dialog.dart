@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/feedback_dto.dart';
 import 'package:desktop/dto/feedback_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/feedback_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +22,18 @@ class _EditFeedbackDialogState extends State<EditFeedbackDialog> {
   final _feedbackService = FeedbackService(baseUrl, http.Client());
 
   final _formKey = GlobalKey<FormState>();
+  final _userIdController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-
   late String _status;
   late DateTime _submittedAt;
+
+  String? _userIdErrorText;
 
   @override
   void initState() {
     super.initState();
+    _userIdController.text = widget.feedback.userId.toString();
     _titleController.text = widget.feedback.title;
     _descriptionController.text = widget.feedback.description;
     _status = widget.feedback.feedbackStatus;
@@ -74,6 +78,25 @@ class _EditFeedbackDialogState extends State<EditFeedbackDialog> {
                         },
                         decoration: const InputDecoration(
                           label: Text("Description"),
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _userIdController,
+                        validator: (value) {
+                          if (value == null) {
+                            return "Please enter a valid positive integer";
+                          }
+                          int? number = int.tryParse(value);
+                          if (number == null || number < 0) {
+                            return "Please enter a valid positive integer";
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                         keyboardType: TextInputType.number,
                       ),
@@ -141,6 +164,7 @@ class _EditFeedbackDialogState extends State<EditFeedbackDialog> {
               _formKey.currentState!.save();
 
               final request = FeedbackDto(
+                userId: int.parse(_userIdController.text),
                 status: _status,
                 title: _titleController.text,
                 description: _descriptionController.text,
@@ -166,7 +190,10 @@ class _EditFeedbackDialogState extends State<EditFeedbackDialog> {
     try {
       final response = await _feedbackService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on InvalidUserIdException {
+      setState(() {
+        _userIdErrorText = "User does not exist";
+      });
       return null;
     }
   }

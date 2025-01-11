@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/user_dto.dart';
 import 'package:desktop/dto/user_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/user_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,12 @@ class _AddUserDialogState extends State<AddUserDialog> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   bool _isAdmin = false;
   bool _isPremium = false;
-
   DateTime _createdAt = DateTime.now();
+
+  String? _emailErrorText;
+  String? _usernameErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,9 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("Username"),
+                        decoration: InputDecoration(
+                          label: const Text("Username"),
+                          errorText: _usernameErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -65,8 +68,9 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("Email"),
+                        decoration: InputDecoration(
+                          label: const Text("Email"),
+                          errorText: _emailErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -180,7 +184,15 @@ class _AddUserDialogState extends State<AddUserDialog> {
     try {
       final response = await _userService.create(request.toJson());
       return response;
-    } on Exception {
+    } on EmailAlreadyInUseException {
+      setState(() {
+        _emailErrorText = "Email already in use";
+      });
+      return null;
+    } on UsernameTakenException {
+      setState(() {
+        _usernameErrorText = "Username taken";
+      });
       return null;
     }
   }

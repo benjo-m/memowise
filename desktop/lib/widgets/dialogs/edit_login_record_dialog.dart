@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/login_record_dto.dart';
 import 'package:desktop/dto/login_record_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/login_record_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,11 @@ class EditLoginRecordDialog extends StatefulWidget {
 
 class _EditLoginRecordDialogState extends State<EditLoginRecordDialog> {
   final _loginRecordService = LoginRecordService(baseUrl, http.Client());
-
   final _formKey = GlobalKey<FormState>();
   final _userIdController = TextEditingController();
-
   late DateTime _loginDate;
+
+  String? _userIdErrorText;
 
   @override
   void initState() {
@@ -63,8 +64,9 @@ class _EditLoginRecordDialogState extends State<EditLoginRecordDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -132,7 +134,10 @@ class _EditLoginRecordDialogState extends State<EditLoginRecordDialog> {
     try {
       final response = await _loginRecordService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on InvalidUserIdException {
+      setState(() {
+        _userIdErrorText = "User does not exist";
+      });
       return null;
     }
   }

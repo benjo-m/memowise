@@ -1,3 +1,4 @@
+import 'package:desktop/services/auth_service.dart';
 import 'package:desktop/views/analytics_view.dart';
 import 'package:desktop/views/dashboard_view.dart';
 import 'package:desktop/views/data_view.dart';
@@ -64,23 +65,24 @@ class _MainViewState extends State<MainView> {
             },
             labelType: NavigationRailLabelType.all,
             backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-            destinations: const [
-              NavigationRailDestination(
+            destinations: [
+              const NavigationRailDestination(
                 padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(Icons.dashboard_rounded),
                 label: Text('Dashboard'),
               ),
-              NavigationRailDestination(
+              const NavigationRailDestination(
                 padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(Icons.bar_chart_rounded),
                 label: Text('Analytics'),
               ),
               NavigationRailDestination(
-                padding: EdgeInsets.only(bottom: 20),
-                icon: Icon(FontAwesomeIcons.database),
-                label: Text('Data'),
+                padding: const EdgeInsets.only(bottom: 20),
+                icon: const Icon(FontAwesomeIcons.database),
+                label: const Text('Data'),
+                disabled: !CurrentUser.isSuperAdmin!,
               ),
-              NavigationRailDestination(
+              const NavigationRailDestination(
                 padding: EdgeInsets.only(bottom: 20),
                 icon: Icon(Icons.thumbs_up_down_rounded),
                 label: Text('Feedback'),

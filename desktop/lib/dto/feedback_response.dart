@@ -1,5 +1,6 @@
 class FeedbackResponse {
   int id;
+  int userId;
   String feedbackStatus;
   String title;
   String description;
@@ -7,6 +8,7 @@ class FeedbackResponse {
 
   FeedbackResponse({
     required this.id,
+    required this.userId,
     required this.feedbackStatus,
     required this.title,
     required this.description,
@@ -16,6 +18,7 @@ class FeedbackResponse {
   factory FeedbackResponse.fromJson(Map<String, dynamic> json) =>
       FeedbackResponse(
         id: json["id"],
+        userId: json["userId"],
         feedbackStatus: json["feedbackStatus"],
         title: json["title"],
         description: json["description"],
@@ -24,6 +27,7 @@ class FeedbackResponse {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "userId": userId,
         "feedbackStatus": feedbackStatus,
         "title": title,
         "description": description,

@@ -21,7 +21,7 @@ class _AddDeckDialogState extends State<AddDeckDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _userIdController = TextEditingController();
-  String? _nameErrorText;
+  String? _userIdErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,8 @@ class _AddDeckDialogState extends State<AddDeckDialog> {
                           }
                           return null;
                         },
-                        decoration: InputDecoration(
-                          label: const Text("Name"),
-                          errorText: _nameErrorText,
+                        decoration: const InputDecoration(
+                          label: Text("Name"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -64,8 +63,9 @@ class _AddDeckDialogState extends State<AddDeckDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                     ],
@@ -101,7 +101,7 @@ class _AddDeckDialogState extends State<AddDeckDialog> {
               );
               final response = await create(request);
               if (response == null) {
-                setState(() => _nameErrorText = "Name taken");
+                setState(() => _userIdErrorText = "User does not exist");
                 return;
               }
               if (context.mounted) {

@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/study_session_dto.dart';
 import 'package:desktop/dto/study_session_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/study_session_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,9 @@ class _AddStudySessionDialogState extends State<AddStudySessionDialog> {
   final _deckIdController = TextEditingController();
 
   DateTime _studiedAt = DateTime.now();
+
+  String? _userIdErrorText;
+  String? _deckIdErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +140,9 @@ class _AddStudySessionDialogState extends State<AddStudySessionDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
-                        ),
+                        decoration: InputDecoration(
+                            label: const Text("User ID"),
+                            errorText: _userIdErrorText),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -153,8 +157,9 @@ class _AddStudySessionDialogState extends State<AddStudySessionDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("Deck ID"),
+                        decoration: InputDecoration(
+                          label: const Text("Deck ID"),
+                          errorText: _deckIdErrorText,
                         ),
                       ),
                     ],
@@ -189,7 +194,7 @@ class _AddStudySessionDialogState extends State<AddStudySessionDialog> {
                 studiedAt: _studiedAt,
                 averageRepetitions: int.parse(_avgRepsController.text),
                 duration: int.parse(_durationController.text),
-                userId: int.parse(_cardCountController.text),
+                userId: int.parse(_userIdController.text),
                 cardCount: int.parse(_cardCountController.text),
                 deckId: int.parse(_deckIdController.text),
                 cardsRated1: 0,
@@ -218,7 +223,11 @@ class _AddStudySessionDialogState extends State<AddStudySessionDialog> {
     try {
       final response = await _studySessionService.create(request.toJson());
       return response;
-    } on Exception {
+    } on InvalidUserIdException {
+      setState(() => _userIdErrorText = "User does not exist");
+      return null;
+    } on InvalidDeckIdException {
+      setState(() => _deckIdErrorText = "Deck does not exist");
       return null;
     }
   }

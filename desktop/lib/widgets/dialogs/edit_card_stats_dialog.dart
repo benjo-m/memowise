@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/card_stats_dto.dart';
 import 'package:desktop/dto/card_stats_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/card_stats_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -170,8 +171,6 @@ class _EditCardStatsDialogState extends State<EditCardStatsDialog> {
               );
               final response = await edit(widget.cardStats.id, request);
               if (response == null) {
-                setState(() => _cardIdErrorText =
-                    "Card Stats row for that card already exists");
                 return;
               } else if (context.mounted) {
                 widget.onEdit();
@@ -190,7 +189,12 @@ class _EditCardStatsDialogState extends State<EditCardStatsDialog> {
     try {
       final response = await _cardStatService.update(id, cardStatsDto.toJson());
       return response;
-    } on Exception {
+    } on DuplicateException {
+      setState(() =>
+          _cardIdErrorText = "Card Stats row for that card already exists");
+      return null;
+    } on InvalidCardIdException {
+      setState(() => _cardIdErrorText = "Card does not exist");
       return null;
     }
   }

@@ -84,6 +84,14 @@ class _FeedbackTableState extends State<FeedbackTable> {
               DataColumn(
                 label: Expanded(
                   child: Text(
+                    "User ID",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
                     "Actions",
                     textAlign: TextAlign.center,
                   ),
@@ -115,6 +123,9 @@ class _FeedbackTableState extends State<FeedbackTable> {
                   ),
                   DataCell(
                     Center(child: Text(feedback.feedbackStatus)),
+                  ),
+                  DataCell(
+                    Center(child: Text(feedback.userId.toString())),
                   ),
                   DataCell(
                     Center(

@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/deck_dto.dart';
 import 'package:desktop/dto/deck_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/deck_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _userIdController = TextEditingController();
-  String? _nameErrorText;
+  String? _userIdErrorText;
 
   @override
   void initState() {
@@ -53,9 +54,8 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
                           }
                           return null;
                         },
-                        decoration: InputDecoration(
-                          label: const Text("Name"),
-                          errorText: _nameErrorText,
+                        decoration: const InputDecoration(
+                          label: Text("Name"),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -71,8 +71,9 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                     ],
@@ -85,7 +86,7 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
                     TextButton(
                       style: greyButtonStyle,
                       onPressed: () {
-                        setState(() => _nameErrorText = null);
+                        setState(() => _userIdErrorText = null);
                         Navigator.pop(context);
                       },
                       child: const Text("Cancel"),
@@ -101,12 +102,11 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
                           );
                           final response = await edit(widget.deck.id, request);
                           if (response == null) {
-                            setState(() => _nameErrorText = "Name taken");
                             return;
                           } else if (context.mounted) {
                             widget.onEdit();
                             Navigator.pop(context);
-                            _nameErrorText = null;
+                            _userIdErrorText = null;
                           }
                         }
                       },
@@ -126,7 +126,8 @@ class _EditDeckDialogState extends State<EditDeckDialog> {
     try {
       final response = await _deckService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on InvalidUserIdException {
+      setState(() => _userIdErrorText = "User does not exist");
       return null;
     }
   }

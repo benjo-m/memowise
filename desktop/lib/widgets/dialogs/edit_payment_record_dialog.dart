@@ -1,6 +1,7 @@
 import 'package:desktop/config/constants.dart';
 import 'package:desktop/dto/payment_record_dto.dart';
 import 'package:desktop/dto/payment_record_response.dart';
+import 'package:desktop/exceptions/exceptions.dart';
 import 'package:desktop/services/payment_record_service.dart';
 import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,9 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
   final _userIdController = TextEditingController();
   final _amountController = TextEditingController();
   final _currencyController = TextEditingController();
-
   late DateTime _createdAt;
+
+  String? _userIdErrorText;
 
   @override
   void initState() {
@@ -80,8 +82,9 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
-                          label: Text("User ID"),
+                        decoration: InputDecoration(
+                          label: const Text("User ID"),
+                          errorText: _userIdErrorText,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -182,7 +185,10 @@ class _EditPaymentRecordDialogState extends State<EditPaymentRecordDialog> {
     try {
       final response = await _paymentRecordService.update(id, request.toJson());
       return response;
-    } on Exception {
+    } on InvalidUserIdException {
+      setState(() {
+        _userIdErrorText = "User does not exist";
+      });
       return null;
     }
   }

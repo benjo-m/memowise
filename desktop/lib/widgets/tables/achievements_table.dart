@@ -76,6 +76,14 @@ class _AchievementsTableState extends State<AchievementsTable> {
               DataColumn(
                 label: Expanded(
                   child: Text(
+                    "Icon",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
                     "Actions",
                     textAlign: TextAlign.center,
                   ),
@@ -93,6 +101,9 @@ class _AchievementsTableState extends State<AchievementsTable> {
                   ),
                   DataCell(
                     Center(child: Text(achievement.description)),
+                  ),
+                  DataCell(
+                    Center(child: Text(achievement.icon)),
                   ),
                   DataCell(
                     Center(

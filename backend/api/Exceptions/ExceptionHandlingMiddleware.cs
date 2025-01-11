@@ -20,6 +20,11 @@ public class ExceptionHandlingMiddleware
             context.Response.StatusCode = StatusCodes.Status409Conflict;
             await context.Response.WriteAsJsonAsync(new { errorCode = ex.ErrorCode, message = ex.Message });
         }
+        catch (InvalidIdException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsJsonAsync(new { errorCode = ex.ErrorCode, message = ex.Message });
+        }
         catch (WrongPasswordException)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;

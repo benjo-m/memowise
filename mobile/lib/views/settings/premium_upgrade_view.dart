@@ -187,10 +187,11 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    onPressed: () => Navigator.pushReplacement(
+                    onPressed: () => Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const MainView())),
+                            builder: (context) => const MainView()),
+                        (route) => false),
                     child: const Text("Close")),
               ],
             )

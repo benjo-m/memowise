@@ -46,6 +46,9 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Deck Details"),
+        actions: [
+          helpDialog(context),
+        ],
       ),
       body: FutureBuilder(
           future: _deckFuture,
@@ -106,6 +109,54 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             return const Center(child: CircularProgressIndicator());
           }),
     );
+  }
+
+  GestureDetector helpDialog(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: const Center(
+                  child: Text("Deck Details Help",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    "This is the Deck Details View.\n\n"
+                    "You can add new cards to your decks from here.\n"
+                    "Tap the card to edit it, tap the red circle icon to remove it.",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Colors.grey,
+                        ),
+                      ),
+                      child: const Text(
+                        "Close",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            barrierDismissible: false,
+          );
+        },
+        child: const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.help_outline_outlined),
+        ));
   }
 
   Row buttonsRow(Deck deck, BuildContext context) {

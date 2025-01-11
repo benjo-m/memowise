@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
@@ -27,6 +28,9 @@ class _DecksViewState extends State<DecksView> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Decks"),
+        actions: [
+          helpDialog(context),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
@@ -64,6 +68,54 @@ class _DecksViewState extends State<DecksView> {
         ),
       ),
     );
+  }
+
+  GestureDetector helpDialog(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: const Center(
+                  child: Text("Decks View Help",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    "This is the Decks View.\n\n"
+                    "Tap the deck list item to edit deck.\n"
+                    "If you don't have any decks, you can create them from here.",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Colors.grey,
+                        ),
+                      ),
+                      child: const Text(
+                        "Close",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            barrierDismissible: false,
+          );
+        },
+        child: const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.help_outline_outlined),
+        ));
   }
 
   Row statsRow(List<DeckSummary> decks) {

@@ -141,7 +141,8 @@ class _LoginFormState extends State<LoginView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(width: 30),
-                      ElevatedButton(
+                      TextButton(
+                        style: redButtonStyle,
                         onPressed: () {
                           Navigator.pop(context);
                         },

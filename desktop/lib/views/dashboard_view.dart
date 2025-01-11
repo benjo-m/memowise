@@ -89,18 +89,15 @@ class _DashboardViewState extends State<DashboardView> {
       runSpacing: 10,
       children: [
         statCard(
+            title: "Total Users",
+            quantity: data.totalUsers.count,
+            bottomText: "+${data.totalUsers.change} last 30 days"),
+        statCard(
           title: "New Users",
           quantity: data.newUsers.userCount,
           bottomText: data.newUsers.userCountChange < 0
               ? "${data.newUsers.userCountChange}% down vs last 30 days"
               : "${data.newUsers.userCountChange}% up vs last 30 days",
-        ),
-        statCard(
-          title: "PETA KARTICA",
-          quantity: 0.0,
-          bottomText: data.newUsers.premiumUserCountChange < 0
-              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
-              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
         ),
         statCard(
           title: "Active Users",
@@ -130,6 +127,10 @@ class _DashboardViewState extends State<DashboardView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         statCard(
+            title: "Total Users",
+            quantity: data.totalUsers.count,
+            bottomText: "+${data.totalUsers.change} last 30 days"),
+        statCard(
           title: "New Users",
           quantity: data.newUsers.userCount,
           bottomText: data.newUsers.userCountChange < 0
@@ -139,13 +140,6 @@ class _DashboardViewState extends State<DashboardView> {
         statCard(
           title: "New Premium Users",
           quantity: data.newUsers.premiumUserCount,
-          bottomText: data.newUsers.premiumUserCountChange < 0
-              ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
-              : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",
-        ),
-        statCard(
-          title: "PETA KARTICA",
-          quantity: 0.0,
           bottomText: data.newUsers.premiumUserCountChange < 0
               ? "${data.newUsers.premiumUserCountChange}% down vs last 30 days"
               : "${data.newUsers.premiumUserCountChange}% up vs last 30 days",

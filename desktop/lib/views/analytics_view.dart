@@ -331,10 +331,6 @@ class _AnalyticsViewState extends State<AnalyticsView> {
           quantity: data.totalUsers.toString(),
         ),
         statCard(
-          title: "PETA KARTICA",
-          quantity: "0000000",
-        ),
-        statCard(
           title: "Total Premium Users",
           quantity: data.totalPremiumUsers.toString(),
         ),
@@ -345,6 +341,10 @@ class _AnalyticsViewState extends State<AnalyticsView> {
         statCard(
           title: "Daily Users",
           quantity: data.dailyActiveUsers.toString(),
+        ),
+        statCard(
+          title: "Admins",
+          quantity: data.adminCount.toString(),
         ),
       ],
     );

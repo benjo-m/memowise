@@ -1,4 +1,5 @@
 class DashboardData {
+  TotalUsers totalUsers;
   UserGrowth userGrowth;
   UserDistribution userDistribution;
   NewUsers newUsers;
@@ -6,6 +7,7 @@ class DashboardData {
   FeedbackCount feedbackCount;
 
   DashboardData({
+    required this.totalUsers,
     required this.userGrowth,
     required this.userDistribution,
     required this.newUsers,
@@ -14,6 +16,7 @@ class DashboardData {
   });
 
   factory DashboardData.fromJson(Map<String, dynamic> json) => DashboardData(
+        totalUsers: TotalUsers.fromJson(json["totalUsers"]),
         userGrowth: UserGrowth.fromJson(json["userGrowth"]),
         userDistribution: UserDistribution.fromJson(json["userDistribution"]),
         newUsers: NewUsers.fromJson(json["newUsers"]),
@@ -22,6 +25,7 @@ class DashboardData {
       );
 
   Map<String, dynamic> toJson() => {
+        "totalUsers": totalUsers.toJson(),
         "userGrowth": userGrowth.toJson(),
         "userDistribution": userDistribution.toJson(),
         "newUsers": newUsers.toJson(),
@@ -158,5 +162,25 @@ class UserGrowthDataPoint {
         "year": year,
         "month": month,
         "count": count,
+      };
+}
+
+class TotalUsers {
+  int count;
+  int change;
+
+  TotalUsers({
+    required this.count,
+    required this.change,
+  });
+
+  factory TotalUsers.fromJson(Map<String, dynamic> json) => TotalUsers(
+        count: json["count"],
+        change: json["change"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "count": count,
+        "change": change,
       };
 }

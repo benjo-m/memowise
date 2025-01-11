@@ -19,6 +19,7 @@ public class AnalyticsService
     {
         return new DashboardData()
         {
+            TotalUsers = await GetTotalUsers(),
             UserGrowth = await GetUserGrowth(),
             UserDistribution = await GetUserDistribution(),
             NewUsers = await GetNewUsers(),
@@ -54,6 +55,7 @@ public class AnalyticsService
             TotalPremiumUsers = await _dbContext.Users.Where(u => u.IsPremium == true).CountAsync(),
             DailyActiveUsers = await GetActiveUsersByTimePeriod(1),
             MonthlyActiveUsers = await GetActiveUsersByTimePeriod(30),
+            AdminCount = await _dbContext.Users.CountAsync(u => u.IsAdmin),
             NewUsersByMonth = await GetNewUsersByMonth(year),
             UserDistribution = await GetUserDistribution(),
             UserGrowth = await GetUserGrowth(),
@@ -70,6 +72,20 @@ public class AnalyticsService
             LongestStudyStreak = await _dbContext.UserStats.MaxAsync(us => us.LongestStudyStreak),
             StudySessionSegments = await GetStudySessionSegments(),
             AchievementUnlockPercentages = await GetAchievementsUnlockPercentages()
+        };
+    }
+
+    private async Task<TotalUsers> GetTotalUsers()
+    {
+        var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+        int count = await _dbContext.Users.CountAsync();
+        int change = await _dbContext.Users
+            .CountAsync(u => u.CreatedAt >= thirtyDaysAgo && u.CreatedAt < DateTime.Now);
+
+        return new TotalUsers
+        {
+            Count = count,
+            Change = change
         };
     }
 

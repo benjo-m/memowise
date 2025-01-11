@@ -7,6 +7,7 @@ public class AnalyticsData
     public int TotalPremiumUsers { get; set; }
     public int MonthlyActiveUsers { get; set; }
     public int DailyActiveUsers { get; set; }
+    public int AdminCount { get; set; }
     public List<NewUsersByMonth> NewUsersByMonth { get; set; }
     public UserDistributionResponse UserDistribution { get; set; }
     public UserGrowthResponse UserGrowth { get; set; }

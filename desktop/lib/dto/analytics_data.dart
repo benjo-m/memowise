@@ -5,6 +5,7 @@ class AnalyticsData {
   int totalPremiumUsers;
   int monthlyActiveUsers;
   int dailyActiveUsers;
+  int adminCount;
   List<NewUsersByMonth> newUsersByMonth;
   UserDistribution userDistribution;
   UserGrowth userGrowth;
@@ -29,6 +30,7 @@ class AnalyticsData {
     required this.monthlyActiveUsers,
     required this.dailyActiveUsers,
     required this.newUsersByMonth,
+    required this.adminCount,
     required this.userDistribution,
     required this.userGrowth,
     required this.totalDecksCreated,
@@ -52,6 +54,7 @@ class AnalyticsData {
         totalPremiumUsers: json["totalPremiumUsers"],
         monthlyActiveUsers: json["monthlyActiveUsers"],
         dailyActiveUsers: json["dailyActiveUsers"],
+        adminCount: json["adminCount"],
         newUsersByMonth: List<NewUsersByMonth>.from(
             json["newUsersByMonth"].map((x) => NewUsersByMonth.fromJson(x))),
         userDistribution: UserDistribution.fromJson(json["userDistribution"]),
@@ -81,6 +84,7 @@ class AnalyticsData {
         "totalPremiumUsers": totalPremiumUsers,
         "monthlyActiveUsers": monthlyActiveUsers,
         "dailyActiveUsers": dailyActiveUsers,
+        "adminCount": adminCount,
         "newUsersByMonth":
             List<dynamic>.from(newUsersByMonth.map((x) => x.toJson())),
         "userDistribution": userDistribution.toJson(),

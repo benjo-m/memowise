@@ -5,8 +5,10 @@ class FeedbackResponse {
   String title;
   String description;
   DateTime submittedAt;
+  bool isPremiumUser;
 
   FeedbackResponse({
+    required this.isPremiumUser,
     required this.id,
     required this.userId,
     required this.feedbackStatus,
@@ -17,6 +19,7 @@ class FeedbackResponse {
 
   factory FeedbackResponse.fromJson(Map<String, dynamic> json) =>
       FeedbackResponse(
+        isPremiumUser: json["isPremiumUser"],
         id: json["id"],
         userId: json["userId"],
         feedbackStatus: json["feedbackStatus"],
@@ -26,6 +29,7 @@ class FeedbackResponse {
       );
 
   Map<String, dynamic> toJson() => {
+        "isPremiumUser": isPremiumUser,
         "id": id,
         "userId": userId,
         "feedbackStatus": feedbackStatus,

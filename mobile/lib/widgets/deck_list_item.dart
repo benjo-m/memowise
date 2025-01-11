@@ -108,7 +108,7 @@ class DeckListItem extends StatelessWidget {
           Column(
             children: [
               timeToCompleteStudySession(context),
-              ElevatedButton(
+              TextButton(
                 style: ButtonStyle(
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   backgroundColor:

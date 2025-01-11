@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
 import 'package:mobile/services/auth/current_user.dart';
@@ -151,6 +152,15 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
   }
 
   Future<void> generateDeck(BuildContext context) async {
+    Fluttertoast.showToast(
+      msg: "Generating deck...",
+      gravity: ToastGravity.CENTER,
+      toastLength: Toast.LENGTH_SHORT,
+      backgroundColor: const Color.fromARGB(255, 188, 234, 255),
+      textColor: Colors.black,
+      fontSize: 16,
+    );
+
     if (_formKey.currentState!.validate()) {
       try {
         final response = await CardService().generateCards(

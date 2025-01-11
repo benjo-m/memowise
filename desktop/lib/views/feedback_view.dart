@@ -22,12 +22,14 @@ class _FeedbackViewState extends State<FeedbackView> {
   late Future<PaginatedResponse<FeedbackResponse>> _feedbackFuture;
 
   final _statusController = TextEditingController(text: "Any");
-  final _sortByController = TextEditingController(text: "Id");
+  final _accountTypeController = TextEditingController(text: "Any");
+  final _sortByController = TextEditingController(text: "Date");
   final _sortOrderController = TextEditingController(text: "Ascending");
 
   String _selectedStatus = "Any";
   String _selectedSortBy = "Id";
   bool _sortDescending = false;
+  String _selectedAccountType = "Any";
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _FeedbackViewState extends State<FeedbackView> {
                         sortByDropdown(),
                         sortOrderDropdown(),
                         statusDropdown(),
+                        accountTypeDropdown(),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -117,6 +120,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         sortBy: _selectedSortBy,
         sortDescending: _sortDescending,
         status: _selectedStatus,
+        accountType: _selectedAccountType,
       );
     });
   }
@@ -129,6 +133,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         sortBy: _selectedSortBy,
         sortDescending: _sortDescending,
         status: _selectedStatus,
+        accountType: _selectedAccountType,
       );
     });
   }
@@ -174,6 +179,9 @@ class _FeedbackViewState extends State<FeedbackView> {
       ],
       rows: data.map((feedback) {
         return DataRow(
+          color: feedback.isPremiumUser
+              ? const WidgetStatePropertyAll(Color.fromARGB(255, 255, 242, 120))
+              : const WidgetStatePropertyAll(Colors.white),
           cells: <DataCell>[
             DataCell(
               Center(child: Text(feedback.title)),
@@ -303,10 +311,12 @@ class _FeedbackViewState extends State<FeedbackView> {
         .updateFeedbackStatus(feedbackId, req)
         .then((value) => setState(() {
               _feedbackFuture = _feedbackService.getAll(
-                  page: _currentPage,
-                  sortBy: _selectedSortBy,
-                  sortDescending: _sortDescending,
-                  status: _selectedStatus);
+                page: _currentPage,
+                sortBy: _selectedSortBy,
+                sortDescending: _sortDescending,
+                status: _selectedStatus,
+                accountType: _selectedAccountType,
+              );
             }));
   }
 
@@ -315,10 +325,12 @@ class _FeedbackViewState extends State<FeedbackView> {
         .removeFeedback(feedbackId)
         .then((value) => setState(() {
               _feedbackFuture = _feedbackService.getAll(
-                  page: _currentPage,
-                  sortBy: _selectedSortBy,
-                  sortDescending: _sortDescending,
-                  status: _selectedStatus);
+                page: _currentPage,
+                sortBy: _selectedSortBy,
+                sortDescending: _sortDescending,
+                status: _selectedStatus,
+                accountType: _selectedAccountType,
+              );
             }));
   }
 
@@ -326,24 +338,25 @@ class _FeedbackViewState extends State<FeedbackView> {
     return DropdownMenu<String>(
       label: const Text("Sort By"),
       controller: _sortByController,
-      initialSelection: "Id",
+      initialSelection: "Date",
       onSelected: (String? item) {
         if (item == _selectedSortBy) return;
         setState(() {
           _selectedSortBy = item!;
           _currentPage = 1;
           _feedbackFuture = _feedbackService.getAll(
-              page: _currentPage,
-              sortBy: _selectedSortBy,
-              sortDescending: _sortDescending,
-              status: _selectedStatus);
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            status: _selectedStatus,
+            accountType: _selectedAccountType,
+          );
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
-        DropdownMenuEntry(value: "id", label: "Id"),
-        DropdownMenuEntry(value: "title", label: "Title"),
         DropdownMenuEntry(value: "date", label: "Date"),
         DropdownMenuEntry(value: "status", label: "Status"),
+        DropdownMenuEntry(value: "title", label: "Title"),
       ],
     );
   }
@@ -358,10 +371,12 @@ class _FeedbackViewState extends State<FeedbackView> {
           _sortDescending = status == "Ascending" ? false : true;
           _currentPage = 1;
           _feedbackFuture = _feedbackService.getAll(
-              page: _currentPage,
-              sortBy: _selectedSortBy,
-              sortDescending: _sortDescending,
-              status: _selectedStatus);
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            status: _selectedStatus,
+            accountType: _selectedAccountType,
+          );
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
@@ -382,10 +397,12 @@ class _FeedbackViewState extends State<FeedbackView> {
           _selectedStatus = status!;
           _currentPage = 1;
           _feedbackFuture = _feedbackService.getAll(
-              page: _currentPage,
-              sortBy: _selectedSortBy,
-              sortDescending: _sortDescending,
-              status: _selectedStatus);
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            status: _selectedStatus,
+            accountType: _accountTypeController.text,
+          );
         });
       },
       dropdownMenuEntries: const <DropdownMenuEntry<String>>[
@@ -393,6 +410,33 @@ class _FeedbackViewState extends State<FeedbackView> {
         DropdownMenuEntry(value: "Pending", label: "Pending"),
         DropdownMenuEntry(value: "Saved", label: "Saved"),
         DropdownMenuEntry(value: "Completed", label: "Completed"),
+      ],
+    );
+  }
+
+  DropdownMenu accountTypeDropdown() {
+    return DropdownMenu<String>(
+      controller: _accountTypeController,
+      initialSelection: "Any",
+      label: const Text("Account Type"),
+      onSelected: (String? accountType) {
+        if (accountType == _selectedAccountType) return;
+        setState(() {
+          _selectedAccountType = accountType!;
+          _currentPage = 1;
+          _feedbackFuture = _feedbackService.getAll(
+            page: _currentPage,
+            sortBy: _selectedSortBy,
+            sortDescending: _sortDescending,
+            status: _selectedStatus,
+            accountType: _selectedAccountType,
+          );
+        });
+      },
+      dropdownMenuEntries: const <DropdownMenuEntry<String>>[
+        DropdownMenuEntry(value: "Any", label: "Any"),
+        DropdownMenuEntry(value: "free", label: "Free"),
+        DropdownMenuEntry(value: "premium", label: "Premium"),
       ],
     );
   }

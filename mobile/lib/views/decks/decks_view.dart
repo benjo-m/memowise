@@ -317,6 +317,7 @@ class _DecksViewState extends State<DecksView> {
                               DeckDetailsView(deckId: deck.id))).then(
                     (value) => setState(() {
                       _decksFuture = DeckService().getDecks();
+                      _currentDeck = 1;
                     }),
                   );
                 },

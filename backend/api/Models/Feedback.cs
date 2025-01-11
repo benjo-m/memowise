@@ -19,6 +19,7 @@ public class Feedback
     public FeedbackStatus FeedbackStatus { get; set; } = FeedbackStatus.PENDING;
     public string Title { get; set; }
     public string Description { get; set; }
+    public bool IsPremiumUser { get; set; }
     public DateTime SubmittedAt { get; set; } = DateTime.Now;
 
     public Feedback()
@@ -32,6 +33,7 @@ public class Feedback
         SubmittedAt = request.SubmittedAt;
         FeedbackStatus = request.Status;
         UserId = request.UserId;
+        IsPremiumUser = request.IsPremiumUser;
     }
 
     public Feedback Update(FeedbackUpdateRequest request)

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/image_picker_service.dart';
@@ -336,6 +337,15 @@ class _AddCardViewState extends State<AddCardView> {
     widget.onAdd(cardCreateRequest);
     _questionController.clear();
     _answerController.clear();
+
+    Fluttertoast.showToast(
+      msg: "Card Added",
+      gravity: ToastGravity.CENTER,
+      toastLength: Toast.LENGTH_SHORT,
+      backgroundColor: const Color.fromARGB(255, 188, 234, 255),
+      textColor: Colors.black,
+      fontSize: 16,
+    );
 
     if (currentCardCount == 19) {
       Navigator.pop(context);

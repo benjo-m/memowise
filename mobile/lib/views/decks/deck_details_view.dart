@@ -207,6 +207,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                           style: const TextStyle(
                             fontSize: 16,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(

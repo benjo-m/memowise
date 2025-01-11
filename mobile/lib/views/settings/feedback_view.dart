@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/feeedback_create_request.dart';
+import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/feedback_service.dart';
 
 class FeedbackView extends StatefulWidget {
@@ -59,13 +60,13 @@ class _FeedbackViewState extends State<FeedbackView> {
                 ),
               ),
               const SizedBox(height: 20),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   sendFeedback(context);
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      const WidgetStatePropertyAll(Color(0xff03AED2)),
+                      const WidgetStatePropertyAll(Colors.lightBlue),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
@@ -94,10 +95,12 @@ class _FeedbackViewState extends State<FeedbackView> {
   void sendFeedback(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final feedback = FeedbackCreateRequest(
+        userId: CurrentUser.userId ?? -1,
         title: _titleController.text,
         description: _descriptionController.text,
         status: "PENDING",
         submittedAt: DateTime.now(),
+        isPremiumUser: CurrentUser.isPremium ?? false,
       );
 
       await FeedbackService().postFeedback(feedback);

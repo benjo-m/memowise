@@ -15,13 +15,24 @@ public class FeedbackService : CRUDService
     }
 
     public async Task<PaginatedResponse<Feedback>> GetAllFeedback
-        (int page, int pageSize, string? status, string? sortBy, bool sortDescending)
+        (int page, int pageSize, string? status, string? accountType, string? sortBy, bool sortDescending)
     {
         var query = _dbContext.Feedbacks.AsQueryable();
 
         if (!string.IsNullOrEmpty(status) && Enum.TryParse<FeedbackStatus>(status, true, out var feedbackStatus))
         {
             query = query.Where(f => f.FeedbackStatus == feedbackStatus);
+        }
+
+        if (!string.IsNullOrEmpty(accountType))
+        {
+            if (accountType == "free")
+            {
+                query = query.Where(f => f.IsPremiumUser == false);
+            } else if (accountType == "premium")
+            {
+                query = query.Where(f => f.IsPremiumUser == true);
+            }
         }
 
         query = sortBy switch

@@ -18,9 +18,9 @@ public class FeedbackController : BaseCRUDController<Feedback, FeedbackCreateReq
 
     [HttpGet]
     public async Task<PaginatedResponse<Feedback>> GetAllFeedback
-        (int page = 1, int pageSize = 10, string? status = null, string? sortBy = "id", bool sortDescending = false)
+        (int page = 1, int pageSize = 10, string? status = null, string? accountType = null, string? sortBy = "id", bool sortDescending = false)
     {
-        return await _feedbackService.GetAllFeedback(page, pageSize, status, sortBy, sortDescending);
+        return await _feedbackService.GetAllFeedback(page, pageSize, status, accountType, sortBy, sortDescending);
     }
 
     [HttpPut("{id}/status")]

@@ -67,7 +67,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   },
                 ),
                 const SizedBox(height: 20),
-                TextButton(
+                ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       final currentPassword =
@@ -104,7 +104,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        const WidgetStatePropertyAll(Color(0xff03AED2)),
+                        const WidgetStatePropertyAll(Colors.lightBlue),
                     foregroundColor: const WidgetStatePropertyAll(Colors.white),
                     padding: WidgetStatePropertyAll(
                       EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
@@ -112,12 +112,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     fixedSize: WidgetStatePropertyAll(
                       Size.fromWidth(
                         MediaQuery.sizeOf(context).width * 0.4,
-                      ),
-                    ),
-                    side: const WidgetStatePropertyAll(
-                      BorderSide(
-                        width: 2,
-                        color: Colors.lightBlue,
                       ),
                     ),
                   ),

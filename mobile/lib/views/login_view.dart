@@ -127,7 +127,7 @@ class _LoginFormState extends State<LoginView> {
         ),
       );
 
-      if (user == null && context.mounted) {
+      if ((user == null || user.isAdmin) && context.mounted) {
         showWrongCredentialsDialog(context);
       } else {
         if (context.mounted) {

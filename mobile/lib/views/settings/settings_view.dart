@@ -479,70 +479,70 @@ class _SettingsViewState extends State<SettingsView> {
     showDialog(
       context: context,
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SimpleDialog(
-            title: const Center(child: Text("Delete Data")),
-            children: [
-              const Center(
+        return SimpleDialog(
+          title: const Center(child: Text("Delete Data")),
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Center(
                 child: Text(
                   "This action will delete all your decks, cards, and achievements.\nAre you sure you want to proceed?",
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text("Cancel"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await UserService().deleteAllData();
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MainView()));
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return SimpleDialog(
-                              title: const Center(child: Text("Fresh Start")),
-                              children: [
-                                const Center(
-                                  child: Text(
-                                    "All data deleted.\nEnjoy a fresh start!",
-                                    textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await UserService().deleteAllData();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainView()));
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(
+                            title: const Center(child: Text("Fresh Start")),
+                            children: [
+                              const Center(
+                                child: Text(
+                                  "All data deleted.\nEnjoy a fresh start!",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text("Close"),
                                   ),
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text("Close"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                    child: const Text("Delete"),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  child: const Text("Delete"),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );

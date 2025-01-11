@@ -17,13 +17,14 @@ class FeedbackService extends BaseCRUDService<FeedbackResponse> {
 
   Future<PaginatedResponse<FeedbackResponse>> getAll({
     int page = 1,
-    String sortBy = "id",
+    String sortBy = "date",
     bool sortDescending = false,
     String status = "Any",
+    String accountType = "any",
   }) async {
     final response = await http.get(
         Uri.parse(
-            '$baseUrl/feedback?page=$page&pageSize=10&sortBy=$sortBy&sortDescending=$sortDescending&status=$status'),
+            '$baseUrl/feedback?page=$page&pageSize=10&accountType=$accountType&sortBy=$sortBy&sortDescending=$sortDescending&status=$status'),
         headers: {
           'Content-Type': 'application/json',
         });

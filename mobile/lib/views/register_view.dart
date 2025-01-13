@@ -25,6 +25,8 @@ class _RegisterViewState extends State<RegisterView> {
   final _confirmPasswordController = TextEditingController();
   String? _usernameError;
   String? _emailError;
+  bool _hidePassword = true;
+  bool _hideConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +41,18 @@ class _RegisterViewState extends State<RegisterView> {
               key: _formKey,
               child: Column(
                 children: [
+                  const Text(
+                    "Welcome to MemoWise, create an account to get started!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _usernameController,
                     decoration: InputDecoration(
                       labelText: 'Username',
                       errorText: _usernameError,
+                      prefixIcon: Icon(Icons.person),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -66,6 +75,7 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       labelText: 'Email',
                       errorText: _emailError,
+                      prefixIcon: Icon(Icons.email_rounded),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -96,14 +106,24 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Password',
+                      prefixIcon: Icon(Icons.password),
+                      suffixIcon: _hidePassword
+                          ? GestureDetector(
+                              onTap: () => setState(
+                                  () => _hidePassword = !_hidePassword),
+                              child: const Icon(Icons.visibility))
+                          : GestureDetector(
+                              onTap: () => setState(
+                                  () => _hidePassword = !_hidePassword),
+                              child: const Icon(Icons.visibility_off)),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
-                    obscureText: true,
+                    obscureText: _hidePassword,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Password is required";
@@ -122,14 +142,24 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   TextFormField(
                     controller: _confirmPasswordController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Confirm password',
+                      prefixIcon: Icon(Icons.password),
+                      suffixIcon: _hideConfirmPassword
+                          ? GestureDetector(
+                              onTap: () => setState(() =>
+                                  _hideConfirmPassword = !_hideConfirmPassword),
+                              child: const Icon(Icons.visibility))
+                          : GestureDetector(
+                              onTap: () => setState(() =>
+                                  _hideConfirmPassword = !_hideConfirmPassword),
+                              child: const Icon(Icons.visibility_off)),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
-                    obscureText: true,
+                    obscureText: _hideConfirmPassword,
                     validator: (value) {
                       if (value != _passwordController.text) {
                         return "Passwords do not match";
@@ -168,6 +198,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 10),
                   TextButton(
                       onPressed: () {
                         Navigator.pushAndRemoveUntil(

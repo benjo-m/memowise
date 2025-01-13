@@ -143,7 +143,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                     backgroundColor: WidgetStatePropertyAll(
                       Colors.amber[500],
                     ),
-                    foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                    foregroundColor: const WidgetStatePropertyAll(Colors.black),
                     padding: WidgetStatePropertyAll(
                       EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
                     ),
@@ -153,7 +153,12 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                       ),
                     ),
                   ),
-                  child: const Text("Upgrade Now"),
+                  child: const Text(
+                    "Upgrade Now",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),

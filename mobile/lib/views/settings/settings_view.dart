@@ -207,8 +207,8 @@ class _SettingsViewState extends State<SettingsView> {
                           backgroundColor: WidgetStatePropertyAll(
                             Colors.amber[500],
                           ),
-                          foregroundColor:
-                              const WidgetStatePropertyAll(Colors.white),
+                          foregroundColor: const WidgetStatePropertyAll(
+                              Color.fromARGB(255, 0, 0, 0)),
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.all(
                                 MediaQuery.sizeOf(context).height * 0.014),
@@ -219,7 +219,12 @@ class _SettingsViewState extends State<SettingsView> {
                             ),
                           ),
                         ),
-                        child: const Text("Upgrade"),
+                        child: const Text(
+                          "Upgrade",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),

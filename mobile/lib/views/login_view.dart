@@ -19,6 +19,7 @@ class _LoginFormState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _hidePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +34,17 @@ class _LoginFormState extends State<LoginView> {
               key: _formKey,
               child: Column(
                 children: [
+                  const Text(
+                    "Welcome back, log in below to continue!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _usernameController,
                     decoration: const InputDecoration(
                       labelText: 'Username',
+                      prefixIcon: Icon(Icons.person),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -53,14 +61,24 @@ class _LoginFormState extends State<LoginView> {
                     height: 20,
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Password',
+                      prefixIcon: const Icon(Icons.password),
+                      suffixIcon: _hidePassword
+                          ? GestureDetector(
+                              onTap: () => setState(
+                                  () => _hidePassword = !_hidePassword),
+                              child: const Icon(Icons.visibility))
+                          : GestureDetector(
+                              onTap: () => setState(
+                                  () => _hidePassword = !_hidePassword),
+                              child: const Icon(Icons.visibility_off)),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
-                    obscureText: true,
+                    obscureText: _hidePassword,
                     controller: _passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -100,6 +118,7 @@ class _LoginFormState extends State<LoginView> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(

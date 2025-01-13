@@ -68,15 +68,14 @@ class CardService {
     return generatedCards;
   }
 
-  Future<void> updateCardStats(
-      List<CardStatsUpdateRequest> cardStatsUpdateRequest) async {
+  Future<void> updateCardStats(CardStatsUpdateRequest request) async {
     http.put(
-      Uri.parse("$baseUrl/cardstats/bulk-update"),
+      Uri.parse("$baseUrl/cards/learning-stats"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: CurrentUser.authHeader ?? "",
       },
-      body: jsonEncode(cardStatsUpdateRequest),
+      body: jsonEncode(request),
     );
   }
 }

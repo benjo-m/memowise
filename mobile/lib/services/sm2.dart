@@ -38,6 +38,7 @@ class SM2 {
       easeFactor: easeFactor,
       interval: interval,
       repetitions: repetitions,
+      dueDate: DateTime.now().add(Duration(days: interval)),
     );
   }
 }

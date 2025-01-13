@@ -119,6 +119,22 @@ public class CardService : CRUDService
         }
     }
 
+    public async Task UpdateLearningStats(CardStatsUpdateRequest request)
+    {
+        Card? card = await _dbContext.Cards
+            .Where(c => c.Id == request.CardId)
+            .Include(c => c.CardStats)
+            .FirstOrDefaultAsync();
+
+        if (card != null)
+        {
+            card.UpdateLearningStats(request);
+
+            _dbContext.Update(card);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {
         var user = await _authService.GetCurrentUser();

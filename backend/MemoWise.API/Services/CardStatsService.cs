@@ -45,23 +45,4 @@ public class CardStatsService : CRUDService
 
         return new PaginatedResponse<CardStats>(cardStats, page, totalPages);
     }
-
-    public async Task BulkUpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
-    {
-        foreach (var cardStats in cardStatsUpdateRequests)
-        {
-            Card? card = await _dbContext.Cards
-                .Where(c => c.Id == cardStats.CardId)
-                .Include(c => c.CardStats)
-                .FirstOrDefaultAsync();
-
-            if (card != null)
-            {
-                card.UpdateLearningStats(cardStats);
-
-                _dbContext.Update(card);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-    }
 }

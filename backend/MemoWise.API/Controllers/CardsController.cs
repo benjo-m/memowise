@@ -50,6 +50,12 @@ public class CardsController : BaseCRUDController<Card, CardCreateRequest, CardU
         await _cardService.EditCard(cardId, cardEditRequest);
     }
 
+    [HttpPut("learning-stats")]
+    public async Task UpdateLearningStats(CardStatsUpdateRequest request)
+    {
+        await _cardService.UpdateLearningStats(request);
+    }
+
     [HttpPost("generate")]
     public async Task<GenerateCardsResponse?> GenerateCards(GenerateCardsRequest generateCardsRequest)
     {

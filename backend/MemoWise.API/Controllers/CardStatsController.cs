@@ -23,10 +23,4 @@ public class CardStatsController : BaseCRUDController<CardStats, CardStatsCreate
         var cardStats = await _cardStatsService.GetAllCardStats(page, pageSize, sortBy, sortDescending, card);
         return Ok(cardStats);
     }
-
-    [HttpPut("bulk-update")]
-    public async Task BulkUpdateCardStats(List<CardStatsUpdateRequest> cardStatsUpdateRequests)
-    {
-        await _cardStatsService.BulkUpdateCardStats(cardStatsUpdateRequests);
-    }
 }

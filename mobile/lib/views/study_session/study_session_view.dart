@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/dtos/card_stats_update_request.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
 import 'package:mobile/models/study_session.dart';
@@ -10,6 +9,7 @@ import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/sm2.dart';
 import 'package:mobile/services/study_session_service.dart';
+import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/study_session/study_session_results_view.dart';
 
 class StudySessionView extends StatefulWidget {
@@ -24,7 +24,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   late List<models.Card> cards = widget.deck.cards
       .where((card) => card.cardStats.dueDate.isBefore(DateTime.now()))
       .toList();
-  List<CardStatsUpdateRequest> cardStatsList = List.empty(growable: true);
+  List<models.Card> reviewedCards = List.empty(growable: true);
   int currentCardIndex = 0;
   bool showAnswer = false;
   final stopwatch = Stopwatch();
@@ -68,8 +68,9 @@ class _StudySessionViewState extends State<StudySessionView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Study"),
+          leading: showQuitDialog(context),
           actions: [
-            helpDialog(context),
+            showHelpDialog(context),
           ],
         ),
         body: cards.isNotEmpty
@@ -212,6 +213,62 @@ class _StudySessionViewState extends State<StudySessionView> {
               ));
   }
 
+  GestureDetector showQuitDialog(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        cards.isEmpty
+            ? Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const MainView()))
+            : showDialog(
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: const Center(child: Text("Quit Session?")),
+                    children: [
+                      Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              "Are you sure you want to quit this study session?",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (reviewedCards.isNotEmpty) {
+                                    finishStudySession(context);
+                                  }
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainView()));
+                                },
+                                child: const Text("Yes"),
+                              ),
+                              const SizedBox(width: 20),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("No"),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  );
+                });
+      },
+      child: const Icon(Icons.arrow_back),
+    );
+  }
+
   Wrap showRatingButtons() {
     return Wrap(
       alignment: WrapAlignment.center,
@@ -317,16 +374,16 @@ class _StudySessionViewState extends State<StudySessionView> {
     );
   }
 
-  void selectAnswer(int q) {
+  void selectAnswer(int q) async {
     var card = cards[currentCardIndex];
     var cardStatsUpdateRequest = SM2().sm2(q, card);
     card.updateCardStats(cardStatsUpdateRequest);
+    await CardService().updateCardStats(cardStatsUpdateRequest);
 
     if (q >= 4) {
       setState(() {
-        cardStatsList.add(cardStatsUpdateRequest);
+        reviewedCards.add(card);
         cards.remove(card);
-
         showAnswer = false;
         if (cards.isEmpty) {
           finishStudySession(context);
@@ -363,14 +420,14 @@ class _StudySessionViewState extends State<StudySessionView> {
       userId: CurrentUser.userId!,
       deckId: widget.deck.id,
       duration: stopwatch.elapsed.inSeconds,
-      cardCount: cardStatsList.length,
-      averageEaseFactor: double.parse((cardStatsList.fold(
-                  0.0, (sum, cardStats) => sum + cardStats.easeFactor) /
-              cardStatsList.length)
+      cardCount: reviewedCards.length,
+      averageEaseFactor: double.parse((reviewedCards.fold(
+                  0.0, (sum, card) => sum + card.cardStats.easeFactor) /
+              reviewedCards.length)
           .toStringAsFixed(2)),
-      averageRepetitions: double.parse((cardStatsList.fold(
-                  0.0, (sum, cardStats) => sum + cardStats.repetitions) /
-              cardStatsList.length)
+      averageRepetitions: double.parse((reviewedCards.fold(
+                  0.0, (sum, card) => sum + card.cardStats.repetitions) /
+              reviewedCards.length)
           .toStringAsFixed(2)),
       studiedAt: DateTime.now(),
       cardsRated1: cardsRated1,
@@ -381,7 +438,6 @@ class _StudySessionViewState extends State<StudySessionView> {
     );
 
     await StudySessionService().saveSession(studySession);
-    await CardService().updateCardStats(cardStatsList);
 
     if (context.mounted) {
       Navigator.pushReplacement(
@@ -394,7 +450,7 @@ class _StudySessionViewState extends State<StudySessionView> {
     }
   }
 
-  GestureDetector helpDialog(BuildContext context) {
+  GestureDetector showHelpDialog(BuildContext context) {
     return GestureDetector(
         onTap: () {
           showDialog(

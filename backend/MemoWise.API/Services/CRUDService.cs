@@ -102,7 +102,7 @@ public class CRUDService
         {
             var request = entity as CardStats;
 
-            if (await _dbContext.CardStats.AnyAsync(cs => cs.CardId == request!.CardId))
+            if (await _dbContext.CardStats.AnyAsync(cs => cs.CardId == request!.CardId && cs.CardId != request.CardId))
             {
                 throw new DuplicateEntryException("CARD_ID_TAKEN", "Card Stats already exists for this card");
             }

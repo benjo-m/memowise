@@ -31,7 +31,7 @@ public class Card
         CardStats.Repetitions = request.Repetitions;
         CardStats.Interval = request.Interval;
         CardStats.EaseFactor = request.EaseFactor;
-        CardStats.DueDate = DateTime.Now.AddDays(request.Interval);
+        CardStats.DueDate = request.DueDate;
     }
 
     public Card(CardCreateRequest request)

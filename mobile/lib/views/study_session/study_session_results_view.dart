@@ -49,16 +49,16 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
               SizedBox(
                 height: MediaQuery.sizeOf(context).height * 0.03,
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const MainView()));
+                      MaterialPageRoute(builder: (context) => const MainView()),
+                      (route) => false);
                 },
                 style: ButtonStyle(
                   backgroundColor: const WidgetStatePropertyAll(
-                    Color.fromARGB(255, 95, 197, 98),
+                    Colors.greenAccent,
                   ),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(
@@ -67,12 +67,6 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
                   fixedSize: WidgetStatePropertyAll(
                     Size.fromWidth(
                       MediaQuery.sizeOf(context).width * 0.4,
-                    ),
-                  ),
-                  side: const WidgetStatePropertyAll(
-                    BorderSide(
-                      width: 2,
-                      color: Colors.green,
                     ),
                   ),
                 ),

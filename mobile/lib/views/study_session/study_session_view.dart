@@ -182,13 +182,13 @@ class _StudySessionViewState extends State<StudySessionView> {
                       ),
                       showAnswer
                           ? const SizedBox()
-                          : TextButton(
+                          : ElevatedButton(
                               onPressed: () {
                                 setState(() => showAnswer = true);
                               },
                               style: ButtonStyle(
                                 backgroundColor: const WidgetStatePropertyAll(
-                                    Color(0xff03AED2)),
+                                    Colors.lightBlue),
                                 foregroundColor:
                                     const WidgetStatePropertyAll(Colors.white),
                                 padding: WidgetStatePropertyAll(
@@ -199,12 +199,6 @@ class _StudySessionViewState extends State<StudySessionView> {
                                 fixedSize: WidgetStatePropertyAll(
                                   Size.fromWidth(
                                     MediaQuery.sizeOf(context).width * 0.4,
-                                  ),
-                                ),
-                                side: const WidgetStatePropertyAll(
-                                  BorderSide(
-                                    width: 2,
-                                    color: Colors.lightBlue,
                                   ),
                                 ),
                               ),
@@ -429,22 +423,14 @@ class _StudySessionViewState extends State<StudySessionView> {
                   children: [
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Colors.grey,
-                        ),
-                      ),
                       child: const Text(
                         "Close",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            barrierDismissible: false,
           );
         },
         child: const Padding(

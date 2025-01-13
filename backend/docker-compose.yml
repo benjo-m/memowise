@@ -1,0 +1,34 @@
+networks:
+  memowisenet:
+    driver: bridge
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+    ports:
+      - 1433:1433
+    expose:
+      - 1433
+    networks:
+      - memowisenet
+
+  api:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: MemoWise.API/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=210170;User Id=sa;Password=${MSSQL_SA_PASSWORD};ConnectRetryCount=0;TrustServerCertificate=True
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GROQ_MODEL=${GROQ_MODEL}
+      - STRIPE_SK=${STRIPE_SK}
+    ports:
+      - 8080:8080
+    networks:
+      - memowisenet
+    depends_on:
+      - sqlserver

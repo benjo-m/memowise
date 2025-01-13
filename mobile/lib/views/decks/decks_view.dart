@@ -82,9 +82,8 @@ class _DecksViewState extends State<DecksView> {
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
-                    "This is the Decks View.\n\n"
-                    "Tap the deck list item to edit deck.\n"
-                    "If you don't have any decks, you can create them from here.",
+                    "If you don't have any decks, you can create them from here.\n\n"
+                    "Tap the deck inside the carousel to edit it.",
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -93,22 +92,14 @@ class _DecksViewState extends State<DecksView> {
                   children: [
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Colors.grey,
-                        ),
-                      ),
                       child: const Text(
                         "Close",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            barrierDismissible: false,
           );
         },
         child: const Padding(

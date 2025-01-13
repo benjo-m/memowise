@@ -124,8 +124,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
-                    "This is the Deck Details View.\n\n"
-                    "You can add new cards to your decks from here.\n"
+                    "You can add new cards to your decks from here.\n\n"
                     "Tap the card to edit it, tap the red circle icon to remove it.",
                     textAlign: TextAlign.center,
                   ),
@@ -135,22 +134,14 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
                   children: [
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Colors.grey,
-                        ),
-                      ),
                       child: const Text(
                         "Close",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            barrierDismissible: false,
           );
         },
         child: const Padding(

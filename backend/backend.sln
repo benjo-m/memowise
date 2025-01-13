@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{0776BA65-50CD-4E4F-9356-C60545AD8CF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoWise.API", "MemoWise.API\MemoWise.API.csproj", "{0776BA65-50CD-4E4F-9356-C60545AD8CF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoWise.SubscriberEmail", "MemoWise.SubscriberEmail\MemoWise.SubscriberEmail.csproj", "{21DEF6FE-5C77-4774-9750-448676246EDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoWise.Model", "MemoWise.Model\MemoWise.Model.csproj", "{6677A46D-A770-4811-9022-D26942D4BF32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{0776BA65-50CD-4E4F-9356-C60545AD8CF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0776BA65-50CD-4E4F-9356-C60545AD8CF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0776BA65-50CD-4E4F-9356-C60545AD8CF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DEF6FE-5C77-4774-9750-448676246EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21DEF6FE-5C77-4774-9750-448676246EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21DEF6FE-5C77-4774-9750-448676246EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21DEF6FE-5C77-4774-9750-448676246EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6677A46D-A770-4811-9022-D26942D4BF32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6677A46D-A770-4811-9022-D26942D4BF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6677A46D-A770-4811-9022-D26942D4BF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6677A46D-A770-4811-9022-D26942D4BF32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

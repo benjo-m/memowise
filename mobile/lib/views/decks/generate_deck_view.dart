@@ -121,7 +121,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                 onPressed: () async => await generateDeck(context),
                 style: ButtonStyle(
                   backgroundColor: const WidgetStatePropertyAll(
-                    Colors.greenAccent,
+                    Color.fromARGB(255, 146, 226, 76),
                   ),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(

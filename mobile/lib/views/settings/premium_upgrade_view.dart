@@ -34,7 +34,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
               children: [
                 Icon(
                   Icons.check_circle,
-                  color: Colors.green,
+                  color: Color.fromARGB(255, 146, 226, 76),
                 ),
                 SizedBox(
                   width: 10,
@@ -56,7 +56,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
               children: [
                 Icon(
                   Icons.check_circle,
-                  color: Colors.green,
+                  color: Color.fromARGB(255, 146, 226, 76),
                 ),
                 SizedBox(
                   width: 10,
@@ -78,7 +78,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
               children: [
                 Icon(
                   Icons.check_circle,
-                  color: Colors.green,
+                  color: Color.fromARGB(255, 146, 226, 76),
                 ),
                 SizedBox(
                   width: 10,
@@ -100,7 +100,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
               children: [
                 Icon(
                   Icons.check_circle,
-                  color: Colors.green,
+                  color: Color.fromARGB(255, 146, 226, 76),
                 ),
                 SizedBox(
                   width: 10,

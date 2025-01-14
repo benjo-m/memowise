@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/achievement.dart';
+import 'package:mobile/styles.dart';
 
 class AchievementListItem extends StatelessWidget {
   const AchievementListItem({
@@ -47,14 +48,12 @@ class AchievementListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isLocked
-              ? const Color.fromARGB(255, 209, 209, 209)
-              : const Color(0xffFEEFAD),
+          color: isLocked ? primaryBackgroundColor : const Color(0xffFEEFAD),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 2.0,
             color: isLocked
-                ? const Color.fromARGB(255, 189, 189, 189)
+                ? primaryBorderColor
                 : const Color.fromARGB(255, 252, 221, 84),
           ),
         ),
@@ -94,7 +93,7 @@ class AchievementListItem extends StatelessWidget {
             if (isLocked)
               const Icon(
                 Icons.lock,
-                color: Colors.yellow,
+                color: Colors.amber,
               ),
           ],
         ),

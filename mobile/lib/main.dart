@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:mobile/styles.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:flutter/services.dart';
 
@@ -22,10 +23,10 @@ class MyApp extends StatelessWidget {
       title: 'MemoWise',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.lightBlue,
+          backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           titleTextStyle: TextStyle(
             fontWeight: FontWeight.bold,

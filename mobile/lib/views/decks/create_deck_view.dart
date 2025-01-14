@@ -101,7 +101,7 @@ class _CreateDeckViewState extends State<CreateDeckView> {
           onPressed: () async => await createDeck(context),
           style: ButtonStyle(
             backgroundColor: const WidgetStatePropertyAll(
-              Colors.greenAccent,
+              Color.fromARGB(255, 146, 226, 76),
             ),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
@@ -141,7 +141,7 @@ class _CreateDeckViewState extends State<CreateDeckView> {
             backgroundColor: cardLimitExceeded()
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Colors.lightBlue),
+                : const WidgetStatePropertyAll(Colors.blue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),

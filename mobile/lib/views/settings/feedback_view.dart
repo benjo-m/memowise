@@ -67,8 +67,7 @@ class _FeedbackViewState extends State<FeedbackView> {
                   sendFeedback(context);
                 },
                 style: ButtonStyle(
-                  backgroundColor:
-                      const WidgetStatePropertyAll(Colors.lightBlue),
+                  backgroundColor: const WidgetStatePropertyAll(Colors.blue),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
@@ -81,7 +80,7 @@ class _FeedbackViewState extends State<FeedbackView> {
                   side: const WidgetStatePropertyAll(
                     BorderSide(
                       width: 2,
-                      color: Colors.lightBlue,
+                      color: Colors.blue,
                     ),
                   ),
                 ),

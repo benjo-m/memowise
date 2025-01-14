@@ -58,7 +58,7 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
                 },
                 style: ButtonStyle(
                   backgroundColor: const WidgetStatePropertyAll(
-                    Colors.greenAccent,
+                    Color.fromARGB(255, 146, 226, 76),
                   ),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(

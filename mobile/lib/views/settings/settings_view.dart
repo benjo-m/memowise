@@ -133,7 +133,7 @@ class _SettingsViewState extends State<SettingsView> {
                       onPressed: () => showDeleteAccountDialog(),
                       style: ButtonStyle(
                         backgroundColor:
-                            const WidgetStatePropertyAll(Colors.redAccent),
+                            const WidgetStatePropertyAll(Colors.red),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -156,7 +156,7 @@ class _SettingsViewState extends State<SettingsView> {
                                   const ChangePasswordView())),
                       style: ButtonStyle(
                         backgroundColor:
-                            const WidgetStatePropertyAll(Colors.lightBlue),
+                            const WidgetStatePropertyAll(Colors.blue),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -251,7 +251,7 @@ class _SettingsViewState extends State<SettingsView> {
                       onPressed: () async => deleteData(),
                       style: ButtonStyle(
                         backgroundColor:
-                            const WidgetStatePropertyAll(Colors.redAccent),
+                            const WidgetStatePropertyAll(Colors.red),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(
@@ -292,7 +292,7 @@ class _SettingsViewState extends State<SettingsView> {
                               builder: (context) => const FeedbackView())),
                       style: ButtonStyle(
                         backgroundColor:
-                            const WidgetStatePropertyAll(Colors.lightBlue),
+                            const WidgetStatePropertyAll(Colors.blue),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),
                         padding: WidgetStatePropertyAll(

@@ -174,7 +174,7 @@ class _RegisterViewState extends State<RegisterView> {
                     onPressed: () async => await register(context),
                     style: ButtonStyle(
                       backgroundColor:
-                          const WidgetStatePropertyAll(Colors.lightBlue),
+                          const WidgetStatePropertyAll(Colors.blue),
                       foregroundColor:
                           const WidgetStatePropertyAll(Colors.white),
                       padding: WidgetStatePropertyAll(

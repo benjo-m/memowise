@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/styles.dart';
 
 class CardListItem extends StatelessWidget {
   const CardListItem({
@@ -23,9 +24,11 @@ class CardListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
+          color: primaryBackgroundColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 3.0,
+            color: primaryBorderColor,
           ),
         ),
         child: Row(

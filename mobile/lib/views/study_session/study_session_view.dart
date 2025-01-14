@@ -10,6 +10,7 @@ import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/card_service.dart';
 import 'package:mobile/services/sm2.dart';
 import 'package:mobile/services/study_session_service.dart';
+import 'package:mobile/styles.dart';
 import 'package:mobile/views/main_view.dart';
 import 'package:mobile/views/study_session/study_session_results_view.dart';
 
@@ -98,10 +99,10 @@ class _StudySessionViewState extends State<StudySessionView> {
                                       MediaQuery.of(context).size.height * 0.25,
                                 ),
                                 decoration: BoxDecoration(
+                                  color: primaryBackgroundColor,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    width: 3.0,
-                                  ),
+                                      width: 3.0, color: primaryBorderColor),
                                 ),
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(10),
@@ -150,10 +151,11 @@ class _StudySessionViewState extends State<StudySessionView> {
                                                 0.25,
                                       ),
                                       decoration: BoxDecoration(
+                                        color: primaryBackgroundColor,
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                          width: 3.0,
-                                        ),
+                                            width: 3.0,
+                                            color: primaryBorderColor),
                                       ),
                                       width: double.infinity,
                                       padding: const EdgeInsets.all(10),
@@ -193,8 +195,8 @@ class _StudySessionViewState extends State<StudySessionView> {
                                 setState(() => showAnswer = true);
                               },
                               style: ButtonStyle(
-                                backgroundColor: const WidgetStatePropertyAll(
-                                    Colors.lightBlue),
+                                backgroundColor:
+                                    const WidgetStatePropertyAll(Colors.blue),
                                 foregroundColor:
                                     const WidgetStatePropertyAll(Colors.white),
                                 padding: WidgetStatePropertyAll(
@@ -347,8 +349,9 @@ class _StudySessionViewState extends State<StudySessionView> {
             });
             selectAnswer(4);
           },
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.lightGreen[500]),
+          style: const ButtonStyle(
+            backgroundColor:
+                WidgetStatePropertyAll(Color.fromARGB(255, 146, 226, 76)),
           ),
           child: const Text(
             "4",
@@ -366,8 +369,9 @@ class _StudySessionViewState extends State<StudySessionView> {
             });
             selectAnswer(5);
           },
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.green[500]),
+          style: const ButtonStyle(
+            backgroundColor:
+                WidgetStatePropertyAll(Color.fromARGB(255, 146, 226, 76)),
           ),
           child: const Text(
             "5",

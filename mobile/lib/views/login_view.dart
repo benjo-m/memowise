@@ -94,7 +94,7 @@ class _LoginFormState extends State<LoginView> {
                     onPressed: () async => await login(context),
                     style: ButtonStyle(
                       backgroundColor:
-                          const WidgetStatePropertyAll(Colors.lightBlue),
+                          const WidgetStatePropertyAll(Colors.blue),
                       foregroundColor:
                           const WidgetStatePropertyAll(Colors.white),
                       padding: WidgetStatePropertyAll(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/styles.dart';
 import 'package:mobile/views/study_session/study_session_view.dart';
 
 class DeckListItem extends StatelessWidget {
@@ -13,12 +14,20 @@ class DeckListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var textStyle = TextStyle(
+      fontSize: MediaQuery.sizeOf(context).width * 0.04,
+      fontWeight: FontWeight.bold,
+      // color: Colors.white,
+    );
+
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
+        color: primaryBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          width: 3.0,
+          width: 3,
+          color: primaryBorderColor,
         ),
       ),
       child: Column(
@@ -29,6 +38,7 @@ class DeckListItem extends StatelessWidget {
             style: TextStyle(
               fontSize: MediaQuery.sizeOf(context).width * 0.05,
               fontWeight: FontWeight.bold,
+              // color: Colors.white,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -49,11 +59,7 @@ class DeckListItem extends StatelessWidget {
                   ),
                   Text(
                     "New: ${deckSummary.newCards}",
-                    style: TextStyle(
-                      fontSize: MediaQuery.sizeOf(context).width * 0.04,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 82, 82, 82),
-                    ),
+                    style: textStyle,
                   ),
                 ],
               ),
@@ -72,11 +78,7 @@ class DeckListItem extends StatelessWidget {
                   ),
                   Text(
                     "Learning: ${deckSummary.learningCards}",
-                    style: TextStyle(
-                      fontSize: MediaQuery.sizeOf(context).width * 0.04,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 82, 82, 82),
-                    ),
+                    style: textStyle,
                   ),
                 ],
               ),
@@ -88,18 +90,14 @@ class DeckListItem extends StatelessWidget {
                 children: [
                   const Icon(
                     Icons.done_all,
-                    color: Colors.green,
+                    color: Color.fromARGB(255, 146, 226, 76),
                   ),
                   const SizedBox(
                     width: 8,
                   ),
                   Text(
                     "Learned: ${deckSummary.learnedCards}",
-                    style: TextStyle(
-                      fontSize: MediaQuery.sizeOf(context).width * 0.04,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 82, 82, 82),
-                    ),
+                    style: textStyle,
                   ),
                 ],
               ),
@@ -112,7 +110,7 @@ class DeckListItem extends StatelessWidget {
                 style: ButtonStyle(
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   backgroundColor:
-                      const WidgetStatePropertyAll(Colors.greenAccent),
+                      WidgetStatePropertyAll(Color.fromARGB(255, 146, 226, 76)),
                   fixedSize: WidgetStatePropertyAll(
                       Size.fromWidth(MediaQuery.sizeOf(context).width * 0.35)),
                 ),
@@ -145,6 +143,14 @@ class DeckListItem extends StatelessWidget {
   }
 
   Row timeToCompleteStudySession(BuildContext context) {
+    const iconColor = Colors.black;
+
+    final TextStyle textStyle = TextStyle(
+      fontSize: MediaQuery.sizeOf(context).width * 0.03,
+      // color: Colors.white,
+      fontWeight: FontWeight.bold,
+    );
+
     if (deckSummary.newCards == 0 && deckSummary.learningCards == 0) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -152,12 +158,11 @@ class DeckListItem extends StatelessWidget {
           const Icon(
             Icons.hourglass_bottom_rounded,
             size: 15.0,
+            color: iconColor,
           ),
           Text(
             "All caught up!",
-            style: TextStyle(
-              fontSize: MediaQuery.sizeOf(context).width * 0.03,
-            ),
+            style: textStyle,
           ),
         ],
       );
@@ -168,12 +173,11 @@ class DeckListItem extends StatelessWidget {
           const Icon(
             Icons.hourglass_top_rounded,
             size: 15.0,
+            color: iconColor,
           ),
           Text(
             "< 1 minute",
-            style: TextStyle(
-              fontSize: MediaQuery.sizeOf(context).width * 0.03,
-            ),
+            style: textStyle,
           ),
         ],
       );
@@ -185,12 +189,11 @@ class DeckListItem extends StatelessWidget {
         const Icon(
           Icons.hourglass_top_rounded,
           size: 15.0,
+          color: iconColor,
         ),
         Text(
           "${(deckSummary.timeToComplete / 60).ceil()} minutes",
-          style: TextStyle(
-            fontSize: MediaQuery.sizeOf(context).width * 0.03,
-          ),
+          style: textStyle,
         ),
       ],
     );

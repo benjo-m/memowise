@@ -159,7 +159,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             await showDeletionConfirmationDialog(deck, context);
           },
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
+            backgroundColor: const WidgetStatePropertyAll(Colors.red),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -203,7 +203,7 @@ class _DeckDetailsViewState extends State<DeckDetailsView> {
             backgroundColor: cardLimitExceeded(deck.cards.length)
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Colors.lightBlue),
+                : const WidgetStatePropertyAll(Colors.blue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),

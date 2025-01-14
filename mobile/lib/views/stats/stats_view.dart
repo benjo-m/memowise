@@ -5,6 +5,7 @@ import 'package:mobile/dtos/stats_response.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/user_service.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:mobile/styles.dart';
 import 'package:mobile/widgets/card_ratings_bar_chart.dart';
 import 'package:mobile/widgets/most_studied_deck_bar_chart.dart';
 
@@ -21,6 +22,7 @@ class _StatsViewState extends State<StatsView> {
 
   TextStyle regularTextStyle = const TextStyle(
     fontSize: 16,
+    // color: Colors.black,
     fontWeight: FontWeight.bold,
     color: Color.fromARGB(255, 82, 82, 82),
     height: 2,
@@ -87,7 +89,7 @@ class _StatsViewState extends State<StatsView> {
                               padding: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromARGB(255, 236, 249, 255),
+                                color: primaryBackgroundColor,
                               ),
                               child: Column(
                                 children: [
@@ -139,7 +141,7 @@ class _StatsViewState extends State<StatsView> {
                               padding: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromARGB(255, 236, 249, 255),
+                                color: primaryBackgroundColor,
                               ),
                               child: Column(
                                 children: [
@@ -216,14 +218,14 @@ class _StatsViewState extends State<StatsView> {
       padding: const EdgeInsets.only(top: 10, bottom: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 236, 249, 255),
+        color: primaryBackgroundColor,
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              indicator(Colors.greenAccent, "Manually"),
+              indicator(Color.fromARGB(255, 146, 226, 76), "Manually"),
               indicator(Colors.blueAccent, "Generated"),
             ],
           ),
@@ -278,7 +280,7 @@ class _StatsViewState extends State<StatsView> {
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        color: Colors.greenAccent,
+        color: Color.fromARGB(255, 146, 226, 76),
       ),
       PieChartSectionData(
         title: "${percentageGenerated.toString()}%",

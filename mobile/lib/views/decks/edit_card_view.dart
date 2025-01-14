@@ -303,7 +303,7 @@ class _EditCardViewState extends State<EditCardView> {
         ElevatedButton(
           onPressed: () => Navigator.pop(context),
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
+            backgroundColor: const WidgetStatePropertyAll(Colors.red),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -330,7 +330,7 @@ class _EditCardViewState extends State<EditCardView> {
             finishEdit(context);
           },
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(Colors.lightBlue),
+            backgroundColor: const WidgetStatePropertyAll(Colors.blue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),

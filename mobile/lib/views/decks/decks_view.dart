@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/auth/current_user.dart';
 import 'package:mobile/services/deck_service.dart';
+import 'package:mobile/styles.dart';
 import 'package:mobile/views/decks/create_deck_view.dart';
 import 'package:mobile/views/decks/deck_details_view.dart';
 import 'package:mobile/views/decks/generate_deck_view.dart';
@@ -117,91 +118,94 @@ class _DecksViewState extends State<DecksView> {
       return total + deck.learningCards + deck.newCards;
     });
 
+    var boxDecoration = BoxDecoration(
+      color: primaryBackgroundColor,
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(
+        width: 3,
+        color: primaryBorderColor,
+      ),
+    );
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 3.0,
-            ),
-          ),
+          decoration: boxDecoration,
           padding: const EdgeInsets.all(5),
-          child: Column(
-            children: [
-              const Text(
-                "Total Decks",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 59, 59, 59),
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Column(
+              children: [
+                const Text(
+                  "Total Decks",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    // color: Color.fromARGB(255, 59, 59, 59),
+                  ),
                 ),
-              ),
-              Text(
-                "${decks.length}",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: MediaQuery.sizeOf(context).height * 0.025,
-                  color: decks.length == 10 && !CurrentUser.isPremium!
-                      ? Colors.red
-                      : Colors.black,
+                Text(
+                  "${decks.length}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                    color: decks.length == 10 && !CurrentUser.isPremium!
+                        ? Colors.red
+                        : Colors.black,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 3.0,
-            ),
-          ),
+          decoration: boxDecoration,
           padding: const EdgeInsets.all(5),
-          child: Column(
-            children: [
-              const Text(
-                "Total Cards",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 59, 59, 59),
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Column(
+              children: [
+                const Text(
+                  "Total Cards",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    // color: Color.fromARGB(255, 59, 59, 59),
+                  ),
                 ),
-              ),
-              Text(
-                "$totalCards",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                Text(
+                  "$totalCards",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 3.0,
-            ),
-          ),
+          decoration: boxDecoration,
           padding: const EdgeInsets.all(5),
-          child: Column(
-            children: [
-              const Text(
-                "  To Learn  ",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 59, 59, 59),
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Column(
+              children: [
+                const Text(
+                  "  To Learn  ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    // color: Color.fromARGB(255, 59, 59, 59),
+                  ),
                 ),
-              ),
-              Text(
-                "$cardToLearn",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                Text(
+                  "$cardToLearn",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -226,7 +230,7 @@ class _DecksViewState extends State<DecksView> {
             backgroundColor: deckLimitExceeded(decks)
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Colors.lightBlue),
+                : const WidgetStatePropertyAll(Colors.blue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -256,7 +260,7 @@ class _DecksViewState extends State<DecksView> {
             backgroundColor: deckLimitExceeded(decks)
                 ? const WidgetStatePropertyAll(
                     Color.fromARGB(255, 192, 192, 192))
-                : const WidgetStatePropertyAll(Colors.lightBlue),
+                : const WidgetStatePropertyAll(Colors.blue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),

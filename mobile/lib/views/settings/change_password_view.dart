@@ -128,8 +128,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Colors.lightBlue),
+                    backgroundColor: const WidgetStatePropertyAll(Colors.blue),
                     foregroundColor: const WidgetStatePropertyAll(Colors.white),
                     padding: WidgetStatePropertyAll(
                       EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),

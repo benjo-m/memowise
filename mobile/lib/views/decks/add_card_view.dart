@@ -277,7 +277,7 @@ class _AddCardViewState extends State<AddCardView> {
           },
           style: ButtonStyle(
             backgroundColor: const WidgetStatePropertyAll(
-              Colors.greenAccent,
+              Color.fromARGB(255, 146, 226, 76),
             ),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
@@ -304,7 +304,7 @@ class _AddCardViewState extends State<AddCardView> {
           onPressed: () =>
               cardLimitExceeded() ? Navigator.pop(context) : addCard(),
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(Colors.lightBlue),
+            backgroundColor: const WidgetStatePropertyAll(Colors.blue),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             padding: WidgetStatePropertyAll(
               EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
@@ -317,7 +317,7 @@ class _AddCardViewState extends State<AddCardView> {
             side: const WidgetStatePropertyAll(
               BorderSide(
                 width: 2,
-                color: Colors.lightBlue,
+                color: Colors.blue,
               ),
             ),
           ),

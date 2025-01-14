@@ -17,15 +17,17 @@ class ReportService {
       headers: [
         "Total Users",
         "Premium Users",
-        "Monthly Active Users",
-        "Daily Active Users"
+        "Monthly Users",
+        "Daily Users",
+        "Admins"
       ],
       data: [
         [
           data.totalUsers,
           data.totalPremiumUsers,
           data.monthlyActiveUsers,
-          data.dailyActiveUsers
+          data.dailyActiveUsers,
+          data.adminCount
         ]
       ],
       headerStyle: TextStyle(

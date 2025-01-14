@@ -188,7 +188,7 @@ class _AnalyticsViewState extends State<AnalyticsView> {
   TextButton generateReportButton() {
     return TextButton(
         style: const ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+          backgroundColor: WidgetStatePropertyAll(Colors.lightBlue),
           foregroundColor: WidgetStatePropertyAll(Colors.white),
         ),
         onPressed: () async {

@@ -36,6 +36,15 @@ class _LoginFormState extends State<LoginView> {
               key: _formKey,
               child: Column(
                 children: [
+                  const Text(
+                    "Welcome to MemoWise Admin.\nLog in with your administrator credentials to continue.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
                   TextFormField(
                     controller: _usernameController,
                     decoration: const InputDecoration(

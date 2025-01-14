@@ -71,6 +71,7 @@ class _SettingsViewState extends State<SettingsView> {
                         decoration: InputDecoration(
                           labelText: 'Username',
                           errorText: _usernameError,
+                          prefixIcon: const Icon(Icons.person),
                         ),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -92,6 +93,7 @@ class _SettingsViewState extends State<SettingsView> {
                         decoration: InputDecoration(
                           labelText: 'Email',
                           errorText: _emailError,
+                          prefixIcon: const Icon(Icons.email),
                         ),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -207,8 +209,8 @@ class _SettingsViewState extends State<SettingsView> {
                           backgroundColor: WidgetStatePropertyAll(
                             Colors.amber[500],
                           ),
-                          foregroundColor: const WidgetStatePropertyAll(
-                              Color.fromARGB(255, 0, 0, 0)),
+                          foregroundColor:
+                              const WidgetStatePropertyAll(Colors.white),
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.all(
                                 MediaQuery.sizeOf(context).height * 0.014),

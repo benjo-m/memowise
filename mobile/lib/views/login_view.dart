@@ -35,7 +35,7 @@ class _LoginFormState extends State<LoginView> {
               child: Column(
                 children: [
                   const Text(
-                    "Welcome back, log in below to continue!",
+                    "Welcome back, log in to continue!",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),

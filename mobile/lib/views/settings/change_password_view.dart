@@ -19,6 +19,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   String? _currentPasswordError;
+  bool _hideCurrentPassword = true;
+  bool _hideNewPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,20 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               children: [
                 TextFormField(
                   controller: _currentPasswordController,
-                  obscureText: true,
+                  obscureText: _hideCurrentPassword,
                   decoration: InputDecoration(
                     labelText: 'Current Password',
                     errorText: _currentPasswordError,
+                    prefixIcon: const Icon(Icons.password),
+                    suffixIcon: _hideCurrentPassword
+                        ? GestureDetector(
+                            onTap: () => setState(() =>
+                                _hideCurrentPassword = !_hideCurrentPassword),
+                            child: const Icon(Icons.visibility))
+                        : GestureDetector(
+                            onTap: () => setState(() =>
+                                _hideCurrentPassword = !_hideCurrentPassword),
+                            child: const Icon(Icons.visibility_off)),
                   ),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
@@ -51,9 +63,19 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _newPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  obscureText: _hideNewPassword,
+                  decoration: InputDecoration(
                     labelText: 'New Password',
+                    prefixIcon: const Icon(Icons.password),
+                    suffixIcon: _hideNewPassword
+                        ? GestureDetector(
+                            onTap: () => setState(
+                                () => _hideNewPassword = !_hideNewPassword),
+                            child: const Icon(Icons.visibility))
+                        : GestureDetector(
+                            onTap: () => setState(
+                                () => _hideNewPassword = !_hideNewPassword),
+                            child: const Icon(Icons.visibility_off)),
                   ),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,

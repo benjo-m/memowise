@@ -52,7 +52,7 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       labelText: 'Username',
                       errorText: _usernameError,
-                      prefixIcon: Icon(Icons.person),
+                      prefixIcon: const Icon(Icons.person),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       labelText: 'Email',
                       errorText: _emailError,
-                      prefixIcon: Icon(Icons.email_rounded),
+                      prefixIcon: const Icon(Icons.email_rounded),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class _RegisterViewState extends State<RegisterView> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      prefixIcon: Icon(Icons.password),
+                      prefixIcon: const Icon(Icons.password),
                       suffixIcon: _hidePassword
                           ? GestureDetector(
                               onTap: () => setState(
@@ -144,7 +144,7 @@ class _RegisterViewState extends State<RegisterView> {
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
                       labelText: 'Confirm password',
-                      prefixIcon: Icon(Icons.password),
+                      prefixIcon: const Icon(Icons.password),
                       suffixIcon: _hideConfirmPassword
                           ? GestureDetector(
                               onTap: () => setState(() =>
@@ -198,7 +198,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextButton(
                       onPressed: () {
                         Navigator.pushAndRemoveUntil(

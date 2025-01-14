@@ -9,9 +9,9 @@ public class Program
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
+            .AddUserSecrets<Program>()
             .AddEnvironmentVariables()
             .Build();
-
         var emailService = new EmailService(configuration);
         var bus = RabbitHutch.CreateBus("host=localhost");
 

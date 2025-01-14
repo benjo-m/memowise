@@ -54,7 +54,9 @@ class _FeedbackViewState extends State<FeedbackView> {
                       },
                       decoration: const InputDecoration(
                         label: Text("Description"),
+                        alignLabelWithHint: true,
                       ),
+                      maxLines: 3,
                     ),
                   ],
                 ),

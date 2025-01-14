@@ -130,31 +130,35 @@ class _EditCardViewState extends State<EditCardView> {
                                     maxLines: null,
                                   ),
                                   _questionImage != null
-                                      ? Stack(children: [
-                                          Image.memory(
-                                            _questionImage!,
-                                            height: 200,
-                                            width: double.infinity,
-                                          ),
-                                          Positioned(
-                                            bottom: 10,
-                                            right: 10,
-                                            child: ElevatedButton(
-                                              style: const ButtonStyle(
-                                                backgroundColor:
-                                                    WidgetStatePropertyAll(
-                                                        Colors.red),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _questionImage = null;
-                                                });
-                                              },
-                                              child: const Icon(Icons.delete,
-                                                  color: Colors.white),
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: Stack(children: [
+                                            Image.memory(
+                                              _questionImage!,
+                                              height: 200,
+                                              width: double.infinity,
                                             ),
-                                          ),
-                                        ])
+                                            Positioned(
+                                              bottom: 10,
+                                              right: 10,
+                                              child: ElevatedButton(
+                                                style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      WidgetStatePropertyAll(
+                                                          Colors.red),
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _questionImage = null;
+                                                  });
+                                                },
+                                                child: const Icon(Icons.delete,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ]),
+                                        )
                                       : const SizedBox(),
                                 ],
                               ),
@@ -227,31 +231,35 @@ class _EditCardViewState extends State<EditCardView> {
                                     maxLines: null,
                                   ),
                                   _answerImage != null
-                                      ? Stack(children: [
-                                          Image.memory(
-                                            _answerImage!,
-                                            height: 200,
-                                            width: double.infinity,
-                                          ),
-                                          Positioned(
-                                            bottom: 10,
-                                            right: 10,
-                                            child: ElevatedButton(
-                                              style: const ButtonStyle(
-                                                backgroundColor:
-                                                    WidgetStatePropertyAll(
-                                                        Colors.red),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _answerImage = null;
-                                                });
-                                              },
-                                              child: const Icon(Icons.delete,
-                                                  color: Colors.white),
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: Stack(children: [
+                                            Image.memory(
+                                              _answerImage!,
+                                              height: 200,
+                                              width: double.infinity,
                                             ),
-                                          ),
-                                        ])
+                                            Positioned(
+                                              bottom: 10,
+                                              right: 10,
+                                              child: ElevatedButton(
+                                                style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      WidgetStatePropertyAll(
+                                                          Colors.red),
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _answerImage = null;
+                                                  });
+                                                },
+                                                child: const Icon(Icons.delete,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ]),
+                                        )
                                       : const SizedBox(),
                                 ],
                               ),

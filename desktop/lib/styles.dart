@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const blueButtonStyle = ButtonStyle(
-  backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+  backgroundColor: WidgetStatePropertyAll(Colors.lightBlue),
   foregroundColor: WidgetStatePropertyAll(Colors.white),
   fixedSize: WidgetStatePropertyAll(Size(100, 35)),
 );

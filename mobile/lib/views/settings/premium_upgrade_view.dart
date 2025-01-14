@@ -143,7 +143,7 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                     backgroundColor: WidgetStatePropertyAll(
                       Colors.amber[500],
                     ),
-                    foregroundColor: const WidgetStatePropertyAll(Colors.black),
+                    foregroundColor: const WidgetStatePropertyAll(Colors.white),
                     padding: WidgetStatePropertyAll(
                       EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
                     ),

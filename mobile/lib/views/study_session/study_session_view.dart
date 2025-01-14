@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:mobile/models/deck.dart';
 import 'package:mobile/models/card.dart' as models;
 import 'package:mobile/models/study_session.dart';
@@ -116,9 +117,11 @@ class _StudySessionViewState extends State<StudySessionView> {
                                       cachedQuestionImageBytes != null &&
                                               cachedQuestionImageBytes!
                                                   .isNotEmpty
-                                          ? Image.memory(
-                                              cachedQuestionImageBytes!,
-                                              height: 200,
+                                          ? InstaImageViewer(
+                                              child: Image.memory(
+                                                cachedQuestionImageBytes!,
+                                                height: 200,
+                                              ),
                                             )
                                           : const SizedBox(),
                                     ],
@@ -167,9 +170,11 @@ class _StudySessionViewState extends State<StudySessionView> {
                                             cachedAnswerImageBytes != null &&
                                                     cachedAnswerImageBytes!
                                                         .isNotEmpty
-                                                ? Image.memory(
-                                                    cachedAnswerImageBytes!,
-                                                    height: 200,
+                                                ? InstaImageViewer(
+                                                    child: Image.memory(
+                                                      cachedAnswerImageBytes!,
+                                                      height: 200,
+                                                    ),
                                                   )
                                                 : const SizedBox(),
                                           ],
@@ -217,8 +222,10 @@ class _StudySessionViewState extends State<StudySessionView> {
     return GestureDetector(
       onTap: () {
         cards.isEmpty
-            ? Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const MainView()))
+            ? Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const MainView()),
+                (route) => false)
             : showDialog(
                 context: context,
                 builder: (context) {
@@ -242,11 +249,12 @@ class _StudySessionViewState extends State<StudySessionView> {
                                   if (reviewedCards.isNotEmpty) {
                                     finishStudySession(context);
                                   }
-                                  Navigator.pushReplacement(
+                                  Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const MainView()));
+                                              const MainView()),
+                                      (route) => false);
                                 },
                                 child: const Text("Yes"),
                               ),

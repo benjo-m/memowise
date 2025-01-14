@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:mobile/dtos/card_dto.dart';
 import 'package:mobile/services/image_picker_service.dart';
 
@@ -134,10 +135,12 @@ class _EditCardViewState extends State<EditCardView> {
                                           padding: const EdgeInsets.only(
                                               left: 10, right: 10),
                                           child: Stack(children: [
-                                            Image.memory(
-                                              _questionImage!,
-                                              height: 200,
-                                              width: double.infinity,
+                                            InstaImageViewer(
+                                              child: Image.memory(
+                                                _questionImage!,
+                                                height: 200,
+                                                width: double.infinity,
+                                              ),
                                             ),
                                             Positioned(
                                               bottom: 10,
@@ -235,10 +238,12 @@ class _EditCardViewState extends State<EditCardView> {
                                           padding: const EdgeInsets.only(
                                               left: 10, right: 10),
                                           child: Stack(children: [
-                                            Image.memory(
-                                              _answerImage!,
-                                              height: 200,
-                                              width: double.infinity,
+                                            InstaImageViewer(
+                                              child: Image.memory(
+                                                _answerImage!,
+                                                height: 200,
+                                                width: double.infinity,
+                                              ),
                                             ),
                                             Positioned(
                                               bottom: 10,

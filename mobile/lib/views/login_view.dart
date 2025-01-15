@@ -113,7 +113,7 @@ class _LoginFormState extends State<LoginView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 23,
                               ),
                               SizedBox(
                                   height: 20,

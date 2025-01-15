@@ -190,13 +190,20 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
     showDialog(
         context: context,
         builder: (context) => SimpleDialog(
-              title: const Center(child: Text("Could not generate deck")),
+              title: const Center(
+                child: Text(
+                  "Could not generate deck",
+                  textAlign: TextAlign.center,
+                ),
+              ),
               children: [
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(
-                    child:
-                        Text("Please enter a different topic and try again."),
+                    child: Text(
+                      "Please enter a different topic and try again.",
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 const SizedBox(

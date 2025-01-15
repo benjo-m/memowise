@@ -193,7 +193,7 @@ class _RegisterViewState extends State<RegisterView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 20,
+                                width: 23,
                               ),
                               SizedBox(
                                   height: 20,

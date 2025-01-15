@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:flutter/services.dart';
@@ -6,9 +7,12 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // Stripe.publishableKey = const String.fromEnvironment('STRIPE_PK');
-  Stripe.publishableKey =
-      "pk_test_51QYA8lKyxjTB7qLm9wnnZ9r7PGg6WXcd1uzvuQ6y1h3i2FK8HTHlRzvrqqA5S9NFEObdmytmFZRWiHxLyUESY5Sv00uGD5SCvx";
+  await dotenv.load(fileName: ".env");
+  String stripePk =
+      const String.fromEnvironment("STRIPE_PK", defaultValue: "") != ""
+          ? const String.fromEnvironment("STRIPE_PK")
+          : dotenv.env['STRIPE_PK']!;
+  Stripe.publishableKey = stripePk;
   runApp(const MyApp());
 }
 

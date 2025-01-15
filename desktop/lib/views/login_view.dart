@@ -151,10 +151,10 @@ class _LoginFormState extends State<LoginView> {
                     ),
                   ),
                   const SizedBox(height: 30),
+                  const SizedBox(width: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(width: 30),
                       TextButton(
                         style: redButtonStyle,
                         onPressed: () {

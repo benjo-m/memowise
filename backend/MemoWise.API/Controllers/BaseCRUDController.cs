@@ -16,7 +16,6 @@ public abstract class BaseCRUDController<TEntity, TCreateRequest, TUpdateRequest
         _crudService = crudService;
     }
 
-    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

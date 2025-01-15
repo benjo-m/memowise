@@ -29,11 +29,33 @@ public class SeedDataService
         var users = new List<User>();
         var random = new Random();
 
+        var freeUser = new User
+        {
+            Username = "user_free",
+            Email = "user@free.com",
+            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
+            IsPremium = false,
+            IsAdmin = false,
+            IsSuperAdmin = false,
+            CreatedAt = DateTime.Now.AddDays(-random.Next(1, 120)),
+        };
+
+        var premiumUser = new User
+        {
+            Username = "user_premium",
+            Email = "user@premium.com",
+            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
+            IsPremium = true,
+            IsAdmin = false,
+            IsSuperAdmin = false,
+            CreatedAt = DateTime.Now.AddDays(-random.Next(1, 120)),
+        };
+
         var superAdmin = new User
         {
             Username = "super_admin",
-            Email = "sa@ex.com",
-            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("test"),
+            Email = "super@admin.com",
+            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
             IsPremium = false,
             IsAdmin = true,
             IsSuperAdmin = true,
@@ -44,7 +66,7 @@ public class SeedDataService
         {
             Username = "admin1",
             Email = "admin@ex.com",
-            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("test"),
+            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
             IsPremium = false,
             IsAdmin = true,
             IsSuperAdmin = false,
@@ -58,18 +80,29 @@ public class SeedDataService
         {
             var username = "user" + i;
             var email = "user" + i + "@example.com";
-            var passwordHashed = BCrypt.Net.BCrypt.HashPassword("test");
-            var isPremium = false;
+            var passwordHashed = BCrypt.Net.BCrypt.HashPassword("password");
             var isAdmin = false;
+            var userStats = new UserStats
+            {
+                TotalDecksCreated = random.Next(20, 50),
+                TotalDecksGenerated = random.Next(0, 20),
+                TotalCardsCreated = random.Next(0, 500),
+                TotalCardsLearned = random.Next(0, 500),
+                StudyStreak = random.Next(0, 20),
+                LongestStudyStreak = random.Next(20, 50),
+                TotalSessionsCompleted = random.Next(0, 200),
+                TotalCorrectAnswers = random.Next(0, 1000)
+            };
 
             var user = new User
             {
                 Username = username,
                 Email = email,
                 PasswordHashed = passwordHashed,
-                IsPremium = isPremium,
+                IsPremium = i % 10 == 0,
                 IsAdmin = isAdmin,
                 CreatedAt = DateTime.Now.AddDays(-random.Next(1, 120)),
+                UserStats = userStats
             };
 
             users.Add(user);
@@ -193,7 +226,8 @@ public class SeedDataService
                 Title = titles[i],
                 Description = descriptions[i],
                 SubmittedAt = DateTime.Now.AddMinutes(-random.Next(0, 100000)),
-                UserId = userIds[random.Next(userIds.Count)]
+                UserId = userIds[random.Next(userIds.Count)],
+                IsPremiumUser = i % 6 == 0
             });
         }
 
@@ -278,4 +312,37 @@ public class SeedDataService
         _dbContext.Achievements.AddRange(achievements);
         _dbContext.SaveChanges();
     }
+
+    public void GenerateAchievementUser()
+    {
+        var random = new Random();
+        var allUsers = _dbContext.Users.ToList();
+        var allAchievements = _dbContext.Achievements.ToList();
+
+        var achievementUsers = new List<AchievementUser>();
+
+        foreach (var user in allUsers)
+        {
+            // Randomly decide how many achievements this user unlocks
+            int achievementsToUnlock = random.Next(1, allAchievements.Count / 2);
+
+            // Randomly pick achievements for this user
+            var unlockedAchievements = allAchievements
+                .OrderBy(a => random.Next())
+                .Take(achievementsToUnlock);
+
+            foreach (var achievement in unlockedAchievements)
+            {
+                achievementUsers.Add(new AchievementUser
+                {
+                    UserId = user.Id,
+                    AchievementId = achievement.Id,
+                });
+            }
+        }
+
+        _dbContext.AchievementUsers.AddRange(achievementUsers);
+        _dbContext.SaveChanges();
+    }
+
 }

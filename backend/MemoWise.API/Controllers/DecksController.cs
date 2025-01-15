@@ -24,7 +24,6 @@ public class DecksController : BaseCRUDController<Deck, DeckCreateRequest, DeckU
         return Ok(decks);
     }
 
-    [AllowAnonymous]
     [HttpGet("user/{userId}")]
     public async Task<ActionResult<List<DeckSummary>>> GetDecksByUser(int userId)
     {

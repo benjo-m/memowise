@@ -20,6 +20,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<LoginRecord> LoginRecords { get; set; }
     public DbSet<PaymentRecord> PaymentRecords { get; set; }
     public DbSet<Feedback> Feedbacks { get; set; }
+    public DbSet<AchievementUser> AchievementUsers { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

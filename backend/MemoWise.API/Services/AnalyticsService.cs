@@ -31,9 +31,10 @@ public class AnalyticsService
     public async Task<AnalyticsData> GetAnalyticsData(int year)
     {
         double averageEaseFactor = await _dbContext.CardStats.AnyAsync()
-            ? await _dbContext.CardStats.AverageAsync(cs => (double?)cs.EaseFactor) ?? 0
-            : 0;
+            ? await _dbContext.CardStats.AverageAsync(cs => (double?)cs.EaseFactor) ?? 2.5
+            : 2.5;
         int totalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated);
+        int totalCardsCreated = await _dbContext.UserStats.SumAsync(us => us.TotalCardsCreated);
         int generatedDecksCount = await _dbContext.UserStats.SumAsync(us => us.TotalDecksGenerated);
         int manuallyCreatedDecksCount = totalDecksCreated - generatedDecksCount;
         double averageSessionDuration = await _dbContext.StudySessions.AnyAsync()
@@ -59,9 +60,9 @@ public class AnalyticsService
             NewUsersByMonth = await GetNewUsersByMonth(year),
             UserDistribution = await GetUserDistribution(),
             UserGrowth = await GetUserGrowth(),
-            TotalDecksCreated = await _dbContext.UserStats.SumAsync(us => us.TotalDecksCreated),
-            TotalCardsCreated = await _dbContext.UserStats.SumAsync(us => us.TotalCardsCreated),
-            AverageDeckSize = deckCount == 0 ? 0 : Math.Round((double)cardCount / (double)deckCount, 2),
+            TotalDecksCreated = totalDecksCreated,
+            TotalCardsCreated = totalCardsCreated,
+            AverageDeckSize = Math.Round((double)totalCardsCreated / (double)totalDecksCreated, 2),
             AverageEaseFactor = Math.Round(averageEaseFactor, 2),
             ManuallyCreatedDecksPercentage = manuallyCreatedDecksPercentage,
             GeneratedDecksPercentage = generatedDecksPercentage,

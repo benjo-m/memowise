@@ -27,6 +27,7 @@ class _RegisterViewState extends State<RegisterView> {
   String? _emailError;
   bool _hidePassword = true;
   bool _hideConfirmPassword = true;
+  bool _buttonTapped = false;
 
   @override
   Widget build(BuildContext context) {
@@ -187,16 +188,35 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.login_rounded),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("Register"),
-                      ],
-                    ),
+                    child: _buttonTapped
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 20,
+                              ),
+                              SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )),
+                              Icon(
+                                Icons.login_rounded,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.login_rounded),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Register"),
+                            ],
+                          ),
                   ),
                   const SizedBox(height: 10),
                   TextButton(
@@ -224,6 +244,8 @@ class _RegisterViewState extends State<RegisterView> {
     });
 
     if (_formKey.currentState!.validate()) {
+      setState(() => _buttonTapped = true);
+
       try {
         var user = await AuthService().register(
           RegisterRequest(
@@ -245,17 +267,21 @@ class _RegisterViewState extends State<RegisterView> {
       } on UsernameTakenException {
         setState(() {
           _usernameError = "Username taken";
+          _buttonTapped = false;
         });
       } on EmailAlreadyInUseException {
         setState(() {
           _emailError = "Email already in use";
+          _buttonTapped = false;
         });
       } on InvalidEmailException {
         setState(() {
           _emailError = "Invalid email";
+          _buttonTapped = false;
         });
       } catch (e) {
         log(e.toString());
+        _buttonTapped = false;
       }
     }
   }

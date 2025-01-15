@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/delete_user_request.dart';
 import 'package:mobile/dtos/update_user_request.dart';
 import 'package:mobile/services/auth/auth_exceptions.dart';
@@ -373,6 +374,10 @@ class _SettingsViewState extends State<SettingsView> {
     }
 
     if (_formKey.currentState!.validate()) {
+      if (CurrentUser.username == _usernameController.text.trim() &&
+          CurrentUser.email == _emailController.text.trim()) {
+        return;
+      }
       final updateUserRequest = UpdateUserRequest(
         username: _usernameController.text.trim(),
         email: _emailController.text.trim(),
@@ -384,6 +389,14 @@ class _SettingsViewState extends State<SettingsView> {
         CurrentUser.email = _emailController.text.trim();
         CurrentUser.authHeader =
             "Basic ${base64Encode(utf8.encode('${CurrentUser.username}:${CurrentUser.password}'))}";
+        Fluttertoast.showToast(
+          msg: "Credentials Updated!",
+          gravity: ToastGravity.CENTER,
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: const Color.fromARGB(255, 188, 234, 255),
+          textColor: Colors.black,
+          fontSize: 16,
+        );
       } on UsernameTakenException catch (_) {
         setState(() {
           _usernameError = "Username taken";

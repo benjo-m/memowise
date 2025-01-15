@@ -20,6 +20,7 @@ class _LoginFormState extends State<LoginView> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _hidePassword = true;
+  bool _buttonTapped = false;
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +108,35 @@ class _LoginFormState extends State<LoginView> {
                         ),
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.login_rounded),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("Log in"),
-                      ],
-                    ),
+                    child: _buttonTapped
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 20,
+                              ),
+                              SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )),
+                              Icon(
+                                Icons.login_rounded,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.login_rounded),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Log in"),
+                            ],
+                          ),
                   ),
                   const SizedBox(height: 10),
                   TextButton(
@@ -139,6 +159,8 @@ class _LoginFormState extends State<LoginView> {
 
   Future<void> login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _buttonTapped = true);
+
       var user = await AuthService().login(
         LoginRequest(
           username: _usernameController.text,
@@ -147,6 +169,7 @@ class _LoginFormState extends State<LoginView> {
       );
 
       if ((user == null || user.isAdmin) && context.mounted) {
+        setState(() => _buttonTapped = false);
         showWrongCredentialsDialog(context);
       } else {
         if (context.mounted) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/dtos/deck_create_request.dart';
 import 'package:mobile/dtos/generate_cards_request.dart';
 import 'package:mobile/services/auth/current_user.dart';
@@ -20,6 +19,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
   final _deckNameController = TextEditingController();
   final _topicController = TextEditingController();
   final _cardCountController = TextEditingController();
+  bool _buttonTapped = false;
 
   @override
   void initState() {
@@ -125,7 +125,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                   ),
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
                   padding: WidgetStatePropertyAll(
-                    EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.013),
+                    EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.014),
                   ),
                   fixedSize: WidgetStatePropertyAll(
                     Size.fromWidth(
@@ -133,16 +133,15 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
                     ),
                   ),
                 ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.done),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Generate Deck"),
-                  ],
-                ),
+                child: _buttonTapped
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text("Generate Deck"),
               ),
             ],
           ),
@@ -154,14 +153,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
   Future<void> generateDeck(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
-        Fluttertoast.showToast(
-          msg: "Generating deck...",
-          gravity: ToastGravity.CENTER,
-          toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: const Color.fromARGB(255, 188, 234, 255),
-          textColor: Colors.black,
-          fontSize: 16,
-        );
+        setState(() => _buttonTapped = true);
         final response = await CardService().generateCards(
           GenerateCardsRequest(
               topic: _topicController.text.trim(),
@@ -169,6 +161,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
         );
 
         if (response.cards.isEmpty && context.mounted) {
+          setState(() => _buttonTapped = false);
           showGenerationFailedDialog(context);
         } else {
           final createDeckResponse = await DeckService().createDeck(
@@ -187,6 +180,7 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
       } catch (e) {
         if (context.mounted) {
           showGenerationFailedDialog(context);
+          setState(() => _buttonTapped = false);
         }
       }
     }

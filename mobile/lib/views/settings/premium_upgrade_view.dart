@@ -10,6 +10,7 @@ class PremiumUpgradeView extends StatefulWidget {
 }
 
 class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
+  bool _buttonTapped = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,12 +154,20 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
                       ),
                     ),
                   ),
-                  child: const Text(
-                    "Upgrade Now",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: _buttonTapped
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          "Upgrade Now",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ],
             ),
@@ -169,40 +178,46 @@ class _PremiumUpgradeViewState extends State<PremiumUpgradeView> {
   }
 
   upgradeToPremium(BuildContext context) async {
-    await StripeService.instance.makePayment();
-    if (context.mounted) {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => SimpleDialog(
-          title: const Text(
-            "Upgraded to premium",
-            textAlign: TextAlign.center,
-          ),
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text(
-                "Upgrade to premium verison successful. Enjoy!",
-                textAlign: TextAlign.center,
-              ),
+    setState(() => _buttonTapped = true);
+    try {
+      await StripeService.instance.makePayment();
+      setState(() => _buttonTapped = false);
+      if (context.mounted) {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => SimpleDialog(
+            title: const Text(
+              "Upgraded to premium",
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    onPressed: () => Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainView()),
-                        (route) => false),
-                    child: const Text("Close")),
-              ],
-            )
-          ],
-        ),
-      );
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text(
+                  "Upgrade to premium verison successful. Enjoy!",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainView()),
+                          (route) => false),
+                      child: const Text("Close")),
+                ],
+              )
+            ],
+          ),
+        );
+      }
+    } on Exception {
+      setState(() => _buttonTapped = false);
     }
   }
 }

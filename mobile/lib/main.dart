@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:mobile/styles.dart';
 import 'package:mobile/views/login_view.dart';
 import 'package:flutter/services.dart';
 

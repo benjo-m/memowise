@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:desktop/dto/analytics_data.dart';
 import 'package:desktop/services/analytics_service.dart';
 import 'package:desktop/services/report_service.dart';
+import 'package:desktop/styles.dart';
 import 'package:desktop/widgets/charts/deck_creation_chart.dart';
 import 'package:desktop/widgets/charts/new_users_by_month_chart.dart';
 import 'package:desktop/widgets/charts/study_times_chart.dart';
@@ -215,7 +216,11 @@ class _AnalyticsViewState extends State<AnalyticsView> {
   Container achievementsUnlockPercentages(AnalyticsData data) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 3),
+        color: primaryBackgroundColor,
+        border: Border.all(
+          width: 3,
+          color: primaryBorderColor,
+        ),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Padding(
@@ -293,9 +298,11 @@ class _AnalyticsViewState extends State<AnalyticsView> {
       height: 200,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: primaryBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         border: Border.all(
           width: 3,
+          color: primaryBorderColor,
         ),
       ),
       child: Column(

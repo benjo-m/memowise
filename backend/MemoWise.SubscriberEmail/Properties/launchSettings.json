@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MemoWise.SubscriberEmail": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

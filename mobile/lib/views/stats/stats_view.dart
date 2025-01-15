@@ -225,7 +225,7 @@ class _StatsViewState extends State<StatsView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              indicator(Color.fromARGB(255, 146, 226, 76), "Manually"),
+              indicator(const Color.fromARGB(255, 146, 226, 76), "Manually"),
               indicator(Colors.blueAccent, "Generated"),
             ],
           ),
@@ -280,7 +280,7 @@ class _StatsViewState extends State<StatsView> {
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        color: Color.fromARGB(255, 146, 226, 76),
+        color: const Color.fromARGB(255, 146, 226, 76),
       ),
       PieChartSectionData(
         title: "${percentageGenerated.toString()}%",

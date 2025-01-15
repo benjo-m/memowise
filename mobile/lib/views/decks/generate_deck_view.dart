@@ -152,17 +152,16 @@ class _GenerateDeckViewState extends State<GenerateDeckView> {
   }
 
   Future<void> generateDeck(BuildContext context) async {
-    Fluttertoast.showToast(
-      msg: "Generating deck...",
-      gravity: ToastGravity.CENTER,
-      toastLength: Toast.LENGTH_SHORT,
-      backgroundColor: const Color.fromARGB(255, 188, 234, 255),
-      textColor: Colors.black,
-      fontSize: 16,
-    );
-
     if (_formKey.currentState!.validate()) {
       try {
+        Fluttertoast.showToast(
+          msg: "Generating deck...",
+          gravity: ToastGravity.CENTER,
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: const Color.fromARGB(255, 188, 234, 255),
+          textColor: Colors.black,
+          fontSize: 16,
+        );
         final response = await CardService().generateCards(
           GenerateCardsRequest(
               topic: _topicController.text.trim(),

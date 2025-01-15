@@ -109,8 +109,8 @@ class DeckListItem extends StatelessWidget {
               TextButton(
                 style: ButtonStyle(
                   foregroundColor: const WidgetStatePropertyAll(Colors.white),
-                  backgroundColor:
-                      WidgetStatePropertyAll(Color.fromARGB(255, 146, 226, 76)),
+                  backgroundColor: const WidgetStatePropertyAll(
+                      Color.fromARGB(255, 146, 226, 76)),
                   fixedSize: WidgetStatePropertyAll(
                       Size.fromWidth(MediaQuery.sizeOf(context).width * 0.35)),
                 ),

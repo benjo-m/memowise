@@ -64,7 +64,7 @@ class _MainViewState extends State<MainView> {
               });
             },
             labelType: NavigationRailLabelType.all,
-            backgroundColor: Color.fromARGB(255, 226, 246, 255),
+            backgroundColor: const Color.fromARGB(255, 226, 246, 255),
             destinations: [
               const NavigationRailDestination(
                 padding: EdgeInsets.only(bottom: 20),

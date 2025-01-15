@@ -1,5 +1,6 @@
 import 'package:desktop/dto/dashboard_data.dart';
 import 'package:desktop/services/analytics_service.dart';
+import 'package:desktop/styles.dart';
 import 'package:desktop/widgets/charts/user_distribution_chart.dart';
 import 'package:desktop/widgets/charts/user_growth_chart.dart';
 import 'package:flutter/material.dart';
@@ -170,9 +171,11 @@ class _DashboardViewState extends State<DashboardView> {
       height: 250,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: primaryBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         border: Border.all(
           width: 3,
+          color: primaryBorderColor,
         ),
       ),
       child: Column(

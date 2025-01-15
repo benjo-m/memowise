@@ -1,4 +1,5 @@
 import 'package:desktop/dto/analytics_data.dart';
+import 'package:desktop/styles.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,11 @@ class _StudyTimesChartState extends State<StudyTimesChart> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 3),
+        color: primaryBackgroundColor,
+        border: Border.all(
+          width: 3,
+          color: primaryBorderColor,
+        ),
         borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       child: Padding(

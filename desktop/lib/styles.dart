@@ -23,3 +23,6 @@ const greyButtonStyle = ButtonStyle(
   foregroundColor: WidgetStatePropertyAll(Colors.white),
   fixedSize: WidgetStatePropertyAll(Size(100, 35)),
 );
+
+Color primaryBackgroundColor = const Color.fromARGB(255, 232, 244, 252);
+Color primaryBorderColor = const Color.fromARGB(255, 217, 234, 247);

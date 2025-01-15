@@ -119,7 +119,7 @@ public class SeedDataService
             var cardCount = random.Next(10, 51);
             var easeFactor = (float)Math.Round((random.NextDouble() * 1.4 + 1.3), 2);
 
-            var duration = (int)((cardCount * 4) * (2.7 - easeFactor) * random.Next(15, 30));
+            var duration = (int)((cardCount * 8) * (2.7 - easeFactor) * random.Next(15, 30));
 
 
             float repetitions = (float)Math.Round(random.NextDouble() * 2.7 + 1.3, 2);

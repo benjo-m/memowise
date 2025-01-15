@@ -1,4 +1,5 @@
 import 'package:desktop/dto/dashboard_data.dart';
+import 'package:desktop/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -16,8 +17,12 @@ class _UserGrowthChartState extends State<UserGrowthChart> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: primaryBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(5)),
-        border: Border.all(width: 3),
+        border: Border.all(
+          width: 3,
+          color: primaryBorderColor,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),

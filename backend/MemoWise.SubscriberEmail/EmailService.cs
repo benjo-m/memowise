@@ -19,7 +19,7 @@ internal class EmailService
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("MemoWise", _configuration["EMAIL"]!));
+            message.From.Add(new MailboxAddress(_configuration["SENDER_USERNAME"], _configuration["EMAIL"]!));
             message.To.Add(new MailboxAddress(recipient.Username, recipient.Email));
             message.Subject = "Welcome!";
 

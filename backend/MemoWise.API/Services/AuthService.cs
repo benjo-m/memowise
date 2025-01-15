@@ -4,7 +4,9 @@ using api.Exceptions;
 using MemoWise.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using EasyNetQ;
+using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
 
 namespace api.Services;
 
@@ -12,11 +14,13 @@ public class AuthService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IConfiguration _configuration;
 
-    public AuthService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public AuthService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
     }
 
     public async Task<UserDto?> Login(LoginRequest loginRequest)
@@ -124,8 +128,36 @@ public class AuthService
             Email = user.Email,
             Username = user.Username,
         };
-        var bus = RabbitHutch.CreateBus("host=localhost");
 
-        await bus.PubSub.PublishAsync(emailRecipient);
+        var rabbitMqHost = _configuration["RABBITMQ_HOST"] ?? "localhost";
+        var rabbitMqPort = _configuration["RABBITMQ_PORT"] ?? "5672";
+        var rabbitMqUser = _configuration["RABBITMQ_DEFAULT_USER"] ?? "guest";
+        var rabbitMqPass = _configuration["RABBITMQ_DEFAULT_PASS"] ?? "guest";
+        var rabbitMqQueue = _configuration["RABBITMQ_QUEUE"] ?? "email";
+
+        var factory = new ConnectionFactory 
+        { 
+            HostName = rabbitMqHost,
+            Port = int.Parse(rabbitMqPort),
+            UserName = rabbitMqUser,
+            Password = rabbitMqPass
+        };
+        using var connection = await factory.CreateConnectionAsync();
+        using var channel = await connection.CreateChannelAsync();
+
+        await channel.QueueDeclareAsync(queue: rabbitMqQueue, durable: false, exclusive: false, autoDelete: false,
+            arguments: null);
+
+        var recipient = new EmailRecipient
+        {
+            Email = user.Email,
+            Username = user.Username,
+        };
+
+        var json = JsonSerializer.Serialize(recipient);
+        var body = Encoding.UTF8.GetBytes(json);
+
+        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: rabbitMqQueue, body: body);
     }
+
 }

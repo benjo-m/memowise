@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using MemoWise.Model.Models;
+using Microsoft.Identity.Client;
 
 namespace api.Services;
 
@@ -21,6 +22,8 @@ public class SeedDataService
             GenerateStudySessions();
             GenerateAchievements();
             GenerateFeedback();
+            GenerateAchievementUser();
+            GenerateLoginRecords();
         }
     }
 
@@ -29,23 +32,12 @@ public class SeedDataService
         var users = new List<User>();
         var random = new Random();
 
-        var freeUser = new User
+        var testUser = new User
         {
-            Username = "user_free",
-            Email = "user@free.com",
+            Username = "user",
+            Email = "user@user.com",
             PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
             IsPremium = false,
-            IsAdmin = false,
-            IsSuperAdmin = false,
-            CreatedAt = DateTime.Now.AddDays(-random.Next(1, 120)),
-        };
-
-        var premiumUser = new User
-        {
-            Username = "user_premium",
-            Email = "user@premium.com",
-            PasswordHashed = BCrypt.Net.BCrypt.HashPassword("password"),
-            IsPremium = true,
             IsAdmin = false,
             IsSuperAdmin = false,
             CreatedAt = DateTime.Now.AddDays(-random.Next(1, 120)),
@@ -145,18 +137,15 @@ public class SeedDataService
             .Select(d => d.Id)
             .ToList();
         var random = new Random();
-        var mockData = new List<StudySession>();
+        var studySessions = new List<StudySession>();
 
         for (int i = 0; i < 500; i++)
         {
             var cardCount = random.Next(10, 51);
             var easeFactor = (float)Math.Round((random.NextDouble() * 1.4 + 1.3), 2);
-
-            var duration = (int)((cardCount * 8) * (2.7 - easeFactor) * random.Next(15, 30));
-
-
+            //var duration = (int)((cardCount * 7) * (2.7 - easeFactor) * random.Next(15, 30));
+            var duration = cardCount * random.Next(15, 60);
             float repetitions = (float)Math.Round(random.NextDouble() * 2.7 + 1.3, 2);
-
             var studySession = new StudySession
             {
                 UserId = random.Next(10, 20),
@@ -168,10 +157,10 @@ public class SeedDataService
                 StudiedAt = DateTime.Now.AddDays(-random.Next(1, 90)).AddHours(-random.Next(1, 24))
             };
 
-            mockData.Add(studySession);
+            studySessions.Add(studySession);
         }
 
-        _dbContext.StudySessions.AddRange(mockData);
+        _dbContext.StudySessions.AddRange(studySessions);
         _dbContext.SaveChanges();
     }
 
@@ -304,7 +293,7 @@ public class SeedDataService
             new Achievement
             {
                 Name = "Deck Designer",
-                Description = "Manually add 100 cards to your decks.",
+                Description = "Manually add 1000 cards to your decks.",
                 Icon = "deck_designer.png"
             },
         };
@@ -323,10 +312,8 @@ public class SeedDataService
 
         foreach (var user in allUsers)
         {
-            // Randomly decide how many achievements this user unlocks
             int achievementsToUnlock = random.Next(1, allAchievements.Count / 2);
 
-            // Randomly pick achievements for this user
             var unlockedAchievements = allAchievements
                 .OrderBy(a => random.Next())
                 .Take(achievementsToUnlock);
@@ -342,6 +329,33 @@ public class SeedDataService
         }
 
         _dbContext.AchievementUsers.AddRange(achievementUsers);
+        _dbContext.SaveChanges();
+    }
+
+    public void GenerateLoginRecords()
+    {
+        var random = new Random();
+        var users = _dbContext.Users.ToList();
+        var loginRecords = new List<LoginRecord>();
+
+        foreach (var user in users)
+        {
+            int numberOfLogins = random.Next(1, 11);
+
+            for (int i = 0; i < numberOfLogins; i++)
+            {
+                var loginDate = DateTime.Now.AddDays(-random.Next(1, 121));
+                var loginRecord = new LoginRecord
+                {
+                    UserId = user.Id,
+                    LoginDateTime = loginDate
+                };
+
+                loginRecords.Add(loginRecord);
+            }
+        }
+
+        _dbContext.LoginRecords.AddRange(loginRecords);
         _dbContext.SaveChanges();
     }
 

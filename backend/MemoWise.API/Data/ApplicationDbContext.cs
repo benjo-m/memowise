@@ -31,7 +31,12 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
-            .IsUnique();
+        .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.Achievements)
+            .WithMany(e => e.Users)
+            .UsingEntity<AchievementUser>();
 
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)

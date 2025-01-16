@@ -1,3 +1,7 @@
-String baseUrl = 'http://localhost:5151';
+// Development
+String baseUrl = const String.fromEnvironment("BASE_URL",
+    defaultValue: 'http://localhost:5151');
 
-// String baseUrl = 'http://localhost:8080';
+// Docker
+// String baseUrl = const String.fromEnvironment("BASE_URL",
+//     defaultValue: 'http://localhost:8080');

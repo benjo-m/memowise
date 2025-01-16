@@ -138,7 +138,7 @@ public class AchievementsService : CRUDService
             {
                 await UnlockAchievement(achievement.Id, userId);
             }
-            else if (achievement.Name == "Deck Designer" && userStats.TotalCardsCreated >= 20)
+            else if (achievement.Name == "Deck Designer" && userStats.TotalCardsCreated >= 1000)
             {
                 await UnlockAchievement(achievement.Id, userId);
             }

@@ -25,8 +25,9 @@ public class StudySessionsController : BaseCRUDController<StudySession, StudySes
     }
 
     [HttpPost("complete")]
-    public async Task SaveSession(StudySessionCreateRequest studySessionCreateRequest)
+    public async Task<IActionResult> SaveSession(StudySessionCreateRequest studySessionCreateRequest)
     {
-        await _studySessionService.CompleteStudySession(studySessionCreateRequest);
+        int studyStreak = await _studySessionService.CompleteStudySession(studySessionCreateRequest);
+        return Ok(studyStreak);
     }
 }

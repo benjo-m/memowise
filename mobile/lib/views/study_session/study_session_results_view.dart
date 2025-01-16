@@ -6,9 +6,11 @@ class StudySessionResultsView extends StatefulWidget {
   const StudySessionResultsView({
     super.key,
     required this.studySession,
+    required this.studyStreak,
   });
 
   final StudySession studySession;
+  final int studyStreak;
 
   @override
   State<StudySessionResultsView> createState() =>
@@ -26,28 +28,40 @@ class _StudySessionResultsViewState extends State<StudySessionResultsView> {
         padding: const EdgeInsets.all(25.0),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Study session duration: ${formatDuration(widget.studySession.duration)} minutes",
-                style: resultsTextStyle(),
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.03,
-              ),
-              Text(
-                "Cards learned: ${widget.studySession.cardCount}",
-                style: resultsTextStyle(),
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.03,
-              ),
-              Text(
-                "Average response time: ${(widget.studySession.duration / widget.studySession.cardCount).toStringAsFixed(2)} seconds",
-                style: resultsTextStyle(),
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.03,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Study Streak: ${widget.studyStreak}",
+                    style: resultsTextStyle(),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.03,
+                  ),
+                  Text(
+                    "Study session duration: ${formatDuration(widget.studySession.duration)} minutes",
+                    style: resultsTextStyle(),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.03,
+                  ),
+                  Text(
+                    "Cards learned: ${widget.studySession.cardCount}",
+                    style: resultsTextStyle(),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.03,
+                  ),
+                  Text(
+                    "Average response time: ${(widget.studySession.duration / widget.studySession.cardCount).toStringAsFixed(2)} seconds",
+                    style: resultsTextStyle(),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.03,
+                  ),
+                ],
               ),
               ElevatedButton(
                 onPressed: () {

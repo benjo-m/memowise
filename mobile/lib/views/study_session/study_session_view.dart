@@ -449,16 +449,18 @@ class _StudySessionViewState extends State<StudySessionView> {
       cardsRated5: cardsRated5,
     );
 
-    await StudySessionService().saveSession(studySession);
+    int studyStreak = await StudySessionService().saveSession(studySession);
 
     if (context.mounted) {
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => StudySessionResultsView(
+              studyStreak: studyStreak,
               studySession: studySession,
             ),
-          ));
+          ),
+          (route) => false);
     }
   }
 

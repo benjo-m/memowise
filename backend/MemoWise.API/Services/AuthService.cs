@@ -91,6 +91,7 @@ public class AuthService
             await _dbContext.SaveChangesAsync();
         }
     }
+    
     private async Task SaveLoginRecord(int userId)
     {
         var loginRecord = new LoginRecord()
@@ -159,5 +160,4 @@ public class AuthService
 
         await channel.BasicPublishAsync(exchange: string.Empty, routingKey: rabbitMqQueue, body: body);
     }
-
 }

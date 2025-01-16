@@ -23,11 +23,11 @@ class DeckListItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: primaryBackgroundColor,
+        color: Color.fromARGB(255, 208, 237, 255),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           width: 3,
-          color: primaryBorderColor,
+          color: Color.fromARGB(255, 191, 230, 255),
         ),
       ),
       child: Column(

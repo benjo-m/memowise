@@ -180,57 +180,86 @@ class _SettingsViewState extends State<SettingsView> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 if (!CurrentUser.isPremium!) const SizedBox(height: 20),
-                if (!CurrentUser.isPremium!)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Flexible(
-                        child: Text(
-                          "Unlock the full experience with the Premium upgrade",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 85, 85, 85),
+                // if (!CurrentUser.isPremium!)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Flexible(
+                      child: Text(
+                        "Unlock the full experience with the Premium upgrade",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 85, 85, 85),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: CurrentUser.isPremium!
+                          ? () => showDialog(
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                    title: const Center(
+                                        child: Text("Already Upgraded")),
+                                    children: [
+                                      const Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Center(
+                                            child: Text(
+                                          "You have already updgraded to Premium version",
+                                          textAlign: TextAlign.center,
+                                        )),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text("Close"))
+                                        ],
+                                      )
+                                    ],
+                                  ))
+                          : () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PremiumUpgradeView()),
+                              );
+                            },
+                      style: ButtonStyle(
+                        backgroundColor: !CurrentUser.isPremium!
+                            ? WidgetStatePropertyAll(Colors.amber[500])
+                            : const WidgetStatePropertyAll(
+                                Color.fromARGB(255, 184, 184, 184),
+                              ),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.all(
+                              MediaQuery.sizeOf(context).height * 0.014),
+                        ),
+                        fixedSize: WidgetStatePropertyAll(
+                          Size.fromWidth(
+                            MediaQuery.sizeOf(context).width * 0.3,
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PremiumUpgradeView()),
-                          );
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Colors.amber[500],
-                          ),
-                          foregroundColor:
-                              const WidgetStatePropertyAll(Colors.white),
-                          padding: WidgetStatePropertyAll(
-                            EdgeInsets.all(
-                                MediaQuery.sizeOf(context).height * 0.014),
-                          ),
-                          fixedSize: WidgetStatePropertyAll(
-                            Size.fromWidth(
-                              MediaQuery.sizeOf(context).width * 0.3,
-                            ),
-                          ),
-                        ),
-                        child: const Text(
-                          "Upgrade",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      child: const Text(
+                        "Upgrade",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -318,7 +347,7 @@ class _SettingsViewState extends State<SettingsView> {
                       onPressed: () async => logout(),
                       style: ButtonStyle(
                         backgroundColor: const WidgetStatePropertyAll(
-                          Colors.grey,
+                          Color.fromARGB(255, 184, 184, 184),
                         ),
                         foregroundColor:
                             const WidgetStatePropertyAll(Colors.white),

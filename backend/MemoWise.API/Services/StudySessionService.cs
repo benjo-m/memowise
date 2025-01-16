@@ -86,21 +86,23 @@ public class StudySessionService : CRUDService
         return new PaginatedResponse<StudySessionDto>(studySessions, page, totalPages);
     }
 
-    public async Task CompleteStudySession(StudySessionCreateRequest studySessionCreateRequest)
+    public async Task<int> CompleteStudySession(StudySessionCreateRequest studySessionCreateRequest)
     {
         var deck = _dbContext.Decks.First(d => d.Id == studySessionCreateRequest.DeckId);
         var studySession = new StudySession(studySessionCreateRequest);
         studySession.Deck = deck;
 
-        await UpdateUserStats(studySession);
+        int studyStreak = await UpdateUserStats(studySession);
 
         _dbContext.StudySessions.Add(studySession);
         await _dbContext.SaveChangesAsync();
 
         await _achievementService.CheckAchievements(studySession.UserId);
+
+        return studyStreak;
     }
 
-    private async Task UpdateUserStats(StudySession studySession)
+    private async Task<int> UpdateUserStats(StudySession studySession)
     {
         var user = await _dbContext.Users
             .Include(u => u.UserStats)
@@ -126,6 +128,8 @@ public class StudySessionService : CRUDService
 
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
+
+        return user.UserStats.StudyStreak;
     }
 
     private void LoadModel()

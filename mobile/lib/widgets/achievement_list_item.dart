@@ -48,12 +48,14 @@ class AchievementListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isLocked ? primaryBackgroundColor : const Color(0xffFEEFAD),
+          color: isLocked
+              ? Color.fromARGB(255, 212, 212, 212)
+              : const Color(0xffFEEFAD),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 2.0,
             color: isLocked
-                ? primaryBorderColor
+                ? Color.fromARGB(255, 194, 194, 194)
                 : const Color.fromARGB(255, 252, 221, 84),
           ),
         ),
@@ -93,7 +95,7 @@ class AchievementListItem extends StatelessWidget {
             if (isLocked)
               const Icon(
                 Icons.lock,
-                color: Colors.amber,
+                color: Colors.yellow,
               ),
           ],
         ),

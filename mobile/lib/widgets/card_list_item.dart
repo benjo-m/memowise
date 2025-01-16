@@ -47,10 +47,13 @@ class CardListItem extends StatelessWidget {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: "$question\n",
+                        // text: "$question\n",
+                        text: question.isEmpty ? "Image\n" : "$question\n",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      TextSpan(text: answer),
+                      TextSpan(
+                        text: answer.isEmpty ? "Image" : "$answer\n",
+                      ),
                     ],
                   ),
                 ),

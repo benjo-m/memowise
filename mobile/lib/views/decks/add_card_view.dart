@@ -23,6 +23,7 @@ class AddCardView extends StatefulWidget {
 }
 
 class _AddCardViewState extends State<AddCardView> {
+  final _formKey = GlobalKey<FormState>();
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
   Uint8List? _questionImage;
@@ -45,222 +46,289 @@ class _AddCardViewState extends State<AddCardView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      " Question",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        " Question",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () => _questionFocusNode.requestFocus(),
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.2,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                width: 3.0,
-                                color: Colors.grey,
+                      Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () => _questionFocusNode.requestFocus(),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.2,
                               ),
-                            ),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    focusNode: _questionFocusNode,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter your question here',
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white,
-                                          width: 3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  width: 3.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5, bottom: 5.0),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.trim().isEmpty &&
+                                                  _questionImage == null) {
+                                            return "Question is required";
+                                          }
+                                          return null;
+                                        },
+                                        focusNode: _questionFocusNode,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter your question here',
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white,
-                                          width: 3,
-                                        ),
+                                        controller: _questionController,
+                                        maxLines: null,
                                       ),
                                     ),
-                                    controller: _questionController,
-                                    maxLines: null,
-                                  ),
-                                  _questionImage != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10.0, right: 10),
-                                          child: Stack(children: [
-                                            InstaImageViewer(
-                                              child: Image.memory(
-                                                _questionImage!,
-                                                height: 200,
-                                                width: double.infinity,
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 10,
-                                              right: 10,
-                                              child: ElevatedButton(
-                                                style: const ButtonStyle(
-                                                  backgroundColor:
-                                                      WidgetStatePropertyAll(
-                                                          Colors.red),
+                                    _questionImage != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0, right: 10),
+                                            child: Stack(children: [
+                                              InstaImageViewer(
+                                                child: Image.memory(
+                                                  _questionImage!,
+                                                  height: 200,
+                                                  width: double.infinity,
                                                 ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _questionImage = null;
-                                                  });
-                                                },
-                                                child: const Icon(Icons.delete,
-                                                    color: Colors.white),
                                               ),
-                                            ),
-                                          ]),
-                                        )
-                                      : const SizedBox(),
-                                ],
+                                              Positioned(
+                                                bottom: 10,
+                                                right: 10,
+                                                child: ElevatedButton(
+                                                  style: const ButtonStyle(
+                                                    backgroundColor:
+                                                        WidgetStatePropertyAll(
+                                                            Colors.red),
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _questionImage = null;
+                                                    });
+                                                  },
+                                                  child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ]),
+                                          )
+                                        : const SizedBox(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        _questionImage == null
-                            ? Positioned(
-                                bottom: 10,
-                                right: 10,
-                                child: IconButton(
-                                  onPressed: () => _uploadQuestionImage(),
-                                  icon: const Icon(
-                                      Icons.add_photo_alternate_rounded),
-                                ),
-                              )
-                            : const SizedBox(),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      " Answer",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                          _questionImage == null
+                              ? Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: IconButton(
+                                    onPressed: () => _uploadQuestionImage(),
+                                    icon: const Icon(
+                                        Icons.add_photo_alternate_rounded),
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
                       ),
-                    ),
-                    Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () => _answerFocusNode.requestFocus(),
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.2,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                width: 3.0,
-                                color: Colors.grey,
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        " Answer",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () => _answerFocusNode.requestFocus(),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.2,
                               ),
-                            ),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  TextField(
-                                    focusNode: _answerFocusNode,
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter your answer here',
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white,
-                                          width: 3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  width: 3.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5, bottom: 5),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.trim().isEmpty &&
+                                                  _answerImage == null) {
+                                            return "Answer is required";
+                                          }
+                                          return null;
+                                        },
+                                        focusNode: _answerFocusNode,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter your answer here',
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
+                                              width: 3,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                          color: Colors.white,
-                                          width: 3,
-                                        ),
+                                        controller: _answerController,
+                                        maxLines: null,
                                       ),
                                     ),
-                                    controller: _answerController,
-                                    maxLines: null,
-                                  ),
-                                  _answerImage != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          child: Stack(children: [
-                                            InstaImageViewer(
-                                              child: Image.memory(
-                                                _answerImage!,
-                                                height: 200,
-                                                width: double.infinity,
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 10,
-                                              right: 10,
-                                              child: ElevatedButton(
-                                                style: const ButtonStyle(
-                                                  backgroundColor:
-                                                      WidgetStatePropertyAll(
-                                                          Colors.red),
+                                    _answerImage != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            child: Stack(children: [
+                                              InstaImageViewer(
+                                                child: Image.memory(
+                                                  _answerImage!,
+                                                  height: 200,
+                                                  width: double.infinity,
                                                 ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _answerImage = null;
-                                                  });
-                                                },
-                                                child: const Icon(Icons.delete,
-                                                    color: Colors.white),
                                               ),
-                                            ),
-                                          ]),
-                                        )
-                                      : const SizedBox(),
-                                ],
+                                              Positioned(
+                                                bottom: 10,
+                                                right: 10,
+                                                child: ElevatedButton(
+                                                  style: const ButtonStyle(
+                                                    backgroundColor:
+                                                        WidgetStatePropertyAll(
+                                                            Colors.red),
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _answerImage = null;
+                                                    });
+                                                  },
+                                                  child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ]),
+                                          )
+                                        : const SizedBox(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        _answerImage == null
-                            ? Positioned(
-                                bottom: 10,
-                                right: 10,
-                                child: IconButton(
-                                  onPressed: () => _uploadAnswerImage(),
-                                  icon: const Icon(
-                                      Icons.add_photo_alternate_rounded),
-                                ),
-                              )
-                            : const SizedBox(),
-                      ],
-                    ),
-                  ],
+                          _answerImage == null
+                              ? Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: IconButton(
+                                    onPressed: () => _uploadAnswerImage(),
+                                    icon: const Icon(
+                                        Icons.add_photo_alternate_rounded),
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            buttonsRow(context),
-          ],
+              const SizedBox(height: 10),
+              buttonsRow(context),
+            ],
+          ),
         ),
       ),
     );
@@ -337,39 +405,37 @@ class _AddCardViewState extends State<AddCardView> {
   }
 
   void addCard() {
-    if (isCardEmpty()) {
-      return;
+    if (_formKey.currentState!.validate()) {
+      var cardCreateRequest = CardDto(
+        question: _questionController.text.trim(),
+        answer: _answerController.text.trim(),
+        questionImage: base64Encode(_questionImage ?? Uint8List(0)),
+        answerImage: base64Encode(_answerImage ?? Uint8List(0)),
+      );
+      widget.onAdd(cardCreateRequest);
+      _questionController.clear();
+      _answerController.clear();
+
+      Fluttertoast.showToast(
+        msg: "Card Added",
+        gravity: ToastGravity.CENTER,
+        toastLength: Toast.LENGTH_SHORT,
+        backgroundColor: const Color.fromARGB(255, 188, 234, 255),
+        textColor: Colors.black,
+        fontSize: 16,
+      );
+
+      if (currentCardCount == 19) {
+        Navigator.pop(context);
+      }
+
+      setState(() {
+        _questionImage = null;
+        _answerImage = null;
+        currentCardCount++;
+      });
+      _questionFocusNode.requestFocus();
     }
-
-    var cardCreateRequest = CardDto(
-      question: _questionController.text.trim(),
-      answer: _answerController.text.trim(),
-      questionImage: base64Encode(_questionImage ?? Uint8List(0)),
-      answerImage: base64Encode(_answerImage ?? Uint8List(0)),
-    );
-    widget.onAdd(cardCreateRequest);
-    _questionController.clear();
-    _answerController.clear();
-
-    Fluttertoast.showToast(
-      msg: "Card Added",
-      gravity: ToastGravity.CENTER,
-      toastLength: Toast.LENGTH_SHORT,
-      backgroundColor: const Color.fromARGB(255, 188, 234, 255),
-      textColor: Colors.black,
-      fontSize: 16,
-    );
-
-    if (currentCardCount == 19) {
-      Navigator.pop(context);
-    }
-
-    setState(() {
-      _questionImage = null;
-      _answerImage = null;
-      currentCardCount++;
-    });
-    _questionFocusNode.requestFocus();
   }
 
   bool isCardEmpty() {

@@ -206,7 +206,7 @@ class _SettingsViewState extends State<SettingsView> {
                                         child: Text("Already Upgraded")),
                                     children: [
                                       const Padding(
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: EdgeInsets.all(20.0),
                                         child: Center(
                                             child: Text(
                                           "You have already updgraded to Premium version",

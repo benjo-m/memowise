@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-Color primaryBackgroundColor = Color.fromARGB(255, 208, 237, 255);
-Color primaryBorderColor = Color.fromARGB(255, 191, 230, 255);
+Color primaryBackgroundColor = const Color.fromARGB(255, 208, 237, 255);
+Color primaryBorderColor = const Color.fromARGB(255, 191, 230, 255);
 
 ThemeData lightTheme = ThemeData(
   useMaterial3: true,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/dtos/deck_summary_response.dart';
 import 'package:mobile/services/deck_service.dart';
-import 'package:mobile/styles.dart';
 import 'package:mobile/views/study_session/study_session_view.dart';
 
 class DeckListItem extends StatelessWidget {
@@ -23,11 +22,11 @@ class DeckListItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 208, 237, 255),
+        color: const Color.fromARGB(255, 208, 237, 255),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           width: 3,
-          color: Color.fromARGB(255, 191, 230, 255),
+          color: const Color.fromARGB(255, 191, 230, 255),
         ),
       ),
       child: Column(

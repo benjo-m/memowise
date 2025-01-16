@@ -22,7 +22,7 @@ class CardRatingsBarChart extends StatelessWidget {
   int getMax() {
     return max(
       cardsRated1,
-      max(cardsRated2, max(cardsRated3, max(cardsRated4, cardsRated5))),
+      max(cardsRated2, max(cardsRated3, max(cardsRated4, cardsRated5))) + 20,
     );
   }
 

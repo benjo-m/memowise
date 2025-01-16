@@ -134,7 +134,7 @@ public class AchievementsService : CRUDService
             {
                 await UnlockAchievement(achievement.Id, userId);
             }
-            else if (achievement.Name == "Flashcard Pro" && userStats.TotalCardsLearned >= 100)
+            else if (achievement.Name == "Flashcard Pro" && userStats.TotalCardsLearned >= 1000)
             {
                 await UnlockAchievement(achievement.Id, userId);
             }

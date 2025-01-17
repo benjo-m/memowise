@@ -12,7 +12,7 @@ Description of all the **must have** features and how I implemented them:
 - Payment system: Stripe is integrated to allow users to upgrade to the premium version of the app through a one-time purchase, unlocking additional features and functionality.
 - Reporting: administrators are able to generate reports through MemoWise Admin desktop application inside **Analytics** view and export them as .pdf files.
 - RabbitMQ: upon registering, users receive a welcome email containing the link to this repository where they can contribute and raise issues. To test this feature you will have to register a new account. You can use something like [10 Minute Mail](https://10minutemail.com/).
-### Running the app
+### Running the application
 The prerequisites for running the app are **Docker** and **Flutter**.
 - Clone this repository: `git clone https://github.com/benjo-m/memowise`
 - Navigate to the cloned directory: `cd memowise`
@@ -31,3 +31,18 @@ Run the desktop app:
 - Run `flutter run`
 
 This repository also includes .apk and .exe files that can be found inside **build** directory. To run it that way just uzip the archive **fit-build-2025-01-16.zip**, password "fit" (it is split into 10 files, 20MB each because I could not upload it any other way because of **extremely slow** upload speed).
+### Testing the application
+To test the mobile application use the following credentials:
+- Username: user
+- Password: password
+
+To test the desktop application as **Super Admin** use the following credentials:
+- Username: super_admin
+- Password: password
+
+To test the desktop application as **Admin** use the following credentials:
+- Username: admin
+- Password: password
+
+### Important Notice: Database Access and Management Functionality
+Due to a misunderstanding of the project requirements, I implemented the desktop application in such way to provide full CRUD operations on **ALL** tables, rather than reference tables only. Because I don't even have any reference tables (Admin and Super Admin roles are just class properties IsAdmin and IsSuperAdmin), I decided to keep this feature but restrict it to **Super Admin** only.

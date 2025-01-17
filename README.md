@@ -10,12 +10,24 @@ Description of all the **must have** features and how I implemented them:
 - Authentication/Authorization: I used Basic authentication as demonstrated in classes. All endpoints are secured with the [Authorize] attribute to ensure that only authenticated users can access them.
 - ML algorithm: since the last academic year, students are allowed to implement any algorithm from the field of machine learning, not just recommender. For this project I chose to implement a regression model. It is used to predict the study session duration for a given deck.
 - Payment system: Stripe is integrated to allow users to upgrade to the premium version of the app through a one-time purchase, unlocking additional features and functionality.
-- Reporting: administrators are able to generate reports through MemoWise Admin desktop application inside 'Analytics' view and export them as .pdf files.
+- Reporting: administrators are able to generate reports through MemoWise Admin desktop application inside **Analytics** view and export them as .pdf files.
 - RabbitMQ: upon registering, users receive a welcome email containing the link to this repository where they can contribute and raise issues. To test this feature you will have to register a new account. You can use something like [10 Minute Mail](https://10minutemail.com/).
 ### Running the app
 The prerequisites for running the app are **Docker** and **Flutter**.
 - Clone this repository: `git clone https://github.com/benjo-m/memowise`
 - Navigate to the cloned directory: `cd memowise`
+
+Run the backend:
 - Navigate to **backend** directory: `cd backend`
-- Unzip the **.env.zip** file inside the same directory (memowise/backend)
-- Run `docker-compose up` from the **backend** directory
+- Unzip the **.env.zip** file inside the same directory (memowise/backend). Password is "fit"
+- Run `docker-compose up` from the **backend** directory (this will start SQL Server, RabbitMQ, API project on port 8080 and SubscriberEmail project)
+
+Run the mobile app:
+- Navigate to `memowise/mobile` directory: `cd ..` `cd mobile`
+- Run `flutter run` (you can optionally pass in `BASE_URL` and `STRIPE_PK` environment variables using `--dart-define`)
+
+Run the desktop app:
+- Navigate to `memowise/desktop` directory: `cd ..` `cd desktop`
+- Run `flutter run`
+
+This repository also includes .apk and .exe files that can be found inside **build** directory. To run it that way just uzip the archive **fit-build-2025-01-16.zip**, password "fit" (it is split into 10 files, 20MB each because I could not upload it any other way because of **extremely slow** upload speed).

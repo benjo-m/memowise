@@ -30,7 +30,6 @@ Run the desktop app:
 - Navigate to `memowise/desktop` directory: `cd ..` `cd desktop`
 - Run `flutter run`
 
-This repository also includes .apk and .exe files that can be found inside **build** directory. To run it that way just uzip the archive **fit-build-2025-01-16.zip**, password "fit" (it is split into 10 files, 20MB each because I could not upload it any other way because of **extremely slow** upload speed).
 ### Testing the application
 To test the mobile application use the following credentials:
 - Username: user

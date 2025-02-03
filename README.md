@@ -1,6 +1,6 @@
 # MemoWise
 ### Description
-MemoWise is a learning app that utilizes learning techniques such as **active recall** and **spaced repetition** to help you learn more efficiently and to retain the knowledge for longer. To achieve this, I used **SM-2** spaced repetition algorithm. You can read more about it here: [SM-2](https://www.supermemo.com/en/blog/application-of-a-computer-to-improve-the-results-obtained-in-working-with-the-supermemo-method).
+MemoWise is a learning app that utilizes learning techniques such as **active recall** and **spaced repetition** to help you learn more efficiently and to retain knowledge for longer. To achieve this, I used **SM-2** spaced repetition algorithm. You can read more about it here: [SM-2](https://www.supermemo.com/en/blog/application-of-a-computer-to-improve-the-results-obtained-in-working-with-the-supermemo-method).
 ### Differences between the prototype and final application
 There are some differences between the prototype and final application worth mentioning:
 - Question types: in the prototype, there is an option to choose a type of question when creating a new flashcard, like 'true/false', 'fill in the blanks' and 'regular'. However this feature was omitted as it would defeat the purpose of active recall because active recall relies on users fully engaging with the material by retrieving information from memory. With question types like 'true/false' and 'fill in the blanks' this is not possible and it encourages passive learning.

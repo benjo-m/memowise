@@ -14,6 +14,9 @@ Description of all the **must have** features and how I implemented them:
 - RabbitMQ: upon registering, users receive a welcome email containing the link to this repository where they can contribute and raise issues. To test this feature you will have to register a new account. You can use something like [10 Minute Mail](https://10minutemail.com/).
 ### Running the application
 The prerequisites for running the app are **Docker** and **Flutter**.
+
+The repository size is around 200MB because I had to commit build files as a requirement for my university class. If you don’t want to download all 200MB, you can download it as a ZIP file instead.
+
 - Clone this repository: `git clone https://github.com/benjo-m/memowise`
 - Navigate to the cloned directory: `cd memowise`
 

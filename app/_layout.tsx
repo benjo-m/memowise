@@ -10,12 +10,12 @@ export default function TabLayout() {
                 title: "Decks",
                 tabBarIcon: ({ color }) => <FontAwesome name="question" size={24} color={color} />,
             }} />
-            <Tabs.Screen name="(stats)" options={{
+            <Tabs.Screen name="stats" options={{
                 headerShown: false,
                 title: "Stats",
                 tabBarIcon: ({ color }) => <FontAwesome6 name="chart-simple" size={24} color={color} />
             }} />
-            <Tabs.Screen name="(settings)" options={{
+            <Tabs.Screen name="settings" options={{
                 headerShown: false,
                 title: "Settings",
                 tabBarIcon: ({ color }) => <FontAwesome6 name="gear" size={24} color={color} />,

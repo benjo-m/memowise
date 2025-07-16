@@ -4,8 +4,13 @@ import { createContext, use, type PropsWithChildren } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
+type SignInResult = {
+  success: boolean;
+  error?: string;
+};
+
 const AuthContext = createContext<{
-  signIn: (email: string, password: string) => void;
+  signIn: (email: string, password: string) => Promise<SignInResult>;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
@@ -16,7 +21,6 @@ const AuthContext = createContext<{
   isLoading: false,
 });
 
-// This hook can be used to access the user info.
 export function useSession() {
   const value = use(AuthContext);
   if (!value) {
@@ -32,24 +36,37 @@ export function SessionProvider({ children }: PropsWithChildren) {
   return (
     <AuthContext
       value={{
-        signIn: async (email: string, password: string) => {
-          const response = await fetch("http://localhost:3000/login", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: email,
-              password: password,
-            }),
-          });
+        signIn: async (
+          email: string,
+          password: string
+        ): Promise<SignInResult> => {
+          try {
+            const response = await fetch("http://localhost:3000/login", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            });
 
-          const token = response.headers.get("authorization");
-          setSession(token);
+            if (!response.ok)
+              return { success: false, error: "Invalid credentials" };
+
+            const token = response.headers.get("authorization");
+
+            if (!token)
+              return { success: false, error: "Missing token in response" };
+
+            setSession(token);
+
+            return { success: true };
+          } catch (err) {
+            console.error("Login error:", err);
+            return { success: false, error: "Network or server error" };
+          }
         },
         signOut: () => {
-          console.log(session);
           setSession(null);
         },
         session,

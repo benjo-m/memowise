@@ -13,7 +13,6 @@ export default function DecksScreen() {
       try {
         const decks: Deck[] = await getAllDecks();
         setDecks(decks);
-        setLoading(false);
       } catch (e) {
         console.log(e);
         setError("Error loading decks...");

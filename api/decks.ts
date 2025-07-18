@@ -16,3 +16,18 @@ export const getAllDecks = async (): Promise<Deck[]> => {
 
   return await response.json();
 };
+
+export const createDeck = async (body): Promise<Deck> => {
+  const token = await SecureStore.getItemAsync("session");
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  return await response.json();
+};

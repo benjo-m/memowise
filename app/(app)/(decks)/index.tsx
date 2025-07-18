@@ -1,7 +1,8 @@
 import { getAllDecks } from "@/api/decks";
 import { Deck } from "@/models/deck";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, Button, FlatList, Text, View } from "react-native";
 
 export default function DecksScreen() {
   const [decks, setDecks] = useState<Deck[]>([]);
@@ -24,21 +25,23 @@ export default function DecksScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center" }}>
       {isLoading ? (
         <ActivityIndicator />
       ) : error != null ? (
         <Text>{error}</Text>
       ) : (
-        <FlatList
-          data={decks}
-          keyExtractor={({ id }) => id}
-          renderItem={({ item }) => (
-            <Text>
-              {item.id} {item.name}
-            </Text>
-          )}
-        />
+        <View style={{ alignItems: "center" }}>
+          <FlatList
+            data={decks}
+            keyExtractor={({ id }) => id}
+            renderItem={({ item }) => <Text>{item.name}</Text>}
+          />
+          <Button
+            title="Create deck"
+            onPress={() => router.push("/create-deck")}
+          />
+        </View>
       )}
     </View>
   );

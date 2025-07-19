@@ -1,9 +1,23 @@
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 
 export default function Layout() {
+  const pathname = usePathname();
+
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "Decks" }} />
+    <Stack
+      screenOptions={{
+        animation:
+          pathname.startsWith("/settings") || pathname.startsWith("/stats")
+            ? "none"
+            : "default",
+      }}
+    >
+      <Stack.Screen
+        name="index"
+        options={{
+          title: "Decks",
+        }}
+      />
       <Stack.Screen name="create-deck" options={{ title: "Create deck" }} />
     </Stack>
   );

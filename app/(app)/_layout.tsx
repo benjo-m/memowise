@@ -12,6 +12,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome6 name="graduation-cap" size={24} color={color} />
           ),
+          popToTopOnBlur: true,
         }}
       />
       <Tabs.Screen

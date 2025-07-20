@@ -1,7 +1,8 @@
 import { getAllDecks } from "@/api/decks";
 import { Deck } from "@/models/deck";
+import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ActivityIndicator, Button, FlatList, Text, View } from "react-native";
 
 export default function DecksScreen() {
@@ -9,20 +10,33 @@ export default function DecksScreen() {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const getDecks = async () => {
-      try {
-        const decks: Deck[] = await getAllDecks();
-        setDecks(decks);
-      } catch (e) {
-        console.log(e);
-        setError("Error loading decks...");
-      } finally {
-        setLoading(false);
-      }
-    };
-    getDecks();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getDecks = async () => {
+        try {
+          setLoading(true);
+          const decks: Deck[] = await getAllDecks();
+          if (isActive) {
+            setDecks(decks);
+            setError(null);
+          }
+        } catch (e) {
+          console.log(e);
+          if (isActive) setError("Error loading decks...");
+        } finally {
+          if (isActive) setLoading(false);
+        }
+      };
+
+      getDecks();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>

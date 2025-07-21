@@ -1,56 +1,41 @@
 import { getAllDecks } from "@/api/decks";
-import { Deck } from "@/models/deck";
-import { useFocusEffect } from "@react-navigation/native";
+import DeckCard from "@/components/deck-card";
+import { useDecks } from "@/contexts/decks-context";
 import { router } from "expo-router";
-import React, { useCallback, useState } from "react";
-import { ActivityIndicator, Button, FlatList, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Button, FlatList, View } from "react-native";
 
 export default function DecksScreen() {
-  const [decks, setDecks] = useState<Deck[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { decks, setDecks } = useDecks();
+  const [isLoading, setLoading] = useState(true);
 
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
+  useEffect(() => {
+    const loadDecks = async () => {
+      const data = await getAllDecks();
+      setDecks(data);
+      setLoading(false);
+    };
 
-      const getDecks = async () => {
-        try {
-          setLoading(true);
-          const decks: Deck[] = await getAllDecks();
-          if (isActive) {
-            setDecks(decks);
-            setError(null);
-          }
-        } catch (e) {
-          console.log(e);
-          if (isActive) setError("Error loading decks...");
-        } finally {
-          if (isActive) setLoading(false);
-        }
-      };
-
-      getDecks();
-
-      return () => {
-        isActive = false;
-      };
-    }, [])
-  );
+    if (decks.length === 0) {
+      loadDecks();
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
+    <View style={{ flex: 1 }}>
       {isLoading ? (
-        <ActivityIndicator />
-      ) : error != null ? (
-        <Text>{error}</Text>
+        <ActivityIndicator style={{ flex: 1 }} />
       ) : (
-        <View style={{ alignItems: "center" }}>
-          <FlatList
-            data={decks}
-            keyExtractor={({ id }) => id}
-            renderItem={({ item }) => <Text>{item.name}</Text>}
-          />
+        <View>
+          <View style={{ height: "85%" }}>
+            <FlatList
+              data={decks}
+              keyExtractor={({ id }) => id}
+              renderItem={({ item }) => <DeckCard name={item.name} />}
+            />
+          </View>
           <Button
             title="Create deck"
             onPress={() => router.push("/create-deck")}

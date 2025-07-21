@@ -9,7 +9,6 @@ export default function DecksScreen() {
       <Text>Settings screen</Text>
       <Text
         onPress={() => {
-          // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
           signOut();
         }}
       >
@@ -17,7 +16,6 @@ export default function DecksScreen() {
       </Text>
       <Text
         onPress={() => {
-          // const res = JSON.parse(session!);
           console.log(session);
         }}
       >

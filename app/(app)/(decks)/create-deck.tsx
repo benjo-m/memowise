@@ -1,9 +1,12 @@
 import { createDeck } from "@/api/decks";
+import { useDecks } from "@/contexts/decks-context";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Text, TextInput, View } from "react-native";
 
 export default function CreateDeckScreen() {
+  const { setDecks } = useDecks();
+
   const {
     control,
     handleSubmit,
@@ -15,8 +18,13 @@ export default function CreateDeckScreen() {
   });
 
   const onSubmit = async (data) => {
-    await createDeck(data);
-    router.back();
+    try {
+      const newDeck = await createDeck(data);
+      setDecks((prev) => [newDeck, ...prev]);
+      router.back();
+    } catch (err) {
+      console.error("Failed to create deck", err);
+    }
   };
 
   return (

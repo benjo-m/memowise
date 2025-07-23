@@ -1,7 +1,7 @@
 import { useSession } from "@/contexts/auth-context";
 import { Text, View } from "react-native";
 
-export default function DecksScreen() {
+export default function SettingsScreen() {
   const { session, signOut } = useSession();
 
   return (

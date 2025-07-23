@@ -31,3 +31,21 @@ export const createDeck = async (body): Promise<Deck> => {
 
   return await response.json();
 };
+
+export const getDeckById = async (id: string): Promise<Deck> => {
+  const token = await SecureStore.getItemAsync("session");
+
+  const res = await fetch(`${BASE_URL}/decks/${id}`, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch deck");
+  }
+
+  return res.json();
+};

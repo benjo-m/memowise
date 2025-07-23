@@ -19,6 +19,7 @@ export default function Layout() {
         }}
       />
       <Stack.Screen name="create-deck" options={{ title: "Create deck" }} />
+      <Stack.Screen name="deck-details" options={{ title: "Deck details" }} />
     </Stack>
   );
 }

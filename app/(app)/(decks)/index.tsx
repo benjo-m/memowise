@@ -33,12 +33,22 @@ export default function DecksScreen() {
             <FlatList
               data={decks}
               keyExtractor={({ id }) => id}
-              renderItem={({ item }) => <DeckCard name={item.name} />}
+              renderItem={({ item }) => (
+                <DeckCard
+                  name={item.name}
+                  onPress={() =>
+                    router.navigate({
+                      pathname: "/deck-details",
+                      params: { id: item.id },
+                    })
+                  }
+                />
+              )}
             />
           </View>
           <Button
             title="Create deck"
-            onPress={() => router.push("/create-deck")}
+            onPress={() => router.navigate("/create-deck")}
           />
         </View>
       )}

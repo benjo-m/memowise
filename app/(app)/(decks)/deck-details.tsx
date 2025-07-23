@@ -5,7 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
-export default function DeckDetails() {
+export default function DeckDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [deck, setDeck] = useState<Deck | null>(null);

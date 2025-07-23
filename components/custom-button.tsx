@@ -9,7 +9,10 @@ type Props = {
 export default function CustomButton({ title, color, onPress }: Props) {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: color ?? "#1273de" }]}
+      style={[
+        styles.button,
+        { backgroundColor: color == "" ? "#1273de" : color },
+      ]}
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -25,7 +28,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 10,
     alignItems: "center",
-    marginTop: 16,
   },
   text: {
     color: "#fff",

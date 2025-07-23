@@ -1,9 +1,10 @@
 import { getAllDecks } from "@/api/decks";
+import CustomButton from "@/components/custom-button";
 import DeckCard from "@/components/deck-card";
 import { useDecks } from "@/contexts/decks-context";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Button, FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
 export default function DecksScreen() {
   const { decks, setDecks } = useDecks();
@@ -24,31 +25,30 @@ export default function DecksScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, margin: 20 }}>
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} />
       ) : (
-        <View>
-          <View style={{ height: "85%" }}>
-            <FlatList
-              data={decks}
-              keyExtractor={({ id }) => id}
-              renderItem={({ item }) => (
-                <DeckCard
-                  name={item.name}
-                  onPress={() =>
-                    router.navigate({
-                      pathname: "/deck-details",
-                      params: { id: item.id },
-                    })
-                  }
-                />
-              )}
-            />
-          </View>
-          <Button
-            title="Create deck"
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
+          <FlatList
+            data={decks}
+            keyExtractor={({ id }) => id}
+            renderItem={({ item }) => (
+              <DeckCard
+                name={item.name}
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/deck-details",
+                    params: { id: item.id },
+                  })
+                }
+              />
+            )}
+          />
+          <CustomButton
+            title="New deck"
             onPress={() => router.navigate("/create-deck")}
+            color={""}
           />
         </View>
       )}

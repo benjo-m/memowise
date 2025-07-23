@@ -2,12 +2,12 @@ import { StyleSheet } from "react-native";
 
 export const inputStyles = StyleSheet.create({
   base: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fff",
     padding: 12,
     borderRadius: 10,
     fontSize: 16,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#ccc",
-    width: "90%",
+    width: "100%",
   },
 });

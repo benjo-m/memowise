@@ -1,3 +1,4 @@
+import { CreateDeckRequest } from "@/models/create-deck-request";
 import { Deck } from "@/models/deck";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
@@ -17,7 +18,7 @@ export const getAllDecks = async (): Promise<Deck[]> => {
   return await response.json();
 };
 
-export const createDeck = async (body): Promise<Deck> => {
+export const createDeck = async (body: CreateDeckRequest): Promise<Deck> => {
   const token = await SecureStore.getItemAsync("session");
   const response = await fetch(url, {
     method: "POST",

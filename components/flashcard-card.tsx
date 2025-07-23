@@ -14,7 +14,7 @@ export default function FlashcardCard({ front, onPress }: FlashcardCardProps) {
         padding: 16,
         marginVertical: 8,
         borderRadius: 12,
-        width: "90%",
+        width: "100%",
         alignSelf: "center",
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },

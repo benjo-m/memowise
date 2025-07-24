@@ -1,10 +1,10 @@
 import { getAllDecks } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
-import DeckCard from "@/components/deck-card";
+import DecksCarousel from "@/components/decks-carousel";
 import { useDecks } from "@/contexts/decks-context";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 export default function DecksScreen() {
   const { decks, setDecks } = useDecks();
@@ -25,26 +25,28 @@ export default function DecksScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, margin: 20 }}>
+    <View style={{ flex: 1, margin: 30 }}>
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} />
       ) : (
-        <View style={{ flex: 1, justifyContent: "space-between" }}>
-          <FlatList
-            data={decks}
-            keyExtractor={({ id }) => id}
-            renderItem={({ item }) => (
-              <DeckCard
-                name={item.name}
-                onPress={() =>
-                  router.navigate({
-                    pathname: "/deck-details",
-                    params: { id: item.id },
-                  })
-                }
-              />
-            )}
-          />
+        <View style={{ flex: 1, justifyContent: "space-between", gap: "10%" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View style={styles.box}>
+              <Text style={styles.boxHeading}>Heading 1</Text>
+              <Text style={styles.boxNumber}>10</Text>
+            </View>
+            <View style={styles.box}>
+              <Text style={styles.boxHeading}>Heading 2</Text>
+              <Text style={styles.boxNumber}>23</Text>
+            </View>
+            <View style={styles.box}>
+              <Text style={styles.boxHeading}>Heading 3</Text>
+              <Text style={styles.boxNumber}>92</Text>
+            </View>
+          </View>
+          <DecksCarousel decks={decks} />
           <CustomButton
             title="New deck"
             onPress={() => router.navigate("/create-deck")}
@@ -55,3 +57,18 @@ export default function DecksScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  box: {
+    alignItems: "center",
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "#000",
+    padding: 10,
+  },
+  boxHeading: {},
+  boxNumber: {
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+});

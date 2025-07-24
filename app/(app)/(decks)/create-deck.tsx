@@ -35,7 +35,7 @@ export default function CreateDeckScreen() {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", margin: 20 }}>
+    <View style={{ flex: 1, alignItems: "center", margin: 30 }}>
       <Controller
         control={control}
         rules={{ required: true }}

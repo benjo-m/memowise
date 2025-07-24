@@ -17,15 +17,17 @@ export default function DeckCard({ name, onPress }: DeckCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
+    backgroundColor: "#e5f5ffff",
+    borderWidth: 2,
+    borderRadius: 10,
     padding: 16,
-    elevation: 3, // Android shadow
-    shadowColor: "#000", // iOS shadow
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    marginHorizontal: 10,
+    // marginRight: 20,
   },
+
   title: {
     fontSize: 18,
     fontWeight: "600",

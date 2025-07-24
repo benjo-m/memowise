@@ -29,7 +29,7 @@ export default function DeckDetailsScreen() {
   }, [id]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
+    <View style={{ flex: 1, alignItems: "center", margin: 30 }}>
       {loading ? (
         <ActivityIndicator />
       ) : error ? (

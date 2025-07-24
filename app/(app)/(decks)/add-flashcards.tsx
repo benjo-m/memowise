@@ -39,7 +39,7 @@ export default function AddFlashcardsScreen() {
   };
 
   return (
-    <View style={{ flex: 1, margin: 20, justifyContent: "space-between" }}>
+    <View style={{ flex: 1, margin: 30, justifyContent: "space-between" }}>
       <View style={{ gap: 16 }}>
         <View>
           <Controller

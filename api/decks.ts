@@ -48,3 +48,22 @@ export const getDeckById = async (id: string): Promise<Deck> => {
 
   return res.json();
 };
+
+export const updateDeck = async (
+  id: string,
+  newName: string
+): Promise<Deck> => {
+  const token = await SecureStore.getItemAsync("session");
+
+  const res = await fetch(`${BASE_URL}/decks/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name: newName }),
+  });
+
+  if (!res.ok) throw new Error("Failed to update deck");
+  return await res.json();
+};

@@ -23,7 +23,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#e5f5ffff",
+    backgroundColor: "#ffffffff",
     borderWidth: 2,
     borderRadius: 10,
     padding: 16,

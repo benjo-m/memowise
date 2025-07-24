@@ -29,6 +29,13 @@ export default function Layout() {
             headerBackButtonDisplayMode: "generic",
           }}
         />
+        <Stack.Screen
+          name="flashcard-details"
+          options={{
+            title: "Flashcard details",
+            headerBackButtonDisplayMode: "generic",
+          }}
+        />
       </Stack>
     </FlashcardsProvider>
   );

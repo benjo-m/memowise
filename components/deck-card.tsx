@@ -1,16 +1,22 @@
+import { Deck } from "@/models/deck";
+import { router } from "expo-router";
 import { Text } from "react-native";
 
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 type DeckCardProps = {
-  name: string;
-  onPress?: () => void;
+  deck: Deck;
 };
 
-export default function DeckCard({ name, onPress }: DeckCardProps) {
+export default function DeckCard({ deck }: DeckCardProps) {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Text style={styles.title}>{name}</Text>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() =>
+        router.navigate({ pathname: "/deck-details", params: { id: deck.id } })
+      }
+    >
+      <Text style={styles.title}>{deck.name}</Text>
     </TouchableOpacity>
   );
 }
@@ -25,7 +31,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
     marginHorizontal: 10,
-    // marginRight: 20,
   },
 
   title: {

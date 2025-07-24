@@ -31,10 +31,14 @@ export default function DecksScreen() {
       ) : (
         <View style={{ flex: 1, justifyContent: "space-between", gap: "10%" }}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: "8%",
+            }}
           >
             <View style={styles.box}>
-              <Text style={styles.boxHeading}>Heading 1</Text>
+              <Text style={styles.boxHeading}>Study streak</Text>
               <Text style={styles.boxNumber}>10</Text>
             </View>
             <View style={styles.box}>
@@ -60,15 +64,19 @@ export default function DecksScreen() {
 
 const styles = StyleSheet.create({
   box: {
+    flex: 1,
     alignItems: "center",
     borderWidth: 2,
     borderRadius: 10,
     borderColor: "#000",
-    padding: 10,
+    paddingVertical: 12,
   },
-  boxHeading: {},
+  boxHeading: {
+    fontSize: 13,
+  },
   boxNumber: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 18,
+    marginTop: 4,
   },
 });

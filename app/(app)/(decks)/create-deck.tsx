@@ -63,7 +63,7 @@ export default function CreateDeckScreen() {
         data={flashcards}
         keyExtractor={(item) => item.front}
         renderItem={({ item }) => (
-          <FlashcardCard front={item.front}></FlashcardCard>
+          <FlashcardCard flashcard={item}></FlashcardCard>
         )}
         style={{ width: "100%" }}
       />

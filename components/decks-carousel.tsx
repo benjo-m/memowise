@@ -1,5 +1,4 @@
 import { Deck } from "@/models/deck";
-import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
@@ -26,17 +25,7 @@ export default function DecksCarousel({ decks }: Props) {
           defaultIndex={0}
           scrollAnimationDuration={400}
           onSnapToItem={(index) => setCurrentIndex(index)}
-          renderItem={({ item }) => (
-            <DeckCard
-              name={item.name}
-              onPress={() =>
-                router.navigate({
-                  pathname: "/deck-details",
-                  params: { id: item.id },
-                })
-              }
-            />
-          )}
+          renderItem={({ item }) => <DeckCard deck={item} />}
         />
         <Text onPress={() => ref.current?.next()}>Next</Text>
       </View>

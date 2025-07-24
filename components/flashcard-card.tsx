@@ -1,14 +1,20 @@
+import { Flashcard } from "@/models/flashcard";
+import { router } from "expo-router";
 import { Text, TouchableOpacity } from "react-native";
 
 type FlashcardCardProps = {
-  front: string;
-  onPress?: () => void;
+  flashcard: Flashcard;
 };
 
-export default function FlashcardCard({ front, onPress }: FlashcardCardProps) {
+export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() =>
+        router.navigate({
+          pathname: "/flashcard-details",
+          params: { id: flashcard.id },
+        })
+      }
       style={{
         backgroundColor: "#ffff",
         padding: 16,
@@ -20,10 +26,10 @@ export default function FlashcardCard({ front, onPress }: FlashcardCardProps) {
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 2, // for Android shadow
+        elevation: 2,
       }}
     >
-      <Text style={{ fontSize: 16 }}>{front}</Text>
+      <Text style={{ fontSize: 16 }}>{flashcard.front}</Text>
     </TouchableOpacity>
   );
 }

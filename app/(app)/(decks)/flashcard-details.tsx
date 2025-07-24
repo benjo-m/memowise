@@ -1,31 +1,30 @@
-import { getDeckById } from "@/api/decks";
-import FlashcardCard from "@/components/flashcard-card";
-import { Deck } from "@/models/deck";
+import { getFlashcardById } from "@/api/flashcards";
+import { Flashcard } from "@/models/flashcard";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
-export default function DeckDetailsScreen() {
+export default function FlashcardDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const [deck, setDeck] = useState<Deck | null>(null);
+  const [flashcard, setFlashcard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchDeck = async () => {
+    const fetchFlashcard = async () => {
       try {
-        const res = await getDeckById(id);
-        setDeck(res);
+        const res = await getFlashcardById(id);
+        setFlashcard(res);
       } catch (e) {
         console.error(e);
-        setError("Failed to load deck.");
+        setError("Failed to load flashcard.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDeck();
+    fetchFlashcard();
   }, [id]);
 
   return (
@@ -34,15 +33,13 @@ export default function DeckDetailsScreen() {
         <ActivityIndicator />
       ) : error ? (
         <Text>{error}</Text>
-      ) : deck ? (
+      ) : flashcard ? (
         <>
-          <Text style={{ fontSize: 24, marginBottom: 20 }}>{deck.name}</Text>
-          {deck.flashcards.map((flashcard) => (
-            <FlashcardCard key={flashcard.id} flashcard={flashcard} />
-          ))}
+          <Text>Front: {flashcard.front}</Text>
+          <Text>Back: {flashcard.back}</Text>
         </>
       ) : (
-        <Text>Deck not found.</Text>
+        <Text>Flashcard not found.</Text>
       )}
     </View>
   );

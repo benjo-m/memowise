@@ -1,17 +1,24 @@
-import { getDeckById, updateDeck } from "@/api/decks";
+import { deleteDeck, getDeckById, updateDeck } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
 import FlashcardCard from "@/components/flashcard-card";
 import { useDecks } from "@/contexts/decks-context";
 import { Deck } from "@/models/deck";
 import { inputStyles } from "@/styles/inputs";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ActivityIndicator, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 export default function DeckDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { decks, setDecks } = useDecks();
+  const { decks, setDecks, removeDeck } = useDecks();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [loading, setLoading] = useState(true);
   const [deckError, setDeckError] = useState<string | null>(null);
@@ -40,7 +47,6 @@ export default function DeckDetailsScreen() {
     handleSubmit,
     reset,
     setError,
-    setFocus,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -80,7 +86,7 @@ export default function DeckDetailsScreen() {
       ) : deckError ? (
         <Text>{deckError}</Text>
       ) : deck ? (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
           <Controller
             control={control}
             rules={{ required: true }}
@@ -150,9 +156,61 @@ export default function DeckDetailsScreen() {
             </View>
           )}
 
-          {deck.flashcards.map((flashcard) => (
-            <FlashcardCard key={flashcard.id} flashcard={flashcard} />
-          ))}
+          <Text style={{ marginTop: 20 }}>Flashcards</Text>
+          <FlatList
+            data={deck.flashcards}
+            keyExtractor={(item) => item.front}
+            renderItem={({ item }) => (
+              <FlashcardCard flashcard={item}></FlashcardCard>
+            )}
+            style={{ width: "100%" }}
+          />
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: 16,
+              marginTop: 20,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <CustomButton
+                title="Delete deck"
+                color="#eb4b4bff"
+                onPress={() => {
+                  Alert.alert(
+                    "Delete deck",
+                    `Are you sure you want to delete "${deck.name}"?`,
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      {
+                        text: "Delete",
+                        style: "destructive",
+                        onPress: async () => {
+                          try {
+                            await deleteDeck(deck.id);
+                            removeDeck(deck.id);
+                            router.back();
+                          } catch (err) {
+                            console.error("Deck deletion failed", err);
+                          }
+                        },
+                      },
+                    ],
+                    { cancelable: true }
+                  );
+                }}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <CustomButton
+                title="Add flashcards"
+                color="#1273de"
+                onPress={() => console.log("go to add flashcards screen")}
+              />
+            </View>
+          </View>
         </View>
       ) : (
         <Text>Deck not found.</Text>

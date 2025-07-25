@@ -78,7 +78,7 @@ export default function CreateDeckScreen() {
       >
         <View style={{ flex: 1 }}>
           <CustomButton
-            title="Add flashcard"
+            title="Add flashcards"
             color="#1273de"
             onPress={() => router.navigate("/add-flashcards")}
           />

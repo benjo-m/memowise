@@ -67,3 +67,20 @@ export const updateDeck = async (
   if (!res.ok) throw new Error("Failed to update deck");
   return await res.json();
 };
+
+export const deleteDeck = async (id: string): Promise<void> => {
+  const token = await SecureStore.getItemAsync("session");
+
+  const response = await fetch(`${BASE_URL}/decks/${id}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete deck");
+  }
+};

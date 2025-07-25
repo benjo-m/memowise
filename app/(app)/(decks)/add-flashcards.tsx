@@ -1,13 +1,27 @@
+import { createFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
+import { useDecks } from "@/contexts/decks-context";
 import { useFlashcards } from "@/contexts/flashcards-context";
+import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
 import { inputStyles } from "@/styles/inputs";
-import { router } from "expo-router";
-import React from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
 
 export default function AddFlashcardsScreen() {
+  const { deckId } = useLocalSearchParams<{ deckId: string }>();
+  const { decks, setDecks } = useDecks();
   const { flashcards, setFlashcards } = useFlashcards();
+  const deck = decks.find((d) => d.id === Number(deckId)) ?? null;
+
+  useEffect(() => {
+    if (deck) {
+      setFlashcards(deck.flashcards);
+    } else {
+      setFlashcards([]);
+    }
+  }, [deck]);
 
   const {
     control,
@@ -22,7 +36,7 @@ export default function AddFlashcardsScreen() {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const exists = flashcards.some((card) => card.front === data.front);
 
     if (exists) {
@@ -30,11 +44,30 @@ export default function AddFlashcardsScreen() {
         type: "manual",
         message: "Duplicate",
       });
-
       return;
     }
 
-    setFlashcards([data, ...flashcards]);
+    if (deck) {
+      const flashcardCreateRequest = new FlashcardCreateRequest(
+        deck.id,
+        data.front,
+        data.back
+      );
+      const newFlashcard = await createFlashcard(flashcardCreateRequest);
+
+      setFlashcards([newFlashcard, ...flashcards]);
+
+      setDecks((prevDecks) =>
+        prevDecks.map((d) =>
+          d.id === deck.id
+            ? { ...d, flashcards: [newFlashcard, ...d.flashcards] }
+            : d
+        )
+      );
+    } else {
+      setFlashcards([data, ...flashcards]);
+    }
+
     reset({ front: "", back: "" });
   };
 

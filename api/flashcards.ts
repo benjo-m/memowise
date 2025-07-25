@@ -1,4 +1,5 @@
 import { Flashcard } from "@/models/flashcard";
+import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
@@ -18,4 +19,26 @@ export const getFlashcardById = async (id: string): Promise<Flashcard> => {
   }
 
   return res.json();
+};
+
+export const createFlashcard = async (
+  body: FlashcardCreateRequest
+): Promise<Flashcard> => {
+  const token = await SecureStore.getItemAsync("session");
+
+  const response = await fetch(`${BASE_URL}/flashcards`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create flashcard.");
+  }
+
+  return await response.json();
 };

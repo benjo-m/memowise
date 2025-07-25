@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 type DecksContextType = {
   decks: Deck[];
   setDecks: React.Dispatch<React.SetStateAction<Deck[]>>;
-  removeDeck: (id: string) => void;
+  removeDeck: (id: number) => void;
 };
 
 const DecksContext = createContext<DecksContextType | null>(null);
@@ -18,7 +18,7 @@ export const useDecks = () => {
 export const DecksProvider = ({ children }: { children: React.ReactNode }) => {
   const [decks, setDecks] = useState<Deck[]>([]);
 
-  const removeDeck = (id: string) => {
+  const removeDeck = (id: number) => {
     setDecks((prev) => prev.filter((deck) => deck.id !== id));
   };
 

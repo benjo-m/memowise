@@ -6,12 +6,17 @@ import { useFlashcards } from "@/contexts/flashcards-context";
 import { CreateDeckRequest } from "@/models/create-deck-request";
 import { inputStyles } from "@/styles/inputs";
 import { router } from "expo-router";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function CreateDeckScreen() {
   const { setDecks } = useDecks();
-  const { flashcards } = useFlashcards();
+  const { flashcards, setFlashcards } = useFlashcards();
+
+  useEffect(() => {
+    setFlashcards([]);
+  }, []);
 
   const {
     control,

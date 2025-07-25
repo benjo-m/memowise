@@ -50,7 +50,7 @@ export const getDeckById = async (id: string): Promise<Deck> => {
 };
 
 export const updateDeck = async (
-  id: string,
+  id: number,
   newName: string
 ): Promise<Deck> => {
   const token = await SecureStore.getItemAsync("session");
@@ -68,7 +68,7 @@ export const updateDeck = async (
   return await res.json();
 };
 
-export const deleteDeck = async (id: string): Promise<void> => {
+export const deleteDeck = async (id: number): Promise<void> => {
   const token = await SecureStore.getItemAsync("session");
 
   const response = await fetch(`${BASE_URL}/decks/${id}`, {

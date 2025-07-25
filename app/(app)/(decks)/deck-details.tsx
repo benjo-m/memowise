@@ -1,4 +1,4 @@
-import { deleteDeck, getDeckById, updateDeck } from "@/api/decks";
+import { deleteDeck, updateDeck } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
 import FlashcardCard from "@/components/flashcard-card";
 import { useDecks } from "@/contexts/decks-context";
@@ -26,21 +26,20 @@ export default function DeckDetailsScreen() {
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    const fetchDeck = async () => {
-      try {
-        const res = await getDeckById(id);
-        setDeck(res);
-        reset({ name: res.name });
-      } catch (e) {
-        console.error(e);
-        setDeckError("Failed to load deck.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!id) return;
 
-    fetchDeck();
-  }, [id]);
+    const foundDeck = decks.find((d) => d.id === Number(id)) ?? null;
+
+    if (foundDeck) {
+      setDeck(foundDeck);
+      reset({ name: foundDeck.name });
+      setLoading(false);
+      setDeckError(null);
+    } else {
+      setDeckError("Deck not found");
+      setLoading(false);
+    }
+  }, [decks, id]);
 
   const {
     control,
@@ -207,7 +206,12 @@ export default function DeckDetailsScreen() {
               <CustomButton
                 title="Add flashcards"
                 color="#1273de"
-                onPress={() => console.log("go to add flashcards screen")}
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/add-flashcards",
+                    params: { deckId: deck.id },
+                  })
+                }
               />
             </View>
           </View>

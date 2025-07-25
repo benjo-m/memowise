@@ -1,7 +1,7 @@
 import { Flashcard } from "./flashcard";
 
 export type Deck = {
-  id: string;
+  id: number;
   name: string;
   flashcards: Flashcard[];
 };

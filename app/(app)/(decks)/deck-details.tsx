@@ -2,6 +2,7 @@ import { deleteDeck, updateDeck } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
 import FlashcardCard from "@/components/flashcard-card";
 import { useDecks } from "@/contexts/decks-context";
+import { useFlashcards } from "@/contexts/flashcards-context";
 import { Deck } from "@/models/deck";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
@@ -19,6 +20,7 @@ import {
 export default function DeckDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { decks, setDecks, removeDeck } = useDecks();
+  const { setFlashcards } = useFlashcards();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [loading, setLoading] = useState(true);
   const [deckError, setDeckError] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export default function DeckDetailsScreen() {
 
     if (foundDeck) {
       setDeck(foundDeck);
+      setFlashcards(foundDeck.flashcards);
       reset({ name: foundDeck.name });
       setLoading(false);
       setDeckError(null);

@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 
 type FlashcardsContextType = {
   flashcards: Flashcard[];
-  setFlashcards: (flashcards: Flashcard[]) => void;
+  setFlashcards: React.Dispatch<React.SetStateAction<Flashcard[]>>;
 };
 
 const FlashcardsContext = createContext<FlashcardsContextType | undefined>(

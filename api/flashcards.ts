@@ -22,19 +22,35 @@ export const getFlashcardById = async (id: string): Promise<Flashcard> => {
   return res.json();
 };
 
-export const createFlashcard = async (
-  body: FlashcardCreateRequest
-): Promise<Flashcard> => {
+export const createFlashcard = async (body: FlashcardCreateRequest): Promise<Flashcard> => {
   const token = await SecureStore.getItemAsync("session");
+
+  const formData = new FormData();
+  formData.append("flashcard[front]", body.front);
+  formData.append("flashcard[back]", body.back);
+  formData.append("flashcard[deck_id]", String(body.deckId));
+  if (body.front_image_file) {
+    formData.append("flashcard[front_image]", {
+      uri: body.front_image_file.uri,
+      name: body.front_image_file.name,
+      type: body.front_image_file.type,
+    } as any);
+  }
+  if (body.back_image_file) {
+    formData.append("flashcard[back_image]", {
+      uri: body.back_image_file.uri,
+      name: body.back_image_file.name,
+      type: body.back_image_file.type,
+    } as any);
+  }
 
   const response = await fetch(`${BASE_URL}/flashcards`, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(body),
+    body: formData,
   });
 
   if (!response.ok) {
@@ -50,14 +66,31 @@ export const updateFlashcard = async (
 ): Promise<Flashcard> => {
   const token = await SecureStore.getItemAsync("session");
 
+  const formData = new FormData();
+  formData.append("flashcard[front]", body.front);
+  formData.append("flashcard[back]", body.back);
+  if (body.front_image_file) {
+    formData.append("flashcard[front_image]", {
+      uri: body.front_image_file.uri,
+      name: body.front_image_file.name,
+      type: body.front_image_file.type,
+    } as any);
+  }
+  if (body.back_image_file) {
+    formData.append("flashcard[back_image]", {
+      uri: body.back_image_file.uri,
+      name: body.back_image_file.name,
+      type: body.back_image_file.type,
+    } as any);
+  }
+
   const response = await fetch(`${BASE_URL}/flashcards/${id}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(body),
+    body: formData,
   });
 
   if (!response.ok) {

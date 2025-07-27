@@ -1,5 +1,5 @@
-import { CreateDeckRequest } from "@/models/create-deck-request";
 import { Deck } from "@/models/deck";
+import { DeckCreateRequest } from "@/models/deck-create-request";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
@@ -16,19 +16,47 @@ export const getAllDecks = async (): Promise<Deck[]> => {
   return await response.json();
 };
 
-export const createDeck = async (body: CreateDeckRequest): Promise<Deck> => {
+export const createDeck = async (deckCreateRequest: DeckCreateRequest): Promise<Deck> => {
   const token = await SecureStore.getItemAsync("session");
+
+  const formData = new FormData();
+  formData.append("deck[name]", deckCreateRequest.name);
+
+  deckCreateRequest.flashcards_attributes.forEach((card, index) => {
+    formData.append(`deck[flashcards_attributes][${index}][front]`, card.front);
+    formData.append(`deck[flashcards_attributes][${index}][back]`, card.back);
+
+    if (card.front_image_file) {
+      formData.append(
+        `deck[flashcards_attributes][${index}][front_image]`,
+        card.front_image_file as any
+      );
+    }
+
+    if (card.back_image_file) {
+      formData.append(
+        `deck[flashcards_attributes][${index}][back_image]`,
+        card.back_image_file as any
+      );
+    }
+  });
+
   const response = await fetch(`${BASE_URL}/decks`, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(body),
+    body: formData,
   });
 
-  return await response.json();
+  if (!response.ok) {
+    throw new Error("Failed to create deck.");
+  }
+
+  const responseData = await response.json();
+
+  return responseData;
 };
 
 export const getDeckById = async (id: string): Promise<Deck> => {
@@ -49,10 +77,7 @@ export const getDeckById = async (id: string): Promise<Deck> => {
   return res.json();
 };
 
-export const updateDeck = async (
-  id: number,
-  newName: string
-): Promise<Deck> => {
+export const updateDeck = async (id: number, newName: string): Promise<Deck> => {
   const token = await SecureStore.getItemAsync("session");
 
   const res = await fetch(`${BASE_URL}/decks/${id}`, {

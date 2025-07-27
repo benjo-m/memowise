@@ -3,7 +3,8 @@ import CustomButton from "@/components/custom-button";
 import FlashcardCard from "@/components/flashcard-card";
 import { useDecks } from "@/contexts/decks-context";
 import { useFlashcards } from "@/contexts/flashcards-context";
-import { CreateDeckRequest } from "@/models/create-deck-request";
+import { DeckCreateRequest } from "@/models/deck-create-request";
+import { FlashcardFreshCreateRequest } from "@/models/flashcard-fresh-create-request";
 import { inputStyles } from "@/styles/inputs";
 import { router } from "expo-router";
 import { useEffect } from "react";
@@ -30,7 +31,10 @@ export default function CreateDeckScreen() {
 
   const onSubmit = async (data) => {
     try {
-      const createDeckRequest = new CreateDeckRequest(data.name, flashcards);
+      const createDeckRequest = new DeckCreateRequest(
+        data.name,
+        flashcards as FlashcardFreshCreateRequest[]
+      );
       const newDeck = await createDeck(createDeckRequest);
       setDecks((prev) => [newDeck, ...prev]);
       router.back();
@@ -59,17 +63,13 @@ export default function CreateDeckScreen() {
         )}
       />
       {errors.name && (
-        <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>
-          Name is required.
-        </Text>
+        <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>Name is required.</Text>
       )}
       <Text style={{ marginTop: 20 }}>Flashcards</Text>
       <FlatList
-        data={flashcards}
+        data={flashcards as FlashcardFreshCreateRequest[]}
         keyExtractor={(item) => item.front}
-        renderItem={({ item }) => (
-          <FlashcardCard flashcard={item}></FlashcardCard>
-        )}
+        renderItem={({ item }) => <FlashcardCard flashcard={item}></FlashcardCard>}
         style={{ width: "100%" }}
       />
 
@@ -89,11 +89,7 @@ export default function CreateDeckScreen() {
           />
         </View>
         <View style={{ flex: 1 }}>
-          <CustomButton
-            title="Create deck"
-            color="#1273de"
-            onPress={handleSubmit(onSubmit)}
-          />
+          <CustomButton title="Create deck" color="#1273de" onPress={handleSubmit(onSubmit)} />
         </View>
       </View>
     </View>

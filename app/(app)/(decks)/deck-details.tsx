@@ -8,19 +8,12 @@ import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, FlatList, Text, TextInput, View } from "react-native";
 
 export default function DeckDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { decks, setDecks, removeDeck } = useDecks();
-  const { setFlashcards } = useFlashcards();
+  const { flashcards, setFlashcards } = useFlashcards();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [loading, setLoading] = useState(true);
   const [deckError, setDeckError] = useState<string | null>(null);
@@ -58,9 +51,7 @@ export default function DeckDetailsScreen() {
 
   const onSubmit = async (data) => {
     try {
-      const duplicate = decks.some(
-        (d) => d.name === data.name && d.id !== deck.id
-      );
+      const duplicate = decks.some((d) => d.name === data.name && d.id !== deck.id);
 
       if (duplicate) {
         setError("name", {
@@ -122,11 +113,7 @@ export default function DeckDetailsScreen() {
               }}
             >
               <View style={{ flex: 1 }}>
-                <CustomButton
-                  title="Save"
-                  onPress={handleSubmit(onSubmit)}
-                  color={""}
-                />
+                <CustomButton title="Save" onPress={handleSubmit(onSubmit)} color={""} />
               </View>
               <View style={{ flex: 1 }}>
                 <CustomButton
@@ -161,10 +148,8 @@ export default function DeckDetailsScreen() {
           <Text style={{ marginTop: 20 }}>Flashcards</Text>
           <FlatList
             data={deck.flashcards}
-            keyExtractor={(item) => item.front}
-            renderItem={({ item }) => (
-              <FlashcardCard flashcard={item}></FlashcardCard>
-            )}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <FlashcardCard flashcard={item}></FlashcardCard>}
             style={{ width: "100%" }}
           />
 

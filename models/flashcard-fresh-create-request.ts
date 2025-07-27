@@ -1,6 +1,6 @@
 import { ImageFile } from "./image-file";
 
-export class FlashcardUpdateRequest {
+export class FlashcardFreshCreateRequest {
   front: string;
   back: string;
   front_image_file: ImageFile;

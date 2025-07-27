@@ -1,10 +1,7 @@
-import { BASE_URL } from "@/api/constants";
-import { updateFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
-import { useDecks } from "@/contexts/decks-context";
 import { useFlashcards } from "@/contexts/flashcards-context";
 import { pickImage } from "@/helpers/image-picker";
-import { Flashcard } from "@/models/flashcard";
+import { FlashcardFreshCreateRequest } from "@/models/flashcard-fresh-create-request";
 import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
 import { ImageFile } from "@/models/image-file";
 import { inputStyles } from "@/styles/inputs";
@@ -13,13 +10,12 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ActivityIndicator, Image, ScrollView, Text, TextInput, View } from "react-native";
 
-export default function FlashcardDetails() {
+export default function FlashcardFreshDetails() {
   const { front } = useLocalSearchParams<{ front: string }>();
-  const [currentFlashcard, setCurrentFlashcard] = useState<Flashcard>();
+  const [currentFlashcard, setCurrentFlashcard] = useState<FlashcardFreshCreateRequest>(null);
   const [loading, setLoading] = useState(true);
   const [flashcardError, setFlashcardError] = useState<string | null>(null);
   const { flashcards, setFlashcards } = useFlashcards();
-  const { setDecks } = useDecks();
   const [frontImageFile, setFrontImageFile] = useState<ImageFile | null>(null);
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
@@ -27,7 +23,7 @@ export default function FlashcardDetails() {
     const found = flashcards.find((card) => card.front == front);
 
     if (found) {
-      setCurrentFlashcard(found as Flashcard);
+      setCurrentFlashcard(found as FlashcardFreshCreateRequest);
       reset({ front: found.front, back: found.back });
     } else {
       setFlashcardError("Flashcard not found.");
@@ -62,37 +58,18 @@ export default function FlashcardDetails() {
       return;
     }
 
-    try {
-      const flashcardUpdateRequest = new FlashcardUpdateRequest(
-        data.front,
-        data.back,
-        frontImageFile,
-        backImageFile
-      );
+    const flashcardUpdateRequest = new FlashcardUpdateRequest(
+      data.front,
+      data.back,
+      frontImageFile,
+      backImageFile
+    );
 
-      const updated = await updateFlashcard(currentFlashcard.id, flashcardUpdateRequest);
+    setFlashcards((prev) =>
+      prev.map((card) => (card.front === currentFlashcard.front ? flashcardUpdateRequest : card))
+    );
 
-      setFlashcards((prev) =>
-        prev.map((card) => (card.id === currentFlashcard.id ? updated : card))
-      );
-
-      setDecks((prevDecks) =>
-        prevDecks.map((deck) => {
-          if (deck.id === Number(currentFlashcard.deck_id)) {
-            const updatedFlashcards = deck.flashcards.map((card) =>
-              card.id === currentFlashcard.id ? updated : card
-            );
-            const updatedDeck = { ...deck, flashcards: updatedFlashcards };
-            return updatedDeck;
-          }
-
-          return deck;
-        })
-      );
-      router.back();
-    } catch (err) {
-      console.error("Failed to update flashcard:", err);
-    }
+    router.back();
   };
 
   return (
@@ -104,12 +81,10 @@ export default function FlashcardDetails() {
       ) : currentFlashcard ? (
         <View style={{ flex: 1 }}>
           <ScrollView>
-            {(currentFlashcard.front_image_url || frontImageFile) && (
+            {(currentFlashcard.front_image_file || frontImageFile) && (
               <Image
                 source={{
-                  uri: frontImageFile
-                    ? frontImageFile.uri
-                    : `${BASE_URL}/${currentFlashcard.front_image_url}`,
+                  uri: frontImageFile ? frontImageFile.uri : currentFlashcard.front_image_file.uri,
                 }}
                 style={{ width: "100%", height: 200, resizeMode: "stretch" }}
               />
@@ -149,17 +124,14 @@ export default function FlashcardDetails() {
               )}
             </View>
             <View>
-              {(currentFlashcard.back_image_url || backImageFile) && (
+              {(currentFlashcard.back_image_file || backImageFile) && (
                 <Image
                   source={{
-                    uri: backImageFile
-                      ? backImageFile.uri
-                      : `${BASE_URL}/${currentFlashcard.back_image_url}`,
+                    uri: backImageFile ? backImageFile.uri : currentFlashcard.back_image_file.uri,
                   }}
                   style={{ width: "100%", height: 200, resizeMode: "stretch" }}
                 />
               )}
-
               <Text>Back</Text>
               <Controller
                 control={control}

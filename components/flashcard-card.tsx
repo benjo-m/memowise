@@ -1,9 +1,10 @@
 import { Flashcard } from "@/models/flashcard";
+import { FlashcardFreshCreateRequest } from "@/models/flashcard-fresh-create-request";
 import { router } from "expo-router";
 import { Text, TouchableOpacity } from "react-native";
 
 type FlashcardCardProps = {
-  flashcard: Flashcard;
+  flashcard: Flashcard | FlashcardFreshCreateRequest;
 };
 
 export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
@@ -11,8 +12,8 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
     <TouchableOpacity
       onPress={() =>
         router.navigate({
-          pathname: "/flashcard-details",
-          params: { id: flashcard.id },
+          pathname: "id" in flashcard ? "/flashcard-details" : "/flashcard-fresh-details",
+          params: { front: flashcard.front },
         })
       }
       style={{

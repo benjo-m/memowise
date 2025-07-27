@@ -9,9 +9,7 @@ export default function Layout() {
       <Stack
         screenOptions={{
           animation:
-            pathname.startsWith("/settings") || pathname.startsWith("/stats")
-              ? "none"
-              : "default",
+            pathname.startsWith("/settings") || pathname.startsWith("/stats") ? "none" : "default",
         }}
       >
         <Stack.Screen
@@ -31,6 +29,13 @@ export default function Layout() {
         />
         <Stack.Screen
           name="flashcard-details"
+          options={{
+            title: "Flashcard details",
+            headerBackButtonDisplayMode: "generic",
+          }}
+        />
+        <Stack.Screen
+          name="flashcard-fresh-details"
           options={{
             title: "Flashcard details",
             headerBackButtonDisplayMode: "generic",

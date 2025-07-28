@@ -1,5 +1,4 @@
 import { Deck } from "@/models/deck";
-import { DeckCreateRequest } from "@/models/deck-create-request";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
@@ -16,38 +15,17 @@ export const getAllDecks = async (): Promise<Deck[]> => {
   return await response.json();
 };
 
-export const createDeck = async (deckCreateRequest: DeckCreateRequest): Promise<Deck> => {
+export const createDeck = async (name: string): Promise<Deck> => {
   const token = await SecureStore.getItemAsync("session");
-
-  const formData = new FormData();
-  formData.append("deck[name]", deckCreateRequest.name);
-
-  deckCreateRequest.flashcards_attributes.forEach((card, index) => {
-    formData.append(`deck[flashcards_attributes][${index}][front]`, card.front);
-    formData.append(`deck[flashcards_attributes][${index}][back]`, card.back);
-
-    if (card.front_image_file) {
-      formData.append(
-        `deck[flashcards_attributes][${index}][front_image]`,
-        card.front_image_file as any
-      );
-    }
-
-    if (card.back_image_file) {
-      formData.append(
-        `deck[flashcards_attributes][${index}][back_image]`,
-        card.back_image_file as any
-      );
-    }
-  });
 
   const response = await fetch(`${BASE_URL}/decks`, {
     method: "POST",
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-    body: formData,
+    body: JSON.stringify({ name: name }),
   });
 
   if (!response.ok) {

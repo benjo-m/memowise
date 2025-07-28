@@ -1,10 +1,9 @@
-import { getAllDecks } from "@/api/decks";
+import { createDeck, getAllDecks } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
 import DecksCarousel from "@/components/decks-carousel";
 import { useDecks } from "@/contexts/decks-context";
-import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
 export default function DecksScreen() {
   const { decks, setDecks } = useDecks();
@@ -23,6 +22,53 @@ export default function DecksScreen() {
       setLoading(false);
     }
   }, []);
+
+  const showCreateDeckPrompt = (defaultText: string) => {
+    Alert.prompt(
+      "New deck",
+      "Enter a name for your new deck",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Create",
+          isPreferred: true,
+          onPress: async (name) => handleCreateDeck(name),
+        },
+      ],
+      "plain-text",
+      defaultText
+    );
+  };
+
+  const handleCreateDeck = async (name: string) => {
+    const trimmedName = name.trim();
+    const duplicate = decks.some((deck) => deck.name === trimmedName);
+    if (!name || trimmedName === "") {
+      Alert.alert("Name required", "Please enter a deck name.", [
+        {
+          text: "OK",
+          onPress: () => {
+            showCreateDeckPrompt("");
+          },
+        },
+      ]);
+    } else if (duplicate) {
+      Alert.alert("Duplicate", "Deck with that name already exists.", [
+        {
+          text: "OK",
+          onPress: () => {
+            showCreateDeckPrompt(name);
+          },
+        },
+      ]);
+    } else {
+      const newDeck = await createDeck(trimmedName);
+      setDecks([newDeck, ...decks]);
+    }
+  };
 
   return (
     <View style={{ flex: 1, margin: 30 }}>
@@ -51,11 +97,7 @@ export default function DecksScreen() {
             </View>
           </View>
           <DecksCarousel decks={decks} />
-          <CustomButton
-            title="New deck"
-            onPress={() => router.navigate("/create-deck")}
-            color={""}
-          />
+          <CustomButton title="New deck" onPress={() => showCreateDeckPrompt("")} color={""} />
         </View>
       )}
     </View>

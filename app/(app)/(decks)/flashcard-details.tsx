@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { ActivityIndicator, Image, ScrollView, Text, TextInput, View } from "react-native";
 
 export default function FlashcardDetails() {
-  const { front } = useLocalSearchParams<{ front: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const [currentFlashcard, setCurrentFlashcard] = useState<Flashcard>();
   const [loading, setLoading] = useState(true);
   const [flashcardError, setFlashcardError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export default function FlashcardDetails() {
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
   useEffect(() => {
-    const found = flashcards.find((card) => card.front == front);
+    const found = flashcards.find((card) => card.id == id);
 
     if (found) {
       setCurrentFlashcard(found as Flashcard);
@@ -34,7 +34,7 @@ export default function FlashcardDetails() {
     }
 
     setLoading(false);
-  }, [front, flashcards]);
+  }, [id, flashcards]);
 
   const {
     control,

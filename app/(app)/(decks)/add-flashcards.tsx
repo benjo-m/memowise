@@ -4,9 +4,7 @@ import { useDecks } from "@/contexts/decks-context";
 import { useFlashcards } from "@/contexts/flashcards-context";
 import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
-import { Flashcard } from "@/models/flashcard";
 import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
-import { FlashcardFreshCreateRequest } from "@/models/flashcard-fresh-create-request";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -49,37 +47,23 @@ export default function AddFlashcardsScreen() {
       return;
     }
 
-    if (deck) {
-      const flashcardCreateRequest = new FlashcardCreateRequest(
-        deck.id,
-        data.front,
-        data.back,
-        frontImageFile,
-        backImageFile
-      );
+    const flashcardCreateRequest = new FlashcardCreateRequest(
+      deck.id,
+      data.front,
+      data.back,
+      frontImageFile,
+      backImageFile
+    );
 
-      const newFlashcard = await createFlashcard(flashcardCreateRequest);
+    const newFlashcard = await createFlashcard(flashcardCreateRequest);
 
-      setFlashcards([newFlashcard, ...(flashcards as Flashcard[])]);
+    setFlashcards([newFlashcard, ...flashcards]);
 
-      setDecks((prevDecks) =>
-        prevDecks.map((d) =>
-          d.id === deck.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
-        )
-      );
-    } else {
-      const flashcardFreshCreateRequest = new FlashcardFreshCreateRequest(
-        data.front,
-        data.back,
-        frontImageFile,
-        backImageFile
-      );
-
-      setFlashcards([
-        flashcardFreshCreateRequest,
-        ...(flashcards as FlashcardFreshCreateRequest[]),
-      ]);
-    }
+    setDecks((prevDecks) =>
+      prevDecks.map((d) =>
+        d.id === deck.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
+      )
+    );
 
     reset({ front: "", back: "" });
     setFrontImageFile(null);

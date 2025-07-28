@@ -1,17 +1,15 @@
-// contexts/flashcards-context.tsx
 import { Flashcard } from "@/models/flashcard";
-import { FlashcardFreshCreateRequest } from "@/models/flashcard-fresh-create-request";
 import { createContext, useContext, useState } from "react";
 
 type FlashcardsContextType = {
-  flashcards: Flashcard[] | FlashcardFreshCreateRequest[];
-  setFlashcards: React.Dispatch<React.SetStateAction<Flashcard[] | FlashcardFreshCreateRequest[]>>;
+  flashcards: Flashcard[];
+  setFlashcards: React.Dispatch<React.SetStateAction<Flashcard[]>>;
 };
 
 const FlashcardsContext = createContext<FlashcardsContextType | undefined>(undefined);
 
 export const FlashcardsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [flashcards, setFlashcards] = useState<Flashcard[] | FlashcardFreshCreateRequest[]>([]);
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
 
   return (
     <FlashcardsContext.Provider value={{ flashcards, setFlashcards }}>

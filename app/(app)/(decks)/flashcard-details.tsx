@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/api/constants";
-import { updateFlashcard } from "@/api/flashcards";
+import { deleteFlashcard, updateFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
 import { useDecks } from "@/contexts/decks-context";
 import { useFlashcards } from "@/contexts/flashcards-context";
@@ -11,7 +11,7 @@ import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ActivityIndicator, Image, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
 
 export default function FlashcardDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -92,6 +92,25 @@ export default function FlashcardDetails() {
       router.back();
     } catch (err) {
       console.error("Failed to update flashcard:", err);
+    }
+  };
+
+  const handleDeleteFlashcard = async (flashcard: Flashcard) => {
+    try {
+      await deleteFlashcard(flashcard.id);
+      setFlashcards((prev) => prev.filter((card) => card.id !== flashcard.id));
+      setDecks((prevDecks) =>
+        prevDecks.map((deck) =>
+          deck.id === Number(flashcard.deck_id)
+            ? {
+                ...deck,
+                flashcards: deck.flashcards.filter((c) => c.id !== flashcard.id),
+              }
+            : deck
+        )
+      );
+    } catch (err) {
+      console.error("Failed to delete flashcard:", err);
     }
   };
 
@@ -202,7 +221,28 @@ export default function FlashcardDetails() {
             }}
           >
             <View style={{ flex: 1 }}>
-              <CustomButton title="Back" color="#1273de" onPress={() => router.back()} />
+              <CustomButton
+                title="Delete"
+                color="#eb4b4bff"
+                onPress={() => {
+                  Alert.alert(
+                    "Delete flashcard",
+                    "Are you sure you want to delete this flashcard?",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      {
+                        text: "Delete",
+                        style: "destructive",
+                        onPress: async () => {
+                          await handleDeleteFlashcard(currentFlashcard);
+                          router.back();
+                        },
+                      },
+                    ],
+                    { cancelable: true }
+                  );
+                }}
+              />
             </View>
             <View style={{ flex: 1 }}>
               <CustomButton title="Update" color="#1273de" onPress={handleSubmit(onSubmit)} />

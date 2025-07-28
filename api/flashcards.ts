@@ -99,3 +99,20 @@ export const updateFlashcard = async (
 
   return await response.json();
 };
+
+export const deleteFlashcard = async (id: string): Promise<void> => {
+  const token = await SecureStore.getItemAsync("session");
+
+  const response = await fetch(`${BASE_URL}/flashcards/${id}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete flashcard");
+  }
+};

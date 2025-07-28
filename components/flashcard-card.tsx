@@ -1,4 +1,8 @@
+import { deleteFlashcard } from "@/api/flashcards";
+import { useDecks } from "@/contexts/decks-context";
+import { useFlashcards } from "@/contexts/flashcards-context";
 import { Flashcard } from "@/models/flashcard";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import { Text, TouchableOpacity } from "react-native";
 
@@ -7,6 +11,28 @@ type FlashcardCardProps = {
 };
 
 export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
+  const { setFlashcards } = useFlashcards();
+  const { setDecks } = useDecks();
+
+  const handleDeleteFlashcard = async (flashcard: Flashcard) => {
+    try {
+      await deleteFlashcard(flashcard.id);
+      setFlashcards((prev) => prev.filter((card) => card.id !== flashcard.id));
+      setDecks((prevDecks) =>
+        prevDecks.map((deck) =>
+          deck.id === Number(flashcard.deck_id)
+            ? {
+                ...deck,
+                flashcards: deck.flashcards.filter((c) => c.id !== flashcard.id),
+              }
+            : deck
+        )
+      );
+    } catch (err) {
+      console.error("Failed to delete flashcard:", err);
+    }
+  };
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -16,8 +42,11 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
         })
       }
       style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         backgroundColor: "#ffff",
-        padding: 16,
+        padding: 14,
         marginVertical: 8,
         borderRadius: 12,
         width: "100%",
@@ -30,6 +59,9 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
       }}
     >
       <Text style={{ fontSize: 16 }}>{flashcard.front}</Text>
+      <TouchableOpacity onPress={async () => handleDeleteFlashcard(flashcard)}>
+        <Ionicons name="remove-circle" size={28} color="#eb4b4bff" />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 }

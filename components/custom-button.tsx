@@ -1,3 +1,4 @@
+import colors from "@/styles/colors";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 type Props = {
@@ -9,10 +10,7 @@ type Props = {
 export default function CustomButton({ title, color, onPress }: Props) {
   return (
     <TouchableOpacity
-      style={[
-        styles.button,
-        { backgroundColor: color == "" ? "#1273de" : color },
-      ]}
+      style={[styles.button, { backgroundColor: color == "" ? colors.blue : color }]}
       onPress={onPress}
       activeOpacity={0.8}
     >

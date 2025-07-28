@@ -2,6 +2,7 @@ import { createDeck, getAllDecks } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
 import DecksCarousel from "@/components/decks-carousel";
 import { useDecks } from "@/contexts/decks-context";
+import colors from "@/styles/colors";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
@@ -97,7 +98,11 @@ export default function DecksScreen() {
             </View>
           </View>
           <DecksCarousel decks={decks} />
-          <CustomButton title="New deck" onPress={() => showCreateDeckPrompt("")} color={""} />
+          <CustomButton
+            title="New deck"
+            onPress={() => showCreateDeckPrompt("")}
+            color={colors.blue}
+          />
         </View>
       )}
     </View>

@@ -4,6 +4,7 @@ import FlashcardCard from "@/components/flashcard-card";
 import { useDecks } from "@/contexts/decks-context";
 import { useFlashcards } from "@/contexts/flashcards-context";
 import { Deck } from "@/models/deck";
+import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -113,17 +114,17 @@ export default function DeckDetailsScreen() {
               }}
             >
               <View style={{ flex: 1 }}>
-                <CustomButton title="Save" onPress={handleSubmit(onSubmit)} color={""} />
-              </View>
-              <View style={{ flex: 1 }}>
                 <CustomButton
                   title="Cancel"
                   onPress={() => {
                     setIsEditing(false);
                     reset({ name: deck.name });
                   }}
-                  color={""}
+                  color={colors.blue}
                 />
+              </View>
+              <View style={{ flex: 1 }}>
+                <CustomButton title="Save" onPress={handleSubmit(onSubmit)} color={colors.blue} />
               </View>
             </View>
           ) : (
@@ -133,14 +134,14 @@ export default function DeckDetailsScreen() {
               }}
             >
               <CustomButton
-                title="Edit deck"
+                title="Edit name"
                 onPress={() => {
                   setIsEditing(true);
                   setTimeout(() => {
                     inputRef.current?.focus();
                   }, 100);
                 }}
-                color={""}
+                color={colors.blue}
               />
             </View>
           )}
@@ -164,7 +165,7 @@ export default function DeckDetailsScreen() {
             <View style={{ flex: 1 }}>
               <CustomButton
                 title="Delete deck"
-                color="#eb4b4bff"
+                color={colors.red}
                 onPress={() => {
                   Alert.alert(
                     "Delete deck",
@@ -193,7 +194,7 @@ export default function DeckDetailsScreen() {
             <View style={{ flex: 1 }}>
               <CustomButton
                 title="Add flashcards"
-                color="#1273de"
+                color={colors.blue}
                 onPress={() =>
                   router.navigate({
                     pathname: "/add-flashcards",

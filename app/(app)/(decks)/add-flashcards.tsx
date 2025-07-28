@@ -5,6 +5,7 @@ import { useFlashcards } from "@/contexts/flashcards-context";
 import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
 import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
+import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -111,7 +112,7 @@ export default function AddFlashcardsScreen() {
             <View style={{ marginTop: 10 }}>
               <CustomButton
                 title="Upload front image"
-                color={""}
+                color={colors.blue}
                 onPress={() => pickImage(setFrontImageFile)}
               />
             </View>
@@ -154,7 +155,7 @@ export default function AddFlashcardsScreen() {
             <View style={{ marginTop: 10 }}>
               <CustomButton
                 title="Upload back image"
-                color={""}
+                color={colors.blue}
                 onPress={() => pickImage(setBackImageFile)}
               />
             </View>
@@ -175,10 +176,10 @@ export default function AddFlashcardsScreen() {
         }}
       >
         <View style={{ flex: 1 }}>
-          <CustomButton title="Back" color="#1273de" onPress={() => router.back()} />
+          <CustomButton title="Back" color={colors.blue} onPress={() => router.back()} />
         </View>
         <View style={{ flex: 1 }}>
-          <CustomButton title="Add" color="#1273de" onPress={handleSubmit(onSubmit)} />
+          <CustomButton title="Add" color={colors.blue} onPress={handleSubmit(onSubmit)} />
         </View>
       </View>
     </View>

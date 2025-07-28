@@ -7,6 +7,7 @@ import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
 import { Flashcard } from "@/models/flashcard";
 import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
+import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -156,7 +157,7 @@ export default function FlashcardDetails() {
               <View style={{ marginTop: 10 }}>
                 <CustomButton
                   title="Upload front image"
-                  color={""}
+                  color={colors.blue}
                   onPress={() => pickImage(setFrontImageFile)}
                 />
               </View>
@@ -201,7 +202,7 @@ export default function FlashcardDetails() {
               <View style={{ marginTop: 10 }}>
                 <CustomButton
                   title="Upload back image"
-                  color={""}
+                  color={colors.blue}
                   onPress={() => pickImage(setBackImageFile)}
                 />
               </View>
@@ -223,7 +224,7 @@ export default function FlashcardDetails() {
             <View style={{ flex: 1 }}>
               <CustomButton
                 title="Delete"
-                color="#eb4b4bff"
+                color={colors.red}
                 onPress={() => {
                   Alert.alert(
                     "Delete flashcard",
@@ -245,7 +246,7 @@ export default function FlashcardDetails() {
               />
             </View>
             <View style={{ flex: 1 }}>
-              <CustomButton title="Update" color="#1273de" onPress={handleSubmit(onSubmit)} />
+              <CustomButton title="Update" color={colors.blue} onPress={handleSubmit(onSubmit)} />
             </View>
           </View>
         </View>

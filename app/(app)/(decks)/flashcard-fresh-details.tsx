@@ -1,9 +1,9 @@
 import CustomButton from "@/components/custom-button";
 import { useFlashcards } from "@/contexts/flashcards-context";
+import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
 import { FlashcardFreshCreateRequest } from "@/models/flashcard-fresh-create-request";
 import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
-import { ImageFile } from "@/models/image-file";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";

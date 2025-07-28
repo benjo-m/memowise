@@ -1,4 +1,4 @@
-import { ImageFile } from "@/models/image-file";
+import { ImageFile } from "@/helpers/image-file";
 import * as ImagePicker from "expo-image-picker";
 
 export const pickImage = async (setImage: (img: ImageFile) => void) => {

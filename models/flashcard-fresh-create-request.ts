@@ -1,4 +1,4 @@
-import { ImageFile } from "./image-file";
+import { ImageFile } from "../helpers/image-file";
 
 export class FlashcardFreshCreateRequest {
   front: string;

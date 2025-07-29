@@ -123,19 +123,11 @@ export default function FlashcardDetails() {
         <Text>{flashcardError}</Text>
       ) : currentFlashcard ? (
         <View style={{ flex: 1 }}>
-          <ScrollView>
-            {(currentFlashcard.front_image_url || frontImageFile) && (
-              <Image
-                source={{
-                  uri: frontImageFile
-                    ? frontImageFile.uri
-                    : `${BASE_URL}/${currentFlashcard.front_image_url}`,
-                }}
-                style={{ width: "100%", height: 200, resizeMode: "stretch" }}
-              />
-            )}
-            <View style={{ marginBottom: 30 }}>
-              <Text>Front</Text>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{ marginBottom: 50 }}>
+              <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
+                Front
+              </Text>
               <Controller
                 control={control}
                 rules={{ required: true }}
@@ -154,12 +146,40 @@ export default function FlashcardDetails() {
                   />
                 )}
               />
-              <View style={{ marginTop: 10 }}>
-                <CustomButton
-                  title="Upload front image"
-                  color={colors.blue}
-                  onPress={() => pickImage(setFrontImageFile)}
+              {(currentFlashcard.front_image_url || frontImageFile) && (
+                <Image
+                  source={{
+                    uri: frontImageFile
+                      ? frontImageFile.uri
+                      : `${BASE_URL}/${currentFlashcard.front_image_url}`,
+                  }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    resizeMode: "stretch",
+                    borderRadius: 10,
+                    marginTop: 10,
+                  }}
                 />
+              )}
+
+              <View style={{ marginTop: 10, width: "100%" }}>
+                {currentFlashcard.front_image_url && !frontImageFile ? (
+                  <CustomButton
+                    title="Remove front image"
+                    color={colors.red}
+                    onPress={() => {
+                      currentFlashcard.front_image_url = null;
+                      setFrontImageFile(null);
+                    }}
+                  />
+                ) : (
+                  <CustomButton
+                    title="Upload front image"
+                    color={colors.blue}
+                    onPress={() => pickImage(setFrontImageFile)}
+                  />
+                )}
               </View>
 
               {errors.front && (
@@ -168,19 +188,10 @@ export default function FlashcardDetails() {
                 </Text>
               )}
             </View>
-            <View>
-              {(currentFlashcard.back_image_url || backImageFile) && (
-                <Image
-                  source={{
-                    uri: backImageFile
-                      ? backImageFile.uri
-                      : `${BASE_URL}/${currentFlashcard.back_image_url}`,
-                  }}
-                  style={{ width: "100%", height: 200, resizeMode: "stretch" }}
-                />
-              )}
-
-              <Text>Back</Text>
+            <View style={{ marginBottom: 50 }}>
+              <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
+                Back
+              </Text>
               <Controller
                 control={control}
                 rules={{ required: true }}
@@ -199,12 +210,39 @@ export default function FlashcardDetails() {
                   />
                 )}
               />
-              <View style={{ marginTop: 10 }}>
-                <CustomButton
-                  title="Upload back image"
-                  color={colors.blue}
-                  onPress={() => pickImage(setBackImageFile)}
+              {(currentFlashcard.back_image_url || backImageFile) && (
+                <Image
+                  source={{
+                    uri: backImageFile
+                      ? backImageFile.uri
+                      : `${BASE_URL}/${currentFlashcard.back_image_url}`,
+                  }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    resizeMode: "stretch",
+                    marginTop: 10,
+                    borderRadius: 10,
+                  }}
                 />
+              )}
+              <View style={{ marginTop: 10, width: "100%" }}>
+                {currentFlashcard.back_image_url ? (
+                  <CustomButton
+                    title="Remove back image"
+                    color={colors.red}
+                    onPress={() => {
+                      currentFlashcard.back_image_url = null;
+                      setBackImageFile(null);
+                    }}
+                  />
+                ) : (
+                  <CustomButton
+                    title="Upload back image"
+                    color={colors.blue}
+                    onPress={() => pickImage(setBackImageFile)}
+                  />
+                )}
               </View>
               {errors.back && (
                 <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>

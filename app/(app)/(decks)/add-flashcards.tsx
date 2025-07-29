@@ -82,15 +82,6 @@ export default function AddFlashcardsScreen() {
         <ScrollView>
           <View style={{ marginBottom: 30 }}>
             <Text>Front</Text>
-            {frontImageFile && (
-              <Image
-                source={{
-                  uri: frontImageFile.uri,
-                }}
-                style={{ width: "100%", height: 200, resizeMode: "stretch" }}
-              />
-            )}
-
             <Controller
               control={control}
               rules={{ required: true }}
@@ -109,31 +100,51 @@ export default function AddFlashcardsScreen() {
                 />
               )}
             />
-            <View style={{ marginTop: 10 }}>
-              <CustomButton
-                title="Upload front image"
-                color={colors.blue}
-                onPress={() => pickImage(setFrontImageFile)}
+            {frontImageFile && (
+              <Image
+                source={{
+                  uri: frontImageFile.uri,
+                }}
+                style={{
+                  width: "100%",
+                  height: 200,
+                  resizeMode: "stretch",
+                  borderRadius: 10,
+                  marginTop: 10,
+                }}
               />
-            </View>
-
+            )}
             {errors.front && (
-              <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>
+              <Text
+                style={{
+                  marginTop: 5,
+                  color: "red",
+                  textAlign: "left",
+                  marginLeft: 2,
+                  fontWeight: 500,
+                }}
+              >
                 {errors.front.message || "Front of the flashcard can't be blank."}
               </Text>
             )}
+            <View style={{ marginTop: 10 }}>
+              {frontImageFile ? (
+                <CustomButton
+                  title="Remove front image"
+                  color={colors.red}
+                  onPress={() => setFrontImageFile(null)}
+                />
+              ) : (
+                <CustomButton
+                  title="Upload front image"
+                  color={colors.blue}
+                  onPress={() => pickImage(setFrontImageFile)}
+                />
+              )}
+            </View>
           </View>
           <View style={{ marginBottom: 30 }}>
             <Text>Back</Text>
-            {backImageFile?.uri && (
-              <Image
-                source={{
-                  uri: backImageFile.uri,
-                }}
-                style={{ width: "100%", height: 200, resizeMode: "stretch" }}
-              />
-            )}
-
             <Controller
               control={control}
               rules={{ required: true }}
@@ -152,18 +163,40 @@ export default function AddFlashcardsScreen() {
                 />
               )}
             />
-            <View style={{ marginTop: 10 }}>
-              <CustomButton
-                title="Upload back image"
-                color={colors.blue}
-                onPress={() => pickImage(setBackImageFile)}
-              />
-            </View>
             {errors.back && (
               <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>
                 Back of the flashcard can't be blank.
               </Text>
             )}
+            {backImageFile?.uri && (
+              <Image
+                source={{
+                  uri: backImageFile.uri,
+                }}
+                style={{
+                  width: "100%",
+                  height: 200,
+                  resizeMode: "stretch",
+                  borderRadius: 10,
+                  marginTop: 10,
+                }}
+              />
+            )}
+            <View style={{ marginTop: 10 }}>
+              {backImageFile ? (
+                <CustomButton
+                  title="Remove back image"
+                  color={colors.red}
+                  onPress={() => setBackImageFile(null)}
+                />
+              ) : (
+                <CustomButton
+                  title="Upload back image"
+                  color={colors.blue}
+                  onPress={() => pickImage(setBackImageFile)}
+                />
+              )}
+            </View>
           </View>
         </ScrollView>
       </View>

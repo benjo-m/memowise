@@ -33,6 +33,7 @@ export default function Layout() {
             headerBackButtonDisplayMode: "generic",
           }}
         />
+        <Stack.Screen name="study" options={{ title: "Study", headerBackTitle: "Quit session" }} />
       </Stack>
     </FlashcardsProvider>
   );

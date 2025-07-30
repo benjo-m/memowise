@@ -2,7 +2,9 @@ import { Deck } from "@/models/deck";
 import { router } from "expo-router";
 import { Text } from "react-native";
 
+import colors from "@/styles/colors";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import CustomButton from "./custom-button";
 
 type DeckCardProps = {
   deck: Deck;
@@ -12,11 +14,14 @@ export default function DeckCard({ deck }: DeckCardProps) {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() =>
-        router.navigate({ pathname: "/deck-details", params: { id: deck.id } })
-      }
+      onPress={() => router.navigate({ pathname: "/deck-details", params: { id: deck.id } })}
     >
       <Text style={styles.title}>{deck.name}</Text>
+      <CustomButton
+        title={"Study"}
+        color={colors.blue}
+        onPress={() => router.navigate("/study")}
+      ></CustomButton>
     </TouchableOpacity>
   );
 }

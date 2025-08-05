@@ -20,7 +20,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
       <CustomButton
         title={"Study"}
         color={colors.blue}
-        onPress={() => router.navigate("/study")}
+        onPress={() => router.navigate({ pathname: "/study", params: { deck_id: deck.id } })}
       ></CustomButton>
     </TouchableOpacity>
   );

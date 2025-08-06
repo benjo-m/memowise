@@ -26,15 +26,13 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
         )
       );
     } catch (err) {
-      Alert.alert("Failed to delete flashcard", err.message);
+      err instanceof Error && Alert.alert("Failed to delete flashcard", err.message);
     }
   };
 
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log(flashcard.front_image_url);
-
         router.navigate({
           pathname: "/flashcard-details",
           params: { flashcardId: flashcard.id, deckId: flashcard.deck_id },

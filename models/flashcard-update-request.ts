@@ -3,8 +3,8 @@ import { ImageFile } from "@/helpers/image-file";
 export class FlashcardUpdateRequest {
   front: string;
   back: string;
-  front_image_file: ImageFile;
-  back_image_file: ImageFile;
+  front_image_file: ImageFile | null;
+  back_image_file: ImageFile | null;
   remove_front_image: boolean;
   remove_back_image: boolean;
 
@@ -18,8 +18,8 @@ export class FlashcardUpdateRequest {
   }: {
     front: string;
     back: string;
-    front_image_file: ImageFile;
-    back_image_file: ImageFile;
+    front_image_file: ImageFile | null;
+    back_image_file: ImageFile | null;
     remove_front_image?: boolean;
     remove_back_image?: boolean;
   }) {

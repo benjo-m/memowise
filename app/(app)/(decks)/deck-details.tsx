@@ -39,9 +39,9 @@ export default function DeckDetailsScreen() {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
-      const duplicate = decks.some((d) => d.name === data.name && d.id !== deck.id);
+      const duplicate = decks.some((d) => d.name === data.name && d.id !== deck!.id);
 
       if (duplicate) {
         setError("name", {
@@ -52,13 +52,13 @@ export default function DeckDetailsScreen() {
         return;
       }
 
-      await updateDeck(deck.id, data.name);
-      const updatedDeck = { ...deck, name: data.name };
-      setDecks((prev) => prev.map((d) => (d.id === deck.id ? updatedDeck : d)));
+      const updatedDeck = await updateDeck(deck!.id, data.name);
+
+      setDecks((prev) => prev.map((d) => (d.id === deck!.id ? updatedDeck : d)));
       setDeck(updatedDeck);
       setIsEditing(false);
     } catch (err) {
-      Alert.alert("Failed to update deck", err.message);
+      err instanceof Error && Alert.alert("Failed to update deck", err.message);
     }
   };
 
@@ -167,7 +167,7 @@ export default function DeckDetailsScreen() {
                           removeDeck(deck.id);
                           router.back();
                         } catch (err) {
-                          Alert.alert("Failed to delete deck", err.message);
+                          err instanceof Error && Alert.alert("Failed to delete deck", err.message);
                         }
                       },
                     },

@@ -23,11 +23,7 @@ export default function AddFlashcardsScreen() {
   useEffect(() => {
     if (!deckId) return;
     const foundDeck = decks.find((d) => d.id === Number(deckId));
-    if (foundDeck) {
-      setDeck(foundDeck);
-    } else {
-      console.warn(`Deck with ID ${deckId} not found`);
-    }
+    setDeck(foundDeck);
   }, [deckId, decks]);
 
   const {
@@ -43,8 +39,8 @@ export default function AddFlashcardsScreen() {
     },
   });
 
-  const onSubmit = async (data) => {
-    const duplicate = deck.flashcards.some((card) => card.front === data.front);
+  const onSubmit = async (data: any) => {
+    const duplicate = deck?.flashcards.some((card) => card.front === data.front);
 
     if (duplicate) {
       setError("front", {
@@ -55,7 +51,7 @@ export default function AddFlashcardsScreen() {
     }
 
     const flashcardCreateRequest = new FlashcardCreateRequest(
-      deck.id,
+      deck!.id,
       data.front,
       data.back,
       frontImageFile,
@@ -67,15 +63,17 @@ export default function AddFlashcardsScreen() {
 
       setDecks((prevDecks) =>
         prevDecks.map((d) =>
-          d.id === deck.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
+          d.id === deck?.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
         )
       );
 
       reset({ front: "", back: "" });
       setFrontImageFile(null);
       setBackImageFile(null);
-    } catch (err) {
-      Alert.alert("Failed to add flashcard", err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        Alert.alert("Failed to add flashcard", err.message);
+      }
     }
   };
 

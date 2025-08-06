@@ -25,7 +25,7 @@ export default function StudyScreen() {
   }, [decks, deckId]);
 
   function goToNextFlashcard() {
-    if (currentFlashcardIndex < deck.flashcards.length - 1) {
+    if (currentFlashcardIndex < deck!.flashcards.length - 1) {
       setCurrentFlashcardIndex((prev) => prev + 1);
     }
     setAnswerShown(false);

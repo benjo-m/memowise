@@ -1,10 +1,4 @@
-import {
-  Button,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-} from "react-native";
+import { Button, SafeAreaView, StyleSheet, Text, TextInput } from "react-native";
 
 import { useSession } from "@/contexts/auth-context";
 import { router } from "expo-router";
@@ -26,22 +20,20 @@ export default function SignIn() {
     },
   });
 
-  const _signIn = async (username, password) => {
+  const _signIn = async (username: string, password: string) => {
     const result = await signIn(username, password);
 
     if (result.success) {
       router.replace("/");
     } else {
-      setSignInError(result.error);
+      setSignInError(result.error!);
     }
   };
 
-  const onSubmit = (data) => _signIn(data.username, data.password);
+  const onSubmit = (data: any) => _signIn(data.username, data.password);
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-    >
+    <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       {signInError && <Text>{signInError}</Text>}
       <Controller
         control={control}

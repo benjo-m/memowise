@@ -44,7 +44,9 @@ export default function DecksScreen() {
     );
   };
 
-  const handleCreateDeck = async (name: string) => {
+  const handleCreateDeck = async (name: string | undefined) => {
+    if (name === undefined) return;
+
     const trimmedName = name.trim();
     const duplicate = decks.some((deck) => deck.name === trimmedName);
     if (!name || trimmedName === "") {
@@ -70,7 +72,7 @@ export default function DecksScreen() {
         const newDeck = await createDeck(trimmedName);
         setDecks([newDeck, ...decks]);
       } catch (err) {
-        Alert.alert("Failed to create deck", err.message);
+        err instanceof Error && Alert.alert("Failed to create deck", err.message);
       }
     }
   };

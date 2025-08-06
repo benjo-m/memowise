@@ -24,8 +24,10 @@ export default function FlashcardDetails() {
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
   useEffect(() => {
+    if (!deckId || !flashcardId) return;
+
     const deck = decks.find((deck) => deck.id === Number(deckId));
-    const flashcard = deck.flashcards.find((flashcard) => flashcard.id === Number(flashcardId));
+    const flashcard = deck?.flashcards.find((flashcard) => flashcard.id === Number(flashcardId));
 
     if (flashcard) {
       setDeck(deck);
@@ -47,9 +49,9 @@ export default function FlashcardDetails() {
     },
   });
 
-  const onSubmit = async (data) => {
-    const duplicate = deck.flashcards.some(
-      (card) => card.front === data.front && card.front !== currentFlashcard.front
+  const onSubmit = async (data: any) => {
+    const duplicate = deck!.flashcards.some(
+      (card) => card.front === data.front && card.front !== currentFlashcard!.front
     );
 
     if (duplicate) {
@@ -66,17 +68,17 @@ export default function FlashcardDetails() {
         back: data.back,
         front_image_file: frontImageFile,
         back_image_file: backImageFile,
-        remove_front_image: currentFlashcard.front_image_url === null && frontImageFile === null,
-        remove_back_image: currentFlashcard.back_image_url === null && backImageFile === null,
+        remove_front_image: currentFlashcard?.front_image_url === null && frontImageFile === null,
+        remove_back_image: currentFlashcard?.back_image_url === null && backImageFile === null,
       });
 
-      const updated = await updateFlashcard(currentFlashcard.id, flashcardUpdateRequest);
+      const updated = await updateFlashcard(currentFlashcard!.id, flashcardUpdateRequest);
 
       setDecks((prevDecks) =>
         prevDecks.map((deck) => {
-          if (deck.id === currentFlashcard.deck_id) {
+          if (deck.id === currentFlashcard!.deck_id) {
             const updatedFlashcards = deck.flashcards.map((card) =>
-              card.id === currentFlashcard.id ? updated : card
+              card.id === currentFlashcard!.id ? updated : card
             );
             const updatedDeck = { ...deck, flashcards: updatedFlashcards };
             return updatedDeck;
@@ -87,7 +89,7 @@ export default function FlashcardDetails() {
       );
       router.back();
     } catch (err) {
-      Alert.alert("Failed to update flashcard", err.message);
+      err instanceof Error && Alert.alert("Failed to update flashcard", err.message);
     }
   };
 
@@ -106,7 +108,7 @@ export default function FlashcardDetails() {
       );
       router.back();
     } catch (err) {
-      Alert.alert("Failed to delete flashcard", err.message);
+      err instanceof Error && Alert.alert("Failed to delete flashcard", err.message);
     }
   };
 
@@ -138,12 +140,12 @@ export default function FlashcardDetails() {
                 />
               )}
             />
-            {(currentFlashcard.front_image_url !== null || frontImageFile !== null) && (
+            {(currentFlashcard?.front_image_url !== null || frontImageFile !== null) && (
               <Image
                 source={{
                   uri: frontImageFile
                     ? frontImageFile.uri
-                    : `${BASE_URL}/${currentFlashcard.front_image_url}`,
+                    : `${BASE_URL}/${currentFlashcard?.front_image_url}`,
                 }}
                 style={{
                   width: "100%",
@@ -156,7 +158,7 @@ export default function FlashcardDetails() {
             )}
 
             <View style={{ marginTop: 10, width: "100%" }}>
-              {currentFlashcard.front_image_url || frontImageFile ? (
+              {currentFlashcard?.front_image_url || frontImageFile ? (
                 <CustomButton
                   title="Remove front image"
                   color={colors.red}
@@ -209,12 +211,12 @@ export default function FlashcardDetails() {
                 />
               )}
             />
-            {(currentFlashcard.back_image_url || backImageFile) && (
+            {(currentFlashcard?.back_image_url || backImageFile) && (
               <Image
                 source={{
                   uri: backImageFile
                     ? backImageFile.uri
-                    : `${BASE_URL}/${currentFlashcard.back_image_url}`,
+                    : `${BASE_URL}/${currentFlashcard?.back_image_url}`,
                 }}
                 style={{
                   width: "100%",
@@ -226,7 +228,7 @@ export default function FlashcardDetails() {
               />
             )}
             <View style={{ marginTop: 10, width: "100%" }}>
-              {currentFlashcard.back_image_url || backImageFile ? (
+              {currentFlashcard?.back_image_url || backImageFile ? (
                 <CustomButton
                   title="Remove back image"
                   color={colors.red}
@@ -279,7 +281,7 @@ export default function FlashcardDetails() {
                       text: "Delete",
                       style: "destructive",
                       onPress: async () => {
-                        await handleDeleteFlashcard(currentFlashcard);
+                        await handleDeleteFlashcard(currentFlashcard!);
                       },
                     },
                   ],

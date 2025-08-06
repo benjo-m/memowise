@@ -10,7 +10,7 @@ type SignInResult = {
 };
 
 const AuthContext = createContext<{
-  signIn: (email: string, password: string) => Promise<SignInResult>;
+  signIn: (email: string, password: string) => Promise<SignInResult> | null;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
@@ -36,10 +36,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   return (
     <AuthContext
       value={{
-        signIn: async (
-          email: string,
-          password: string
-        ): Promise<SignInResult> => {
+        signIn: async (email: string, password: string): Promise<SignInResult> => {
           try {
             const response = await fetch("http://localhost:3000/login", {
               method: "POST",
@@ -50,13 +47,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
               body: JSON.stringify({ email, password }),
             });
 
-            if (!response.ok)
-              return { success: false, error: "Invalid credentials" };
+            if (!response.ok) return { success: false, error: "Invalid credentials" };
 
             const token = response.headers.get("authorization");
 
-            if (!token)
-              return { success: false, error: "Missing token in response" };
+            if (!token) return { success: false, error: "Missing token in response" };
 
             setSession(token);
 

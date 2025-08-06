@@ -7,22 +7,22 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 export default function StudyScreen() {
-  const { deck_id } = useLocalSearchParams<{ deck_id: string }>();
+  const { deckId } = useLocalSearchParams<{ deckId: string }>();
   const { decks } = useDecks();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState<number>(0);
   const [answerShown, setAnswerShown] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!deck_id) return;
+    if (!deckId) return;
 
-    const foundDeck = decks.find((d) => d.id === Number(deck_id)) ?? null;
+    const foundDeck = decks.find((d) => d.id === Number(deckId)) ?? null;
 
     if (foundDeck) {
       setDeck(foundDeck);
       // setFlashcards(foundDeck.flashcards);
     }
-  }, [decks, deck_id]);
+  }, [decks, deckId]);
 
   function goToNextFlashcard() {
     if (currentFlashcardIndex < deck.flashcards.length - 1) {

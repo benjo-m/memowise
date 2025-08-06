@@ -25,7 +25,7 @@ export default function FlashcardDetails() {
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
   useEffect(() => {
-    const found = flashcards.find((card) => card.id == id);
+    const found = flashcards.find((card) => card.id === Number(id));
 
     if (found) {
       setCurrentFlashcard(found as Flashcard);
@@ -79,7 +79,7 @@ export default function FlashcardDetails() {
 
       setDecks((prevDecks) =>
         prevDecks.map((deck) => {
-          if (deck.id === Number(currentFlashcard.deck_id)) {
+          if (deck.id === currentFlashcard.deck_id) {
             const updatedFlashcards = deck.flashcards.map((card) =>
               card.id === currentFlashcard.id ? updated : card
             );
@@ -102,7 +102,7 @@ export default function FlashcardDetails() {
       setFlashcards((prev) => prev.filter((card) => card.id !== flashcard.id));
       setDecks((prevDecks) =>
         prevDecks.map((deck) =>
-          deck.id === Number(flashcard.deck_id)
+          deck.id === flashcard.deck_id
             ? {
                 ...deck,
                 flashcards: deck.flashcards.filter((c) => c.id !== flashcard.id),

@@ -1,6 +1,6 @@
 export type Flashcard = {
-  id: string;
-  deck_id: string;
+  id: number;
+  deck_id: number;
   front: string;
   back: string;
   front_image_url: string;

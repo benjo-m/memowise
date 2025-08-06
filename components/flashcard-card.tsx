@@ -20,7 +20,7 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
       setFlashcards((prev) => prev.filter((card) => card.id !== flashcard.id));
       setDecks((prevDecks) =>
         prevDecks.map((deck) =>
-          deck.id === Number(flashcard.deck_id)
+          deck.id === flashcard.deck_id
             ? {
                 ...deck,
                 flashcards: deck.flashcards.filter((c) => c.id !== flashcard.id),

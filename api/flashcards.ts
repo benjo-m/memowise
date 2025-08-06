@@ -4,7 +4,7 @@ import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
-export const getFlashcardById = async (id: string): Promise<Flashcard> => {
+export const getFlashcardById = async (id: number): Promise<Flashcard> => {
   const token = await SecureStore.getItemAsync("session");
 
   const res = await fetch(`${BASE_URL}/flashcards/${id}`, {
@@ -61,7 +61,7 @@ export const createFlashcard = async (body: FlashcardCreateRequest): Promise<Fla
 };
 
 export const updateFlashcard = async (
-  id: string,
+  id: number,
   body: FlashcardUpdateRequest
 ): Promise<Flashcard> => {
   const token = await SecureStore.getItemAsync("session");
@@ -100,7 +100,7 @@ export const updateFlashcard = async (
   return await response.json();
 };
 
-export const deleteFlashcard = async (id: string): Promise<void> => {
+export const deleteFlashcard = async (id: number): Promise<void> => {
   const token = await SecureStore.getItemAsync("session");
 
   const response = await fetch(`${BASE_URL}/flashcards/${id}`, {

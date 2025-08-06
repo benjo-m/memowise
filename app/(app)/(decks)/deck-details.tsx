@@ -149,7 +149,7 @@ export default function DeckDetailsScreen() {
           <Text style={{ marginTop: 20 }}>Flashcards</Text>
           <FlatList
             data={deck.flashcards}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <FlashcardCard flashcard={item}></FlashcardCard>}
             style={{ width: "100%" }}
           />

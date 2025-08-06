@@ -1,28 +1,34 @@
 import { createFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
+import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
-import { useFlashcards } from "@/contexts/flashcards-context";
 import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
+import { Deck } from "@/models/deck";
 import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
 
 export default function AddFlashcardsScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
+  const [deck, setDeck] = useState<Deck>();
   const { decks, setDecks } = useDecks();
-  const { flashcards, setFlashcards } = useFlashcards();
-  const deck = decks.find((d) => d.id === Number(deckId)) ?? null;
   const [frontImageFile, setFrontImageFile] = useState<ImageFile | null>(null);
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
   useEffect(() => {
-    if (deck) setFlashcards(deck.flashcards);
-  }, [deck]);
+    if (!deckId) return;
+    const foundDeck = decks.find((d) => d.id === Number(deckId));
+    if (foundDeck) {
+      setDeck(foundDeck);
+    } else {
+      console.warn(`Deck with ID ${deckId} not found`);
+    }
+  }, [deckId, decks]);
 
   const {
     control,
@@ -38,7 +44,7 @@ export default function AddFlashcardsScreen() {
   });
 
   const onSubmit = async (data) => {
-    const duplicate = flashcards.some((card) => card.front === data.front);
+    const duplicate = deck.flashcards.some((card) => card.front === data.front);
 
     if (duplicate) {
       setError("front", {
@@ -56,22 +62,26 @@ export default function AddFlashcardsScreen() {
       backImageFile
     );
 
-    const newFlashcard = await createFlashcard(flashcardCreateRequest);
+    try {
+      const newFlashcard = await createFlashcard(flashcardCreateRequest);
 
-    setFlashcards([newFlashcard, ...flashcards]);
+      setDecks((prevDecks) =>
+        prevDecks.map((d) =>
+          d.id === deck.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
+        )
+      );
 
-    setDecks((prevDecks) =>
-      prevDecks.map((d) =>
-        d.id === deck.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
-      )
-    );
-
-    reset({ front: "", back: "" });
-    setFrontImageFile(null);
-    setBackImageFile(null);
+      reset({ front: "", back: "" });
+      setFrontImageFile(null);
+      setBackImageFile(null);
+    } catch (err) {
+      Alert.alert("Failed to add flashcard", err.message);
+    }
   };
 
-  return (
+  return !deck ? (
+    FallbackMessage({})
+  ) : (
     <View style={{ flex: 1, margin: 30, justifyContent: "space-between" }}>
       <View
         style={{

@@ -66,8 +66,12 @@ export default function DecksScreen() {
         },
       ]);
     } else {
-      const newDeck = await createDeck(trimmedName);
-      setDecks([newDeck, ...decks]);
+      try {
+        const newDeck = await createDeck(trimmedName);
+        setDecks([newDeck, ...decks]);
+      } catch (err) {
+        Alert.alert("Failed to create deck", err.message);
+      }
     }
   };
 

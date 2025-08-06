@@ -3,7 +3,7 @@ import { useDecks } from "@/contexts/decks-context";
 import { Flashcard } from "@/models/flashcard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
+import { Alert, Text, TouchableOpacity } from "react-native";
 
 type FlashcardCardProps = {
   flashcard: Flashcard;
@@ -26,18 +26,20 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
         )
       );
     } catch (err) {
-      console.error("Failed to delete flashcard:", err);
+      Alert.alert("Failed to delete flashcard", err.message);
     }
   };
 
   return (
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
+        console.log(flashcard.front_image_url);
+
         router.navigate({
           pathname: "/flashcard-details",
           params: { flashcardId: flashcard.id, deckId: flashcard.deck_id },
-        })
-      }
+        });
+      }}
       style={{
         flexDirection: "row",
         justifyContent: "space-between",

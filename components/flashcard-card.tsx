@@ -1,6 +1,5 @@
 import { deleteFlashcard } from "@/api/flashcards";
 import { useDecks } from "@/contexts/decks-context";
-import { useFlashcards } from "@/contexts/flashcards-context";
 import { Flashcard } from "@/models/flashcard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
@@ -11,13 +10,11 @@ type FlashcardCardProps = {
 };
 
 export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
-  const { setFlashcards } = useFlashcards();
   const { setDecks } = useDecks();
 
   const handleDeleteFlashcard = async (flashcard: Flashcard) => {
     try {
       await deleteFlashcard(flashcard.id);
-      setFlashcards((prev) => prev.filter((card) => card.id !== flashcard.id));
       setDecks((prevDecks) =>
         prevDecks.map((deck) =>
           deck.id === flashcard.deck_id
@@ -38,7 +35,7 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
       onPress={() =>
         router.navigate({
           pathname: "/flashcard-details",
-          params: { id: flashcard.id },
+          params: { flashcardId: flashcard.id, deckId: flashcard.deck_id },
         })
       }
       style={{

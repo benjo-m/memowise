@@ -2,9 +2,9 @@ import { BASE_URL } from "@/api/constants";
 import { deleteFlashcard, updateFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
 import { useDecks } from "@/contexts/decks-context";
-import { useFlashcards } from "@/contexts/flashcards-context";
 import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
+import { Deck } from "@/models/deck";
 import { Flashcard } from "@/models/flashcard";
 import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
 import colors from "@/styles/colors";
@@ -15,27 +15,29 @@ import { Controller, useForm } from "react-hook-form";
 import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
 
 export default function FlashcardDetails() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { flashcardId, deckId } = useLocalSearchParams<{ flashcardId: string; deckId: string }>();
   const [currentFlashcard, setCurrentFlashcard] = useState<Flashcard>();
+  const [deck, setDeck] = useState<Deck>();
   const [loading, setLoading] = useState(true);
   const [flashcardError, setFlashcardError] = useState<string | null>(null);
-  const { flashcards, setFlashcards } = useFlashcards();
-  const { setDecks } = useDecks();
+  const { decks, setDecks } = useDecks();
   const [frontImageFile, setFrontImageFile] = useState<ImageFile | null>(null);
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
   useEffect(() => {
-    const found = flashcards.find((card) => card.id === Number(id));
+    const deck = decks.find((deck) => deck.id === Number(deckId));
+    const flashcard = deck.flashcards.find((flashcard) => flashcard.id === Number(flashcardId));
 
-    if (found) {
-      setCurrentFlashcard(found as Flashcard);
-      reset({ front: found.front, back: found.back });
+    if (flashcard) {
+      setDeck(deck);
+      setCurrentFlashcard(flashcard);
+      reset({ front: flashcard.front, back: flashcard.back });
     } else {
       setFlashcardError("Flashcard not found.");
     }
 
     setLoading(false);
-  }, [id, flashcards]);
+  }, []);
 
   const {
     control,
@@ -51,7 +53,7 @@ export default function FlashcardDetails() {
   });
 
   const onSubmit = async (data) => {
-    const duplicate = flashcards.some(
+    const duplicate = deck.flashcards.some(
       (card) => card.front === data.front && card.front !== currentFlashcard.front
     );
 
@@ -64,18 +66,16 @@ export default function FlashcardDetails() {
     }
 
     try {
-      const flashcardUpdateRequest = new FlashcardUpdateRequest(
-        data.front,
-        data.back,
-        frontImageFile,
-        backImageFile
-      );
+      const flashcardUpdateRequest = new FlashcardUpdateRequest({
+        front: data.front,
+        back: data.back,
+        front_image_file: frontImageFile,
+        back_image_file: backImageFile,
+        remove_front_image: currentFlashcard.front_image_url === null && frontImageFile === null,
+        remove_back_image: currentFlashcard.back_image_url === null && backImageFile === null,
+      });
 
       const updated = await updateFlashcard(currentFlashcard.id, flashcardUpdateRequest);
-
-      setFlashcards((prev) =>
-        prev.map((card) => (card.id === currentFlashcard.id ? updated : card))
-      );
 
       setDecks((prevDecks) =>
         prevDecks.map((deck) => {
@@ -99,7 +99,6 @@ export default function FlashcardDetails() {
   const handleDeleteFlashcard = async (flashcard: Flashcard) => {
     try {
       await deleteFlashcard(flashcard.id);
-      setFlashcards((prev) => prev.filter((card) => card.id !== flashcard.id));
       setDecks((prevDecks) =>
         prevDecks.map((deck) =>
           deck.id === flashcard.deck_id
@@ -146,7 +145,7 @@ export default function FlashcardDetails() {
                   />
                 )}
               />
-              {(currentFlashcard.front_image_url || frontImageFile) && (
+              {(currentFlashcard.front_image_url !== null || frontImageFile !== null) && (
                 <Image
                   source={{
                     uri: frontImageFile
@@ -164,12 +163,19 @@ export default function FlashcardDetails() {
               )}
 
               <View style={{ marginTop: 10, width: "100%" }}>
-                {currentFlashcard.front_image_url && !frontImageFile ? (
+                {currentFlashcard.front_image_url || frontImageFile ? (
                   <CustomButton
                     title="Remove front image"
                     color={colors.red}
                     onPress={() => {
-                      currentFlashcard.front_image_url = null;
+                      setCurrentFlashcard((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              front_image_url: null,
+                            }
+                          : prev
+                      );
                       setFrontImageFile(null);
                     }}
                   />
@@ -227,12 +233,19 @@ export default function FlashcardDetails() {
                 />
               )}
               <View style={{ marginTop: 10, width: "100%" }}>
-                {currentFlashcard.back_image_url ? (
+                {currentFlashcard.back_image_url || backImageFile ? (
                   <CustomButton
                     title="Remove back image"
                     color={colors.red}
                     onPress={() => {
-                      currentFlashcard.back_image_url = null;
+                      setCurrentFlashcard((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              back_image_url: null,
+                            }
+                          : prev
+                      );
                       setBackImageFile(null);
                     }}
                   />

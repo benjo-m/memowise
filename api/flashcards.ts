@@ -67,8 +67,10 @@ export const updateFlashcard = async (
   const token = await SecureStore.getItemAsync("session");
 
   const formData = new FormData();
+
   formData.append("flashcard[front]", body.front);
   formData.append("flashcard[back]", body.back);
+
   if (body.front_image_file) {
     formData.append("flashcard[front_image]", {
       uri: body.front_image_file.uri,
@@ -76,6 +78,7 @@ export const updateFlashcard = async (
       type: body.front_image_file.type,
     } as any);
   }
+
   if (body.back_image_file) {
     formData.append("flashcard[back_image]", {
       uri: body.back_image_file.uri,
@@ -83,6 +86,9 @@ export const updateFlashcard = async (
       type: body.back_image_file.type,
     } as any);
   }
+
+  formData.append("flashcard[remove_front_image]", body.remove_front_image.toString());
+  formData.append("flashcard[remove_back_image]", body.remove_back_image.toString());
 
   const response = await fetch(`${BASE_URL}/flashcards/${id}`, {
     method: "PUT",

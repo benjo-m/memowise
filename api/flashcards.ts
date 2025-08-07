@@ -113,8 +113,6 @@ export const updateFlashcardStats = async (
 ): Promise<Flashcard> => {
   const token = await SecureStore.getItemAsync("session");
 
-  console.log(flashcardStatsUpdateRequest);
-
   const response = await fetch(`${BASE_URL}/flashcards/${id}/stats`, {
     method: "PATCH",
     headers: {

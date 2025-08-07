@@ -1,5 +1,6 @@
 import { Flashcard } from "@/models/flashcard";
 import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
+import { FlashcardStatsUpdateRequest } from "@/models/flashcard-stats-update-request";
 import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
@@ -101,6 +102,31 @@ export const updateFlashcard = async (
 
   if (!response.ok) {
     throw new Error("Failed to update flashcard.");
+  }
+
+  return await response.json();
+};
+
+export const updateFlashcardStats = async (
+  id: number,
+  flashcardStatsUpdateRequest: FlashcardStatsUpdateRequest
+): Promise<Flashcard> => {
+  const token = await SecureStore.getItemAsync("session");
+
+  console.log(flashcardStatsUpdateRequest);
+
+  const response = await fetch(`${BASE_URL}/flashcards/${id}/stats`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(flashcardStatsUpdateRequest),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update flashcard stats.");
   }
 
   return await response.json();

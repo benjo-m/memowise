@@ -1,6 +1,8 @@
+import { updateFlashcardStats } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
+import { applySm2 } from "@/helpers/sm2";
 import { Deck } from "@/models/deck";
 import colors from "@/styles/colors";
 import { useLocalSearchParams } from "expo-router";
@@ -24,24 +26,27 @@ export default function StudyScreen() {
     }
   }, [decks, deckId]);
 
-  function goToNextFlashcard() {
-    if (currentFlashcardIndex < deck!.flashcards.length - 1) {
+  const goToNextFlashcard = () => {
+    if (currentFlashcardIndex < deck!.flashcards.length) {
       setCurrentFlashcardIndex((prev) => prev + 1);
     }
     setAnswerShown(false);
-  }
+  };
 
   return !deck ? (
     FallbackMessage({})
+  ) : deck.flashcards.length == 0 ? (
+    <Text>No flashcards left to study</Text>
   ) : (
     <View style={{ flex: 1, justifyContent: "space-between", margin: 30 }}>
-      {currentFlashcardIndex == deck.flashcards.length - 1 ? (
+      {currentFlashcardIndex == deck.flashcards.length ? (
         <Text>Study session finished</Text>
       ) : (
         <View style={{ flex: 1 }}>
           <ScrollView style={{ marginBottom: 30 }}>
             <View style={{ borderWidth: 2, borderRadius: 10, padding: 10 }}>
-              <Text>{deck.flashcards[currentFlashcardIndex].front}</Text>
+              <Text>Front: {deck.flashcards[currentFlashcardIndex].front}</Text>
+              <Text>Due date: {deck.flashcards[currentFlashcardIndex].due_date.toString()}</Text>
             </View>
             <View style={{ marginTop: 10, display: answerShown ? "contents" : "none" }}>
               <Text>Answer:</Text>
@@ -54,8 +59,11 @@ export default function StudyScreen() {
                 <CustomButton
                   title={"1"}
                   color={colors.blue}
-                  onPress={() => {
-                    console.log("ocjena: ", 0);
+                  onPress={async () => {
+                    await updateFlashcardStats(
+                      deck.flashcards[currentFlashcardIndex].id,
+                      applySm2(deck.flashcards[currentFlashcardIndex], 1)
+                    );
                     goToNextFlashcard();
                   }}
                 ></CustomButton>
@@ -64,8 +72,11 @@ export default function StudyScreen() {
                 <CustomButton
                   title={"2"}
                   color={colors.blue}
-                  onPress={() => {
-                    console.log("ocjena: ", 0);
+                  onPress={async () => {
+                    await updateFlashcardStats(
+                      deck.flashcards[currentFlashcardIndex].id,
+                      applySm2(deck.flashcards[currentFlashcardIndex], 2)
+                    );
                     goToNextFlashcard();
                   }}
                 ></CustomButton>
@@ -74,8 +85,11 @@ export default function StudyScreen() {
                 <CustomButton
                   title={"3"}
                   color={colors.blue}
-                  onPress={() => {
-                    console.log("ocjena: ", 0);
+                  onPress={async () => {
+                    await updateFlashcardStats(
+                      deck.flashcards[currentFlashcardIndex].id,
+                      applySm2(deck.flashcards[currentFlashcardIndex], 3)
+                    );
                     goToNextFlashcard();
                   }}
                 ></CustomButton>
@@ -84,8 +98,11 @@ export default function StudyScreen() {
                 <CustomButton
                   title={"4"}
                   color={colors.blue}
-                  onPress={() => {
-                    console.log("ocjena: ", 0);
+                  onPress={async () => {
+                    await updateFlashcardStats(
+                      deck.flashcards[currentFlashcardIndex].id,
+                      applySm2(deck.flashcards[currentFlashcardIndex], 4)
+                    );
                     goToNextFlashcard();
                   }}
                 ></CustomButton>
@@ -94,8 +111,11 @@ export default function StudyScreen() {
                 <CustomButton
                   title={"5"}
                   color={colors.blue}
-                  onPress={() => {
-                    console.log("ocjena: ", 0);
+                  onPress={async () => {
+                    await updateFlashcardStats(
+                      deck.flashcards[currentFlashcardIndex].id,
+                      applySm2(deck.flashcards[currentFlashcardIndex], 5)
+                    );
                     goToNextFlashcard();
                   }}
                 ></CustomButton>

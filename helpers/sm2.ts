@@ -21,12 +21,15 @@ export const applySm2 = (flashcard: Flashcard, rating: number): Flashcard => {
     }
 
     ++flashcard.repetitions;
-    const newDueDate = new Date();
-    newDueDate.setDate(newDueDate.getDate() + flashcard.interval);
-    flashcard.due_date = newDueDate;
   } else {
     flashcard.repetitions = 0;
     flashcard.interval = 1;
+  }
+
+  if (rating > 3) {
+    const newDueDate = new Date();
+    newDueDate.setDate(newDueDate.getDate() + flashcard.interval);
+    flashcard.due_date = newDueDate;
   }
 
   return flashcard;

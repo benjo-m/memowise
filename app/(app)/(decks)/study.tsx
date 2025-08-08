@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/api/constants";
 import { updateFlashcardStats } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
@@ -9,7 +10,7 @@ import { FlashcardStatsUpdateRequest } from "@/models/flashcard-stats-update-req
 import colors from "@/styles/colors";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 
 export default function StudyScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
@@ -61,48 +62,79 @@ export default function StudyScreen() {
           <ScrollView style={{ marginBottom: 30 }}>
             <View style={{ borderWidth: 2, borderRadius: 10, padding: 10 }}>
               <Text>{flashcardsToReview[0].front}</Text>
+              {flashcardsToReview[0].front_image_url && (
+                <Image
+                  source={{
+                    uri: `${BASE_URL}/${flashcardsToReview[0].front_image_url}`,
+                  }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    resizeMode: "stretch",
+                    borderRadius: 10,
+                    marginTop: 10,
+                  }}
+                />
+              )}
             </View>
             <View style={{ marginTop: 10, display: answerShown ? "contents" : "none" }}>
               <Text>Answer:</Text>
               <Text>{flashcardsToReview[0].back}</Text>
+              {flashcardsToReview[0].back_image_url && (
+                <Image
+                  source={{
+                    uri: `${BASE_URL}/${flashcardsToReview[0].back_image_url}`,
+                  }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    resizeMode: "stretch",
+                    borderRadius: 10,
+                    marginTop: 10,
+                  }}
+                />
+              )}
             </View>
           </ScrollView>
           {answerShown ? (
-            <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
-              <View style={{ flex: 1 }}>
-                <CustomButton
-                  title={"1"}
-                  color={colors.blue}
-                  onPress={() => rateFlashcard(1)}
-                ></CustomButton>
-              </View>
-              <View style={{ flex: 1 }}>
-                <CustomButton
-                  title={"2"}
-                  color={colors.blue}
-                  onPress={() => rateFlashcard(2)}
-                ></CustomButton>
-              </View>
-              <View style={{ flex: 1 }}>
-                <CustomButton
-                  title={"3"}
-                  color={colors.blue}
-                  onPress={() => rateFlashcard(3)}
-                ></CustomButton>
-              </View>
-              <View style={{ flex: 1 }}>
-                <CustomButton
-                  title={"4"}
-                  color={colors.blue}
-                  onPress={() => rateFlashcard(4)}
-                ></CustomButton>
-              </View>
-              <View style={{ flex: 1 }}>
-                <CustomButton
-                  title={"5"}
-                  color={colors.blue}
-                  onPress={() => rateFlashcard(5)}
-                ></CustomButton>
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ fontWeight: 500, marginBottom: 15 }}>Rate your answer</Text>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
+                <View style={{ flex: 1 }}>
+                  <CustomButton
+                    title={"1"}
+                    color={colors.blue}
+                    onPress={() => rateFlashcard(1)}
+                  ></CustomButton>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <CustomButton
+                    title={"2"}
+                    color={colors.blue}
+                    onPress={() => rateFlashcard(2)}
+                  ></CustomButton>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <CustomButton
+                    title={"3"}
+                    color={colors.blue}
+                    onPress={() => rateFlashcard(3)}
+                  ></CustomButton>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <CustomButton
+                    title={"4"}
+                    color={colors.blue}
+                    onPress={() => rateFlashcard(4)}
+                  ></CustomButton>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <CustomButton
+                    title={"5"}
+                    color={colors.blue}
+                    onPress={() => rateFlashcard(5)}
+                  ></CustomButton>
+                </View>
               </View>
             </View>
           ) : (

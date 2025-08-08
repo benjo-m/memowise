@@ -60,7 +60,7 @@ export default function StudyScreen() {
       ) : (
         <View style={{ flex: 1 }}>
           <ScrollView style={{ marginBottom: 30 }}>
-            <View style={{ borderWidth: 2, borderRadius: 10, padding: 10 }}>
+            <View style={{ borderRadius: 10, padding: 15, backgroundColor: "#ffffff" }}>
               <Text>{flashcardsToReview[0].front}</Text>
               {flashcardsToReview[0].front_image_url && (
                 <Image
@@ -77,8 +77,15 @@ export default function StudyScreen() {
                 />
               )}
             </View>
-            <View style={{ marginTop: 10, display: answerShown ? "contents" : "none" }}>
-              <Text>Answer:</Text>
+            <View
+              style={{
+                marginTop: 20,
+                backgroundColor: "#ffffff",
+                borderRadius: 10,
+                padding: 15,
+                display: answerShown ? "flex" : "none",
+              }}
+            >
               <Text>{flashcardsToReview[0].back}</Text>
               {flashcardsToReview[0].back_image_url && (
                 <Image

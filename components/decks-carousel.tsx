@@ -1,6 +1,7 @@
 import { Deck } from "@/models/deck";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React, { useRef, useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import DeckCard from "./deck-card";
 
@@ -17,7 +18,9 @@ export default function DecksCarousel({ decks }: Props) {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <View style={{ alignItems: "center", flexDirection: "row" }}>
-        <Text onPress={() => ref.current?.prev()}>Prev</Text>
+        <TouchableOpacity onPress={() => ref.current?.prev()} style={{ marginRight: 5 }}>
+          <FontAwesome name="arrow-left" size={28} color="#2d2d2dff" />
+        </TouchableOpacity>
         <Carousel
           ref={ref}
           width={width}
@@ -27,7 +30,9 @@ export default function DecksCarousel({ decks }: Props) {
           onSnapToItem={(index) => setCurrentIndex(index)}
           renderItem={({ item }) => <DeckCard deck={item} />}
         />
-        <Text onPress={() => ref.current?.next()}>Next</Text>
+        <TouchableOpacity onPress={() => ref.current?.next()} style={{ marginLeft: 5 }}>
+          <FontAwesome name="arrow-right" size={28} color="#2d2d2dff" />
+        </TouchableOpacity>
       </View>
 
       <Text style={{ marginTop: 10 }}>

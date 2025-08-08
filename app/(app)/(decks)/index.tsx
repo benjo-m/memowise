@@ -82,12 +82,12 @@ export default function DecksScreen() {
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} />
       ) : (
-        <View style={{ flex: 1, justifyContent: "space-between", gap: "10%" }}>
+        <View style={{ flex: 1, justifyContent: "space-between", gap: "13%" }}>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              gap: "8%",
+              gap: "5%",
             }}
           >
             <View style={styles.box}>
@@ -95,7 +95,7 @@ export default function DecksScreen() {
               <Text style={styles.boxNumber}>10</Text>
             </View>
             <View style={styles.box}>
-              <Text style={styles.boxHeading}>Heading 2</Text>
+              <Text style={styles.boxHeading}>Due flashcards</Text>
               <Text style={styles.boxNumber}>23</Text>
             </View>
             <View style={styles.box}>
@@ -119,10 +119,9 @@ const styles = StyleSheet.create({
   box: {
     flex: 1,
     alignItems: "center",
-    borderWidth: 2,
     borderRadius: 10,
-    borderColor: "#000",
     paddingVertical: 12,
+    backgroundColor: "#ffffff",
   },
   boxHeading: {
     fontSize: 13,

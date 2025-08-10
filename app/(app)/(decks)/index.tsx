@@ -26,7 +26,7 @@ export default function DecksScreen() {
 
   const showCreateDeckPrompt = (defaultText: string) => {
     Alert.prompt(
-      "New deck",
+      "Create deck",
       "Enter a name for your new deck",
       [
         {
@@ -105,7 +105,7 @@ export default function DecksScreen() {
           </View>
           <DecksCarousel decks={decks} />
           <CustomButton
-            title="New deck"
+            title="Create deck"
             onPress={() => showCreateDeckPrompt("")}
             color={colors.blue}
           />

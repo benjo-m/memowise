@@ -5,7 +5,7 @@ type StudySessionsByPartOfDay = {
   night: number;
 };
 
-type StudySessionsByWeekday = {
+type StudySessionsByDay = {
   Sunday: number;
   Monday: number;
   Tuesday: number;
@@ -27,7 +27,7 @@ export type UserStats = {
   total_time_spent_studying: number;
   average_session_duration: number;
   study_sessions_by_part_of_day: StudySessionsByPartOfDay;
-  study_sessions_by_weekday: StudySessionsByWeekday;
+  study_sessions_by_day: StudySessionsByDay;
   average_flashcards_reviewed_per_session: number;
   total_correct_answers: number;
   total_incorrect_answers: number;

@@ -1,4 +1,7 @@
 import { getUserStats } from "@/api/users";
+import AnswerAccuracyRatioChart from "@/components/answer-accuracy-ratio-chart";
+import SessionsByDayChart from "@/components/sessions-by-day-chart";
+import TimesOfDayChart from "@/components/times-of-day-chart";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
@@ -40,34 +43,26 @@ export default function StatsScreen() {
   if (!stats) return null;
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }}>
+    <ScrollView contentContainerStyle={{ margin: 30 }}>
       <Text>Longest study streak: {stats.longest_study_streak}</Text>
       <Text>Current study streak: {stats.current_study_streak}</Text>
       <Text>Total study sessions: {stats.total_study_sessions}</Text>
       <Text>Total time spent studying (seconds): {stats.total_time_spent_studying}</Text>
       <Text>Average session duration (seconds): {stats.average_session_duration.toFixed(1)}</Text>
+      <View style={{ marginVertical: 20 }}>
+        <SessionsByDayChart></SessionsByDayChart>
+      </View>
+      <View style={{ marginVertical: 20 }}>
+        <TimesOfDayChart></TimesOfDayChart>
+      </View>
 
-      <Text style={{ marginTop: 10, fontWeight: "bold" }}>Sessions by part of day:</Text>
-      <Text>Morning: {stats.study_sessions_by_part_of_day.morning}</Text>
-      <Text>Afternoon: {stats.study_sessions_by_part_of_day.afternoon}</Text>
-      <Text>Evening: {stats.study_sessions_by_part_of_day.evening}</Text>
-      <Text>Night: {stats.study_sessions_by_part_of_day.night}</Text>
-
-      <Text style={{ marginTop: 10, fontWeight: "bold" }}>Sessions by weekday:</Text>
-      <Text>Sunday: {stats.study_sessions_by_weekday.Sunday}</Text>
-      <Text>Monday: {stats.study_sessions_by_weekday.Monday}</Text>
-      <Text>Tuesday: {stats.study_sessions_by_weekday.Tuesday}</Text>
-      <Text>Wednesday: {stats.study_sessions_by_weekday.Wednesday}</Text>
-      <Text>Thursday: {stats.study_sessions_by_weekday.Thursday}</Text>
-      <Text>Friday: {stats.study_sessions_by_weekday.Friday}</Text>
-      <Text>Saturday: {stats.study_sessions_by_weekday.Saturday}</Text>
-
+      <View style={{ marginVertical: 20 }}>
+        <AnswerAccuracyRatioChart></AnswerAccuracyRatioChart>
+      </View>
       <Text style={{ marginTop: 10 }}>
         Average flashcards reviewed per session:{" "}
         {stats.average_flashcards_reviewed_per_session.toFixed(1)}
       </Text>
-      <Text>Total correct answers: {stats.total_correct_answers}</Text>
-      <Text>Total incorrect answers: {stats.total_incorrect_answers}</Text>
 
       <Text style={{ marginTop: 10, fontWeight: "bold" }}>Favorite deck:</Text>
       {stats.favorite_deck ? (

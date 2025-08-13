@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/api/constants";
 import { updateFlashcardStats } from "@/api/flashcards";
+import { createStudySesssion } from "@/api/study-sessions";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
@@ -7,10 +8,11 @@ import { applySm2 } from "@/helpers/sm2";
 import { Deck } from "@/models/deck";
 import { Flashcard } from "@/models/flashcard";
 import { FlashcardStatsUpdateRequest } from "@/models/flashcard-stats-update-request";
+import { StudySessionCreateRequest } from "@/models/study-session-create-request";
 import colors from "@/styles/colors";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function StudyScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
@@ -18,6 +20,24 @@ export default function StudyScreen() {
   const [deck, setDeck] = useState<Deck | null>(null);
   const [flashcardsToReview, setFlashcardsToReview] = useState<Flashcard[]>([]);
   const [answerShown, setAnswerShown] = useState<boolean>(false);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: showQuitDialog,
+    });
+  }, [navigation, correctAnswers, incorrectAnswers]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDuration((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!deckId) return;
@@ -36,6 +56,45 @@ export default function StudyScreen() {
     }
   }, [decks, deckId]);
 
+  const showQuitDialog = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          Alert.alert("Quit Session", "Are you sure you want to quit this session?", [
+            {
+              text: "No",
+              style: "cancel",
+            },
+            {
+              text: "Yes",
+              onPress: async () => {
+                if (correctAnswers + incorrectAnswers > 0) {
+                  await finishSession(correctAnswers, incorrectAnswers);
+                }
+                router.back();
+              },
+              style: "destructive",
+            },
+          ]);
+        }}
+        style={{}}
+      >
+        <Text style={{ color: "#ff2323ff", fontSize: 17, fontWeight: 500 }}>Quit session</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const finishSession = async (correctCount: number, incorrectCount: number) => {
+    const studySession = new StudySessionCreateRequest({
+      deck_id: Number(deckId),
+      duration: duration,
+      correct_answers: correctCount,
+      incorrect_answers: incorrectCount,
+    });
+
+    await createStudySesssion(studySession);
+  };
+
   const rateFlashcard = async (rating: number) => {
     const ratedFlashcard = applySm2(flashcardsToReview.shift()!, rating);
     const request = new FlashcardStatsUpdateRequest(ratedFlashcard);
@@ -46,7 +105,17 @@ export default function StudyScreen() {
       flashcardsToReview.push(ratedFlashcard);
     }
 
+    const newCorrect = correctAnswers + (rating >= 3 ? 1 : 0);
+    const newIncorrect = incorrectAnswers + (rating < 3 ? 1 : 0);
+
+    setCorrectAnswers(newCorrect);
+    setIncorrectAnswers(newIncorrect);
+
     setAnswerShown(false);
+
+    if (flashcardsToReview.length === 0) {
+      await finishSession(newCorrect, newIncorrect);
+    }
   };
 
   return !deck ? (

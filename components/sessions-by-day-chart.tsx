@@ -28,7 +28,7 @@ export default function SessionsByDayChart({ data }: Props) {
 
       <BarChart
         barWidth={22}
-        noOfSections={4}
+        noOfSections={3}
         barBorderRadius={5}
         data={barData}
         yAxisThickness={0}

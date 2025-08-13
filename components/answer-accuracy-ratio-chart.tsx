@@ -47,7 +47,7 @@ export default function AnswerAccuracyRatioChart({ correctAnswers, incorrectAnsw
           {renderDot(correctColor)}
           <Text style={{}}>
             Correct:{" "}
-            {noData ? 0 : ((correctAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(1)}
+            {noData ? 0 : ((correctAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(0)}
             %
           </Text>
         </View>
@@ -58,7 +58,7 @@ export default function AnswerAccuracyRatioChart({ correctAnswers, incorrectAnsw
             Incorrect:{" "}
             {noData
               ? 0
-              : ((incorrectAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(1)}
+              : ((incorrectAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(0)}
             %
           </Text>
         </View>

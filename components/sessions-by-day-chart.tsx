@@ -34,7 +34,7 @@ export default function SessionsByDayChart({ data }: Props) {
         yAxisThickness={0}
         xAxisThickness={0}
         hideRules
-        maxValue={15}
+        maxValue={maxValue}
         disableScroll
         spacing={16}
         disablePress

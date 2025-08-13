@@ -30,12 +30,16 @@ export default function TimesOfDayChart({ data }: Props) {
 
   const getPercentage = (value: number) => (total > 0 ? ((value / total) * 100).toFixed(0) : 0);
 
-  const pieData = [
-    { value: data.morning, color: morningColor },
-    { value: data.afternoon, color: afternoonColor },
-    { value: data.evening, color: eveningColor },
-    { value: data.night, color: nightColor },
-  ];
+  const noData = data.morning == 0 && data.afternoon == 0 && data.evening == 0 && data.night == 0;
+
+  const pieData = noData
+    ? [{ value: 1, color: "#d0d0d0ff" }]
+    : [
+        { value: data.morning, color: morningColor },
+        { value: data.afternoon, color: afternoonColor },
+        { value: data.evening, color: eveningColor },
+        { value: data.night, color: nightColor },
+      ];
 
   const renderDot = (color: any) => {
     return (
@@ -108,7 +112,7 @@ export default function TimesOfDayChart({ data }: Props) {
             return (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <Text style={{ fontSize: 22, fontWeight: "bold" }}>{maxPercentage}%</Text>
-                <Text style={{ fontSize: 14 }}>{maxEntry.label}</Text>
+                <Text style={{ fontSize: 14 }}>{noData ? "No data" : maxEntry.label}</Text>
               </View>
             );
           }}

@@ -10,10 +10,14 @@ export default function AnswerAccuracyRatioChart({ correctAnswers, incorrectAnsw
   const correctColor = "#92f09dff";
   const incorrectColor = "#ff9595ff";
 
-  const pieData = [
-    { value: correctAnswers, color: correctColor },
-    { value: incorrectAnswers, color: incorrectColor },
-  ];
+  const noData = correctAnswers + incorrectAnswers == 0;
+
+  const pieData = noData
+    ? [{ value: 1, color: "#d0d0d0ff" }]
+    : [
+        { value: correctAnswers, color: correctColor },
+        { value: incorrectAnswers, color: incorrectColor },
+      ];
 
   const renderDot = (color: any) => {
     return (
@@ -42,14 +46,19 @@ export default function AnswerAccuracyRatioChart({ correctAnswers, incorrectAnsw
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {renderDot(correctColor)}
           <Text style={{}}>
-            Correct: {((correctAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(1)}%
+            Correct:{" "}
+            {noData ? 0 : ((correctAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(1)}
+            %
           </Text>
         </View>
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {renderDot(incorrectColor)}
           <Text style={{}}>
-            Incorrect: {((incorrectAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(1)}
+            Incorrect:{" "}
+            {noData
+              ? 0
+              : ((incorrectAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(1)}
             %
           </Text>
         </View>

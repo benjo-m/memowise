@@ -1,20 +1,30 @@
+import { StudySessionsByDay } from "@/models/user-stats";
 import { Text, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 
-export default function SessionsByDayChart() {
+type Props = {
+  data: StudySessionsByDay;
+};
+
+export default function SessionsByDayChart({ data }: Props) {
+  const maxValue = Math.max(...Object.values(data));
+
   const barData = [
-    { value: 10, label: "M", frontColor: "#76b3ecff" },
-    { value: 12, label: "T", frontColor: "#177AD5" },
-    { value: 5, label: "W", frontColor: "#76b3ecff" },
-    { value: 3, label: "T", frontColor: "#76b3ecff" },
-    { value: 6, label: "F", frontColor: "#76b3ecff" },
-    { value: 9, label: "S", frontColor: "#76b3ecff" },
-    { value: 11, label: "S", frontColor: "#76b3ecff" },
-  ];
+    { value: data.Monday, label: "M" },
+    { value: data.Tuesday, label: "T" },
+    { value: data.Wednesday, label: "W" },
+    { value: data.Thursday, label: "T" },
+    { value: data.Friday, label: "F" },
+    { value: data.Saturday, label: "S" },
+    { value: data.Sunday, label: "S" },
+  ].map((day) => ({
+    ...day,
+    frontColor: day.value === maxValue ? "#177AD5" : "#76b3ecff",
+  }));
 
   return (
     <View style={{ alignItems: "center", backgroundColor: "white", padding: 20, borderRadius: 20 }}>
-      <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 20 }}>Sessions by day</Text>
+      <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 20 }}>Sessions by day</Text>
 
       <BarChart
         barWidth={22}
@@ -28,6 +38,7 @@ export default function SessionsByDayChart() {
         disableScroll
         spacing={16}
         disablePress
+        minHeight={5}
       />
     </View>
   );

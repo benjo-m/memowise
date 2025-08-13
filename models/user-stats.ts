@@ -1,11 +1,11 @@
-type StudySessionsByPartOfDay = {
+export type StudySessionsByPartOfDay = {
   morning: number;
   afternoon: number;
   evening: number;
   night: number;
 };
 
-type StudySessionsByDay = {
+export type StudySessionsByDay = {
   Sunday: number;
   Monday: number;
   Tuesday: number;

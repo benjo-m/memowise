@@ -1,17 +1,40 @@
+import { StudySessionsByPartOfDay } from "@/models/user-stats";
 import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 
-export default function TimesOfDayChart() {
+type Props = {
+  data: StudySessionsByPartOfDay;
+};
+
+export default function TimesOfDayChart({ data }: Props) {
   const morningColor = "#92f09dff";
   const afternoonColor = "#FFD166";
   const eveningColor = "#9B8CFF";
   const nightColor = "#5B4BFF";
 
+  const timesOfDay = [
+    { label: "Morning", value: data.morning },
+    { label: "Afternoon", value: data.afternoon },
+    { label: "Evening", value: data.evening },
+    { label: "Night", value: data.night },
+  ];
+
+  const total = timesOfDay.reduce((sum, t) => sum + t.value, 0);
+
+  const maxEntry = timesOfDay.reduce(
+    (prev, curr) => (curr.value > prev.value ? curr : prev),
+    timesOfDay[0]
+  );
+
+  const maxPercentage = total > 0 ? ((maxEntry.value / total) * 100).toFixed(0) : "0";
+
+  const getPercentage = (value: number) => (total > 0 ? ((value / total) * 100).toFixed(0) : 0);
+
   const pieData = [
-    { value: 47, color: morningColor },
-    { value: 40, color: afternoonColor },
-    { value: 16, color: eveningColor },
-    { value: 3, color: nightColor },
+    { value: data.morning, color: morningColor },
+    { value: data.afternoon, color: afternoonColor },
+    { value: data.evening, color: eveningColor },
+    { value: data.night, color: nightColor },
   ];
 
   const renderDot = (color: any) => {
@@ -41,24 +64,24 @@ export default function TimesOfDayChart() {
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(morningColor)}
-            <Text style={{}}>Morning: 47%</Text>
+            <Text style={{}}>Morning: {getPercentage(data.morning)}%</Text>
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(afternoonColor)}
-            <Text style={{}}>Afternoon: 16%</Text>
+            <Text style={{}}>Afternoon: {getPercentage(data.afternoon)}%</Text>
           </View>
         </View>
 
         <View style={{ flexDirection: "row", gap: 15, justifyContent: "center" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(eveningColor)}
-            <Text style={{}}>Evening: 40%</Text>
+            <Text style={{}}>Evening: {getPercentage(data.evening)}%</Text>
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(nightColor)}
-            <Text style={{}}>Night: 3%</Text>
+            <Text style={{}}>Night: {getPercentage(data.night)}%</Text>
           </View>
         </View>
       </View>
@@ -74,7 +97,7 @@ export default function TimesOfDayChart() {
         alignItems: "center",
       }}
     >
-      <Text style={{ fontSize: 16, fontWeight: "bold" }}>Sessions by part of day</Text>
+      <Text style={{ fontSize: 18, fontWeight: "bold" }}>Sessions by part of day</Text>
       <View style={{ padding: 20, alignItems: "center" }}>
         <PieChart
           data={pieData}
@@ -84,8 +107,8 @@ export default function TimesOfDayChart() {
           centerLabelComponent={() => {
             return (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ fontSize: 22, fontWeight: "bold" }}>47%</Text>
-                <Text style={{ fontSize: 14 }}>Morning</Text>
+                <Text style={{ fontSize: 22, fontWeight: "bold" }}>{maxPercentage}%</Text>
+                <Text style={{ fontSize: 14 }}>{maxEntry.label}</Text>
               </View>
             );
           }}

@@ -26,9 +26,11 @@ export default function StudyScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: showQuitDialog,
-    });
+    if (flashcardsToReview.length > 0) {
+      navigation.setOptions({
+        headerLeft: showQuitDialog,
+      });
+    }
   }, [navigation, correctAnswers, incorrectAnswers]);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function StudyScreen() {
                 if (correctAnswers + incorrectAnswers > 0) {
                   await finishSession(correctAnswers, incorrectAnswers);
                 }
-                router.back();
+                router.replace("/(app)/(decks)");
               },
               style: "destructive",
             },
@@ -115,13 +117,21 @@ export default function StudyScreen() {
 
     if (flashcardsToReview.length === 0) {
       await finishSession(newCorrect, newIncorrect);
+      router.replace("/(app)/(decks)/session-summary");
     }
   };
 
   return !deck ? (
     FallbackMessage({})
   ) : flashcardsToReview.length == 0 ? (
-    <Text>No flashcards left to study</Text>
+    <>
+      <Text>No flashcards left to study</Text>
+      <CustomButton
+        title={"Close"}
+        color={""}
+        onPress={() => router.replace("/(app)/(decks)")}
+      ></CustomButton>
+    </>
   ) : (
     <View style={{ flex: 1, justifyContent: "space-between", margin: 30 }}>
       {flashcardsToReview.length === 0 ? (

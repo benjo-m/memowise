@@ -36,7 +36,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
         <CustomButton
           title={"Study"}
           color={colors.blue}
-          onPress={() => router.navigate({ pathname: "/study", params: { deckId: deck.id } })}
+          onPress={() => router.replace({ pathname: "/study", params: { deckId: deck.id } })}
         ></CustomButton>
       </View>
     </TouchableOpacity>

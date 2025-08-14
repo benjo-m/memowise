@@ -1,20 +1,26 @@
 import colors from "@/styles/colors";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   title: string;
   color: string;
   onPress: () => void;
+  icon: any;
 };
 
-export default function CustomButton({ title, color, onPress }: Props) {
+export default function CustomButton({ title, color, onPress, icon }: Props) {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: color == "" ? colors.blue : color }]}
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Text style={styles.text}>{title}</Text>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}
+      >
+        {icon}
+        <Text style={styles.text}>{title}</Text>
+      </View>
     </TouchableOpacity>
   );
 }

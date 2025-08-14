@@ -1,9 +1,8 @@
 import { Deck } from "@/models/deck";
-import { router } from "expo-router";
-import { Text, View } from "react-native";
-
 import colors from "@/styles/colors";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { router } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CustomButton from "./custom-button";
 
 type DeckCardProps = {
@@ -11,33 +10,42 @@ type DeckCardProps = {
 };
 
 export default function DeckCard({ deck }: DeckCardProps) {
+  const newCount = deck.flashcards.filter((c) => c.interval === 0).length;
+  const dueCount = deck.flashcards.filter(
+    (c) => new Date(c.due_date).setHours(0, 0, 0, 0) <= new Date().setHours(0, 0, 0, 0)
+  ).length;
+
   return (
     <TouchableOpacity
       style={styles.card}
       onPress={() => router.navigate({ pathname: "/deck-details", params: { id: deck.id } })}
+      activeOpacity={0.8}
     >
-      <Text style={{ fontSize: 18, fontWeight: 600, color: "#333" }}>{deck.name}</Text>
-      <Text style={{ marginTop: 20, marginBottom: 5 }}>Flashcards</Text>
-      <View style={{ backgroundColor: "#e7e7e7ff", padding: 10, borderRadius: 10 }}>
-        <Text style={{}}>New: {deck.flashcards.filter((card) => card.interval === 0).length}</Text>
-        <Text style={{}}>
-          To review:
-          {
-            deck.flashcards.filter(
-              (card) =>
-                new Date(card.due_date).setHours(0, 0, 0, 0) <= new Date().setHours(0, 0, 0, 0)
-            ).length
-          }
-        </Text>
-        <Text style={{}}>Total: {deck.flashcards.length}</Text>
-      </View>
+      <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
+        {deck.name}
+      </Text>
 
-      <View style={{ marginTop: 20 }}>
+      <View style={styles.statsContainer}>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>New flashcards</Text>
+          <Text style={styles.statValue}>{newCount}</Text>
+        </View>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Flashcards to review</Text>
+          <Text style={styles.statValue}>{dueCount}</Text>
+        </View>
+        <View style={styles.stat}>
+          <Text style={styles.statLabel}>Total flashcards</Text>
+          <Text style={styles.statValue}>{deck.flashcards.length}</Text>
+        </View>
+      </View>
+      <View style={{ width: "100%" }}>
         <CustomButton
-          title={"Study"}
+          title="Study"
           color={colors.blue}
           onPress={() => router.replace({ pathname: "/study", params: { deckId: deck.id } })}
-        ></CustomButton>
+          icon={<FontAwesome5 name="play" size={18} color="white" />}
+        />
       </View>
     </TouchableOpacity>
   );
@@ -45,14 +53,37 @@ export default function DeckCard({ deck }: DeckCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#ffffffff",
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: "#e6e6e6ff",
-    padding: 16,
-    justifyContent: "center",
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    padding: 20,
+    marginHorizontal: 8,
+    justifyContent: "space-between",
     alignItems: "center",
-    height: "100%",
-    marginHorizontal: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#111",
+    textAlign: "center",
+  },
+  statsContainer: {
+    justifyContent: "space-between",
+    width: "100%",
+    gap: 15,
+    borderRadius: 10,
+  },
+  stat: {
+    alignItems: "center",
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 2,
+  },
+  statValue: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#222",
   },
 });

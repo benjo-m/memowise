@@ -8,6 +8,8 @@ import { Deck } from "@/models/deck";
 import { FlashcardCreateRequest } from "@/models/flashcard-create-request";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -141,12 +143,14 @@ export default function AddFlashcardsScreen() {
                   title="Remove front image"
                   color={colors.red}
                   onPress={() => setFrontImageFile(null)}
+                  icon={<FontAwesome name="remove" size={20} color="white" />}
                 />
               ) : (
                 <CustomButton
                   title="Upload front image"
                   color={colors.blue}
                   onPress={() => pickImage(setFrontImageFile)}
+                  icon={<MaterialIcons name="upload" size={24} color="white" />}
                 />
               )}
             </View>
@@ -196,12 +200,14 @@ export default function AddFlashcardsScreen() {
                   title="Remove back image"
                   color={colors.red}
                   onPress={() => setBackImageFile(null)}
+                  icon={<FontAwesome name="remove" size={20} color="white" />}
                 />
               ) : (
                 <CustomButton
                   title="Upload back image"
                   color={colors.blue}
                   onPress={() => pickImage(setBackImageFile)}
+                  icon={<MaterialIcons name="upload" size={24} color="white" />}
                 />
               )}
             </View>
@@ -217,10 +223,20 @@ export default function AddFlashcardsScreen() {
         }}
       >
         <View style={{ flex: 1 }}>
-          <CustomButton title="Back" color={colors.blue} onPress={() => router.back()} />
+          <CustomButton
+            title="Back"
+            color={colors.blue}
+            onPress={() => router.back()}
+            icon={<FontAwesome name="arrow-left" size={18} color="white" />}
+          />
         </View>
         <View style={{ flex: 1 }}>
-          <CustomButton title="Add" color={colors.blue} onPress={handleSubmit(onSubmit)} />
+          <CustomButton
+            title="Add"
+            color={colors.blue}
+            onPress={handleSubmit(onSubmit)}
+            icon={<FontAwesome name="plus" size={20} color="white" />}
+          />
         </View>
       </View>
     </View>

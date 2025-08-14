@@ -35,7 +35,7 @@ export default function DecksCarousel({ decks }: Props) {
         </TouchableOpacity>
       </View>
 
-      <Text style={{ marginTop: 10 }}>
+      <Text style={{ marginTop: 8, fontWeight: 500 }}>
         {currentIndex + 1} / {decks.length}
       </Text>
     </View>

@@ -6,6 +6,9 @@ import { useDecks } from "@/contexts/decks-context";
 import { Deck } from "@/models/deck";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -106,11 +109,17 @@ export default function DeckDetailsScreen() {
                   setIsEditing(false);
                   reset({ name: deck.name });
                 }}
-                color={colors.blue}
+                color={"#b5b5b5"}
+                icon={null}
               />
             </View>
             <View style={{ flex: 1 }}>
-              <CustomButton title="Save" onPress={handleSubmit(onSubmit)} color={colors.blue} />
+              <CustomButton
+                title="Save"
+                onPress={handleSubmit(onSubmit)}
+                color={colors.blue}
+                icon={null}
+              />
             </View>
           </View>
         ) : (
@@ -128,6 +137,7 @@ export default function DeckDetailsScreen() {
                 }, 100);
               }}
               color={colors.blue}
+              icon={<FontAwesome5 name="pen" size={16} color="white" />}
             />
           </View>
         )}
@@ -175,6 +185,7 @@ export default function DeckDetailsScreen() {
                   { cancelable: true }
                 );
               }}
+              icon={<FontAwesome6 name="trash" size={18} color="white" />}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -187,6 +198,7 @@ export default function DeckDetailsScreen() {
                   params: { deckId: deck.id },
                 })
               }
+              icon={<FontAwesome name="plus" size={20} color="white" />}
             />
           </View>
         </View>

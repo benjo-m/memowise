@@ -148,7 +148,7 @@ export default function StatsScreen() {
         <TimesOfDayChart data={stats.study_sessions_by_part_of_day} />
       </View>
 
-      <View style={{ marginVertical: 10 }}>
+      <View style={{ marginVertical: 10, marginBottom: 30 }}>
         <AnswerAccuracyRatioChart
           correctAnswers={stats.total_correct_answers}
           incorrectAnswers={stats.total_incorrect_answers}

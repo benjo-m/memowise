@@ -26,11 +26,9 @@ export default function StudyScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    if (flashcardsToReview.length > 0) {
-      navigation.setOptions({
-        headerLeft: showQuitDialog,
-      });
-    }
+    navigation.setOptions({
+      headerLeft: showQuitDialog,
+    });
   }, [navigation, correctAnswers, incorrectAnswers]);
 
   useEffect(() => {
@@ -61,25 +59,28 @@ export default function StudyScreen() {
   const showQuitDialog = () => {
     return (
       <TouchableOpacity
-        onPress={() => {
-          Alert.alert("Quit Session", "Are you sure you want to quit this session?", [
-            {
-              text: "No",
-              style: "cancel",
-            },
-            {
-              text: "Yes",
-              onPress: async () => {
-                if (correctAnswers + incorrectAnswers > 0) {
-                  await finishSession(correctAnswers, incorrectAnswers);
-                }
-                router.replace("/(app)/(decks)");
-              },
-              style: "destructive",
-            },
-          ]);
-        }}
-        style={{}}
+        onPress={
+          flashcardsToReview.length == 0
+            ? () => router.replace("/(app)/(decks)")
+            : () => {
+                Alert.alert("Quit Session", "Are you sure you want to quit this session?", [
+                  {
+                    text: "No",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Yes",
+                    onPress: async () => {
+                      if (correctAnswers + incorrectAnswers > 0) {
+                        await finishSession(correctAnswers, incorrectAnswers);
+                      }
+                      router.replace("/(app)/(decks)");
+                    },
+                    style: "destructive",
+                  },
+                ]);
+              }
+        }
       >
         <Text style={{ color: "#ff2323ff", fontSize: 17, fontWeight: 500 }}>Quit session</Text>
       </TouchableOpacity>
@@ -117,125 +118,104 @@ export default function StudyScreen() {
 
     if (flashcardsToReview.length === 0) {
       await finishSession(newCorrect, newIncorrect);
-      router.replace("/(app)/(decks)/session-summary");
     }
   };
 
-  return !deck ? (
-    FallbackMessage({})
-  ) : flashcardsToReview.length == 0 ? (
-    <>
-      <Text>No flashcards left to study</Text>
-      <CustomButton
-        title={"Close"}
-        color={""}
-        onPress={() => router.replace("/(app)/(decks)")}
-      ></CustomButton>
-    </>
-  ) : (
-    <View style={{ flex: 1, justifyContent: "space-between", margin: 30 }}>
-      {flashcardsToReview.length === 0 ? (
-        <Text>Study session finished</Text>
-      ) : (
-        <View style={{ flex: 1 }}>
-          <ScrollView style={{ marginBottom: 30 }}>
-            <View style={{ borderRadius: 10, padding: 15, backgroundColor: "#ffffff" }}>
-              <Text>{flashcardsToReview[0].front}</Text>
-              {flashcardsToReview[0].front_image_url && (
-                <Image
-                  source={{
-                    uri: `${BASE_URL}/${flashcardsToReview[0].front_image_url}`,
-                  }}
-                  style={{
-                    width: "100%",
-                    height: 200,
-                    resizeMode: "stretch",
-                    borderRadius: 10,
-                    marginTop: 10,
-                  }}
-                />
-              )}
-            </View>
-            <View
-              style={{
-                marginTop: 20,
-                backgroundColor: "#ffffff",
-                borderRadius: 10,
-                padding: 15,
-                display: answerShown ? "flex" : "none",
-              }}
-            >
-              <Text>{flashcardsToReview[0].back}</Text>
-              {flashcardsToReview[0].back_image_url && (
-                <Image
-                  source={{
-                    uri: `${BASE_URL}/${flashcardsToReview[0].back_image_url}`,
-                  }}
-                  style={{
-                    width: "100%",
-                    height: 200,
-                    resizeMode: "stretch",
-                    borderRadius: 10,
-                    marginTop: 10,
-                  }}
-                />
-              )}
-            </View>
-          </ScrollView>
-          {answerShown ? (
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontWeight: 500, marginBottom: 15 }}>Rate your answer</Text>
-              <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
-                <View style={{ flex: 1 }}>
-                  <CustomButton
-                    title={"1"}
-                    color={colors.blue}
-                    onPress={() => rateFlashcard(1)}
-                  ></CustomButton>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <CustomButton
-                    title={"2"}
-                    color={colors.blue}
-                    onPress={() => rateFlashcard(2)}
-                  ></CustomButton>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <CustomButton
-                    title={"3"}
-                    color={colors.blue}
-                    onPress={() => rateFlashcard(3)}
-                  ></CustomButton>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <CustomButton
-                    title={"4"}
-                    color={colors.blue}
-                    onPress={() => rateFlashcard(4)}
-                  ></CustomButton>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <CustomButton
-                    title={"5"}
-                    color={colors.blue}
-                    onPress={() => rateFlashcard(5)}
-                  ></CustomButton>
-                </View>
-              </View>
-            </View>
-          ) : (
-            <View>
-              <CustomButton
-                title={"Show answer"}
-                color={colors.blue}
-                onPress={() => {
-                  setAnswerShown(true);
-                }}
-              ></CustomButton>
-            </View>
-          )}
+  if (!deck) {
+    return FallbackMessage({});
+  }
+
+  if (flashcardsToReview.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", margin: 30 }}>
+        {correctAnswers + incorrectAnswers == 0 ? (
+          <Text style={{ marginBottom: 20 }}>No flashcards scheduled for today.</Text>
+        ) : (
+          <Text style={{ marginBottom: 20 }}>All done for today!</Text>
+        )}
+        <View style={{ width: "100%" }}>
+          <CustomButton
+            title={"Close"}
+            color={""}
+            onPress={() => router.replace("/(app)/(decks)")}
+          />
         </View>
-      )}
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, justifyContent: "space-between", margin: 30 }}>
+      <View style={{ flex: 1 }}>
+        <ScrollView style={{ marginBottom: 30 }}>
+          <View style={{ borderRadius: 10, padding: 15, backgroundColor: "#ffffff" }}>
+            <Text>{flashcardsToReview[0].front}</Text>
+            {flashcardsToReview[0].front_image_url && (
+              <Image
+                source={{
+                  uri: `${BASE_URL}/${flashcardsToReview[0].front_image_url}`,
+                }}
+                style={{
+                  width: "100%",
+                  height: 200,
+                  resizeMode: "stretch",
+                  borderRadius: 10,
+                  marginTop: 10,
+                }}
+              />
+            )}
+          </View>
+          <View
+            style={{
+              marginTop: 20,
+              backgroundColor: "#ffffff",
+              borderRadius: 10,
+              padding: 15,
+              display: answerShown ? "flex" : "none",
+            }}
+          >
+            <Text>{flashcardsToReview[0].back}</Text>
+            {flashcardsToReview[0].back_image_url && (
+              <Image
+                source={{
+                  uri: `${BASE_URL}/${flashcardsToReview[0].back_image_url}`,
+                }}
+                style={{
+                  width: "100%",
+                  height: 200,
+                  resizeMode: "stretch",
+                  borderRadius: 10,
+                  marginTop: 10,
+                }}
+              />
+            )}
+          </View>
+        </ScrollView>
+        {answerShown ? (
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ fontWeight: "500", marginBottom: 15 }}>Rate your answer</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
+              {[1, 2, 3, 4, 5].map((num) => (
+                <View style={{ flex: 1 }} key={num}>
+                  <CustomButton
+                    title={String(num)}
+                    color={colors.blue}
+                    onPress={() => rateFlashcard(num)}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : (
+          <View>
+            <CustomButton
+              title={"Show answer"}
+              color={colors.blue}
+              onPress={() => setAnswerShown(true)}
+            />
+          </View>
+        )}
+      </View>
     </View>
   );
 }

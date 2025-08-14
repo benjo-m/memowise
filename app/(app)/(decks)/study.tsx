@@ -171,7 +171,7 @@ export default function StudyScreen() {
               backgroundColor: "#ffffff",
               borderRadius: 10,
               padding: 15,
-              display: answerShown ? "flex" : "none",
+              opacity: answerShown ? 1 : 0,
             }}
           >
             <Text>{flashcardsToReview[0].back}</Text>

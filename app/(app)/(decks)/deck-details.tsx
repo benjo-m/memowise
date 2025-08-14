@@ -142,14 +142,25 @@ export default function DeckDetailsScreen() {
           </View>
         )}
 
-        <Text style={{ marginTop: 20 }}>Flashcards</Text>
-        <FlatList
-          data={deck.flashcards}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <FlashcardCard flashcard={item}></FlashcardCard>}
-          style={{ width: "100%" }}
-        />
-
+        {deck.flashcards.length > 0 && (
+          <Text style={{ marginTop: 20, fontSize: 16, fontWeight: "bold" }}>Flashcards</Text>
+        )}
+        {deck.flashcards.length == 0 ? (
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <Text style={{ marginBottom: 10, fontSize: 16, fontWeight: "bold" }}>Deck empty</Text>
+            <Text style={{ textAlign: "center", color: "#585858ff" }}>
+              Press the <Text style={{ fontWeight: "bold" }}>Add flashcards</Text> button to start
+              adding flashcards to this deck
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={deck.flashcards}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <FlashcardCard flashcard={item}></FlashcardCard>}
+            style={{ width: "100%" }}
+          />
+        )}
         <View
           style={{
             flexDirection: "row",

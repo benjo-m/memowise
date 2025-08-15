@@ -15,22 +15,22 @@ export default function SignIn() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  const _signIn = async (username: string, password: string) => {
-    const result = await signIn(username, password);
+  const _signIn = async (email: string, password: string) => {
+    const result = await signIn(email, password);
 
-    if (result.success) {
+    if (result?.success) {
       router.replace("/");
     } else {
-      setSignInError(result.error!);
+      setSignInError(result?.error!);
     }
   };
 
-  const onSubmit = (data: any) => _signIn(data.username, data.password);
+  const onSubmit = (data: any) => _signIn(data.email, data.password);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -42,7 +42,7 @@ export default function SignIn() {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            placeholder="Username"
+            placeholder="Email"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -51,9 +51,9 @@ export default function SignIn() {
             autoCorrect={false}
           />
         )}
-        name="username"
+        name="email"
       />
-      {errors.username && <Text>Username is required.</Text>}
+      {errors.email && <Text>Email is required.</Text>}
       <Controller
         control={control}
         rules={{

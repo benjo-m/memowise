@@ -5,24 +5,28 @@ import { useDecks } from "@/contexts/decks-context";
 import colors from "@/styles/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert, RefreshControl, ScrollView, Text, View } from "react-native";
+
 export default function DecksScreen() {
   const { decks, setDecks } = useDecks();
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadDecks = async () => {
+    const data = await getAllDecks();
+    setDecks(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const loadDecks = async () => {
-      const data = await getAllDecks();
-      setDecks(data);
-      setLoading(false);
-    };
-
-    if (decks.length === 0) {
-      loadDecks();
-    } else {
-      setLoading(false);
-    }
+    loadDecks();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadDecks();
+    setRefreshing(false);
+  };
 
   const showCreateDeckPrompt = (defaultText: string) => {
     Alert.prompt(
@@ -92,7 +96,10 @@ export default function DecksScreen() {
   };
 
   return (
-    <View style={{ flex: 1, marginVertical: 20, marginHorizontal: 30 }}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1, marginVertical: 20, marginHorizontal: 30 }}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} />
       ) : (
@@ -152,6 +159,6 @@ export default function DecksScreen() {
           />
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }

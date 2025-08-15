@@ -22,9 +22,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: "Stats",
-            tabBarIcon: ({ color }) => (
-              <FontAwesome6 name="chart-simple" size={24} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <FontAwesome6 name="chart-simple" size={24} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -32,9 +30,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: "Settings",
-            tabBarIcon: ({ color }) => (
-              <FontAwesome6 name="gear" size={24} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <FontAwesome6 name="gear" size={24} color={color} />,
           }}
         />
       </Tabs>

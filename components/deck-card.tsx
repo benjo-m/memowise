@@ -43,7 +43,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
         <CustomButton
           title="Study"
           color={colors.blue}
-          onPress={() => router.replace({ pathname: "/study", params: { deckId: deck.id } })}
+          onPress={() => router.push({ pathname: "/study", params: { deckId: deck.id } })}
           icon={<FontAwesome5 name="play" size={18} color="white" />}
         />
       </View>

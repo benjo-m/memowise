@@ -74,7 +74,7 @@ export default function SignIn() {
         name="password"
       />
       {errors.password && <Text>Password is required.</Text>}
-      <Button title="Log in" onPress={handleSubmit(onSubmit)} />
+      <Button title="Sign in" onPress={handleSubmit(onSubmit)} />
     </SafeAreaView>
   );
 }

@@ -9,4 +9,5 @@ export type Flashcard = {
   repetitions: number;
   ease_factor: number;
   due_date: Date;
+  due_today: boolean;
 };

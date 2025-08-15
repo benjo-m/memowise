@@ -46,12 +46,7 @@ export default function StudyScreen() {
 
     if (foundDeck) {
       setDeck(foundDeck);
-
-      const dueFlashcards = foundDeck.flashcards.filter((card) => {
-        const dueDate = new Date(card.due_date);
-        return dueDate <= new Date();
-      });
-
+      const dueFlashcards = foundDeck.flashcards.filter((card) => card.due_today);
       setFlashcardsToReview(dueFlashcards);
     }
   }, [decks, deckId]);
@@ -61,7 +56,7 @@ export default function StudyScreen() {
       <TouchableOpacity
         onPress={
           flashcardsToReview.length == 0
-            ? () => router.replace("/(app)/(decks)")
+            ? () => router.back()
             : () => {
                 Alert.alert("Quit Session", "Are you sure you want to quit this session?", [
                   {
@@ -74,7 +69,7 @@ export default function StudyScreen() {
                       if (correctAnswers + incorrectAnswers > 0) {
                         await finishSession(correctAnswers, incorrectAnswers);
                       }
-                      router.replace("/(app)/(decks)");
+                      router.back();
                     },
                     style: "destructive",
                   },
@@ -134,11 +129,7 @@ export default function StudyScreen() {
           <Text style={{ marginBottom: 20 }}>All done for today!</Text>
         )}
         <View style={{ width: "100%" }}>
-          <CustomButton
-            title={"Close"}
-            color={""}
-            onPress={() => router.replace("/(app)/(decks)")}
-          />
+          <CustomButton title={"Close"} color={""} onPress={() => router.back()} icon={null} />
         </View>
       </View>
     );
@@ -201,6 +192,7 @@ export default function StudyScreen() {
                     title={String(num)}
                     color={colors.blue}
                     onPress={() => rateFlashcard(num)}
+                    icon={null}
                   />
                 </View>
               ))}
@@ -212,6 +204,7 @@ export default function StudyScreen() {
               title={"Show answer"}
               color={colors.blue}
               onPress={() => setAnswerShown(true)}
+              icon={null}
             />
           </View>
         )}

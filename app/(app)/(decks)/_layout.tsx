@@ -13,7 +13,7 @@ export default function Layout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Decks",
+          title: "Study",
         }}
       />
       <Stack.Screen name="deck-details" options={{ title: "Deck details" }} />

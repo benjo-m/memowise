@@ -10,6 +10,8 @@ import { Flashcard } from "@/models/flashcard";
 import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -173,12 +175,14 @@ export default function FlashcardDetails() {
                     );
                     setFrontImageFile(null);
                   }}
+                  icon={<FontAwesome name="remove" size={20} color="white" />}
                 />
               ) : (
                 <CustomButton
                   title="Upload front image"
                   color={colors.blue}
                   onPress={() => pickImage(setFrontImageFile)}
+                  icon={<MaterialIcons name="upload" size={24} color="white" />}
                 />
               )}
             </View>
@@ -243,12 +247,14 @@ export default function FlashcardDetails() {
                     );
                     setBackImageFile(null);
                   }}
+                  icon={<FontAwesome name="remove" size={20} color="white" />}
                 />
               ) : (
                 <CustomButton
                   title="Upload back image"
                   color={colors.blue}
                   onPress={() => pickImage(setBackImageFile)}
+                  icon={<MaterialIcons name="upload" size={24} color="white" />}
                 />
               )}
             </View>
@@ -288,10 +294,16 @@ export default function FlashcardDetails() {
                   { cancelable: true }
                 );
               }}
+              icon={undefined}
             />
           </View>
           <View style={{ flex: 1 }}>
-            <CustomButton title="Update" color={colors.blue} onPress={handleSubmit(onSubmit)} />
+            <CustomButton
+              title="Update"
+              color={colors.blue}
+              onPress={handleSubmit(onSubmit)}
+              icon={undefined}
+            />
           </View>
         </View>
       </View>

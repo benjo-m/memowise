@@ -1,9 +1,11 @@
 import { BASE_URL } from "@/api/constants";
 import { updateFlashcardStats } from "@/api/flashcards";
 import { createStudySesssion } from "@/api/study-sessions";
+import { getUserStats } from "@/api/users";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
+import { useUserStats } from "@/contexts/user-stats-context";
 import { applySm2 } from "@/helpers/sm2";
 import { Deck } from "@/models/deck";
 import { Flashcard } from "@/models/flashcard";
@@ -17,6 +19,7 @@ import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-na
 export default function StudyScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
   const { decks } = useDecks();
+  const { setUserStats } = useUserStats();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [flashcardsToReview, setFlashcardsToReview] = useState<Flashcard[]>([]);
   const [answerShown, setAnswerShown] = useState<boolean>(false);
@@ -91,6 +94,8 @@ export default function StudyScreen() {
     });
 
     await createStudySesssion(studySession);
+    const stats = await getUserStats();
+    setUserStats(stats);
   };
 
   const rateFlashcard = async (rating: number) => {

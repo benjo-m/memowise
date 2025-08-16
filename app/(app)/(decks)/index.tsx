@@ -107,7 +107,7 @@ export default function DecksScreen() {
           <View>
             <View style={{ marginBottom: "5%" }}>
               <Text style={{ fontSize: 20, fontWeight: "700", color: "#111" }}>
-                Friendly greeting
+                Greeting placeholder
               </Text>
               <Text style={{ fontSize: 14, color: "#555", marginTop: 5 }}>
                 You have {getTotalFlashcards()} flashcards scheduled for today

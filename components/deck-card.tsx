@@ -21,7 +21,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
       onPress={() => router.navigate({ pathname: "/deck-details", params: { id: deck.id } })}
       activeOpacity={0.8}
     >
-      <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
+      <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
         {deck.name}
       </Text>
 
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: "#fff",
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 20,
     marginHorizontal: 8,
     justifyContent: "space-between",
@@ -70,8 +70,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     justifyContent: "space-between",
     width: "100%",
-    gap: 15,
-    borderRadius: 10,
+    gap: 5,
   },
   stat: {
     alignItems: "center",

@@ -2,27 +2,25 @@ import { getUserStats } from "@/api/users";
 import AnswerAccuracyRatioChart from "@/components/answer-accuracy-ratio-chart";
 import SessionsByDayChart from "@/components/sessions-by-day-chart";
 import TimesOfDayChart from "@/components/times-of-day-chart";
+import { useUserStats } from "@/contexts/user-stats-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
-import type { UserStats } from "../../../models/user-stats";
 
 export default function StatsScreen() {
-  const [stats, setStats] = useState<UserStats | null>(null);
+  const { userStats, setUserStats } = useUserStats();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useFocusEffect(
-    useCallback(() => {
-      setLoading(true);
-      setError(null);
-      getUserStats()
-        .then((data) => setStats(data))
-        .catch(() => setError("Failed to load stats"))
-        .finally(() => setLoading(false));
-    }, [])
-  );
+  const loadUserStats = async () => {
+    const data = await getUserStats();
+    setUserStats(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadUserStats();
+  }, []);
 
   if (loading) {
     return (
@@ -40,7 +38,7 @@ export default function StatsScreen() {
     );
   }
 
-  if (!stats) return null;
+  if (!userStats) return null;
 
   function formatTime(seconds: number) {
     const hours = Math.floor(seconds / 3600);
@@ -64,7 +62,7 @@ export default function StatsScreen() {
         >
           <Ionicons name="flame" size={28} color="#F97316" style={{ marginBottom: 5 }} />
           <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 5 }}>
-            {stats.current_study_streak}d
+            {userStats.current_study_streak}d
           </Text>
           <Text style={{ fontSize: 12, color: "#555" }}>Current</Text>
           <Text style={{ fontSize: 12, color: "#555" }}>study streak</Text>
@@ -81,7 +79,7 @@ export default function StatsScreen() {
         >
           <Ionicons name="trophy" size={28} color="#EAB308" style={{ marginBottom: 5 }} />
           <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 5 }}>
-            {stats.longest_study_streak}d
+            {userStats.longest_study_streak}d
           </Text>
           <Text style={{ fontSize: 12, color: "#555" }}>Longest</Text>
           <Text style={{ fontSize: 12, color: "#555" }}>study streak</Text>
@@ -98,7 +96,7 @@ export default function StatsScreen() {
         >
           <Ionicons name="time" size={28} color="#2563EB" style={{ marginBottom: 5 }} />
           <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 5 }}>
-            {formatTime(stats.total_time_spent_studying)}
+            {formatTime(userStats.total_time_spent_studying)}
           </Text>
           <Text style={{ fontSize: 12, color: "#555" }}>Total</Text>
           <Text style={{ fontSize: 12, color: "#555" }}>time studied</Text>
@@ -115,24 +113,28 @@ export default function StatsScreen() {
       >
         <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 5 }}>Summary</Text>
         <Text style={{ fontSize: 14, color: "#374151", fontWeight: "500" }}>
-          You’ve studied <Text style={{ fontWeight: "bold" }}>{stats.total_study_sessions}</Text>{" "}
-          times, spending a total of{" "}
-          <Text style={{ fontWeight: "bold" }}>{formatTime(stats.total_time_spent_studying)}</Text>{" "}
+          You’ve studied{" "}
+          <Text style={{ fontWeight: "bold" }}>{userStats.total_study_sessions}</Text> times,
+          spending a total of{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            {formatTime(userStats.total_time_spent_studying)}
+          </Text>{" "}
           learning.{"\n"}
           Your average study session lasts{" "}
           <Text style={{ fontWeight: "bold" }}>
-            {Math.round(stats.average_session_duration / 60)}
+            {Math.round(userStats.average_session_duration / 60)}
           </Text>{" "}
           minutes, and you review about{" "}
           <Text style={{ fontWeight: "bold" }}>
-            {stats.average_flashcards_reviewed_per_session.toFixed(1)}
+            {userStats.average_flashcards_reviewed_per_session.toFixed(1)}
           </Text>{" "}
           flashcards per session.{"\n"}
-          {stats.favorite_deck ? (
+          {userStats.favorite_deck ? (
             <>
               Your favorite deck is{" "}
-              <Text style={{ fontWeight: "bold" }}>{stats.favorite_deck.deck}</Text>, which you’ve
-              studied <Text style={{ fontWeight: "bold" }}>{stats.favorite_deck.count}</Text> times.
+              <Text style={{ fontWeight: "bold" }}>{userStats.favorite_deck.deck}</Text>, which
+              you’ve studied{" "}
+              <Text style={{ fontWeight: "bold" }}>{userStats.favorite_deck.count}</Text> times.
             </>
           ) : (
             <>You don’t have a favorite deck yet — time to start one!</>
@@ -141,17 +143,17 @@ export default function StatsScreen() {
       </View>
 
       <View style={{ marginVertical: 10 }}>
-        <SessionsByDayChart data={stats.study_sessions_by_day} />
+        <SessionsByDayChart data={userStats.study_sessions_by_day} />
       </View>
 
       <View style={{ marginVertical: 10 }}>
-        <TimesOfDayChart data={stats.study_sessions_by_part_of_day} />
+        <TimesOfDayChart data={userStats.study_sessions_by_part_of_day} />
       </View>
 
       <View style={{ marginVertical: 10, marginBottom: 30 }}>
         <AnswerAccuracyRatioChart
-          correctAnswers={stats.total_correct_answers}
-          incorrectAnswers={stats.total_incorrect_answers}
+          correctAnswers={userStats.total_correct_answers}
+          incorrectAnswers={userStats.total_incorrect_answers}
         />
       </View>
     </ScrollView>

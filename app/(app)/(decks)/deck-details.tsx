@@ -201,7 +201,7 @@ export default function DeckDetailsScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <CustomButton
-              title="Add flashcards"
+              title="Add flashcard"
               color={colors.blue}
               onPress={() =>
                 router.navigate({

@@ -2,7 +2,7 @@ import { StudySessionCreateRequest } from "@/models/study-session-create-request
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
-export const createStudySesssion = async (request: StudySessionCreateRequest) => {
+export const createStudySession = async (request: StudySessionCreateRequest) => {
   const token = await SecureStore.getItemAsync("session");
 
   const response = await fetch(`${BASE_URL}/study_sessions`, {

@@ -107,27 +107,24 @@ export const updateFlashcard = async (
   return await response.json();
 };
 
-export const updateFlashcardStats = async (
-  id: number,
-  flashcardStatsUpdateRequest: FlashcardStatsUpdateRequest
-): Promise<Flashcard> => {
+export const batchUpdateFlashcardStats = async (
+  flashcards: FlashcardStatsUpdateRequest[]
+): Promise<void> => {
   const token = await SecureStore.getItemAsync("session");
 
-  const response = await fetch(`${BASE_URL}/flashcards/${id}/stats`, {
+  const response = await fetch(`${BASE_URL}/flashcards/batch-update`, {
     method: "PATCH",
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(flashcardStatsUpdateRequest),
+    body: JSON.stringify({ flashcards }),
   });
 
   if (!response.ok) {
     throw new Error("Failed to update flashcard stats.");
   }
-
-  return await response.json();
 };
 
 export const deleteFlashcard = async (id: number): Promise<void> => {

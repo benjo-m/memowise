@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/api/constants";
-import { updateFlashcardStats } from "@/api/flashcards";
-import { createStudySesssion } from "@/api/study-sessions";
+import { batchUpdateFlashcardStats } from "@/api/flashcards";
+import { createStudySession } from "@/api/study-sessions";
 import { getUserStats } from "@/api/users";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
@@ -22,6 +22,7 @@ export default function StudyScreen() {
   const { setUserStats } = useUserStats();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [flashcardsToReview, setFlashcardsToReview] = useState<Flashcard[]>([]);
+  const [reviewedFlashcards, setRevievedFlashcards] = useState<FlashcardStatsUpdateRequest[]>([]);
   const [answerShown, setAnswerShown] = useState<boolean>(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -70,7 +71,7 @@ export default function StudyScreen() {
                     text: "Yes",
                     onPress: async () => {
                       if (correctAnswers + incorrectAnswers > 0) {
-                        await finishSession(correctAnswers, incorrectAnswers);
+                        await finishSession(correctAnswers, incorrectAnswers, reviewedFlashcards);
                       }
                       router.back();
                     },
@@ -85,7 +86,11 @@ export default function StudyScreen() {
     );
   };
 
-  const finishSession = async (correctCount: number, incorrectCount: number) => {
+  const finishSession = async (
+    correctCount: number,
+    incorrectCount: number,
+    newReviewedFlashcards: FlashcardStatsUpdateRequest[]
+  ) => {
     const studySession = new StudySessionCreateRequest({
       deck_id: Number(deckId),
       duration: duration,
@@ -93,7 +98,9 @@ export default function StudyScreen() {
       incorrect_answers: incorrectCount,
     });
 
-    await createStudySesssion(studySession);
+    await createStudySession(studySession);
+    await batchUpdateFlashcardStats(newReviewedFlashcards);
+
     const stats = await getUserStats();
     setUserStats(stats);
   };
@@ -102,7 +109,8 @@ export default function StudyScreen() {
     const ratedFlashcard = applySm2(flashcardsToReview.shift()!, rating);
     const request = new FlashcardStatsUpdateRequest(ratedFlashcard);
 
-    await updateFlashcardStats(ratedFlashcard.id, request);
+    setRevievedFlashcards((prev) => [...prev, request]);
+    const newReviewedFlashcards = [...reviewedFlashcards, request];
 
     if (rating < 4) {
       flashcardsToReview.push(ratedFlashcard);
@@ -117,7 +125,7 @@ export default function StudyScreen() {
     setAnswerShown(false);
 
     if (flashcardsToReview.length === 0) {
-      await finishSession(newCorrect, newIncorrect);
+      await finishSession(newCorrect, newIncorrect, newReviewedFlashcards);
     }
   };
 

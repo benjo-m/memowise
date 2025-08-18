@@ -2,6 +2,7 @@ import { DecksProvider } from "@/contexts/decks-context";
 import { TodaysProgressProvider } from "@/contexts/todays-progress-context";
 import { UserStatsProvider } from "@/contexts/user-stats-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
@@ -14,9 +15,9 @@ export default function TabLayout() {
               name="(decks)"
               options={{
                 headerShown: false,
-                title: "Study",
+                title: "Decks",
                 tabBarIcon: ({ color }) => (
-                  <FontAwesome6 name="graduation-cap" size={24} color={color} />
+                  <MaterialCommunityIcons name="view-carousel" size={26} color={color} />
                 ),
                 popToTopOnBlur: true,
               }}

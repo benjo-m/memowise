@@ -95,9 +95,9 @@ export default function SettingsScreen() {
                 </View>
                 {answerOneVisible && (
                   <Text style={{ marginTop: 10 }}>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum excepturi ut rem
-                    doloremque tenetur quae expedita, vel totam recusandae eos aliquam dolore quas
-                    consequatur esse harum? Id vel soluta sequi!
+                    MemoWise is a learning app that utilizes learning techniques such as active
+                    recall and spaced repetition to help you learn more efficiently and to retain
+                    knowledge for longer.
                   </Text>
                 )}
               </TouchableOpacity>
@@ -116,9 +116,17 @@ export default function SettingsScreen() {
                 </View>
                 {answerTwoVisible && (
                   <Text style={{ marginTop: 10 }}>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum excepturi ut rem
-                    doloremque tenetur quae expedita, vel totam recusandae eos aliquam dolore quas
-                    consequatur esse harum? Id vel soluta sequi!
+                    To begin, first you create a deck. After creating a deck, you need to fill it
+                    with flashcards. Flashcards have two sides, front and back. You write a question
+                    on the front and an answer on the back side. After you add some flashcards to a
+                    deck you can start studying them. When you start a study session, flashcards
+                    scheduled for today will be displayed to you, one by one. After you read a
+                    question on a flashcard, you answer it to yourself (you don't type it anywhere).
+                    Once you've given your answer, in your head or out loud, you reveal the back of
+                    the card to check if you were correct, then rate how well you remembered it.
+                    Based on the rating you gave, the number of days after which the question will
+                    be asked again is calculated using SM-2 algorithm. Make sure you rate your
+                    answers truthfully to get the best results.
                   </Text>
                 )}
               </TouchableOpacity>
@@ -137,9 +145,13 @@ export default function SettingsScreen() {
                 </View>
                 {answerThreeVisible && (
                   <Text style={{ marginTop: 10 }}>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum excepturi ut rem
-                    doloremque tenetur quae expedita, vel totam recusandae eos aliquam dolore quas
-                    consequatur esse harum? Id vel soluta sequi!
+                    The SM-2 algorithm determines the optimal time to review a flashcard based on
+                    how well you remembered it during previous reviews. Each time you rate your
+                    answer, the algorithm adjusts the interval before the flashcard reappears again,
+                    making easy material appear less often and difficult material more frequently.
+                    Over time, this process strengthens long-term retention while minimizing
+                    unnecessary repetition. Flashcards rated 3 and below will be asked again, in the
+                    same session, until they are rated 4 or 5.
                   </Text>
                 )}
               </TouchableOpacity>

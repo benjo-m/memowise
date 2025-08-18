@@ -4,6 +4,7 @@ import CustomButton from "@/components/custom-button";
 import DecksCarousel from "@/components/decks-carousel";
 import { useDecks } from "@/contexts/decks-context";
 import { useTodaysProgress } from "@/contexts/todays-progress-context";
+import { quotes } from "@/helpers/qoutes";
 import colors from "@/styles/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
@@ -19,6 +20,8 @@ export default function DecksScreen() {
   } = useTodaysProgress();
   const [isLoading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
   const loadData = async () => {
     const loadedDecks = await getAllDecks();
@@ -105,15 +108,16 @@ export default function DecksScreen() {
         <View style={{ flex: 1, justifyContent: "space-between", gap: "10%" }}>
           <View>
             <View style={{ marginBottom: "5%" }}>
-              <Text style={{ fontSize: 20, fontWeight: "700", color: "#111" }}>
-                Greeting placeholder
+              <Text style={{ fontWeight: "600", color: "#111", fontStyle: "italic" }}>
+                "{randomQuote.text}"
               </Text>
-              <Text style={{ fontSize: 14, color: "#555", marginTop: 5 }}>
+              <Text style={{ textAlign: "right", marginTop: 10 }}>{randomQuote.author}</Text>
+              {/* <Text style={{ fontSize: 14, color: "#555", marginTop: 5 }}>
                 You have {flashcardsDueTodayCount} flashcards scheduled for today
-              </Text>
+              </Text> */}
             </View>
             {/* Progress Bar */}
-            <View style={{}}>
+            {/* <View style={{}}>
               <View style={{ backgroundColor: "white", borderRadius: 10, height: 10 }}>
                 <View
                   style={{
@@ -130,7 +134,7 @@ export default function DecksScreen() {
               <Text style={{ fontSize: 12, color: "#555", marginTop: 5, textAlign: "right" }}>
                 {flashcardsReviewedTodayCount} / {flashcardsDueTodayCount} reviewed
               </Text>
-            </View>
+            </View> */}
           </View>
           {decks.length === 0 ? (
             <View

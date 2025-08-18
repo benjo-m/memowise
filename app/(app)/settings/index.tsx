@@ -5,6 +5,7 @@ import { inputStyles } from "@/styles/inputs";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import {
   Alert,
@@ -38,7 +39,10 @@ export default function SettingsScreen() {
               Account
             </Text>
             <View style={{ gap: 10 }}>
-              <TextInput style={inputStyles.base} defaultValue="cfokp@gmail.com"></TextInput>
+              <TextInput
+                style={inputStyles.base}
+                defaultValue={SecureStore.getItem("email")!}
+              ></TextInput>
               <CustomButton
                 title={"Change email"}
                 color={""}

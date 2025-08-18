@@ -1,7 +1,7 @@
 import { useStorageState } from "@/hooks/useStorageState";
 import { SplashScreen } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { createContext, use, type PropsWithChildren } from "react";
-
 SplashScreen.preventAutoHideAsync();
 
 type SignInResult = {
@@ -54,6 +54,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             if (!token) return { success: false, error: "Missing token in response" };
 
             setSession(token);
+            SecureStore.setItem("email", email);
 
             return { success: true };
           } catch (err) {

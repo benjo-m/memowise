@@ -147,14 +147,14 @@ export default function AddFlashcardsScreen() {
                   title="Remove front image"
                   color={colors.red}
                   onPress={() => setFrontImageFile(null)}
-                  icon={<FontAwesome name="remove" size={20} color="white" />}
+                  icon={<FontAwesome name="remove" size={18} color="white" />}
                 />
               ) : (
                 <CustomButton
                   title="Upload front image"
                   color={colors.blue}
                   onPress={() => pickImage(setFrontImageFile)}
-                  icon={<MaterialIcons name="upload" size={24} color="white" />}
+                  icon={<MaterialIcons name="upload" size={18} color="white" />}
                 />
               )}
             </View>
@@ -204,14 +204,14 @@ export default function AddFlashcardsScreen() {
                   title="Remove back image"
                   color={colors.red}
                   onPress={() => setBackImageFile(null)}
-                  icon={<FontAwesome name="remove" size={20} color="white" />}
+                  icon={<FontAwesome name="remove" size={18} color="white" />}
                 />
               ) : (
                 <CustomButton
                   title="Upload back image"
                   color={colors.blue}
                   onPress={() => pickImage(setBackImageFile)}
-                  icon={<MaterialIcons name="upload" size={24} color="white" />}
+                  icon={<MaterialIcons name="upload" size={18} color="white" />}
                 />
               )}
             </View>
@@ -239,7 +239,7 @@ export default function AddFlashcardsScreen() {
             title="Add"
             color={colors.blue}
             onPress={handleSubmit(onSubmit)}
-            icon={<FontAwesome name="plus" size={20} color="white" />}
+            icon={<FontAwesome name="plus" size={18} color="white" />}
           />
         </View>
       </View>

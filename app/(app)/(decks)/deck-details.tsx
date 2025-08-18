@@ -207,7 +207,7 @@ export default function DeckDetailsScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <CustomButton
-              title="Add flashcard"
+              title="Add flashcards"
               color={colors.blue}
               onPress={() =>
                 router.navigate({
@@ -215,7 +215,7 @@ export default function DeckDetailsScreen() {
                   params: { deckId: deck.id },
                 })
               }
-              icon={<FontAwesome name="plus" size={20} color="white" />}
+              icon={<FontAwesome name="plus" size={18} color="white" />}
             />
           </View>
         </View>

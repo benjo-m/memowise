@@ -96,7 +96,7 @@ export default function DecksScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={{ flexGrow: 1, marginVertical: 20, marginHorizontal: 30 }}
+      contentContainerStyle={{ flexGrow: 1, margin: 30 }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       {isLoading ? (
@@ -157,7 +157,7 @@ export default function DecksScreen() {
             title="Create deck"
             onPress={() => showCreateDeckPrompt("")}
             color={colors.blue}
-            icon={<FontAwesome name="plus" size={20} color="white" />}
+            icon={<FontAwesome name="plus" size={18} color="white" />}
           />
         </View>
       )}

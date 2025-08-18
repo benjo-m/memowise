@@ -2,6 +2,7 @@ import { createFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
+import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
 import { Deck } from "@/models/deck";
@@ -19,6 +20,7 @@ export default function AddFlashcardsScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck>();
   const { decks, setDecks } = useDecks();
+  const { setFlashcardsDueTodayCount } = useTodaysProgress();
   const [frontImageFile, setFrontImageFile] = useState<ImageFile | null>(null);
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
 
@@ -68,6 +70,8 @@ export default function AddFlashcardsScreen() {
           d.id === deck?.id ? { ...d, flashcards: [newFlashcard, ...d.flashcards] } : d
         )
       );
+
+      setFlashcardsDueTodayCount((prev) => prev + 1);
 
       reset({ front: "", back: "" });
       setFrontImageFile(null);

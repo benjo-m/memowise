@@ -3,6 +3,7 @@ import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import FlashcardCard from "@/components/flashcard-card";
 import { useDecks } from "@/contexts/decks-context";
+import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import { Deck } from "@/models/deck";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
@@ -20,6 +21,7 @@ export default function DeckDetailsScreen() {
   const [deck, setDeck] = useState<Deck | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<TextInput>(null);
+  const { setFlashcardsDueTodayCount } = useTodaysProgress();
 
   useEffect(() => {
     const foundDeck = decks.find((d) => d.id === Number(id)) ?? null;
@@ -62,6 +64,18 @@ export default function DeckDetailsScreen() {
       setIsEditing(false);
     } catch (err) {
       err instanceof Error && Alert.alert("Failed to update deck", err.message);
+    }
+  };
+
+  const handleDeleteDeck = async (deckId: number) => {
+    try {
+      const d = await deleteDeck(deckId);
+      const dueTodayCount = d.flashcards.filter((f) => f.due_today).length;
+      setFlashcardsDueTodayCount((prev) => prev - dueTodayCount);
+      removeDeck(deckId);
+      router.back();
+    } catch (err) {
+      err instanceof Error && Alert.alert("Failed to delete deck", err.message);
     }
   };
 
@@ -182,15 +196,7 @@ export default function DeckDetailsScreen() {
                     {
                       text: "Delete",
                       style: "destructive",
-                      onPress: async () => {
-                        try {
-                          await deleteDeck(deck.id);
-                          removeDeck(deck.id);
-                          router.back();
-                        } catch (err) {
-                          err instanceof Error && Alert.alert("Failed to delete deck", err.message);
-                        }
-                      },
+                      onPress: async () => await handleDeleteDeck(deck.id),
                     },
                   ],
                   { cancelable: true }

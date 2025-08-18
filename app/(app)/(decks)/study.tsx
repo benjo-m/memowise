@@ -5,6 +5,7 @@ import { getUserStats } from "@/api/users";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
+import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import { useUserStats } from "@/contexts/user-stats-context";
 import { applySm2 } from "@/helpers/sm2";
 import { Deck } from "@/models/deck";
@@ -28,6 +29,7 @@ export default function StudyScreen() {
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [duration, setDuration] = useState(0);
   const navigation = useNavigation();
+  const { setFlashcardsReviewedTodayCount } = useTodaysProgress();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -101,6 +103,8 @@ export default function StudyScreen() {
     await createStudySession(studySession);
     await batchUpdateFlashcardStats(newReviewedFlashcards);
 
+    setFlashcardsReviewedTodayCount((prev) => prev + correctCount);
+
     const stats = await getUserStats();
     setUserStats(stats);
   };
@@ -116,8 +120,8 @@ export default function StudyScreen() {
       flashcardsToReview.push(ratedFlashcard);
     }
 
-    const newCorrect = correctAnswers + (rating >= 3 ? 1 : 0);
-    const newIncorrect = incorrectAnswers + (rating < 3 ? 1 : 0);
+    const newCorrect = correctAnswers + (rating >= 4 ? 1 : 0);
+    const newIncorrect = incorrectAnswers + (rating < 4 ? 1 : 0);
 
     setCorrectAnswers(newCorrect);
     setIncorrectAnswers(newIncorrect);

@@ -1,5 +1,6 @@
 import { deleteFlashcard } from "@/api/flashcards";
 import { useDecks } from "@/contexts/decks-context";
+import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import { Flashcard } from "@/models/flashcard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
@@ -11,9 +12,13 @@ type FlashcardCardProps = {
 
 export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
   const { setDecks } = useDecks();
+  const { setFlashcardsDueTodayCount } = useTodaysProgress();
 
   const handleDeleteFlashcard = async (flashcard: Flashcard) => {
     try {
+      if (flashcard.due_today) {
+        setFlashcardsDueTodayCount((prev) => prev - 1);
+      }
       await deleteFlashcard(flashcard.id);
       setDecks((prevDecks) =>
         prevDecks.map((deck) =>

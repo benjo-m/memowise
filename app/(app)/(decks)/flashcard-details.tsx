@@ -3,6 +3,7 @@ import { deleteFlashcard, updateFlashcard } from "@/api/flashcards";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import { useDecks } from "@/contexts/decks-context";
+import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import { ImageFile } from "@/helpers/image-file";
 import { pickImage } from "@/helpers/image-picker";
 import { Deck } from "@/models/deck";
@@ -24,6 +25,7 @@ export default function FlashcardDetails() {
   const { decks, setDecks } = useDecks();
   const [frontImageFile, setFrontImageFile] = useState<ImageFile | null>(null);
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
+  const { setFlashcardsDueTodayCount } = useTodaysProgress();
 
   useEffect(() => {
     if (!deckId || !flashcardId) return;
@@ -108,6 +110,11 @@ export default function FlashcardDetails() {
             : deck
         )
       );
+
+      if (flashcard.due_today) {
+        setFlashcardsDueTodayCount((prev) => prev - 1);
+      }
+
       router.back();
     } catch (err) {
       err instanceof Error && Alert.alert("Failed to delete flashcard", err.message);

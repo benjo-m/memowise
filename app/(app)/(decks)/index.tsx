@@ -1,7 +1,9 @@
 import { createDeck, getAllDecks } from "@/api/decks";
+import { getTodaysProgress } from "@/api/users";
 import CustomButton from "@/components/custom-button";
 import DecksCarousel from "@/components/decks-carousel";
 import { useDecks } from "@/contexts/decks-context";
+import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import colors from "@/styles/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
@@ -9,22 +11,33 @@ import { ActivityIndicator, Alert, RefreshControl, ScrollView, Text, View } from
 
 export default function DecksScreen() {
   const { decks, setDecks } = useDecks();
+  const {
+    flashcardsDueTodayCount,
+    flashcardsReviewedTodayCount,
+    setFlashcardsDueTodayCount,
+    setFlashcardsReviewedTodayCount,
+  } = useTodaysProgress();
   const [isLoading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadDecks = async () => {
-    const data = await getAllDecks();
-    setDecks(data);
+  const loadData = async () => {
+    const loadedDecks = await getAllDecks();
+    setDecks(loadedDecks);
+
+    const loadedTodaysProgress = await getTodaysProgress();
+    setFlashcardsDueTodayCount(loadedTodaysProgress.flashcards_due_today_count);
+    setFlashcardsReviewedTodayCount(loadedTodaysProgress.flashcards_reviewed_today_count);
+
     setLoading(false);
   };
 
   useEffect(() => {
-    loadDecks();
+    loadData();
   }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadDecks();
+    await loadData();
     setRefreshing(false);
   };
 
@@ -81,20 +94,6 @@ export default function DecksScreen() {
     }
   };
 
-  const getTotalFlashcards = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // normalize to midnight
-
-    return decks.reduce((sum, deck) => {
-      const dueFlashcards = deck.flashcards.filter((card) => {
-        const dueDate = new Date(card.due_date);
-        dueDate.setHours(0, 0, 0, 0);
-        return dueDate <= today;
-      });
-      return sum + dueFlashcards.length;
-    }, 0);
-  };
-
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1, marginVertical: 20, marginHorizontal: 30 }}
@@ -110,7 +109,7 @@ export default function DecksScreen() {
                 Greeting placeholder
               </Text>
               <Text style={{ fontSize: 14, color: "#555", marginTop: 5 }}>
-                You have {getTotalFlashcards()} flashcards scheduled for today
+                You have {flashcardsDueTodayCount} flashcards scheduled for today
               </Text>
             </View>
             {/* Progress Bar */}
@@ -118,7 +117,10 @@ export default function DecksScreen() {
               <View style={{ backgroundColor: "white", borderRadius: 10, height: 10 }}>
                 <View
                   style={{
-                    width: `${(1 / getTotalFlashcards()) * 100}%`,
+                    width:
+                      flashcardsDueTodayCount == 0
+                        ? 0
+                        : `${(flashcardsReviewedTodayCount / flashcardsDueTodayCount) * 100}%`,
                     height: "100%",
                     backgroundColor: colors.blue,
                     borderRadius: 10,
@@ -126,7 +128,7 @@ export default function DecksScreen() {
                 />
               </View>
               <Text style={{ fontSize: 12, color: "#555", marginTop: 5, textAlign: "right" }}>
-                {2} / {getTotalFlashcards()} reviewed
+                {flashcardsReviewedTodayCount} / {flashcardsDueTodayCount} reviewed
               </Text>
             </View>
           </View>

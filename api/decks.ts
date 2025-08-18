@@ -71,7 +71,7 @@ export const updateDeck = async (id: number, newName: string): Promise<Deck> => 
   return await res.json();
 };
 
-export const deleteDeck = async (id: number): Promise<void> => {
+export const deleteDeck = async (id: number): Promise<Deck> => {
   const token = await SecureStore.getItemAsync("session");
 
   const response = await fetch(`${BASE_URL}/decks/${id}`, {
@@ -86,4 +86,6 @@ export const deleteDeck = async (id: number): Promise<void> => {
   if (!response.ok) {
     throw new Error("Failed to delete deck");
   }
+
+  return await response.json();
 };

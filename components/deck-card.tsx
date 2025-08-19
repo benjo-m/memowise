@@ -1,19 +1,36 @@
 import { Deck } from "@/models/deck";
-import colors from "@/styles/colors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import CustomButton from "./custom-button";
 
 type DeckCardProps = {
   deck: Deck;
 };
 
 export default function DeckCard({ deck }: DeckCardProps) {
-  const newCount = deck.flashcards.filter((c) => c.interval === 0).length;
-  const dueCount = deck.flashcards.filter(
-    (c) => new Date(c.due_date).setHours(0, 0, 0, 0) <= new Date().setHours(0, 0, 0, 0)
-  ).length;
+  const newCount = deck.flashcards.filter((fc) => fc.interval === 0).length;
+  const dueCount = deck.flashcards.filter((fc) => fc.due_today).length;
+
+  const studyButton = () => {
+    return (
+      <TouchableOpacity
+        style={{
+          flexDirection: "row",
+          backgroundColor: "#34d770ff",
+          paddingVertical: 12,
+          paddingHorizontal: 10,
+          borderRadius: 10,
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 6,
+        }}
+        onPress={() => router.push({ pathname: "/study", params: { deckId: deck.id } })}
+      >
+        <FontAwesome5 name="play" size={14} color="white" />
+        <Text style={{ color: "white", fontWeight: "bold" }}>Study</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <TouchableOpacity
@@ -21,32 +38,22 @@ export default function DeckCard({ deck }: DeckCardProps) {
       onPress={() => router.navigate({ pathname: "/deck-details", params: { id: deck.id } })}
       activeOpacity={0.8}
     >
-      <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-        {deck.name}
-      </Text>
-
-      <View style={styles.statsContainer}>
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>New flashcards</Text>
-          <Text style={styles.statValue}>{newCount}</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>Flashcards to review</Text>
-          <Text style={styles.statValue}>{dueCount}</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>Total flashcards</Text>
-          <Text style={styles.statValue}>{deck.flashcards.length}</Text>
+      <View>
+        <Text style={styles.title}>
+          {deck.name.length > 20 ? deck.name.slice(0, 20) + "…" : deck.name}
+        </Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.stat}>
+            <Text style={styles.statLabel}>New cards</Text>
+            <Text style={styles.statValue}>{newCount}</Text>
+          </View>
+          <View style={styles.stat}>
+            <Text style={styles.statLabel}>To review</Text>
+            <Text style={styles.statValue}>{dueCount}</Text>
+          </View>
         </View>
       </View>
-      <View style={{ width: "100%" }}>
-        <CustomButton
-          title="Study"
-          color={colors.blue}
-          onPress={() => router.push({ pathname: "/study", params: { deckId: deck.id } })}
-          icon={<FontAwesome5 name="play" size={18} color="white" />}
-        />
-      </View>
+      {studyButton()}
     </TouchableOpacity>
   );
 }
@@ -54,35 +61,34 @@ export default function DeckCard({ deck }: DeckCardProps) {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
+    flexDirection: "row",
     backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 20,
-    marginHorizontal: 8,
+    borderRadius: 10,
     justifyContent: "space-between",
-    alignItems: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
   },
   title: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "700",
     color: "#111",
-    textAlign: "center",
+    marginBottom: 4,
   },
   statsContainer: {
-    justifyContent: "space-between",
-    width: "100%",
-    gap: 5,
+    flexDirection: "row",
+    gap: 10,
   },
   stat: {
-    alignItems: "center",
+    flexDirection: "row",
+    gap: 4,
   },
   statLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#555",
-    marginBottom: 2,
   },
   statValue: {
-    fontSize: 16,
     fontWeight: "600",
+    fontSize: 12,
     color: "#222",
   },
 });

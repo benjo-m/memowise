@@ -2,7 +2,7 @@ import { DecksProvider } from "@/contexts/decks-context";
 import { TodaysProgressProvider } from "@/contexts/todays-progress-context";
 import { UserStatsProvider } from "@/contexts/user-stats-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
@@ -17,7 +17,7 @@ export default function TabLayout() {
                 headerShown: false,
                 title: "Decks",
                 tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="view-carousel" size={26} color={color} />
+                  <MaterialIcons name="view-stream" size={28} color={color} />
                 ),
                 popToTopOnBlur: true,
               }}

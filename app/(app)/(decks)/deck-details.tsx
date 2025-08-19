@@ -157,7 +157,9 @@ export default function DeckDetailsScreen() {
         )}
 
         {deck.flashcards.length > 0 && (
-          <Text style={{ marginTop: 20, fontSize: 16, fontWeight: "bold" }}>Flashcards</Text>
+          <Text style={{ marginTop: 20, fontSize: 16, fontWeight: "bold", color: "#313131ff" }}>
+            Flashcards ({deck.flashcards.length})
+          </Text>
         )}
         {deck.flashcards.length == 0 ? (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -172,7 +174,9 @@ export default function DeckDetailsScreen() {
             data={deck.flashcards}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <FlashcardCard flashcard={item}></FlashcardCard>}
-            style={{ width: "100%" }}
+            style={{ marginTop: 16, borderRadius: 10 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ gap: 16 }}
           />
         )}
         <View

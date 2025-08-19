@@ -1,14 +1,13 @@
 import { createDeck, getAllDecks } from "@/api/decks";
 import { getTodaysProgress } from "@/api/users";
 import CustomButton from "@/components/custom-button";
-import DecksCarousel from "@/components/decks-carousel";
+import DeckCard from "@/components/deck-card";
 import { useDecks } from "@/contexts/decks-context";
 import { useTodaysProgress } from "@/contexts/todays-progress-context";
-import { quotes } from "@/helpers/qoutes";
 import colors from "@/styles/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, RefreshControl, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Text, View } from "react-native";
 
 export default function DecksScreen() {
   const { decks, setDecks } = useDecks();
@@ -19,9 +18,6 @@ export default function DecksScreen() {
     setFlashcardsReviewedTodayCount,
   } = useTodaysProgress();
   const [isLoading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
   const loadData = async () => {
     const loadedDecks = await getAllDecks();
@@ -37,12 +33,6 @@ export default function DecksScreen() {
   useEffect(() => {
     loadData();
   }, []);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await loadData();
-    setRefreshing(false);
-  };
 
   const showCreateDeckPrompt = (defaultText: string) => {
     Alert.prompt(
@@ -98,26 +88,19 @@ export default function DecksScreen() {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1, margin: 30 }}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
+    <View style={{ flex: 1, margin: 30 }}>
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} />
       ) : (
-        <View style={{ flex: 1, justifyContent: "space-between", gap: "10%" }}>
-          <View>
-            <View style={{ marginBottom: "5%" }}>
-              <Text style={{ fontWeight: "600", color: "#111", fontStyle: "italic" }}>
-                "{randomQuote.text}"
-              </Text>
-              <Text style={{ textAlign: "right", marginTop: 10 }}>{randomQuote.author}</Text>
-              {/* <Text style={{ fontSize: 14, color: "#555", marginTop: 5 }}>
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
+          <View style={{ marginBottom: 20 }}>
+            <View style={{ marginBottom: "2%" }}>
+              <Text style={{ fontWeight: "600", marginBottom: 10, color: "#313131ff" }}>
                 You have {flashcardsDueTodayCount} flashcards scheduled for today
-              </Text> */}
+              </Text>
             </View>
             {/* Progress Bar */}
-            {/* <View style={{}}>
+            <View style={{}}>
               <View style={{ backgroundColor: "white", borderRadius: 10, height: 10 }}>
                 <View
                   style={{
@@ -134,7 +117,7 @@ export default function DecksScreen() {
               <Text style={{ fontSize: 12, color: "#555", marginTop: 5, textAlign: "right" }}>
                 {flashcardsReviewedTodayCount} / {flashcardsDueTodayCount} reviewed
               </Text>
-            </View> */}
+            </View>
           </View>
           {decks.length === 0 ? (
             <View
@@ -155,7 +138,21 @@ export default function DecksScreen() {
               </Text>
             </View>
           ) : (
-            <DecksCarousel decks={decks} />
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10, color: "#313131ff" }}
+              >
+                Decks ({decks.length})
+              </Text>
+              <FlatList
+                data={decks}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <DeckCard deck={item}></DeckCard>}
+                style={{ marginBottom: 30, borderRadius: 10 }}
+                contentContainerStyle={{ gap: 16 }}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
           )}
           <CustomButton
             title="Create deck"
@@ -165,6 +162,6 @@ export default function DecksScreen() {
           />
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 }

@@ -49,7 +49,6 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
         alignItems: "center",
         backgroundColor: "#ffff",
         padding: 14,
-        marginVertical: 8,
         borderRadius: 12,
         width: "100%",
         alignSelf: "center",

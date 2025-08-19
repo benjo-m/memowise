@@ -19,7 +19,7 @@ export default function CustomButton({ title, color, onPress, icon }: Props) {
         style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}
       >
         {icon}
-        <Text style={styles.text}>{title}</Text>
+        {title != "" && <Text style={styles.text}>{title}</Text>}
       </View>
     </TouchableOpacity>
   );

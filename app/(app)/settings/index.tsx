@@ -5,6 +5,7 @@ import { inputStyles } from "@/styles/inputs";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import {
@@ -54,9 +55,7 @@ export default function SettingsScreen() {
               <CustomButton
                 title={"Change password"}
                 color={""}
-                onPress={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
+                onPress={() => router.push("/(app)/settings/change-password")}
                 icon={<Entypo name="dots-three-horizontal" size={18} color="white" />}
               ></CustomButton>
               <CustomButton
@@ -162,7 +161,7 @@ export default function SettingsScreen() {
         <View style={{ marginTop: 30 }}>
           <CustomButton
             title={"Sign out"}
-            color="#8686ac9a"
+            color={colors.gray}
             onPress={() => {
               Alert.alert(
                 "Sign out",
@@ -175,6 +174,12 @@ export default function SettingsScreen() {
               );
             }}
             icon={<MaterialCommunityIcons name="logout" size={18} color="white" />}
+          ></CustomButton>
+          <CustomButton
+            title={"Get token"}
+            color={""}
+            onPress={() => console.log(session)}
+            icon={undefined}
           ></CustomButton>
         </View>
       </View>

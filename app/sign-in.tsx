@@ -20,8 +20,8 @@ export default function SignIn() {
     },
   });
 
-  const _signIn = async (email: string, password: string) => {
-    const result = await signIn(email, password);
+  const onSubmit = async (data: any) => {
+    const result = await signIn(data.email, data.password);
 
     if (result?.success) {
       router.replace("/");
@@ -29,8 +29,6 @@ export default function SignIn() {
       setSignInError(result?.error!);
     }
   };
-
-  const onSubmit = (data: any) => _signIn(data.email, data.password);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

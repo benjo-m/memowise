@@ -1,12 +1,14 @@
+import { signIn } from "@/api/auth";
 import { useStorageState } from "@/hooks/useStorageState";
 import { SplashScreen } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { createContext, use, type PropsWithChildren } from "react";
 SplashScreen.preventAutoHideAsync();
 
-type SignInResult = {
+export type SignInResult = {
   success: boolean;
   error?: string;
+  token?: string;
 };
 
 const AuthContext = createContext<{
@@ -38,25 +40,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
       value={{
         signIn: async (email: string, password: string): Promise<SignInResult> => {
           try {
-            const response = await fetch("http://localhost:3000/login", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) return { success: false, error: "Invalid credentials" };
-
-            const token = response.headers.get("authorization");
-
-            if (!token) return { success: false, error: "Missing token in response" };
-
-            setSession(token);
-            SecureStore.setItem("email", email);
-
-            return { success: true };
+            const response = await signIn(email, password);
+            if (response.token) {
+              setSession(response.token);
+              SecureStore.setItem("email", email);
+            }
+            return response;
           } catch (err) {
             console.error("Login error:", err);
             return { success: false, error: "Network or server error" };

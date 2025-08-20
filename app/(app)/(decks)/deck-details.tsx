@@ -123,7 +123,7 @@ export default function DeckDetailsScreen() {
                   setIsEditing(false);
                   reset({ name: deck.name });
                 }}
-                color={"#b5b5b5"}
+                color={colors.gray}
                 icon={null}
               />
             </View>

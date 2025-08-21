@@ -6,6 +6,6 @@ export const inputStyles = StyleSheet.create({
     padding: 14,
     borderRadius: 10,
     fontSize: 16,
-    borderColor: "#ccc",
+    flex: 1,
   },
 });

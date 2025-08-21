@@ -1,10 +1,20 @@
 import { changePassword } from "@/api/auth";
 import CustomButton from "@/components/custom-button";
+import InputWrapper from "@/components/input-wrapper";
 import { inputStyles } from "@/styles/inputs";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { router } from "expo-router";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Text, TextInput, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function ChangePasswordScreen() {
+  const [currentPasswordHidden, setCurrentPasswordHidden] = useState<boolean>(true);
+  const [newPasswordHidden, setNewPasswordHidden] = useState<boolean>(true);
+  const [passwordConfirmationHidden, setPasswordConfirmationHidden] = useState<boolean>(true);
+
   const {
     control,
     handleSubmit,
@@ -26,7 +36,17 @@ export default function ChangePasswordScreen() {
         "password-confirm": data.confirmNewPassword,
       });
 
-      Alert.alert("Password changed successfully.", "yay");
+      Alert.alert(
+        "Password changed successfully.",
+        "",
+        [
+          {
+            text: "OK",
+            onPress: () => router.back(),
+          },
+        ],
+        { cancelable: false }
+      );
     } catch (err: any) {
       const errorField = err["field-error"][0];
       const errorMessage = err["field-error"][1];
@@ -55,23 +75,39 @@ export default function ChangePasswordScreen() {
           <Controller
             control={control}
             rules={{
-              required: true,
+              required: "Current password is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Enter your current password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                style={inputStyles.base}
-              />
+              <InputWrapper
+                leadingIcon={<FontAwesome6 name="lock" size={16} color="orange" />}
+                trailingIcon={
+                  <TouchableOpacity onPress={() => setCurrentPasswordHidden((prev) => !prev)}>
+                    {currentPasswordHidden ? (
+                      <FontAwesome5 name="eye" size={20} color="black" />
+                    ) : (
+                      <FontAwesome5 name="eye-slash" size={20} color="black" />
+                    )}
+                  </TouchableOpacity>
+                }
+              >
+                <TextInput
+                  placeholder="Enter your current password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  style={inputStyles.base}
+                  secureTextEntry={currentPasswordHidden}
+                />
+              </InputWrapper>
             )}
             name="currentPassword"
           />
-          {errors.currentPassword && <Text>{errors.currentPassword.message}</Text>}
+          {errors.currentPassword && (
+            <Text style={{ marginTop: 5, color: "red" }}>{errors.currentPassword.message}</Text>
+          )}
         </View>
 
         <View>
@@ -82,23 +118,39 @@ export default function ChangePasswordScreen() {
           <Controller
             control={control}
             rules={{
-              required: true,
+              required: "New password is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Enter your new password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                style={inputStyles.base}
-              />
+              <InputWrapper
+                leadingIcon={<FontAwesome6 name="lock" size={16} color="orange" />}
+                trailingIcon={
+                  <TouchableOpacity onPress={() => setNewPasswordHidden((prev) => !prev)}>
+                    {newPasswordHidden ? (
+                      <FontAwesome5 name="eye" size={20} color="black" />
+                    ) : (
+                      <FontAwesome5 name="eye-slash" size={20} color="black" />
+                    )}
+                  </TouchableOpacity>
+                }
+              >
+                <TextInput
+                  placeholder="Enter your new password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  style={inputStyles.base}
+                  secureTextEntry={newPasswordHidden}
+                />
+              </InputWrapper>
             )}
             name="newPassword"
           />
-          {errors.newPassword && <Text>{errors.newPassword.message}</Text>}
+          {errors.newPassword && (
+            <Text style={{ marginTop: 5, color: "red" }}>{errors.newPassword.message}</Text>
+          )}
         </View>
 
         <View>
@@ -109,30 +161,46 @@ export default function ChangePasswordScreen() {
           <Controller
             control={control}
             rules={{
-              required: true,
+              required: "Password confirmation is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Confirm your new password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                style={inputStyles.base}
-              />
+              <InputWrapper
+                leadingIcon={<FontAwesome6 name="lock" size={16} color="orange" />}
+                trailingIcon={
+                  <TouchableOpacity onPress={() => setPasswordConfirmationHidden((prev) => !prev)}>
+                    {passwordConfirmationHidden ? (
+                      <FontAwesome5 name="eye" size={20} color="black" />
+                    ) : (
+                      <FontAwesome5 name="eye-slash" size={20} color="black" />
+                    )}
+                  </TouchableOpacity>
+                }
+              >
+                <TextInput
+                  placeholder="Confirm your new password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  style={inputStyles.base}
+                  secureTextEntry={passwordConfirmationHidden}
+                />
+              </InputWrapper>
             )}
             name="confirmNewPassword"
           />
-          {errors.confirmNewPassword && <Text>New password confirmation is required</Text>}
+          {errors.confirmNewPassword && (
+            <Text style={{ marginTop: 5, color: "red" }}>{errors.confirmNewPassword.message}</Text>
+          )}
         </View>
       </View>
       <CustomButton
         title={"Change password"}
         color={""}
         onPress={handleSubmit(onSubmit)}
-        icon={undefined}
+        icon={<FontAwesome name="check" size={18} color="white" />}
       ></CustomButton>
     </View>
   );

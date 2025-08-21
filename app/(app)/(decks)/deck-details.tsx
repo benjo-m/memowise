@@ -2,6 +2,7 @@ import { deleteDeck, updateDeck } from "@/api/decks";
 import CustomButton from "@/components/custom-button";
 import FallbackMessage from "@/components/fallback-message";
 import FlashcardCard from "@/components/flashcard-card";
+import InputWrapper from "@/components/input-wrapper";
 import { useDecks } from "@/contexts/decks-context";
 import { useTodaysProgress } from "@/contexts/todays-progress-context";
 import { Deck } from "@/models/deck";
@@ -89,17 +90,19 @@ export default function DeckDetailsScreen() {
           rules={{ required: true }}
           name="name"
           render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              ref={inputRef}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              editable={isEditing}
-              style={inputStyles.base}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-            />
+            <InputWrapper>
+              <TextInput
+                ref={inputRef}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                editable={isEditing}
+                style={inputStyles.base}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect={false}
+              />
+            </InputWrapper>
           )}
         />
         {errors.name && (

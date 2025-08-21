@@ -1,9 +1,11 @@
 import CustomButton from "@/components/custom-button";
+import InputWrapper from "@/components/input-wrapper";
 import { useSession } from "@/contexts/auth-context";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -40,10 +42,15 @@ export default function SettingsScreen() {
               Account
             </Text>
             <View style={{ gap: 10 }}>
-              <TextInput
-                style={inputStyles.base}
-                defaultValue={SecureStore.getItem("email")!}
-              ></TextInput>
+              <InputWrapper
+                leadingIcon={<FontAwesome5 name="user-alt" size={16} color="#353535ff" />}
+              >
+                <TextInput
+                  style={inputStyles.base}
+                  defaultValue={SecureStore.getItem("email")!}
+                  editable={false}
+                ></TextInput>
+              </InputWrapper>
               <CustomButton
                 title={"Change email"}
                 color={""}

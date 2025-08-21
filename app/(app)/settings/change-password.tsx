@@ -1,6 +1,7 @@
 import { changePassword } from "@/api/auth";
 import CustomButton from "@/components/custom-button";
 import InputWrapper from "@/components/input-wrapper";
+import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -83,9 +84,9 @@ export default function ChangePasswordScreen() {
                 trailingIcon={
                   <TouchableOpacity onPress={() => setCurrentPasswordHidden((prev) => !prev)}>
                     {currentPasswordHidden ? (
-                      <FontAwesome5 name="eye" size={20} color="black" />
+                      <FontAwesome5 name="eye" size={20} color={colors.blue} />
                     ) : (
-                      <FontAwesome5 name="eye-slash" size={20} color="black" />
+                      <FontAwesome5 name="eye-slash" size={20} color={colors.blue} />
                     )}
                   </TouchableOpacity>
                 }
@@ -126,9 +127,9 @@ export default function ChangePasswordScreen() {
                 trailingIcon={
                   <TouchableOpacity onPress={() => setNewPasswordHidden((prev) => !prev)}>
                     {newPasswordHidden ? (
-                      <FontAwesome5 name="eye" size={20} color="black" />
+                      <FontAwesome5 name="eye" size={20} color={colors.blue} />
                     ) : (
-                      <FontAwesome5 name="eye-slash" size={20} color="black" />
+                      <FontAwesome5 name="eye-slash" size={20} color={colors.blue} />
                     )}
                   </TouchableOpacity>
                 }
@@ -169,9 +170,9 @@ export default function ChangePasswordScreen() {
                 trailingIcon={
                   <TouchableOpacity onPress={() => setPasswordConfirmationHidden((prev) => !prev)}>
                     {passwordConfirmationHidden ? (
-                      <FontAwesome5 name="eye" size={20} color="black" />
+                      <FontAwesome5 name="eye" size={20} color={colors.blue} />
                     ) : (
-                      <FontAwesome5 name="eye-slash" size={20} color="black" />
+                      <FontAwesome5 name="eye-slash" size={20} color={colors.blue} />
                     )}
                   </TouchableOpacity>
                 }

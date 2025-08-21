@@ -43,7 +43,7 @@ export default function SettingsScreen() {
             </Text>
             <View style={{ gap: 10 }}>
               <InputWrapper
-                leadingIcon={<FontAwesome5 name="user-alt" size={16} color="#353535ff" />}
+                leadingIcon={<FontAwesome5 name="user-alt" size={16} color={colors.blue} />}
               >
                 <TextInput
                   style={inputStyles.base}

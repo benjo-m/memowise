@@ -6,15 +6,16 @@ import { inputStyles } from "@/styles/inputs";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-export default function SignIn() {
+
+export default function SignUp() {
   const { signIn } = useSession();
   const [signInError, setSignInError] = useState<string | null>(null);
   const [passwordHidden, setPasswordHidden] = useState(true);
+  const [passwordConfirmationHidden, setPasswordConfirmationHidden] = useState(true);
 
   const {
     control,
@@ -24,6 +25,7 @@ export default function SignIn() {
     defaultValues: {
       email: "",
       password: "",
+      passwordConfirmation: "",
     },
   });
 
@@ -57,9 +59,7 @@ export default function SignIn() {
         >
           {signInError}
         </Text>
-        <Text style={{ color: "red", marginTop: 10 }}>
-          Try again with different email or password
-        </Text>
+        <Text style={{ color: "#ff5050ff" }}>Try again with different email or password</Text>
       </View>
     );
   };
@@ -67,7 +67,7 @@ export default function SignIn() {
   return (
     <View style={{ flex: 1, margin: 30 }}>
       <Text style={styles.title}>Welcome to MemoWise!</Text>
-      <Text style={styles.subtitle}>Sign in to continue.</Text>
+      <Text style={styles.subtitle}>Create an account to continue.</Text>
       <View style={{ gap: 10, marginTop: 30, marginBottom: 20 }}>
         {signInError && invalidCredentialsMessage()}
         <View>
@@ -134,17 +134,58 @@ export default function SignIn() {
           />
           {errors.password && <Text>Password is required.</Text>}
         </View>
+        <View>
+          <Text style={{ marginBottom: 8, fontWeight: "600", color: "#2c2c2cff" }}>
+            Confirm password
+          </Text>
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <InputWrapper
+                leadingIcon={<FontAwesome6 name="lock" size={16} color="orange" />}
+                trailingIcon={
+                  <TouchableOpacity onPress={() => setPasswordConfirmationHidden((prev) => !prev)}>
+                    {passwordConfirmationHidden ? (
+                      <FontAwesome5 name="eye" size={20} color={colors.blue} />
+                    ) : (
+                      <FontAwesome5 name="eye-slash" size={20} color={colors.blue} />
+                    )}
+                  </TouchableOpacity>
+                }
+              >
+                <TextInput
+                  placeholder="Confirm password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  textContentType="password"
+                  style={inputStyles.base}
+                  secureTextEntry={passwordConfirmationHidden}
+                />
+              </InputWrapper>
+            )}
+            name="passwordConfirmation"
+          />
+          {errors.passwordConfirmation && <Text>Password confirmation is required.</Text>}
+        </View>
       </View>
       <CustomButton
-        title={"Sign in"}
+        title={"Sign up"}
         color={""}
         onPress={handleSubmit(onSubmit)}
-        icon={<MaterialCommunityIcons name="login" size={18} color="white" />}
+        icon={<FontAwesome5 name="user-plus" size={18} color="white" />}
       ></CustomButton>
       <View style={{ marginTop: 30, alignItems: "center", gap: 8 }}>
-        <Text style={{}}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => router.replace("/sign-up")}>
-          <Text style={{ color: colors.blue, fontWeight: "600" }}>Create one here!</Text>
+        <Text style={{}}>Already have an account?</Text>
+        <TouchableOpacity onPress={() => router.replace("/sign-in")}>
+          <Text style={{ color: colors.blue, fontWeight: "600" }}>Sign in</Text>
         </TouchableOpacity>
       </View>
     </View>

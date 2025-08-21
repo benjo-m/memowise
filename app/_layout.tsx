@@ -23,10 +23,8 @@ function RootNavigator() {
       </Stack.Protected>
 
       <Stack.Protected guard={!session}>
-        <Stack.Screen
-          name="sign-in"
-          options={{ animation: "none", title: "Sign in" }}
-        />
+        <Stack.Screen name="sign-in" options={{ animation: "none", title: "Sign in" }} />
+        <Stack.Screen name="sign-up" options={{ animation: "none", title: "Sign up" }} />
       </Stack.Protected>
     </Stack>
   );

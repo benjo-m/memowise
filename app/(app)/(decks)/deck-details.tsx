@@ -168,7 +168,7 @@ export default function DeckDetailsScreen() {
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ marginBottom: 10, fontSize: 16, fontWeight: "bold" }}>Deck empty</Text>
             <Text style={{ textAlign: "center", color: "#585858ff" }}>
-              Press the <Text style={{ fontWeight: "bold" }}>Add flashcards</Text> button to start
+              Press the <Text style={{ fontWeight: "bold" }}>Add flashcard</Text> button to start
               adding flashcards to this deck
             </Text>
           </View>
@@ -214,7 +214,7 @@ export default function DeckDetailsScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <CustomButton
-              title="Add flashcards"
+              title="Add flashcard"
               color={colors.blue}
               onPress={() =>
                 router.navigate({

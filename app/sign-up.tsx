@@ -1,6 +1,6 @@
+import { signUp } from "@/api/auth";
 import CustomButton from "@/components/custom-button";
 import InputWrapper from "@/components/input-wrapper";
-import { useSession } from "@/contexts/auth-context";
 import colors from "@/styles/colors";
 import { inputStyles } from "@/styles/inputs";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -12,14 +12,13 @@ import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function SignUp() {
-  const { signIn } = useSession();
-  const [signInError, setSignInError] = useState<string | null>(null);
-  const [passwordHidden, setPasswordHidden] = useState(true);
-  const [passwordConfirmationHidden, setPasswordConfirmationHidden] = useState(true);
+  const [passwordHidden, setPasswordHidden] = useState<boolean>(true);
+  const [passwordConfirmationHidden, setPasswordConfirmationHidden] = useState<boolean>(true);
 
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -30,38 +29,35 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data: any) => {
-    const result = await signIn(data.email, data.password);
+    try {
+      await signUp({
+        email: data.email,
+        password: data.password,
+        "password-confirm": data.passwordConfirmation,
+      });
 
-    if (result?.success) {
-      router.replace("/");
-    } else {
-      setSignInError(result?.error!);
+      // go to email verification screen
+      // go to email verification screen
+      // go to email verification screen
+      // go to email verification screen
+    } catch (err: any) {
+      console.log(err);
+
+      const errorField = err["field-error"][0];
+      const errorMessage = err["field-error"][1];
+
+      if (errorField == "email") {
+        setError("email", {
+          type: "manual",
+          message: errorMessage,
+        });
+      } else if (errorField == "password") {
+        setError("password", {
+          type: "manual",
+          message: errorMessage,
+        });
+      }
     }
-  };
-
-  const invalidCredentialsMessage = () => {
-    return (
-      <View
-        style={{
-          padding: 20,
-          backgroundColor: "#ffc4c4ff",
-          borderRadius: 10,
-          marginBottom: 20,
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            color: "red",
-            fontWeight: 500,
-            fontSize: 16,
-          }}
-        >
-          {signInError}
-        </Text>
-        <Text style={{ color: "#ff5050ff" }}>Try again with different email or password</Text>
-      </View>
-    );
   };
 
   return (
@@ -69,13 +65,12 @@ export default function SignUp() {
       <Text style={styles.title}>Welcome to MemoWise!</Text>
       <Text style={styles.subtitle}>Create an account to continue.</Text>
       <View style={{ gap: 10, marginTop: 30, marginBottom: 20 }}>
-        {signInError && invalidCredentialsMessage()}
         <View>
           <Text style={{ marginBottom: 8, fontWeight: "600", color: "#2c2c2cff" }}>Email</Text>
           <Controller
             control={control}
             rules={{
-              required: true,
+              required: "Email is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <InputWrapper leadingIcon={<Ionicons name="mail" size={20} color={colors.blue} />}>
@@ -93,15 +88,16 @@ export default function SignUp() {
             )}
             name="email"
           />
-          {errors.email && <Text>Email is required.</Text>}
+          {errors.email && (
+            <Text style={{ marginTop: 5, color: "red" }}>{errors.email.message}</Text>
+          )}
         </View>
         <View>
           <Text style={{ marginBottom: 8, fontWeight: "600", color: "#2c2c2cff" }}>Password</Text>
-
           <Controller
             control={control}
             rules={{
-              required: true,
+              required: "Password is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <InputWrapper
@@ -124,7 +120,6 @@ export default function SignUp() {
                   autoCapitalize="none"
                   autoComplete="off"
                   autoCorrect={false}
-                  textContentType="password"
                   style={inputStyles.base}
                   secureTextEntry={passwordHidden}
                 />
@@ -132,7 +127,9 @@ export default function SignUp() {
             )}
             name="password"
           />
-          {errors.password && <Text>Password is required.</Text>}
+          {errors.password && (
+            <Text style={{ marginTop: 5, color: "red" }}>{errors.password.message}</Text>
+          )}
         </View>
         <View>
           <Text style={{ marginBottom: 8, fontWeight: "600", color: "#2c2c2cff" }}>
@@ -142,7 +139,7 @@ export default function SignUp() {
           <Controller
             control={control}
             rules={{
-              required: true,
+              required: "Password confirmation is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <InputWrapper
@@ -173,7 +170,11 @@ export default function SignUp() {
             )}
             name="passwordConfirmation"
           />
-          {errors.passwordConfirmation && <Text>Password confirmation is required.</Text>}
+          {errors.passwordConfirmation && (
+            <Text style={{ marginTop: 5, color: "red" }}>
+              {errors.passwordConfirmation.message}
+            </Text>
+          )}
         </View>
       </View>
       <CustomButton

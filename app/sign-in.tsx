@@ -93,7 +93,7 @@ export default function SignIn() {
             )}
             name="email"
           />
-          {errors.email && <Text>Email is required.</Text>}
+          {errors.email && <Text style={{ marginTop: 5, color: "red" }}>Email is required.</Text>}
         </View>
         <View>
           <Text style={{ marginBottom: 8, fontWeight: "600", color: "#2c2c2cff" }}>Password</Text>
@@ -132,7 +132,9 @@ export default function SignIn() {
             )}
             name="password"
           />
-          {errors.password && <Text>Password is required.</Text>}
+          {errors.password && (
+            <Text style={{ marginTop: 5, color: "red" }}>Password is required.</Text>
+          )}
         </View>
       </View>
       <CustomButton

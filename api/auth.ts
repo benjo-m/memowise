@@ -68,3 +68,22 @@ export const changePassword = async (request: ChangePasswordRequest) => {
 
   return data;
 };
+
+export const resetPassword = async (email: string) => {
+  const response = await fetch(`${BASE_URL}/reset-password-request`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
+  }
+
+  return data;
+};

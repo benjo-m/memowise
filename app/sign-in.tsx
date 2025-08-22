@@ -57,7 +57,7 @@ export default function SignIn() {
         >
           {signInError}
         </Text>
-        <Text style={{ color: "red", marginTop: 10 }}>
+        <Text style={{ color: "red", marginTop: 10, textAlign: "center" }}>
           Try again with different email or password
         </Text>
       </View>
@@ -136,6 +136,9 @@ export default function SignIn() {
             <Text style={{ marginTop: 5, color: "red" }}>Password is required.</Text>
           )}
         </View>
+        <TouchableOpacity onPress={() => router.push("/reset-password")}>
+          <Text style={{ color: colors.blue, fontWeight: "600" }}>Reset password</Text>
+        </TouchableOpacity>
       </View>
       <CustomButton
         title={"Sign in"}

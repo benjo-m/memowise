@@ -11,6 +11,7 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+
 export default function SignIn() {
   const { signIn } = useSession();
   const [signInError, setSignInError] = useState<string | null>(null);
@@ -29,9 +30,10 @@ export default function SignIn() {
 
   const onSubmit = async (data: any) => {
     const result = await signIn(data.email, data.password);
-
     if (result?.success) {
       router.replace("/");
+    } else if (result?.status == 403) {
+      router.push({ pathname: "/verify-email", params: { email: data.email } });
     } else {
       setSignInError(result?.error!);
     }

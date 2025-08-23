@@ -14,8 +14,20 @@ export const signIn = async (email: string, password: string): Promise<SignInRes
     body: JSON.stringify({ email, password }),
   });
 
+  if (response.status == 403) {
+    return {
+      success: false,
+      status: 403,
+      error:
+        "You must verify your email before proceeding. Please check your inbox for the verification link.",
+    };
+  }
+
   if (!response.ok) {
-    return { success: false, error: "Invalid credentials" };
+    return {
+      success: false,
+      error: "Invalid credentials",
+    };
   }
 
   const token = response.headers.get("authorization");

@@ -36,26 +36,19 @@ export default function SignUp() {
         "password-confirm": data.passwordConfirmation,
       });
 
-      // go to email verification screen
-      // go to email verification screen
-      // go to email verification screen
-      // go to email verification screen
+      router.push({
+        pathname: "/verify-email",
+        params: { fromSignUp: 1, email: data.email, password: data.password },
+      });
     } catch (err: any) {
-      console.log(err);
-
-      const errorField = err["field-error"][0];
-      const errorMessage = err["field-error"][1];
-
-      if (errorField == "email") {
-        setError("email", {
-          type: "manual",
-          message: errorMessage,
-        });
-      } else if (errorField == "password") {
-        setError("password", {
-          type: "manual",
-          message: errorMessage,
-        });
+      if (err["field-error"]) {
+        const errorField = err["field-error"][0];
+        const errorMessage = err["field-error"][1];
+        setError(errorField, { type: "manual", message: errorMessage });
+      } else if (err.error) {
+        setError("email", { type: "manual", message: err.error });
+      } else {
+        setError("email", { type: "manual", message: "An unknown error occurred" });
       }
     }
   };

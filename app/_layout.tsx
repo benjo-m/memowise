@@ -29,6 +29,10 @@ function RootNavigator() {
           name="reset-password"
           options={{ title: "Reset password", headerBackButtonDisplayMode: "generic" }}
         />
+        <Stack.Screen
+          name="verify-email"
+          options={{ title: "Verify email", headerBackButtonDisplayMode: "generic" }}
+        />
       </Stack.Protected>
     </Stack>
   );

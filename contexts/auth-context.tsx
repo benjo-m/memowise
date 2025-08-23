@@ -9,6 +9,7 @@ export type SignInResult = {
   success: boolean;
   error?: string;
   token?: string;
+  status?: number;
 };
 
 const AuthContext = createContext<{

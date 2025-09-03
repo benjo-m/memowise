@@ -196,13 +196,13 @@ export default function ChangePasswordScreen() {
             <Text style={{ marginTop: 5, color: "red" }}>{errors.confirmNewPassword.message}</Text>
           )}
         </View>
+        <CustomButton
+          title={"Change password"}
+          color={""}
+          onPress={handleSubmit(onSubmit)}
+          icon={<FontAwesome name="check" size={18} color="white" />}
+        ></CustomButton>
       </View>
-      <CustomButton
-        title={"Change password"}
-        color={""}
-        onPress={handleSubmit(onSubmit)}
-        icon={<FontAwesome name="check" size={18} color="white" />}
-      ></CustomButton>
     </View>
   );
 }

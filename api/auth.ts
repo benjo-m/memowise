@@ -118,3 +118,24 @@ export const verifyAccountResend = async (email: string) => {
 
   return data;
 };
+
+export const closeAccount = async (password: string) => {
+  const token = await SecureStore.getItemAsync("session");
+  const response = await fetch(`${BASE_URL}/close-account`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ password }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
+  }
+
+  return data;
+};

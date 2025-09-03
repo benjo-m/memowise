@@ -17,7 +17,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
+import { ActionSheetIOS, Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
 
 export default function FlashcardDetails() {
   const { flashcardId, deckId } = useLocalSearchParams<{ flashcardId: string; deckId: string }>();
@@ -286,20 +286,19 @@ export default function FlashcardDetails() {
               title="Delete"
               color={colors.red}
               onPress={() => {
-                Alert.alert(
-                  "Delete flashcard",
-                  "Are you sure you want to delete this flashcard?",
-                  [
-                    { text: "Cancel", style: "cancel" },
-                    {
-                      text: "Delete",
-                      style: "destructive",
-                      onPress: async () => {
-                        await handleDeleteFlashcard(currentFlashcard!);
-                      },
-                    },
-                  ],
-                  { cancelable: true }
+                ActionSheetIOS.showActionSheetWithOptions(
+                  {
+                    title: "Delete flashcard",
+                    message: "Are you sure you want to delete this flashcard?",
+                    options: ["Cancel", "Delete"],
+                    destructiveButtonIndex: 1,
+                    cancelButtonIndex: 0,
+                  },
+                  async (buttonIndex) => {
+                    if (buttonIndex === 1) {
+                      await handleDeleteFlashcard(currentFlashcard!);
+                    }
+                  }
                 );
               }}
               icon={<FontAwesome6 name="trash" size={18} color="white" />}

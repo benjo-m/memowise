@@ -62,15 +62,13 @@ export default function SettingsScreen() {
               <CustomButton
                 title={"Change password"}
                 color={""}
-                onPress={() => router.push("/(app)/settings/change-password")}
+                onPress={() => router.push("/settings/change-password")}
                 icon={<Entypo name="dots-three-horizontal" size={18} color="white" />}
               ></CustomButton>
               <CustomButton
                 title={"Delete account"}
                 color={colors.red}
-                onPress={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
+                onPress={() => router.push("/settings/delete-account")}
                 icon={<FontAwesome name="user-times" size={18} color="white" />}
               ></CustomButton>
             </View>

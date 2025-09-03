@@ -14,7 +14,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, FlatList, Text, TextInput, View } from "react-native";
+import { ActionSheetIOS, Alert, FlatList, Text, TextInput, View } from "react-native";
 
 export default function DeckDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -195,18 +195,19 @@ export default function DeckDetailsScreen() {
               title="Delete deck"
               color={colors.red}
               onPress={() => {
-                Alert.alert(
-                  "Delete deck",
-                  `Are you sure you want to delete "${deck.name}"?`,
-                  [
-                    { text: "Cancel", style: "cancel" },
-                    {
-                      text: "Delete",
-                      style: "destructive",
-                      onPress: async () => await handleDeleteDeck(deck.id),
-                    },
-                  ],
-                  { cancelable: true }
+                ActionSheetIOS.showActionSheetWithOptions(
+                  {
+                    title: `Delete deck`,
+                    message: `Are you sure you want to delete "${deck.name}"?`,
+                    options: ["Cancel", "Delete"],
+                    destructiveButtonIndex: 1,
+                    cancelButtonIndex: 0,
+                  },
+                  async (buttonIndex) => {
+                    if (buttonIndex === 1) {
+                      await handleDeleteDeck(deck.id);
+                    }
+                  }
                 );
               }}
               icon={<FontAwesome6 name="trash" size={18} color="white" />}

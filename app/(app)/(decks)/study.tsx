@@ -15,7 +15,7 @@ import { StudySessionCreateRequest } from "@/models/study-session-create-request
 import colors from "@/styles/colors";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ActionSheetIOS, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function StudyScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
@@ -64,22 +64,23 @@ export default function StudyScreen() {
           flashcardsToReview.length == 0
             ? () => router.back()
             : () => {
-                Alert.alert("Quit Session", "Are you sure you want to quit this session?", [
+                ActionSheetIOS.showActionSheetWithOptions(
                   {
-                    text: "No",
-                    style: "cancel",
+                    title: "Quit Session",
+                    message: "Are you sure you want to quit this session?",
+                    options: ["No", "Yes"],
+                    cancelButtonIndex: 0,
+                    destructiveButtonIndex: 1,
                   },
-                  {
-                    text: "Yes",
-                    onPress: async () => {
+                  async (buttonIndex) => {
+                    if (buttonIndex === 1) {
                       if (correctAnswers + incorrectAnswers > 0) {
                         await finishSession(correctAnswers, incorrectAnswers, reviewedFlashcards);
                       }
                       router.back();
-                    },
-                    style: "destructive",
-                  },
-                ]);
+                    }
+                  }
+                );
               }
         }
       >

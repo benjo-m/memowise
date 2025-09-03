@@ -1,3 +1,4 @@
+import { verifyAccountResend } from "@/api/auth";
 import CustomButton from "@/components/custom-button";
 import { useSession } from "@/contexts/auth-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -10,6 +11,7 @@ export default function VerifyEmail() {
   const { fromSignUp, email, password } = useLocalSearchParams();
   const [errorMessage, setErrorMessage] = useState("");
   const [errorVisible, setErrorVisible] = useState(false);
+  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
 
   const signNewUserIn = async (email: string, password: string) => {
     const result = await signIn(email, password);
@@ -17,6 +19,18 @@ export default function VerifyEmail() {
       router.replace("/");
     } else {
       setErrorMessage(result?.error!);
+      setErrorVisible(true);
+    }
+  };
+
+  const resendLink = async () => {
+    try {
+      await verifyAccountResend(email.toString());
+      setErrorVisible(false);
+      setEmailSentMessageVisible(true);
+    } catch (error: any) {
+      setErrorMessage(error.error);
+      setEmailSentMessageVisible(false);
       setErrorVisible(true);
     }
   };
@@ -48,16 +62,21 @@ export default function VerifyEmail() {
         {"\n"} Please check your inbox and click the link to activate your account.
       </Text>
       {errorVisible && (
-        <Text style={{ textAlign: "center", color: "red", marginBottom: 10 }}>{errorMessage}</Text>
+        <Text style={{ textAlign: "center", color: "red", marginBottom: 15, fontWeight: "600" }}>
+          {errorMessage}
+        </Text>
+      )}
+      {emailSentMessageVisible && (
+        <Text style={{ textAlign: "center", color: "green", marginBottom: 15, fontWeight: "600" }}>
+          A verification email has been resent to {email}
+        </Text>
       )}
       <View style={{ flexDirection: "row", gap: 10 }}>
         <View style={{ flex: 1 }}>
           <CustomButton
             title={"Resend"}
             color={""}
-            onPress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
+            onPress={async () => resendLink()}
             icon={<FontAwesome name="send" size={18} color="white" />}
           ></CustomButton>
         </View>

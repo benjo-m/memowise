@@ -99,3 +99,22 @@ export const resetPassword = async (email: string) => {
 
   return data;
 };
+
+export const verifyAccountResend = async (email: string) => {
+  const response = await fetch(`${BASE_URL}/verify-account-resend`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
+  }
+
+  return data;
+};

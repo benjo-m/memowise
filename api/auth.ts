@@ -1,4 +1,5 @@
 import { SignInResult } from "@/contexts/auth-context";
+import { ChangeEmailRequest } from "@/models/change-email-request";
 import { ChangePasswordRequest } from "@/models/change-password-request";
 import { SignUpRequest } from "@/models/sign-up-request";
 import * as SecureStore from "expo-secure-store";
@@ -55,7 +56,27 @@ export const signUp = async (request: SignUpRequest) => {
     throw data;
   }
 
-  console.log("Create account response:", data);
+  return data;
+};
+
+export const changeEmail = async (request: ChangeEmailRequest) => {
+  const token = await SecureStore.getItemAsync("session");
+  const response = await fetch(`${BASE_URL}/change-login`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(request),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
+  }
+
   return data;
 };
 

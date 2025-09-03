@@ -41,7 +41,7 @@ export default function SettingsScreen() {
             >
               Account
             </Text>
-            <View style={{ gap: 10 }}>
+            <View style={{ gap: 14 }}>
               <InputWrapper
                 leadingIcon={<FontAwesome5 name="user-alt" size={16} color={colors.blue} />}
               >
@@ -54,9 +54,7 @@ export default function SettingsScreen() {
               <CustomButton
                 title={"Change email"}
                 color={""}
-                onPress={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
+                onPress={() => router.push("/settings/change-email")}
                 icon={<MaterialCommunityIcons name="email" size={18} color="white" />}
               ></CustomButton>
               <CustomButton

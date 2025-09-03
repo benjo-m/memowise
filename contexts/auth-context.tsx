@@ -48,7 +48,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
             return response;
           } catch (err) {
-            console.error("Login error:", err);
             return { success: false, error: "Network or server error" };
           }
         },

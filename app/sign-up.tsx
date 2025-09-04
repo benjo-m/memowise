@@ -55,7 +55,7 @@ export default function SignUp() {
 
   return (
     <View style={{ flex: 1, margin: 30 }}>
-      <Text style={styles.title}>Welcome to MemoWise!</Text>
+      <Text style={styles.title}>Welcome to Memowise!</Text>
       <Text style={styles.subtitle}>Create an account to continue.</Text>
       <View style={{ gap: 10, marginTop: 30, marginBottom: 20 }}>
         <View>

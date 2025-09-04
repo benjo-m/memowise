@@ -55,7 +55,7 @@ export default function FlashcardCard({ flashcard }: FlashcardCardProps) {
       }}
     >
       <Text style={{ fontSize: 16 }} numberOfLines={1}>
-        {flashcard.front.length > 20 ? flashcard.front.slice(0, 30) + "..." : flashcard.front}
+        {flashcard.front.length > 20 ? flashcard.front.slice(0, 25) + "..." : flashcard.front}
       </Text>
       <TouchableOpacity onPress={async () => handleDeleteFlashcard(flashcard)}>
         <Ionicons name="remove-circle" size={28} color="#f25c5cff" />

@@ -68,7 +68,7 @@ export default function StudyScreen() {
                   {
                     title: "Quit Session",
                     message: "Are you sure you want to quit this session?",
-                    options: ["No", "Yes"],
+                    options: ["Continue", "Quit"],
                     cancelButtonIndex: 0,
                     destructiveButtonIndex: 1,
                   },
@@ -202,8 +202,16 @@ export default function StudyScreen() {
         </ScrollView>
         {answerShown ? (
           <View style={{ alignItems: "center" }}>
-            <Text style={{ fontWeight: "500", marginBottom: 15 }}>Rate your answer</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
+            <Text style={{ fontWeight: "500", marginBottom: 10, color: "#222222ff" }}>
+              Rate your answer
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: 10,
+              }}
+            >
               {[1, 2, 3, 4, 5].map((num) => (
                 <View style={{ flex: 1 }} key={num}>
                   <CustomButton

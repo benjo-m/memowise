@@ -94,8 +94,10 @@ export default function AddFlashcardsScreen() {
         }}
       >
         <ScrollView>
-          <View style={{ marginBottom: 30 }}>
-            <Text>Front</Text>
+          <View style={{ marginBottom: 50 }}>
+            <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
+              Front
+            </Text>
             <Controller
               control={control}
               rules={{ required: true }}
@@ -159,8 +161,10 @@ export default function AddFlashcardsScreen() {
               )}
             </View>
           </View>
-          <View style={{ marginBottom: 30 }}>
-            <Text>Back</Text>
+          <View style={{ marginBottom: 50 }}>
+            <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
+              Back
+            </Text>
             <Controller
               control={control}
               rules={{ required: true }}

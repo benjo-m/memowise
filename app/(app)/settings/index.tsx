@@ -80,7 +80,7 @@ export default function SettingsScreen() {
                 marginBottom: 15,
               }}
             >
-              About MemoWise
+              About Memowise
             </Text>
             <View style={{ gap: 10 }}>
               <TouchableOpacity
@@ -88,7 +88,7 @@ export default function SettingsScreen() {
                 style={styles.questionBox}
               >
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                  <Text style={styles.questionText}>What is MemoWise?</Text>
+                  <Text style={styles.questionText}>What is Memowise?</Text>
                   {answerOneVisible ? (
                     <FontAwesome name="chevron-up" size={14} color="#333" />
                   ) : (
@@ -97,7 +97,7 @@ export default function SettingsScreen() {
                 </View>
                 {answerOneVisible && (
                   <Text style={{ marginTop: 10 }}>
-                    MemoWise is a learning app that utilizes learning techniques such as active
+                    Memowise is a learning app that utilizes learning techniques such as active
                     recall and spaced repetition to help you learn more efficiently and to retain
                     knowledge for longer.
                   </Text>
@@ -109,7 +109,7 @@ export default function SettingsScreen() {
                 style={styles.questionBox}
               >
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                  <Text style={styles.questionText}>How to use MemoWise?</Text>
+                  <Text style={styles.questionText}>How to use Memowise?</Text>
                   {answerTwoVisible ? (
                     <FontAwesome name="chevron-up" size={14} color="#333" />
                   ) : (
@@ -178,12 +178,12 @@ export default function SettingsScreen() {
             }}
             icon={<MaterialCommunityIcons name="logout" size={18} color="white" />}
           ></CustomButton>
-          <CustomButton
+          {/* <CustomButton
             title={"Get token"}
             color={""}
             onPress={() => console.log(session)}
             icon={undefined}
-          ></CustomButton>
+          ></CustomButton> */}
         </View>
       </View>
     </ScrollView>

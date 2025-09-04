@@ -55,7 +55,7 @@ export default function StatsScreen() {
           style={{
             backgroundColor: "#ffffff",
             borderRadius: 15,
-            padding: 15,
+            paddingVertical: 16,
             alignItems: "center",
             flex: 1,
           }}
@@ -72,7 +72,7 @@ export default function StatsScreen() {
           style={{
             backgroundColor: "#ffffff",
             borderRadius: 15,
-            padding: 15,
+            paddingVertical: 16,
             alignItems: "center",
             flex: 1,
           }}
@@ -89,7 +89,7 @@ export default function StatsScreen() {
           style={{
             backgroundColor: "#ffffff",
             borderRadius: 15,
-            padding: 15,
+            paddingVertical: 16,
             alignItems: "center",
             flex: 1,
           }}

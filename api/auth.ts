@@ -6,7 +6,7 @@ import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
 export const signIn = async (email: string, password: string): Promise<SignInResult> => {
-  const response = await fetch("http://localhost:3000/login", {
+  const response = await fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: {
       Accept: "application/json",

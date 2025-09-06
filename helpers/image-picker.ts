@@ -6,7 +6,7 @@ export const pickImage = async (setImage: (img: ImageFile) => void) => {
     mediaTypes: ["images"],
     allowsEditing: true,
     aspect: [4, 3],
-    quality: 1,
+    quality: 0.3,
   });
 
   if (!result.canceled) {

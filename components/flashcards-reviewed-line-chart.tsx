@@ -1,10 +1,10 @@
 import { FlashcardsReviewedByDayEntry } from "@/models/user-stats";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 type Props = {
   dataArr: FlashcardsReviewedByDayEntry[];
 };
-export default function FlashcardsReviewedBarChart({ dataArr }: Props) {
+export default function FlashcardsReviewedLineChart({ dataArr }: Props) {
   const customLabel = (val: any) => {
     return (
       <View style={{ width: 100, marginLeft: 4 }}>
@@ -28,6 +28,11 @@ export default function FlashcardsReviewedBarChart({ dataArr }: Props) {
     };
   });
 
+  const screenWidth = Dimensions.get("screen").width;
+  const spacing = screenWidth * 0.1;
+  const initalSpacing = screenWidth * 0.02;
+  const endSpacing = screenWidth * 0.01;
+
   return (
     <View
       style={{
@@ -48,15 +53,15 @@ export default function FlashcardsReviewedBarChart({ dataArr }: Props) {
         noOfSections={3}
         areaChart
         yAxisTextStyle={{ color: "gray" }}
+        xAxisThickness={0}
         data={data}
-        startFillColor={"rgb(84,219,234)"}
-        endFillColor={"rgb(84,219,234)"}
+        startFillColor="rgb(84,219,234)"
+        endFillColor="rgb(84,219,234)"
         startOpacity={0.4}
         endOpacity={0.4}
-        spacing={40}
-        rulesType="solid"
-        initialSpacing={8}
-        endSpacing={4}
+        spacing={spacing}
+        endSpacing={endSpacing}
+        initialSpacing={initalSpacing}
         yAxisColor="white"
         xAxisColor="lightgray"
         dataPointsHeight={20}

@@ -1,6 +1,6 @@
 import { getUserStats } from "@/api/users";
 import AnswerAccuracyRatioChart from "@/components/answer-accuracy-ratio-chart";
-import FlashcardsReviewedBarChart from "@/components/flashcards-reviewed-bar-chart";
+import FlashcardsReviewedLineChart from "@/components/flashcards-reviewed-line-chart";
 import SessionsByDayChart from "@/components/sessions-by-day-chart";
 import TimesOfDayChart from "@/components/times-of-day-chart";
 import { useUserStats } from "@/contexts/user-stats-context";
@@ -152,9 +152,9 @@ export default function StatsScreen() {
       </View>
 
       <View style={{ marginVertical: 10 }}>
-        <FlashcardsReviewedBarChart
+        <FlashcardsReviewedLineChart
           dataArr={userStats.flashcards_reviewed_by_day}
-        ></FlashcardsReviewedBarChart>
+        ></FlashcardsReviewedLineChart>
       </View>
 
       <View style={{ marginVertical: 10, marginBottom: 30 }}>

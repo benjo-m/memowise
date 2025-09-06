@@ -1,5 +1,5 @@
 import { StudySessionsByDay } from "@/models/user-stats";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 
 type Props = {
@@ -22,6 +22,10 @@ export default function SessionsByDayChart({ data }: Props) {
     frontColor: day.value === maxValue ? "#177AD5" : "#76b3ecff",
   }));
 
+  const screenWidth = Dimensions.get("window").width;
+  const barWidth = screenWidth * 0.065;
+  const spacing = screenWidth * 0.031;
+
   return (
     <View
       style={{
@@ -34,7 +38,7 @@ export default function SessionsByDayChart({ data }: Props) {
       <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 20 }}>Sessions by day</Text>
 
       <BarChart
-        barWidth={22}
+        barWidth={barWidth}
         noOfSections={3}
         barBorderRadius={5}
         data={barData}
@@ -42,7 +46,9 @@ export default function SessionsByDayChart({ data }: Props) {
         xAxisThickness={0}
         maxValue={maxValue}
         disableScroll
-        spacing={12}
+        spacing={spacing}
+        endSpacing={0}
+        initialSpacing={0}
         disablePress
         minHeight={5}
       />

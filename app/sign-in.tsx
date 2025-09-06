@@ -44,7 +44,7 @@ export default function SignIn() {
       <View
         style={{
           padding: 20,
-          backgroundColor: "#ffc4c4ff",
+          backgroundColor: "#f8d7d7ff",
           borderRadius: 10,
           marginBottom: 20,
         }}

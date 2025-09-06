@@ -23,7 +23,14 @@ export default function SessionsByDayChart({ data }: Props) {
   }));
 
   return (
-    <View style={{ alignItems: "center", backgroundColor: "white", padding: 20, borderRadius: 20 }}>
+    <View
+      style={{
+        alignItems: "center",
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 20,
+      }}
+    >
       <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 20 }}>Sessions by day</Text>
 
       <BarChart
@@ -33,10 +40,9 @@ export default function SessionsByDayChart({ data }: Props) {
         data={barData}
         yAxisThickness={0}
         xAxisThickness={0}
-        hideRules
         maxValue={maxValue}
         disableScroll
-        spacing={16}
+        spacing={12}
         disablePress
         minHeight={5}
       />

@@ -1,5 +1,5 @@
 import { StudySessionsByPartOfDay } from "@/models/user-stats";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 
 type Props = {
@@ -68,24 +68,24 @@ export default function TimesOfDayChart({ data }: Props) {
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(morningColor)}
-            <Text style={{}}>Morning: {getPercentage(data.morning)}%</Text>
+            <Text style={styles.percentageText}>Morning: {getPercentage(data.morning)}%</Text>
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(afternoonColor)}
-            <Text style={{}}>Afternoon: {getPercentage(data.afternoon)}%</Text>
+            <Text style={styles.percentageText}>Afternoon: {getPercentage(data.afternoon)}%</Text>
           </View>
         </View>
 
         <View style={{ flexDirection: "row", gap: 15, justifyContent: "center" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(eveningColor)}
-            <Text style={{}}>Evening: {getPercentage(data.evening)}%</Text>
+            <Text style={styles.percentageText}>Evening: {getPercentage(data.evening)}%</Text>
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {renderDot(nightColor)}
-            <Text style={{}}>Night: {getPercentage(data.night)}%</Text>
+            <Text style={styles.percentageText}>Night: {getPercentage(data.night)}%</Text>
           </View>
         </View>
       </View>
@@ -123,3 +123,9 @@ export default function TimesOfDayChart({ data }: Props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  percentageText: {
+    fontWeight: "500",
+  },
+});

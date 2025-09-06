@@ -45,7 +45,7 @@ export default function AnswerAccuracyRatioChart({ correctAnswers, incorrectAnsw
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {renderDot(correctColor)}
-          <Text style={{}}>
+          <Text style={{ fontWeight: "500" }}>
             Correct:{" "}
             {noData ? 0 : ((correctAnswers / (correctAnswers + incorrectAnswers)) * 100).toFixed(0)}
             %
@@ -54,7 +54,7 @@ export default function AnswerAccuracyRatioChart({ correctAnswers, incorrectAnsw
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {renderDot(incorrectColor)}
-          <Text style={{}}>
+          <Text style={{ fontWeight: "500" }}>
             Incorrect:{" "}
             {noData
               ? 0

@@ -20,6 +20,11 @@ type FavoriteDeck = {
   count: number;
 } | null;
 
+export type FlashcardsReviewedByDayEntry = {
+  date: string;
+  count: number;
+};
+
 export type UserStats = {
   longest_study_streak: number;
   current_study_streak: number;
@@ -32,4 +37,5 @@ export type UserStats = {
   total_correct_answers: number;
   total_incorrect_answers: number;
   favorite_deck: FavoriteDeck;
+  flashcards_reviewed_by_day: FlashcardsReviewedByDayEntry[];
 };

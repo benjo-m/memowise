@@ -75,6 +75,7 @@ export default function DeleteAccountScreen() {
       >
         <TextInput
           placeholder="Enter your password"
+          placeholderTextColor={"#c6c6c6ff"}
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}

@@ -69,6 +69,8 @@ export default function SignUp() {
               <InputWrapper leadingIcon={<Ionicons name="mail" size={20} color={colors.blue} />}>
                 <TextInput
                   placeholder="Email"
+                  placeholderTextColor={"#c6c6c6ff"}
+                  keyboardType="email-address"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -76,6 +78,8 @@ export default function SignUp() {
                   autoComplete="off"
                   autoCorrect={false}
                   style={inputStyles.base}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}
@@ -107,6 +111,7 @@ export default function SignUp() {
               >
                 <TextInput
                   placeholder="Password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -115,6 +120,8 @@ export default function SignUp() {
                   autoCorrect={false}
                   style={inputStyles.base}
                   secureTextEntry={passwordHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}
@@ -149,6 +156,7 @@ export default function SignUp() {
               >
                 <TextInput
                   placeholder="Confirm password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -158,6 +166,8 @@ export default function SignUp() {
                   textContentType="password"
                   style={inputStyles.base}
                   secureTextEntry={passwordConfirmationHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}

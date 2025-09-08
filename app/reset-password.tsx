@@ -80,6 +80,7 @@ export default function ResetPassword() {
         <InputWrapper leadingIcon={<Ionicons name="mail" size={20} color={colors.blue} />}>
           <TextInput
             placeholder="Email"
+            placeholderTextColor={"#c6c6c6ff"}
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect={false}

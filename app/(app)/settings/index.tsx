@@ -178,12 +178,12 @@ export default function SettingsScreen() {
             }}
             icon={<MaterialCommunityIcons name="logout" size={18} color="white" />}
           ></CustomButton>
-          <CustomButton
-            title={"Get token"}
-            color={""}
-            onPress={() => console.log(session)}
-            icon={undefined}
-          ></CustomButton>
+          {/* <CustomButton */}
+          {/*   title={"Get token"} */}
+          {/*   color={""} */}
+          {/*   onPress={() => console.log(session)} */}
+          {/*   icon={undefined} */}
+          {/* ></CustomButton> */}
         </View>
       </View>
     </ScrollView>

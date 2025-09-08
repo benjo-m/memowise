@@ -93,6 +93,7 @@ export default function ChangePasswordScreen() {
               >
                 <TextInput
                   placeholder="Enter your current password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -101,6 +102,8 @@ export default function ChangePasswordScreen() {
                   autoCorrect={false}
                   style={inputStyles.base}
                   secureTextEntry={currentPasswordHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}
@@ -136,6 +139,7 @@ export default function ChangePasswordScreen() {
               >
                 <TextInput
                   placeholder="Enter your new password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -144,6 +148,8 @@ export default function ChangePasswordScreen() {
                   autoCorrect={false}
                   style={inputStyles.base}
                   secureTextEntry={newPasswordHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}
@@ -179,6 +185,7 @@ export default function ChangePasswordScreen() {
               >
                 <TextInput
                   placeholder="Confirm your new password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -187,6 +194,8 @@ export default function ChangePasswordScreen() {
                   autoCorrect={false}
                   style={inputStyles.base}
                   secureTextEntry={passwordConfirmationHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}

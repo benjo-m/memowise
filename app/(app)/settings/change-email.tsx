@@ -79,6 +79,7 @@ export default function ChangeEmailScreen() {
               <InputWrapper leadingIcon={<Ionicons name="mail" size={20} color={colors.blue} />}>
                 <TextInput
                   placeholder="Email"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -86,6 +87,8 @@ export default function ChangeEmailScreen() {
                   autoComplete="off"
                   autoCorrect={false}
                   style={inputStyles.base}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}
@@ -117,6 +120,7 @@ export default function ChangeEmailScreen() {
               >
                 <TextInput
                   placeholder="Password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -125,6 +129,8 @@ export default function ChangeEmailScreen() {
                   autoCorrect={false}
                   style={inputStyles.base}
                   secureTextEntry={passwordHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}

@@ -1,16 +1,19 @@
 {
   "expo": {
-    "name": "memowise",
+    "name": "Memowise",
     "slug": "memowise",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/ios-light.png",
     "scheme": "memowise",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "memowise"
+      "bundleIdentifier": "memowise",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -39,6 +42,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c709f939-67ad-41bc-8786-d208e3285fe3"
+      }
     }
   }
 }

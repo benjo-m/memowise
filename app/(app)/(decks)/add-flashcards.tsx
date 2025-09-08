@@ -105,6 +105,7 @@ export default function AddFlashcardsScreen() {
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   placeholder="Front of the flashcard"
+                  placeholderTextColor={"#c6c6c6ff"}
                   multiline
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -172,6 +173,7 @@ export default function AddFlashcardsScreen() {
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   placeholder="Back of the flashcard"
+                  placeholderTextColor={"#c6c6c6ff"}
                   multiline
                   onBlur={onBlur}
                   onChangeText={onChange}

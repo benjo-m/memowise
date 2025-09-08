@@ -83,6 +83,8 @@ export default function SignIn() {
               <InputWrapper leadingIcon={<Ionicons name="mail" size={20} color={colors.blue} />}>
                 <TextInput
                   placeholder="Email"
+                  placeholderTextColor={"#c6c6c6ff"}
+                  keyboardType="email-address"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -90,6 +92,8 @@ export default function SignIn() {
                   autoComplete="off"
                   autoCorrect={false}
                   style={inputStyles.base}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}
@@ -120,6 +124,7 @@ export default function SignIn() {
               >
                 <TextInput
                   placeholder="Password"
+                  placeholderTextColor={"#c6c6c6ff"}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -129,6 +134,8 @@ export default function SignIn() {
                   textContentType="password"
                   style={inputStyles.base}
                   secureTextEntry={passwordHidden}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               </InputWrapper>
             )}

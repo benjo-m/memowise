@@ -24,7 +24,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
           alignItems: "center",
           gap: 6,
         }}
-        onPress={() => router.push({ pathname: "/study", params: { deckId: deck.id } })}
+        onPress={() => router.replace({ pathname: "/study", params: { deckId: deck.id } })}
       >
         <FontAwesome5 name="play" size={14} color="white" />
         <Text style={{ color: "white", fontWeight: "bold" }}>Study</Text>

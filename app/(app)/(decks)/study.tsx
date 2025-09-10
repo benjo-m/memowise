@@ -62,7 +62,7 @@ export default function StudyScreen() {
       <TouchableOpacity
         onPress={
           flashcardsToReview.length == 0
-            ? () => router.back()
+            ? () => router.replace("/(app)/(decks)")
             : () => {
                 ActionSheetIOS.showActionSheetWithOptions(
                   {
@@ -77,7 +77,7 @@ export default function StudyScreen() {
                       if (correctAnswers + incorrectAnswers > 0) {
                         await finishSession(correctAnswers, incorrectAnswers, reviewedFlashcards);
                       }
-                      router.back();
+                      router.replace("/(app)/(decks)");
                     }
                   }
                 );

@@ -14,7 +14,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, View } from "react-native";
 
 export default function AddFlashcardsScreen() {
   const { deckId } = useLocalSearchParams<{ deckId: string }>();
@@ -23,6 +23,7 @@ export default function AddFlashcardsScreen() {
   const { setFlashcardsDueTodayCount } = useTodaysProgress();
   const [frontImageFile, setFrontImageFile] = useState<ImageFile | null>(null);
   const [backImageFile, setBackImageFile] = useState<ImageFile | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!deckId) return;
@@ -63,6 +64,7 @@ export default function AddFlashcardsScreen() {
     );
 
     try {
+      setLoading(true);
       const newFlashcard = await createFlashcard(flashcardCreateRequest);
 
       setDecks((prevDecks) =>
@@ -80,6 +82,8 @@ export default function AddFlashcardsScreen() {
       if (err instanceof Error) {
         Alert.alert("Failed to add flashcard", err.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,147 +93,155 @@ export default function AddFlashcardsScreen() {
     <ScrollView
       showsVerticalScrollIndicator={false}
       automaticallyAdjustKeyboardInsets={true}
-      contentContainerStyle={{ flexGrow: 1, margin: 30 }}
+      contentContainerStyle={{ flexGrow: 1 }}
     >
-      <View style={{ flex: 1 }}>
-        <View style={{ marginBottom: 50 }}>
-          <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
-            Front
-          </Text>
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            name="front"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Front of the flashcard"
-                placeholderTextColor={"#c6c6c6ff"}
-                multiline
-                numberOfLines={5}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                style={inputStyles.base}
-              />
-            )}
-          />
-          {frontImageFile && (
-            <Image
-              source={{
-                uri: frontImageFile.uri,
-              }}
-              style={{
-                width: "100%",
-                height: 200,
-                resizeMode: "stretch",
-                borderRadius: 10,
-                marginTop: 10,
-              }}
-            />
-          )}
-          {errors.front && (
-            <Text
-              style={{
-                marginTop: 5,
-                color: "red",
-                textAlign: "left",
-                marginLeft: 2,
-                fontWeight: 500,
-              }}
-            >
-              {errors.front.message || "Front of the flashcard can't be blank."}
+      <View style={{ flex: 1, margin: 30 }}>
+        <View style={{ flex: 1 }}>
+          <View style={{ marginBottom: 50 }}>
+            <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
+              Front
             </Text>
-          )}
-          <View style={{ marginTop: 10 }}>
-            {frontImageFile ? (
-              <CustomButton
-                title="Remove front image"
-                color={colors.red}
-                onPress={() => setFrontImageFile(null)}
-                icon={<FontAwesome name="remove" size={18} color="white" />}
-              />
-            ) : (
-              <CustomButton
-                title="Upload front image"
-                color={colors.blue}
-                onPress={() => pickImage(setFrontImageFile)}
-                icon={<FontAwesome6 name="image" size={18} color="white" />}
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              name="front"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Front of the flashcard"
+                  placeholderTextColor={"#c6c6c6ff"}
+                  multiline
+                  numberOfLines={5}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  style={inputStyles.base}
+                />
+              )}
+            />
+            {frontImageFile && (
+              <Image
+                source={{
+                  uri: frontImageFile.uri,
+                }}
+                style={{
+                  width: "100%",
+                  height: 200,
+                  resizeMode: "stretch",
+                  borderRadius: 10,
+                  marginTop: 10,
+                }}
               />
             )}
+            {errors.front && (
+              <Text
+                style={{
+                  marginTop: 5,
+                  color: "red",
+                  textAlign: "left",
+                  marginLeft: 2,
+                  fontWeight: 500,
+                }}
+              >
+                {errors.front.message || "Front of the flashcard can't be blank."}
+              </Text>
+            )}
+            <View style={{ marginTop: 10 }}>
+              {frontImageFile ? (
+                <CustomButton
+                  title="Remove front image"
+                  color={colors.red}
+                  onPress={() => setFrontImageFile(null)}
+                  icon={<FontAwesome name="remove" size={18} color="white" />}
+                />
+              ) : (
+                <CustomButton
+                  title="Upload front image"
+                  color={colors.blue}
+                  onPress={() => pickImage(setFrontImageFile)}
+                  icon={<FontAwesome6 name="image" size={18} color="white" />}
+                />
+              )}
+            </View>
+          </View>
+          <View style={{ marginBottom: 50 }}>
+            <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
+              Back
+            </Text>
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              name="back"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Back of the flashcard"
+                  placeholderTextColor={"#c6c6c6ff"}
+                  multiline
+                  numberOfLines={5}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  style={inputStyles.base}
+                />
+              )}
+            />
+            {errors.back && (
+              <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>
+                Back of the flashcard can't be blank.
+              </Text>
+            )}
+            {backImageFile?.uri && (
+              <Image
+                source={{
+                  uri: backImageFile.uri,
+                }}
+                style={{
+                  width: "100%",
+                  height: 200,
+                  resizeMode: "stretch",
+                  borderRadius: 10,
+                  marginTop: 10,
+                }}
+              />
+            )}
+            <View style={{ marginTop: 10 }}>
+              {backImageFile ? (
+                <CustomButton
+                  title="Remove back image"
+                  color={colors.red}
+                  onPress={() => setBackImageFile(null)}
+                  icon={<FontAwesome name="remove" size={18} color="white" />}
+                />
+              ) : (
+                <CustomButton
+                  title="Upload back image"
+                  color={colors.blue}
+                  onPress={() => pickImage(setBackImageFile)}
+                  icon={<FontAwesome6 name="image" size={18} color="white" />}
+                />
+              )}
+            </View>
           </View>
         </View>
-        <View style={{ marginBottom: 50 }}>
-          <Text style={{ fontWeight: 500, marginBottom: 5, marginLeft: 2, fontSize: 16 }}>
-            Back
-          </Text>
-          <Controller
-            control={control}
-            rules={{ required: true }}
-            name="back"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Back of the flashcard"
-                placeholderTextColor={"#c6c6c6ff"}
-                multiline
-                numberOfLines={5}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                style={inputStyles.base}
-              />
-            )}
-          />
-          {errors.back && (
-            <Text style={{ marginTop: 5, color: "red", textAlign: "left" }}>
-              Back of the flashcard can't be blank.
-            </Text>
-          )}
-          {backImageFile?.uri && (
-            <Image
-              source={{
-                uri: backImageFile.uri,
-              }}
-              style={{
-                width: "100%",
-                height: 200,
-                resizeMode: "stretch",
-                borderRadius: 10,
-                marginTop: 10,
-              }}
-            />
-          )}
-          <View style={{ marginTop: 10 }}>
-            {backImageFile ? (
-              <CustomButton
-                title="Remove back image"
-                color={colors.red}
-                onPress={() => setBackImageFile(null)}
-                icon={<FontAwesome name="remove" size={18} color="white" />}
-              />
+        {/* -------- ADD BUTTON ----------- */}
+        <CustomButton
+          title={loading ? "Creating flashcard" : "Add flashcard"}
+          color={colors.blue}
+          onPress={handleSubmit(onSubmit)}
+          icon={
+            loading ? (
+              <ActivityIndicator size={18} color="white" />
             ) : (
-              <CustomButton
-                title="Upload back image"
-                color={colors.blue}
-                onPress={() => pickImage(setBackImageFile)}
-                icon={<FontAwesome6 name="image" size={18} color="white" />}
-              />
-            )}
-          </View>
-        </View>
+              <FontAwesome name="plus" size={18} color="white" />
+            )
+          }
+        />
       </View>
-      {/* -------- ADD BUTTON ----------- */}
-      <CustomButton
-        title="Add flashcard"
-        color={colors.blue}
-        onPress={handleSubmit(onSubmit)}
-        icon={<FontAwesome name="plus" size={18} color="white" />}
-      />
     </ScrollView>
   );
 }

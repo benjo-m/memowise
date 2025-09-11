@@ -1,4 +1,5 @@
 import { Deck } from "@/models/deck";
+import colors from "@/styles/colors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -16,7 +17,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
       <TouchableOpacity
         style={{
           flexDirection: "row",
-          backgroundColor: "#34d770ff",
+          backgroundColor: colors.green,
           paddingVertical: 12,
           paddingHorizontal: 10,
           borderRadius: 10,

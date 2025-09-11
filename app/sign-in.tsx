@@ -10,12 +10,21 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function SignIn() {
   const { signIn } = useSession();
   const [signInError, setSignInError] = useState<string | null>(null);
   const [passwordHidden, setPasswordHidden] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -29,6 +38,7 @@ export default function SignIn() {
   });
 
   const onSubmit = async (data: any) => {
+    setLoading(true);
     const result = await signIn(data.email, data.password);
     if (result?.success) {
       router.replace("/");
@@ -37,6 +47,7 @@ export default function SignIn() {
     } else {
       setSignInError(result?.error!);
     }
+    setLoading(false);
   };
 
   const invalidCredentialsMessage = () => {
@@ -151,10 +162,16 @@ export default function SignIn() {
           </TouchableOpacity>
         </View>
         <CustomButton
-          title={"Sign in"}
+          title={loading ? "Loading" : "Sign in"}
           color={""}
           onPress={handleSubmit(onSubmit)}
-          icon={<MaterialCommunityIcons name="login" size={18} color="white" />}
+          icon={
+            loading ? (
+              <ActivityIndicator size={18} color={"white"} />
+            ) : (
+              <MaterialCommunityIcons name="login" size={18} color="white" />
+            )
+          }
         ></CustomButton>
         <View style={{ marginTop: 30, alignItems: "center", gap: 8 }}>
           <Text style={{}}>Don't have an account?</Text>

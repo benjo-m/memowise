@@ -1,5 +1,5 @@
 import { StudySessionsByDay } from "@/models/user-stats";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Platform, Text, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 
 type Props = {
@@ -23,7 +23,8 @@ export default function SessionsByDayChart({ data }: Props) {
   }));
 
   const screenWidth = Dimensions.get("window").width;
-  const barWidth = screenWidth * 0.065;
+  const barWidth =
+    Platform.OS == "ios" && Platform.isPad ? screenWidth * 0.025 : screenWidth * 0.065;
   const spacing = screenWidth * 0.031;
 
   return (
@@ -37,6 +38,7 @@ export default function SessionsByDayChart({ data }: Props) {
     >
       <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 20 }}>Sessions by day</Text>
 
+      <Text></Text>
       <BarChart
         barWidth={barWidth}
         noOfSections={3}
@@ -52,6 +54,7 @@ export default function SessionsByDayChart({ data }: Props) {
         disablePress
         minHeight={5}
       />
+      <Text></Text>
     </View>
   );
 }

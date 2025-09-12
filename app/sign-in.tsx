@@ -162,7 +162,7 @@ export default function SignIn() {
           </TouchableOpacity>
         </View>
         <CustomButton
-          title={loading ? "Loading" : "Sign in"}
+          title={loading ? "" : "Sign in"}
           color={""}
           onPress={handleSubmit(onSubmit)}
           icon={

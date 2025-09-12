@@ -6,7 +6,7 @@ import TimesOfDayChart from "@/components/times-of-day-chart";
 import { useUserStats } from "@/contexts/user-stats-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Platform, ScrollView, Text, View } from "react-native";
 
 export default function StatsScreen() {
   const { userStats, setUserStats } = useUserStats();
@@ -49,6 +49,7 @@ export default function StatsScreen() {
 
   return (
     <ScrollView contentContainerStyle={{ margin: 30 }}>
+      {/* ---------3 CARDS ON TOP--------- */}
       <View
         style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, gap: 10 }}
       >
@@ -103,7 +104,7 @@ export default function StatsScreen() {
           <Text style={{ fontSize: 12, color: "#555" }}>time studied</Text>
         </View>
       </View>
-
+      {/* ---------SUMMARY--------- */}
       <View
         style={{
           backgroundColor: "#ffffff",
@@ -142,27 +143,49 @@ export default function StatsScreen() {
           )}
         </Text>
       </View>
+      {/* ---------CHARTS--------- */}
+      {Platform.OS == "ios" && Platform.isPad ? (
+        <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+          <View style={{ width: "48.5%", marginVertical: 10 }}>
+            <SessionsByDayChart data={userStats.study_sessions_by_day} />
+          </View>
 
-      <View style={{ marginVertical: 10 }}>
-        <SessionsByDayChart data={userStats.study_sessions_by_day} />
-      </View>
+          <View style={{ width: "48.5%", marginVertical: 10 }}>
+            <TimesOfDayChart data={userStats.study_sessions_by_part_of_day} />
+          </View>
 
-      <View style={{ marginVertical: 10 }}>
-        <TimesOfDayChart data={userStats.study_sessions_by_part_of_day} />
-      </View>
+          <View style={{ width: "48.5%", marginVertical: 10 }}>
+            <FlashcardsReviewedLineChart dataArr={userStats.flashcards_reviewed_by_day} />
+          </View>
 
-      <View style={{ marginVertical: 10 }}>
-        <FlashcardsReviewedLineChart
-          dataArr={userStats.flashcards_reviewed_by_day}
-        ></FlashcardsReviewedLineChart>
-      </View>
-
-      <View style={{ marginVertical: 10, marginBottom: 30 }}>
-        <AnswerAccuracyRatioChart
-          correctAnswers={userStats.total_correct_answers}
-          incorrectAnswers={userStats.total_incorrect_answers}
-        />
-      </View>
+          <View style={{ width: "48.5%", marginVertical: 10 }}>
+            <AnswerAccuracyRatioChart
+              correctAnswers={userStats.total_correct_answers}
+              incorrectAnswers={userStats.total_incorrect_answers}
+            />
+          </View>
+        </View>
+      ) : (
+        <View>
+          <View style={{ marginVertical: 10 }}>
+            <SessionsByDayChart data={userStats.study_sessions_by_day} />
+          </View>
+          <View style={{ marginVertical: 10 }}>
+            <TimesOfDayChart data={userStats.study_sessions_by_part_of_day} />
+          </View>
+          <View style={{ marginVertical: 10 }}>
+            <FlashcardsReviewedLineChart
+              dataArr={userStats.flashcards_reviewed_by_day}
+            ></FlashcardsReviewedLineChart>
+          </View>
+          <View style={{ marginVertical: 10, marginBottom: 30 }}>
+            <AnswerAccuracyRatioChart
+              correctAnswers={userStats.total_correct_answers}
+              incorrectAnswers={userStats.total_incorrect_answers}
+            />
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 }

@@ -230,7 +230,7 @@ export default function AddFlashcardsScreen() {
         </View>
         {/* -------- ADD BUTTON ----------- */}
         <CustomButton
-          title={loading ? "Creating flashcard" : "Add flashcard"}
+          title={loading ? "" : "Add flashcard"}
           color={colors.blue}
           onPress={handleSubmit(onSubmit)}
           icon={

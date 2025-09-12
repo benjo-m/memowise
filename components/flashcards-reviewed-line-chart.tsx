@@ -1,5 +1,5 @@
 import { FlashcardsReviewedByDayEntry } from "@/models/user-stats";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Platform, Text, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 type Props = {
   dataArr: FlashcardsReviewedByDayEntry[];
@@ -29,8 +29,11 @@ export default function FlashcardsReviewedLineChart({ dataArr }: Props) {
   });
 
   const screenWidth = Dimensions.get("screen").width;
-  const spacing = screenWidth * 0.1;
-  const initalSpacing = screenWidth * 0.02;
+  // const spacing = screenWidth * 0.1
+  const spacing = Platform.OS == "ios" && Platform.isPad ? screenWidth * 0.055 : screenWidth * 0.1;
+
+  const initalSpacing =
+    Platform.OS == "ios" && Platform.isPad ? screenWidth * 0.025 : screenWidth * 0.02;
   const endSpacing = screenWidth * 0.01;
 
   return (
@@ -67,6 +70,7 @@ export default function FlashcardsReviewedLineChart({ dataArr }: Props) {
         dataPointsHeight={20}
         dataPointsWidth={20}
       />
+      <Text></Text>
     </View>
   );
 }

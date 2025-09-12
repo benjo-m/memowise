@@ -326,7 +326,7 @@ export default function FlashcardDetails() {
           </View>
           <View style={{ flex: 1 }}>
             <CustomButton
-              title={loading ? "Updating" : "Update"}
+              title={loading ? "" : "Update"}
               color={colors.blue}
               onPress={handleSubmit(onSubmit)}
               icon={

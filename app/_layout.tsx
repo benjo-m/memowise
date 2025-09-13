@@ -1,6 +1,12 @@
 import { SessionProvider, useSession } from "@/contexts/auth-context";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { SplashScreenController } from "./splash";
+
+SplashScreen.setOptions({
+  duration: 300,
+  fade: true,
+});
 
 export default function Root() {
   // Set up the auth context and render our layout inside of it.

@@ -147,7 +147,12 @@ export default function StudyScreen() {
           <Text style={{ marginBottom: 20 }}>All done for today!</Text>
         )}
         <View style={{ width: "100%" }}>
-          <CustomButton title={"Close"} color={""} onPress={() => router.back()} icon={null} />
+          <CustomButton
+            title={"Close"}
+            color={""}
+            onPress={() => router.replace("/(app)/(decks)")}
+            icon={null}
+          />
         </View>
       </View>
     );

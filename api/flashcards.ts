@@ -5,24 +5,6 @@ import { FlashcardUpdateRequest } from "@/models/flashcard-update-request";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "./constants";
 
-export const getFlashcardById = async (id: number): Promise<Flashcard> => {
-  const token = await SecureStore.getItemAsync("session");
-
-  const res = await fetch(`${BASE_URL}/flashcards/${id}`, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch flashcard");
-  }
-
-  return res.json();
-};
-
 export const createFlashcard = async (body: FlashcardCreateRequest): Promise<Flashcard> => {
   const token = await SecureStore.getItemAsync("session");
 

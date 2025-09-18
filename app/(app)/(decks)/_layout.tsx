@@ -16,7 +16,10 @@ export default function Layout() {
           title: "Decks",
         }}
       />
-      <Stack.Screen name="deck-details" options={{ title: "Deck details" }} />
+      <Stack.Screen
+        name="deck-details"
+        options={{ title: "Deck details", headerBackButtonDisplayMode: "generic" }}
+      />
       <Stack.Screen
         name="add-flashcards"
         options={{
@@ -31,7 +34,7 @@ export default function Layout() {
           headerBackButtonDisplayMode: "generic",
         }}
       />
-      <Stack.Screen name="study" options={{ title: "Study", headerBackTitle: "Quit session" }} />
+      <Stack.Screen name="study" options={{ title: "Study", headerBackTitle: "Quit" }} />
     </Stack>
   );
 }

@@ -84,7 +84,9 @@ export default function StudyScreen() {
               }
         }
       >
-        <Text style={{ color: "#ff2323ff", fontSize: 17, fontWeight: 500 }}>Quit session</Text>
+        <Text style={{ color: "#ff2323ff", fontSize: 17, fontWeight: 500, paddingHorizontal: 10 }}>
+          Quit session
+        </Text>
       </TouchableOpacity>
     );
   };
